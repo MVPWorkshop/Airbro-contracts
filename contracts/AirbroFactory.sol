@@ -2,6 +2,7 @@
 pragma solidity ^0.8.11;
 
 import "./TokenDrop.sol";
+import "./ExistingTokenDrop.sol";
 import "./NFTDrop.sol";
 
 /// @title Airbro - NFT airdrop tool factory contract
@@ -26,6 +27,28 @@ contract AirbroFactory {
         );
 
         emit NewAirdrop(rewardedNftCollection, address(tokenDropContract));
+    }
+
+    /// @notice Creates a new airdrop claim contract for specific NFT collection holders
+    /// @param rewardedNftCollection - Rewarded NFT collection address
+    /// @param rewardToken - ERC20 token's address that will be distributed as a reward
+    /// @param tokensPerClaim - airdrop reward size for each NFT holder
+    /// @param totalAirdropAmount - total amount of ERC20 tokens to be supplied for the rewards
+    function dropExistingTokensToNftHolders(
+        address rewardedNftCollection,
+        uint256 tokensPerClaim,
+        address rewardToken,
+        uint256 totalAirdropAmount
+    ) external {
+        ExistingTokenDrop tokenDropContract = new ExistingTokenDrop(
+            rewardedNftCollection,
+            tokensPerClaim,
+            rewardToken,
+            totalAirdropAmount
+        );
+        emit NewAirdrop(rewardedNftCollection, address(tokenDropContract));
+
+        tokenDropContract.fundAirdrop();
     }
 
     /// @notice Creates a new airdrop ERC721 claim contract for specific NFT collection holders
