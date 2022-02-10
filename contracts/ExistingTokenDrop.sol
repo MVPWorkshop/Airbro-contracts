@@ -5,8 +5,9 @@ import "@rari-capital/solmate/src/tokens/ERC20.sol";
 import "@rari-capital/solmate/src/tokens/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "./AirdropInfo.sol";
 
-contract ExistingTokenDrop {
+contract ExistingTokenDrop is AirdropInfo {
     IERC721 public immutable rewardedNft;
     IERC20 public immutable rewardToken;
     uint256 public immutable tokensPerClaim;
@@ -83,4 +84,24 @@ contract ExistingTokenDrop {
 
         rewardToken.transfer(msg.sender, tokensPerClaim * tokenIds.length);
     }
+
+    //@notice Get the type of airdrop, it's either ERC20, ERC721, ERC1155
+    function getAirdropType() external override view returns (string memory){
+        return "ERC20";
+    }
+
+    //@notice Checks if the user is eligible for this airdrop
+    function isEligibleForReward(uint256 tokenId) external view returns (bool){
+        if (hasClaimed[tokenId]) revert AlreadyRedeemed();
+        if (rewardToken.balanceOf(address(this)) < tokensPerClaim) revert InsufficientLiquidity();
+        if (rewardedNft.ownerOf(tokenId) != msg.sender) revert NotOwner();
+        return true;
+    }
+
+    //@notice Returns the amount(number) of airdrop tokens to claim
+    //@param tokenId is the rewarded NFT collections token ID
+    function getAirdropAmount() external view returns (uint256){
+        return rewardedNft.balanceOf(msg.sender) * tokensPerClaim;
+    }
+
 }
