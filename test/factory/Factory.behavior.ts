@@ -25,13 +25,9 @@ export function shouldBehaveLikeFactory(): void {
 
   it("should fund existing token airdrop contract", async function() {
     const totalAirdropAmount = ethers.utils.parseEther("1000");
-    console.log("Test token balance of: " + await this.testToken.balanceOf(this.signers.admin.address));
 
     await this.testToken.connect(this.signers.admin).mint(this.signers.admin.address, totalAirdropAmount);
-    await this.testToken.connect(this.signers.admin).approve(this.airbroFactory.address, totalAirdropAmount);
-
     console.log("Test token balance of: " + await this.testToken.balanceOf(this.signers.admin.address));
-    console.log("Test token allowance of: " + await this.testToken.allowance(this.signers.admin.address, this.airbroFactory.address));
 
     await expect(await this.airbroFactory.connect(this.signers.admin).dropExistingTokensToNftHolders(
       this.testNftCollection.address, // rewardedNftCollection,
