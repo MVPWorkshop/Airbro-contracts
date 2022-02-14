@@ -7,6 +7,10 @@ import "./NFTDrop.sol";
 
 /// @title Airbro - NFT airdrop tool factory contract
 contract AirbroFactory {
+
+    // index of deployed airdrop contracts
+    address[] public airdrops;
+
     event NewAirdrop(address indexed rewardedNftCollection, address indexed airdropContract);
 
     constructor() {}
@@ -26,6 +30,7 @@ contract AirbroFactory {
             newTokenSymbol
         );
 
+        airdrops.push(address(tokenDropContract));
         emit NewAirdrop(rewardedNftCollection, address(tokenDropContract));
     }
 
@@ -46,9 +51,8 @@ contract AirbroFactory {
             rewardToken,
             totalAirdropAmount
         );
+        airdrops.push(address(tokenDropContract));
         emit NewAirdrop(rewardedNftCollection, address(tokenDropContract));
-
-        tokenDropContract.fundAirdrop();
     }
 
     /// @notice Creates a new airdrop ERC721 claim contract for specific NFT collection holders
@@ -70,7 +74,7 @@ contract AirbroFactory {
             newNftCollectionSymbol,
             baseUri
         );
-
+        airdrops.push(address(nftDropContract));
         emit NewAirdrop(rewardedNftCollection, address(nftDropContract));
     }
 }

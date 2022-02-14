@@ -4,6 +4,7 @@ import type { SignerWithAddress } from "@nomiclabs/hardhat-ethers/dist/src/signe
 
 import type { AirbroFactory } from "../../src/types/AirbroFactory";
 import type { TestNftCollection } from "../../src/types/TestNftCollection";
+import type { TestToken } from "../../src/types/TestToken";
 import { Signers } from "../types";
 import { shouldBehaveLikeFactory } from "./Factory.behavior";
 
@@ -19,8 +20,10 @@ describe("Unit tests", function () {
     beforeEach(async function () {
       const factoryArtifact: Artifact = await artifacts.readArtifact("AirbroFactory");
       const testNftArtifact: Artifact = await artifacts.readArtifact("TestNftCollection");
-      this.AirbroFactory = <AirbroFactory>await waffle.deployContract(this.signers.admin, factoryArtifact, []);
+      const testTokenArtifact: Artifact = await artifacts.readArtifact("TestToken");
+      this.airbroFactory = <AirbroFactory>await waffle.deployContract(this.signers.admin, factoryArtifact, []);
       this.testNftCollection = <TestNftCollection>await waffle.deployContract(this.signers.admin, testNftArtifact, []);
+      this.testToken = <TestToken>await waffle.deployContract(this.signers.admin, testTokenArtifact, []);
     });
 
     shouldBehaveLikeFactory();

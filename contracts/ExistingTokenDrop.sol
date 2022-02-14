@@ -18,6 +18,7 @@ contract ExistingTokenDrop is AirdropInfo {
     address internal airdropFundingHolder;
 
     event Claimed(uint256 indexed tokenId, address indexed claimer);
+    event AirdropFunded();
 
     error NotOwner();
     error AirdropStillInProgress();
@@ -41,13 +42,15 @@ contract ExistingTokenDrop is AirdropInfo {
     }
 
     /// @notice Allows the airdrop creator to provide funds for airdrop reward
+    // This function is called by Factory contract so we are using tx.origin instead of msg.sender
     function fundAirdrop() external {
-        if (rewardToken.balanceOf(msg.sender) < totalAirdropAmount) revert InsufficientAmount();
+        if (rewardToken.balanceOf(tx.origin) < totalAirdropAmount) revert InsufficientAmount();
         if (airdropFunded) revert AlreadyFunded();
-        rewardToken.transferFrom(msg.sender, address(this), totalAirdropAmount);
+        rewardToken.transferFrom(tx.origin, address(this), totalAirdropAmount);
         airdropFunded = true;
         airdropFundBlockTimestamp = block.timestamp;
-        airdropFundingHolder = msg.sender;
+        airdropFundingHolder = tx.origin;
+        emit AirdropFunded();
     }
 
     /// @notice Allows the airdrop creator to withdraw back his funds after the airdrop has finished
