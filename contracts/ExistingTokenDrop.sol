@@ -42,14 +42,13 @@ contract ExistingTokenDrop is AirdropInfo {
     }
 
     /// @notice Allows the airdrop creator to provide funds for airdrop reward
-    // This function is called by Factory contract so we are using tx.origin instead of msg.sender
     function fundAirdrop() external {
-        if (rewardToken.balanceOf(tx.origin) < totalAirdropAmount) revert InsufficientAmount();
+        if (rewardToken.balanceOf(msg.sender) < totalAirdropAmount) revert InsufficientAmount();
         if (airdropFunded) revert AlreadyFunded();
-        rewardToken.transferFrom(tx.origin, address(this), totalAirdropAmount);
+        rewardToken.transferFrom(msg.sender, address(this), totalAirdropAmount);
         airdropFunded = true;
         airdropFundBlockTimestamp = block.timestamp;
-        airdropFundingHolder = tx.origin;
+        airdropFundingHolder = msg.sender;
         emit AirdropFunded();
     }
 
@@ -90,7 +89,7 @@ contract ExistingTokenDrop is AirdropInfo {
 
     //@notice Get the type of airdrop, it's either ERC20, ERC721, ERC1155
     function getAirdropType() external override view returns (string memory){
-        return "ERC20";
+        return Type.ERC20;
     }
 
     //@notice Checks if the user is eligible for this airdrop

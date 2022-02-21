@@ -3,6 +3,11 @@ pragma solidity ^0.8.11;
 
 interface AirdropInfo {
 
+    enum Type {
+        ERC20,
+        ERC721,
+        ERC1155
+    }
 
     //@notice Get the type of airdrop, it's either ERC20, ERC721, ERC1155
     function getAirdropType() external view returns (string memory);

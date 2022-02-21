@@ -1,6 +1,5 @@
 import { expect } from "chai";
 import { ethers } from "hardhat";
-import { ExistingTokenDrop__factory } from "../../src/types";
 
 
 export function shouldBehaveLikeFactory(): void {
@@ -13,15 +12,6 @@ export function shouldBehaveLikeFactory(): void {
       100, // tokensPerClaim
     )).to.emit(this.airbroFactory, "NewAirdrop");
   });
-
-  // it("should throw insufficient amount for existing token airdrop contract", async function() {
-  //   await expect(await this.airbroFactory.connect(this.signers.admin).dropExistingTokensToNftHolders(
-  //     this.testNftCollection.address, // rewardedNftCollection,
-  //     100, // tokensPerClaim
-  //     this.testToken.address, //existing token address
-  //     1000, // totalAirdropAmount
-  //   )).to.be.revertedWith("InsufficientAmount()");
-  // });
 
   it("should fund existing token airdrop contract", async function() {
     const totalAirdropAmount = ethers.utils.parseEther("1000");

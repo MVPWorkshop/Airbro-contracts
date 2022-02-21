@@ -29,7 +29,7 @@ contract NFTDrop is ERC721, AirdropInfo {
         string memory name,
         string memory symbol,
         string memory _baseURI
-    ) payable ERC721(name, symbol) {
+    ) ERC721(name, symbol) {
         baseURI = _baseURI;
         rewardedNft = IERC721(_rewardedNft);
         maxSupply = _maxSupply;
@@ -68,7 +68,7 @@ contract NFTDrop is ERC721, AirdropInfo {
 
     //@notice Get the type of airdrop, it's either ERC20, ERC721, ERC1155
     function getAirdropType() external view returns (string memory){
-        return "ERC721";
+        return Type.ERC721;
     }
 
     //@notice Checks if the user is eligible for this airdrop
