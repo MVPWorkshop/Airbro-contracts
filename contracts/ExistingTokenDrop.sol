@@ -89,7 +89,7 @@ contract ExistingTokenDrop is AirdropInfo {
 
     //@notice Get the type of airdrop, it's either ERC20, ERC721, ERC1155
     function getAirdropType() external override view returns (string memory){
-        return Type.ERC20;
+        return "ERC20";
     }
 
     //@notice Checks if the user is eligible for this airdrop

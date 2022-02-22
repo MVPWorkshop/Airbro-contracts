@@ -1,16 +1,18 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.11;
 
-import "@rari-capital/solmate/src/tokens/ERC721.sol";
+
+import "@rari-capital/solmate/src/tokens/ERC1155.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "./AirdropInfo.sol";
 
-contract NFTDrop is ERC721, AirdropInfo {
+contract ItemNFTDrop is ERC1155, AirdropInfo {
 
     uint256 public immutable maxSupply;
     uint256 public totalSupply;
 
     string public baseURI;
+    bytes data;
 
     IERC721 public immutable rewardedNft;
 
@@ -26,13 +28,13 @@ contract NFTDrop is ERC721, AirdropInfo {
     constructor(
         address _rewardedNft,
         uint256 _maxSupply,
-        string memory name,
-        string memory symbol,
-        string memory _baseURI
-    ) ERC721(name, symbol) {
+        string memory _baseURI,
+        bytes memory _data
+    ) ERC1155() {
         baseURI = _baseURI;
         rewardedNft = IERC721(_rewardedNft);
         maxSupply = _maxSupply;
+        data = _data;
     }
 
     function claim(uint256 tokenId) external {
@@ -43,32 +45,16 @@ contract NFTDrop is ERC721, AirdropInfo {
         hasClaimed[tokenId] = true;
         emit Claimed(tokenId, msg.sender);
 
-        _mint(msg.sender, totalSupply++);
+        _mint(msg.sender, totalSupply++, 1, data);
     }
 
-    function tokenURI(uint256 id) public view override returns (string memory) {
-        if (ownerOf[id] == address(0)) revert DoesNotExist();
-
+    function uri(uint256 id) public view override returns (string memory) {
         return string(abi.encodePacked(baseURI, id));
-    }
-
-    function supportsInterface(bytes4 interfaceId)
-    public
-    pure
-    override(ERC721)
-    returns (bool)
-    {
-        return
-        interfaceId == 0x7f5828d0 || // ERC165 Interface ID for ERC173
-        interfaceId == 0x80ac58cd || // ERC165 Interface ID for ERC721
-        interfaceId == 0x5b5e139f || // ERC165 Interface ID for ERC165
-        interfaceId == 0x01ffc9a7;
-        // ERC165 Interface ID for ERC721Metadata
     }
 
     //@notice Get the type of airdrop, it's either ERC20, ERC721, ERC1155
     function getAirdropType() external view returns (string memory){
-        return "ERC721";
+        return "ERC1155";
     }
 
     //@notice Checks if the user is eligible for this airdrop
