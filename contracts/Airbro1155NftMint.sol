@@ -4,7 +4,7 @@ pragma solidity ^0.8.11;
 import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract ItemNftMint is ERC1155, Ownable {
+contract AirBro1155NftMint is ERC1155, Ownable {
 
     constructor() ERC1155("") {}
 

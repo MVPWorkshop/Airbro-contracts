@@ -905,6 +905,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@metamask/eth-sig-util@npm:^4.0.0":
+  version: 4.0.0
+  resolution: "@metamask/eth-sig-util@npm:4.0.0"
+  dependencies:
+    ethereumjs-abi: ^0.6.8
+    ethereumjs-util: ^6.2.1
+    ethjs-util: ^0.1.6
+    tweetnacl: ^1.0.3
+    tweetnacl-util: ^0.15.1
+  checksum: 983fc1d4ba2d23d8d87024013edc38660456be978641087fa4c9ca4a1c8ea0cb33e5b6845153e3f8d76adf297d38479fcfd16ed871916fee8814cca05b85b458
+  languageName: node
+  linkType: hard
+
 "@nftizer/nft-token-airdrop@workspace:.":
   version: 0.0.0-use.local
   resolution: "@nftizer/nft-token-airdrop@workspace:."
@@ -920,7 +933,7 @@ __metadata:
     "@nomiclabs/hardhat-ethers": ^2.0.4
     "@nomiclabs/hardhat-etherscan": ^3.0.0
     "@nomiclabs/hardhat-waffle": ^2.0.2
-    "@openzeppelin/contracts": ^4.4.2
+    "@openzeppelin/contracts": ^4.5.0
     "@rari-capital/solmate": ^6.2.0
     "@typechain/ethers-v5": ^9.0.0
     "@typechain/hardhat": ^4.0.0
@@ -940,8 +953,8 @@ __metadata:
     ethereum-waffle: ^3.4.0
     ethers: ^5.5.4
     fs-extra: ^10.0.0
-    hardhat: ^2.8.3
-    hardhat-gas-reporter: ^1.0.7
+    hardhat: ^2.9.1
+    hardhat-gas-reporter: ^1.0.8
     lint-staged: ^12.3.1
     lodash: ^4.17.21
     mocha: ^9.2.0
@@ -950,7 +963,7 @@ __metadata:
     prettier-plugin-solidity: ^1.0.0-beta.19
     shelljs: ^0.8.5
     shx: ^0.3.4
-    solhint: ^3.3.6
+    solhint: ^3.3.7
     solhint-plugin-prettier: ^0.0.5
     solidity-coverage: ^0.7.18
     ts-generator: ^0.1.1
@@ -1049,10 +1062,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@openzeppelin/contracts@npm:^4.4.2":
-  version: 4.4.2
-  resolution: "@openzeppelin/contracts@npm:4.4.2"
-  checksum: 5c6be7bfe757c6a43eb5b24aa9c61a79deaed9de4bc5f59356b35f5519b0fb340f4da8b4df99588bded5e6b6a773fc54961917a1c657063247c1763f9752bd0e
+"@openzeppelin/contracts@npm:^4.5.0":
+  version: 4.5.0
+  resolution: "@openzeppelin/contracts@npm:4.5.0"
+  checksum: 1c9c5dff041905771d2a83ac29c64dbf0b48603de43f74a34fb1358813d7c7bf259efe2f64e2112b410c5cca7a0b41aaedd882368be5f01a6d50a3ee0740f962
   languageName: node
   linkType: hard
 
@@ -1230,6 +1243,15 @@ __metadata:
   dependencies:
     antlr4ts: ^0.5.0-alpha.4
   checksum: fe92710e53b2bb9e8423129ca2984c08723f575eda2e4f83a8e883a741436e5ca0bd36826c10ec553bd72d6fe6abd5178ee291baafdf0bb71eb56ca91e383804
+  languageName: node
+  linkType: hard
+
+"@solidity-parser/parser@npm:^0.14.1":
+  version: 0.14.1
+  resolution: "@solidity-parser/parser@npm:0.14.1"
+  dependencies:
+    antlr4ts: ^0.5.0-alpha.4
+  checksum: 616df6c31007710f2a99f8022fa5917968bbe83293cdc0154ba378aad405c0fc0b7af45cf2c99d159ff0b24b67c7a9bc01f80178d086c705682f2f8c7f771137
   languageName: node
   linkType: hard
 
@@ -5585,18 +5607,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eth-sig-util@npm:^2.5.2":
-  version: 2.5.4
-  resolution: "eth-sig-util@npm:2.5.4"
-  dependencies:
-    ethereumjs-abi: 0.6.8
-    ethereumjs-util: ^5.1.1
-    tweetnacl: ^1.0.3
-    tweetnacl-util: ^0.15.0
-  checksum: 727ff2ec7859d9609fa3b43d1652eb40740f075e0196cacd67d5bcf50f8fb17fdbf6f384ad457785684d86a0e8155375aece42ad8393487eb8f665adb640b340
-  languageName: node
-  linkType: hard
-
 "eth-tx-summary@npm:^3.1.2":
   version: 3.2.4
   resolution: "eth-tx-summary@npm:3.2.4"
@@ -5833,7 +5843,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ethereumjs-util@npm:6.2.1, ethereumjs-util@npm:^6.0.0, ethereumjs-util@npm:^6.1.0, ethereumjs-util@npm:^6.2.0":
+"ethereumjs-util@npm:6.2.1, ethereumjs-util@npm:^6.0.0, ethereumjs-util@npm:^6.1.0, ethereumjs-util@npm:^6.2.0, ethereumjs-util@npm:^6.2.1":
   version: 6.2.1
   resolution: "ethereumjs-util@npm:6.2.1"
   dependencies:
@@ -6013,7 +6023,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ethjs-util@npm:0.1.6, ethjs-util@npm:^0.1.3":
+"ethjs-util@npm:0.1.6, ethjs-util@npm:^0.1.3, ethjs-util@npm:^0.1.6":
   version: 0.1.6
   resolution: "ethjs-util@npm:0.1.6"
   dependencies:
@@ -7300,22 +7310,22 @@ __metadata:
   languageName: node
   linkType: hard
 
-"hardhat-gas-reporter@npm:^1.0.7":
-  version: 1.0.7
-  resolution: "hardhat-gas-reporter@npm:1.0.7"
+"hardhat-gas-reporter@npm:^1.0.8":
+  version: 1.0.8
+  resolution: "hardhat-gas-reporter@npm:1.0.8"
   dependencies:
     array-uniq: 1.0.3
     eth-gas-reporter: ^0.2.24
     sha1: ^1.1.1
   peerDependencies:
     hardhat: ^2.0.2
-  checksum: 0e077e6ed587a6d5a360a121964957fe92c995741b8bfac87d34d127f50d76efdb5875f17a6376189ec07684e3bc72c7a6a27f5995c02e59b325caff80ec5592
+  checksum: bf18aacd08e0bdef81b180f3c97f76fcab885de3e92ed2dc014712e671c83ee7f77755c0e6c0f923a95f8372714cfcb7cdaa019afc42984c159603f8a8d724cf
   languageName: node
   linkType: hard
 
-"hardhat@npm:^2.8.3":
-  version: 2.8.3
-  resolution: "hardhat@npm:2.8.3"
+"hardhat@npm:^2.9.1":
+  version: 2.9.1
+  resolution: "hardhat@npm:2.9.1"
   dependencies:
     "@ethereumjs/block": ^3.6.0
     "@ethereumjs/blockchain": ^5.5.0
@@ -7323,12 +7333,14 @@ __metadata:
     "@ethereumjs/tx": ^3.4.0
     "@ethereumjs/vm": ^5.6.0
     "@ethersproject/abi": ^5.1.2
+    "@metamask/eth-sig-util": ^4.0.0
     "@sentry/node": ^5.18.1
-    "@solidity-parser/parser": ^0.14.0
+    "@solidity-parser/parser": ^0.14.1
     "@types/bn.js": ^5.1.0
     "@types/lru-cache": ^5.1.0
     abort-controller: ^3.0.0
     adm-zip: ^0.4.16
+    aggregate-error: ^3.0.0
     ansi-escapes: ^4.3.0
     chalk: ^2.4.2
     chokidar: ^3.4.0
@@ -7336,7 +7348,6 @@ __metadata:
     debug: ^4.1.1
     enquirer: ^2.3.0
     env-paths: ^2.2.0
-    eth-sig-util: ^2.5.2
     ethereum-cryptography: ^0.1.2
     ethereumjs-abi: ^0.6.8
     ethereumjs-util: ^7.1.3
@@ -7344,14 +7355,13 @@ __metadata:
     fp-ts: 1.19.3
     fs-extra: ^7.0.1
     glob: ^7.1.3
-    https-proxy-agent: ^5.0.0
     immutable: ^4.0.0-rc.12
     io-ts: 1.10.4
     lodash: ^4.17.11
     merkle-patricia-tree: ^4.2.2
     mnemonist: ^0.38.0
-    mocha: ^7.2.0
-    node-fetch: ^2.6.0
+    mocha: ^9.2.0
+    p-map: ^4.0.0
     qs: ^6.7.0
     raw-body: ^2.4.1
     resolve: 1.17.0
@@ -7362,11 +7372,12 @@ __metadata:
     stacktrace-parser: ^0.1.10
     true-case-path: ^2.2.1
     tsort: 0.0.1
+    undici: ^4.14.1
     uuid: ^8.3.2
     ws: ^7.4.6
   bin:
     hardhat: internal/cli/cli.js
-  checksum: 760faf9c91d5c6cb5035bf9e62d14fb52cae6a995b86195457cf1d41a1fb73c4ec1ef9c7e8e033e335495d65265a072ddef4a4b56b1cbaa94c18fc87edf91e16
+  checksum: 1f622e9f0be506a1e201502c04cfe6a98339e437a067b435ec22f69c90828ab1a926ac23b920931cd3143a71a668eb7ebd471347b97e7f80d7b88021fff533c4
   languageName: node
   linkType: hard
 
@@ -9937,7 +9948,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mocha@npm:^7.1.1, mocha@npm:^7.2.0":
+"mocha@npm:^7.1.1":
   version: 7.2.0
   resolution: "mocha@npm:7.2.0"
   dependencies:
@@ -12697,11 +12708,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"solhint@npm:^3.3.6":
-  version: 3.3.6
-  resolution: "solhint@npm:3.3.6"
+"solhint@npm:^3.3.7":
+  version: 3.3.7
+  resolution: "solhint@npm:3.3.7"
   dependencies:
-    "@solidity-parser/parser": ^0.13.2
+    "@solidity-parser/parser": ^0.14.1
     ajv: ^6.6.1
     antlr4: 4.7.1
     ast-parents: 0.0.1
@@ -12721,7 +12732,7 @@ __metadata:
       optional: true
   bin:
     solhint: solhint.js
-  checksum: 0ea5c96540adbc33e3c0305dacf270bcdfdbfb6f64652eb3584de2770b98dc1383bd65faf8506fbee95d773e359fe7f3b0a15c492a0596fcc14de0d609a0a335
+  checksum: 140a4660b691ea78aa7de19aca2123991fb4f9bc7be574e1573ae428b356e12919805df56c2892ddbdd031a4a4db477a81425ad85aac6672f3fb73f4887c2abb
   languageName: node
   linkType: hard
 
@@ -13758,7 +13769,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tweetnacl-util@npm:^0.15.0":
+"tweetnacl-util@npm:^0.15.0, tweetnacl-util@npm:^0.15.1":
   version: 0.15.1
   resolution: "tweetnacl-util@npm:0.15.1"
   checksum: ae6aa8a52cdd21a95103a4cc10657d6a2040b36c7a6da7b9d3ab811c6750a2d5db77e8c36969e75fdee11f511aa2b91c552496c6e8e989b6e490e54aca2864fc
@@ -14021,6 +14032,13 @@ __metadata:
   version: 1.9.1
   resolution: "underscore@npm:1.9.1"
   checksum: bee6f587661a6a9ca2f77e611896141e0287af51d8ca6034b11d0d4163ddbdd181a9720078ddbe94d265b7694f4880bc7f4c2ad260cfb8985ee2f9adcf13df03
+  languageName: node
+  linkType: hard
+
+"undici@npm:^4.14.1":
+  version: 4.15.0
+  resolution: "undici@npm:4.15.0"
+  checksum: be1f7bc0cf17dacc0b2619c694f2d8c3d17d2ca23264469a7032425e5f5c2915cc105f6efa2df26da368bb6921b76c3f0207f727b2fdc11e8e35c6c16839f848
   languageName: node
   linkType: hard
 
