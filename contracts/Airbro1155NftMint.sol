@@ -13,7 +13,6 @@ contract AirBro1155NftMint is ERC1155, Ownable {
     uint256 private _currentTokenID = 0;
 
     string public name = "Airbro";
-    string public description = "Airbro.xyz minting contract";
 
     // token reference maps
     mapping(string => uint256) public idMap;
