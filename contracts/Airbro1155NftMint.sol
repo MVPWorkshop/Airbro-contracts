@@ -12,6 +12,9 @@ contract AirBro1155NftMint is ERC1155, Ownable {
 
     uint256 private _currentTokenID = 0;
 
+    string public name = "Airbro";
+    string public description = "Airbro.xyz minting contract";
+
     // token reference maps
     mapping(string => uint256) public idMap;
     mapping(uint256 => string) public lookupMap;
@@ -31,13 +34,13 @@ contract AirBro1155NftMint is ERC1155, Ownable {
         return string(abi.encodePacked(super.uri(id), lookupMap[id]));
     }
 
-    function mint(string memory cid, uint256 amount, bytes memory data) public {
+    function mint(string memory cid, uint256 amount) public {
         _currentTokenID = _currentTokenID + 1;
         // add to reference maps
         idMap[cid] = _currentTokenID;
         lookupMap[_currentTokenID] = cid;
 
-        _mint(msg.sender, _currentTokenID, amount, data);
+        _mint(msg.sender, _currentTokenID, amount, bytes(cid));
     }
 
 }
