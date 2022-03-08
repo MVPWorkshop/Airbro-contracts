@@ -4,20 +4,40 @@ pragma solidity ^0.8.11;
 import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
+/**
+ * @title An ERC1155 contract for minting tokens.
+ * @notice This contract is intended to reference it's metadata on IPFS.
+ */
 contract AirBro1155NftMint is ERC1155, Ownable {
 
-    constructor() ERC1155("") {}
+    uint256 private _currentTokenID = 0;
+
+    // token reference maps
+    mapping(string => uint256) public idMap;
+    mapping(uint256 => string) public lookupMap;
+
+    constructor() ERC1155("https://ipfs.moralis.io:2053/ipfs/") {}
 
     function setURI(string memory newUri) public onlyOwner {
         _setURI(newUri);
     }
 
-    function mint(address account, uint256 id, uint256 amount, bytes memory data) public {
-        _mint(account, id, amount, data);
+    /**
+     * @notice Override ERC1155 base uri function to use IPFS CIDs instead of token ids
+     * @param id ID of token to get URI for
+     * @return Correctly formatted IPFS URI for token
+     */
+    function uri(uint256 id) public view virtual override returns (string memory){
+        return string(abi.encodePacked(super.uri(id), lookupMap[id]));
     }
 
-    function mintBatch(address to, uint256[] memory ids, uint256[] memory amounts, bytes memory data) public {
-        _mintBatch(to, ids, amounts, data);
+    function mint(string memory cid, uint256 amount, bytes memory data) public {
+        _currentTokenID = _currentTokenID + 1;
+        // add to reference maps
+        idMap[cid] = _currentTokenID;
+        lookupMap[_currentTokenID] = cid;
+
+        _mint(msg.sender, _currentTokenID, amount, data);
     }
 
 }
