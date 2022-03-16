@@ -108,7 +108,6 @@ contract Existing1155NftDrop is AirdropInfo, IERC1155Receiver {
     function isEligibleForReward(uint256 tokenId) external view returns (bool) {
         if (hasClaimed[tokenId]) revert AlreadyRedeemed();
         if (rewardToken.balanceOf(address(this), rewardTokenId) < tokensPerClaim) revert InsufficientLiquidity();
-        if (rewardedNft.ownerOf(tokenId) != msg.sender) revert NotOwner();
         return true;
     }
 
