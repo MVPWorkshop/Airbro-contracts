@@ -31,7 +31,9 @@ export function shouldBehaveLikeFactory(): void {
 
     await this.testToken.connect(this.signers.admin).approve(tokenDropContract.address, totalAirdropAmount);
 
-    await expect(tokenDropContract.fundAirdrop()).to.emit(tokenDropContract,"AirdropFunded");
+    await expect(await this.airbroFactory.connect(this.signers.admin).totalAirdropsCount()).to.equal(1);
+
+    await expect(tokenDropContract.fundAirdrop()).to.emit(tokenDropContract, "AirdropFunded");
 
   });
 
