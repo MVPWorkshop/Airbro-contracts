@@ -13,7 +13,7 @@ export function shouldBehaveLikeFactory(): void {
     )).to.emit(this.airbroFactory, "NewAirdrop");
   });
 
-  it("should fund existing token airdrop contract", async function() {
+  it("should fund and claim existing token airdrop", async function() {
     const totalAirdropAmount = ethers.utils.parseEther("1000");
 
     await this.testToken.connect(this.signers.admin).mint(this.signers.admin.address, totalAirdropAmount);
@@ -34,6 +34,10 @@ export function shouldBehaveLikeFactory(): void {
     await expect(await this.airbroFactory.connect(this.signers.admin).totalAirdropsCount()).to.equal(1);
 
     await expect(tokenDropContract.fundAirdrop()).to.emit(tokenDropContract, "AirdropFunded");
+
+    await this.testNftCollection.connect(this.signers.admin).safeMint(this.signers.admin.address);
+
+    await expect(tokenDropContract.claim(0)).to.emit(tokenDropContract, "Claimed");
 
   });
 
