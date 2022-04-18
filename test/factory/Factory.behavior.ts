@@ -39,6 +39,15 @@ export function shouldBehaveLikeFactory(): void {
 
     await expect(tokenDropContract.claim(0)).to.emit(tokenDropContract, "Claimed");
 
+    await expect(tokenDropContract.claim(0)).to.be.revertedWith("AlreadyRedeemed");
+
+    await this.testNftCollection.connect(this.signers.admin).safeMint(this.signers.admin.address);
+
+    await expect(tokenDropContract.batchClaim([1])).to.emit(tokenDropContract, "Claimed");
+
+    expect(await tokenDropContract.hasClaimed(1)).to.be.equal(true);
+    expect(await tokenDropContract.hasClaimed(2)).to.be.equal(false);
+
   });
 
 }
