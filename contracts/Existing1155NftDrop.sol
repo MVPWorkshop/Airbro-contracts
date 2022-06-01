@@ -100,7 +100,7 @@ contract Existing1155NftDrop is AirdropInfo, IERC1155Receiver {
     }
 
     //@notice Get the type of airdrop, it's either ERC20, ERC721, ERC1155
-    function getAirdropType() external view override returns (string memory) {
+    function getAirdropType() external pure override returns (string memory) {
         return "ERC1155";
     }
 

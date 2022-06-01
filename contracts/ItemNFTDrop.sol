@@ -53,7 +53,7 @@ contract ItemNFTDrop is ERC1155, AirdropInfo {
     }
 
     //@notice Get the type of airdrop, it's either ERC20, ERC721, ERC1155
-    function getAirdropType() external view returns (string memory){
+    function getAirdropType() external pure returns (string memory){
         return "ERC1155";
     }
 

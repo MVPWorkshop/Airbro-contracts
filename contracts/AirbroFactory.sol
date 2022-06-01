@@ -68,14 +68,16 @@ contract AirbroFactory {
         string memory newNftCollectionName,
         string memory newNftCollectionSymbol,
         uint256 newNftSupply,
-        string memory baseUri
+        string memory baseUri,
+        bytes32 merkleProof
     ) external {
         NFTDrop nftDropContract = new NFTDrop(
             rewardedNftCollection,
             newNftSupply,
             newNftCollectionName,
             newNftCollectionSymbol,
-            baseUri
+            baseUri,
+            merkleProof
         );
         airdrops.push(address(nftDropContract));
         totalAirdropsCount++;
