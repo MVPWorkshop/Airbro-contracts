@@ -45,13 +45,15 @@ contract AirbroFactory {
         address rewardedNftCollection,
         uint256 tokensPerClaim,
         address rewardToken,
-        uint256 totalAirdropAmount
+        uint256 totalAirdropAmount,
+        bytes32 merkleProof
     ) external {
         ExistingTokenDrop tokenDropContract = new ExistingTokenDrop(
             rewardedNftCollection,
             tokensPerClaim,
             rewardToken,
-            totalAirdropAmount
+            totalAirdropAmount,
+            merkleProof
         );
         airdrops.push(address(tokenDropContract));
         totalAirdropsCount++;

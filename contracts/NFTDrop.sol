@@ -79,7 +79,7 @@ contract NFTDrop is ERC721, AirdropInfo {
     }
 
     //@notice Get the type of airdrop, it's either ERC20, ERC721, ERC1155
-    function getAirdropType() external view returns (string memory) {
+    function getAirdropType() external pure returns (string memory) {
         return "ERC721";
     }
 
