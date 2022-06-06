@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.11;
+pragma solidity ^0.8.14;
 
 import "@rari-capital/solmate/src/tokens/ERC20.sol";
 import "@rari-capital/solmate/src/tokens/ERC721.sol";
@@ -7,6 +7,7 @@ import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "@openzeppelin/contracts/token/ERC1155/IERC1155.sol";
 import "@openzeppelin/contracts/token/ERC1155/IERC1155Receiver.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
 import "./AirdropInfo.sol";
 
 contract Existing1155NftDrop is AirdropInfo, IERC1155Receiver {
@@ -29,21 +30,28 @@ contract Existing1155NftDrop is AirdropInfo, IERC1155Receiver {
     error AlreadyFunded();
     error InsufficientAmount();
     error InsufficientLiquidity();
+    error InvalidProof();
 
     mapping(uint256 => bool) public hasClaimed;
+
+    // The root hash of the Merle Tree we previously generated in our JavaScript code. Remember
+    // to provide this as a bytes32 type and not string. Ox should be prepended.
+    bytes32 public immutable merkleRoot;
 
     constructor(
         address _rewardedNft,
         address _reward1155Nft,
         uint256 _tokensPerClaim,
         uint256 _tokenId,
-        uint256 _totalAirdropAmount
+        uint256 _totalAirdropAmount,
+        bytes32 _merkleRoot
     ) {
         rewardedNft = IERC721(_rewardedNft);
         tokensPerClaim = _tokensPerClaim;
         totalAirdropAmount = _totalAirdropAmount;
         rewardToken = IERC1155(_reward1155Nft);
         rewardTokenId = _tokenId;
+        merkleRoot = _merkleRoot;
     }
 
     /// @notice Allows the airdrop creator to provide funds for airdrop reward
@@ -71,10 +79,17 @@ contract Existing1155NftDrop is AirdropInfo, IERC1155Receiver {
     }
 
     /// @notice Allows the NFT holder to claim his ERC20 airdrop
-    function claim(uint256 tokenId) external {
+    function claim(uint256 tokenId, bytes32[] calldata _merkleProof) external {
         if (hasClaimed[tokenId]) revert AlreadyRedeemed();
         if (rewardToken.balanceOf(address(this), rewardTokenId) < tokensPerClaim) revert InsufficientLiquidity();
         if (rewardedNft.ownerOf(tokenId) != msg.sender) revert NotOwner();
+
+        //check if merkle root hash exists
+        if (merkleRoot != 0) {
+            // Verify the provided _merkleProof, given to us through the API call on our website.
+            bytes32 leaf = keccak256(abi.encodePacked(msg.sender));
+            if (!MerkleProof.verify(_merkleProof, merkleRoot, leaf)) revert InvalidProof();
+        }
 
         hasClaimed[tokenId] = true;
         emit Claimed(tokenId, msg.sender);
@@ -82,9 +97,16 @@ contract Existing1155NftDrop is AirdropInfo, IERC1155Receiver {
         rewardToken.safeTransferFrom(address(this), msg.sender, rewardTokenId, tokensPerClaim, "");
     }
 
-    function batchClaim(uint256[] memory tokenIds) external {
+    function batchClaim(uint256[] memory tokenIds, bytes32[] calldata _merkleProof) external {
         if (rewardToken.balanceOf(address(this), rewardTokenId) < tokensPerClaim * tokenIds.length)
             revert InsufficientLiquidity();
+
+        //check if merkle root hash exists
+        if (merkleRoot != 0) {
+            // Verify the provided _merkleProof, given to us through the API call on our website.
+            bytes32 leaf = keccak256(abi.encodePacked(msg.sender));
+            if (!MerkleProof.verify(_merkleProof, merkleRoot, leaf)) revert InvalidProof();
+        }
 
         for (uint256 index = 0; index < tokenIds.length; index++) {
             uint256 tokenId = tokenIds[index];

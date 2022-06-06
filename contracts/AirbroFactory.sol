@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.11;
+pragma solidity ^0.8.14;
 
 import "./TokenDrop.sol";
 import "./ExistingTokenDrop.sol";
@@ -97,14 +97,16 @@ contract AirbroFactory {
         address reward1155Nft,
         uint256 tokensPerClaim,
         uint256 tokenId,
-        uint256 totalAirdropAmount
+        uint256 totalAirdropAmount,
+        bytes32 merkleProof
     ) external {
         Existing1155NftDrop tokenDropContract = new Existing1155NftDrop(
             rewardedNftCollection,
             reward1155Nft,
             tokensPerClaim,
             tokenId,
-            totalAirdropAmount
+            totalAirdropAmount,
+            merkleProof
         );
         airdrops.push(address(tokenDropContract));
         totalAirdropsCount++;

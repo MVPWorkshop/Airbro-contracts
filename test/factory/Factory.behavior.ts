@@ -32,13 +32,10 @@ export function shouldBehaveLikeFactory(): void {
     await this.testToken.connect(this.signers.admin).approve(tokenDropContract.address, totalAirdropAmount);
 
     await expect(await this.airbroFactory.connect(this.signers.admin).totalAirdropsCount()).to.equal(1);
-
     await expect(tokenDropContract.fundAirdrop()).to.emit(tokenDropContract, "AirdropFunded");
-
     await this.testNftCollection.connect(this.signers.admin).safeMint(this.signers.admin.address);
 
     await expect(tokenDropContract.claim(0)).to.emit(tokenDropContract, "Claimed");
-
     await expect(tokenDropContract.claim(0)).to.be.revertedWith("AlreadyRedeemed");
 
     await this.testNftCollection.connect(this.signers.admin).safeMint(this.signers.admin.address);
@@ -50,5 +47,17 @@ export function shouldBehaveLikeFactory(): void {
     expect(await tokenDropContract.hasClaimed(3)).to.be.equal(false);
 
   });
+
+  it("should create contract with merkle proof", async function() {
+
+    await expect(await this.airbroFactory.connect(this.signers.admin).dropNewTokensToNftHolders(
+      this.testNftCollection.address, // rewardedNftCollection,
+      "Reward Token", // newTokenName
+      "TKN", // newTokenSymbol
+      100, // tokensPerClaim
+    )).to.emit(this.airbroFactory, "NewAirdrop");
+
+  });
+
 
 }
