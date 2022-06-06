@@ -3,10 +3,10 @@ pragma solidity ^0.8.14;
 
 import "@rari-capital/solmate/src/tokens/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
-import "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
 import "./AirdropInfo.sol";
+import "./AirdropMerkleProof.sol";
 
-contract NFTDrop is ERC721, AirdropInfo {
+contract NFTDrop is ERC721, AirdropInfo, AirdropMerkleProof {
     uint256 public immutable maxSupply;
     uint256 public totalSupply;
 
@@ -50,12 +50,7 @@ contract NFTDrop is ERC721, AirdropInfo {
 
         if (totalSupply + 1 >= maxSupply) revert NoTokensLeft();
 
-        //check if merkle root hash exists
-        if (merkleRoot != 0) {
-            // Verify the provided _merkleProof, given to us through the API call on our website.
-            bytes32 leaf = keccak256(abi.encodePacked(msg.sender));
-            if (!MerkleProof.verify(_merkleProof, merkleRoot, leaf)) revert InvalidProof();
-        }
+        checkProof(_merkleProof, merkleRoot);
 
         hasClaimed[tokenId] = true;
         emit Claimed(tokenId, msg.sender);
@@ -71,10 +66,10 @@ contract NFTDrop is ERC721, AirdropInfo {
 
     function supportsInterface(bytes4 interfaceId) public pure override(ERC721) returns (bool) {
         return
-            interfaceId == 0x7f5828d0 || // ERC165 Interface ID for ERC173
-            interfaceId == 0x80ac58cd || // ERC165 Interface ID for ERC721
-            interfaceId == 0x5b5e139f || // ERC165 Interface ID for ERC165
-            interfaceId == 0x01ffc9a7;
+        interfaceId == 0x7f5828d0 || // ERC165 Interface ID for ERC173
+        interfaceId == 0x80ac58cd || // ERC165 Interface ID for ERC721
+        interfaceId == 0x5b5e139f || // ERC165 Interface ID for ERC165
+        interfaceId == 0x01ffc9a7;
         // ERC165 Interface ID for ERC721Metadata
     }
 

@@ -4,10 +4,10 @@ pragma solidity ^0.8.14;
 
 import "@rari-capital/solmate/src/tokens/ERC1155.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
-import "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
 import "./AirdropInfo.sol";
+import "./AirdropMerkleProof.sol";
 
-contract ItemNFTDrop is ERC1155, AirdropInfo {
+contract ItemNFTDrop is ERC1155, AirdropInfo, AirdropMerkleProof {
 
     uint256 public immutable maxSupply;
     uint256 public totalSupply;
@@ -50,12 +50,7 @@ contract ItemNFTDrop is ERC1155, AirdropInfo {
         if (rewardedNft.ownerOf(tokenId) != msg.sender) revert NotOwner();
         if (totalSupply + 1 >= maxSupply) revert NoTokensLeft();
 
-        //check if merkle root hash exists
-        if (merkleRoot != 0) {
-            // Verify the provided _merkleProof, given to us through the API call on our website.
-            bytes32 leaf = keccak256(abi.encodePacked(msg.sender));
-            if (!MerkleProof.verify(_merkleProof, merkleRoot, leaf)) revert InvalidProof();
-        }
+        checkProof(_merkleProof, merkleRoot);
 
         hasClaimed[tokenId] = true;
         emit Claimed(tokenId, msg.sender);

@@ -1,16 +1,14 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.14;
 
-import "@rari-capital/solmate/src/tokens/ERC20.sol";
-import "@rari-capital/solmate/src/tokens/ERC721.sol";
+
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "@openzeppelin/contracts/token/ERC1155/IERC1155.sol";
 import "@openzeppelin/contracts/token/ERC1155/IERC1155Receiver.sol";
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
+import "./AirdropMerkleProof.sol";
 import "./AirdropInfo.sol";
 
-contract Existing1155NftDrop is AirdropInfo, IERC1155Receiver {
+contract Existing1155NftDrop is AirdropInfo, AirdropMerkleProof, IERC1155Receiver {
     IERC721 public immutable rewardedNft;
     IERC1155 public immutable rewardToken;
     uint256 public immutable rewardTokenId;
@@ -30,7 +28,6 @@ contract Existing1155NftDrop is AirdropInfo, IERC1155Receiver {
     error AlreadyFunded();
     error InsufficientAmount();
     error InsufficientLiquidity();
-    error InvalidProof();
 
     mapping(uint256 => bool) public hasClaimed;
 
@@ -84,12 +81,7 @@ contract Existing1155NftDrop is AirdropInfo, IERC1155Receiver {
         if (rewardToken.balanceOf(address(this), rewardTokenId) < tokensPerClaim) revert InsufficientLiquidity();
         if (rewardedNft.ownerOf(tokenId) != msg.sender) revert NotOwner();
 
-        //check if merkle root hash exists
-        if (merkleRoot != 0) {
-            // Verify the provided _merkleProof, given to us through the API call on our website.
-            bytes32 leaf = keccak256(abi.encodePacked(msg.sender));
-            if (!MerkleProof.verify(_merkleProof, merkleRoot, leaf)) revert InvalidProof();
-        }
+        checkProof(_merkleProof, merkleRoot);
 
         hasClaimed[tokenId] = true;
         emit Claimed(tokenId, msg.sender);
@@ -101,12 +93,7 @@ contract Existing1155NftDrop is AirdropInfo, IERC1155Receiver {
         if (rewardToken.balanceOf(address(this), rewardTokenId) < tokensPerClaim * tokenIds.length)
             revert InsufficientLiquidity();
 
-        //check if merkle root hash exists
-        if (merkleRoot != 0) {
-            // Verify the provided _merkleProof, given to us through the API call on our website.
-            bytes32 leaf = keccak256(abi.encodePacked(msg.sender));
-            if (!MerkleProof.verify(_merkleProof, merkleRoot, leaf)) revert InvalidProof();
-        }
+        checkProof(_merkleProof, merkleRoot);
 
         for (uint256 index = 0; index < tokenIds.length; index++) {
             uint256 tokenId = tokenIds[index];

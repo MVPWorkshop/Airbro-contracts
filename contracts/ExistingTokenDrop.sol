@@ -1,14 +1,12 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.14;
 
-import "@rari-capital/solmate/src/tokens/ERC20.sol";
-import "@rari-capital/solmate/src/tokens/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
 import "./AirdropInfo.sol";
+import "./AirdropMerkleProof.sol";
 
-contract ExistingTokenDrop is AirdropInfo {
+contract ExistingTokenDrop is AirdropInfo, AirdropMerkleProof {
     IERC721 public immutable rewardedNft;
     IERC20 public immutable rewardToken;
     uint256 public immutable tokensPerClaim;
@@ -73,12 +71,7 @@ contract ExistingTokenDrop is AirdropInfo {
         if (rewardToken.balanceOf(address(this)) < tokensPerClaim) revert InsufficientLiquidity();
         if (rewardedNft.ownerOf(tokenId) != msg.sender) revert NotOwner();
 
-        //check if merkle root hash exists
-        if (merkleRoot != 0) {
-            // Verify the provided _merkleProof, given to us through the API call on our website.
-            bytes32 leaf = keccak256(abi.encodePacked(msg.sender));
-            if (!MerkleProof.verify(_merkleProof, merkleRoot, leaf)) revert InvalidProof();
-        }
+        checkProof(_merkleProof, merkleRoot);
 
         hasClaimed[tokenId] = true;
         emit Claimed(tokenId, msg.sender);
@@ -89,12 +82,7 @@ contract ExistingTokenDrop is AirdropInfo {
     function batchClaim(uint256[] memory tokenIds, bytes32[] calldata _merkleProof) external {
         if (rewardToken.balanceOf(address(this)) < tokensPerClaim * tokenIds.length) revert InsufficientLiquidity();
 
-        //check if merkle root hash exists
-        if (merkleRoot != 0) {
-            // Verify the provided _merkleProof, given to us through the API call on our website.
-            bytes32 leaf = keccak256(abi.encodePacked(msg.sender));
-            if (!MerkleProof.verify(_merkleProof, merkleRoot, leaf)) revert InvalidProof();
-        }
+        checkProof(_merkleProof, merkleRoot);
 
         for (uint256 index = 0; index < tokenIds.length; index++) {
             uint256 tokenId = tokenIds[index];

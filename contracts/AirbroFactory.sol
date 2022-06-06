@@ -3,7 +3,7 @@ pragma solidity ^0.8.14;
 
 import "./TokenDrop.sol";
 import "./ExistingTokenDrop.sol";
-import "./NFTDrop.sol";
+//import "./NFTDrop.sol";
 import "./Existing1155NftDrop.sol";
 
 /// @title Airbro - NFT airdrop tool factory contract
@@ -65,26 +65,26 @@ contract AirbroFactory {
     /// @param newNftCollectionName - new ERC721 name
     /// @param newNftCollectionSymbol - new ERC721 symbol
     /// @param baseUri - new ERC721 baseUri
-    function dropNftsToNftHolders(
-        address rewardedNftCollection,
-        string memory newNftCollectionName,
-        string memory newNftCollectionSymbol,
-        uint256 newNftSupply,
-        string memory baseUri,
-        bytes32 merkleProof
-    ) external {
-        NFTDrop nftDropContract = new NFTDrop(
-            rewardedNftCollection,
-            newNftSupply,
-            newNftCollectionName,
-            newNftCollectionSymbol,
-            baseUri,
-            merkleProof
-        );
-        airdrops.push(address(nftDropContract));
-        totalAirdropsCount++;
-        emit NewAirdrop(rewardedNftCollection, address(nftDropContract));
-    }
+//    function dropNftsToNftHolders(
+//        address rewardedNftCollection,
+//        string memory newNftCollectionName,
+//        string memory newNftCollectionSymbol,
+//        uint256 newNftSupply,
+//        string memory baseUri,
+//        bytes32 merkleProof
+//    ) external {
+//        NFTDrop nftDropContract = new NFTDrop(
+//            rewardedNftCollection,
+//            newNftSupply,
+//            newNftCollectionName,
+//            newNftCollectionSymbol,
+//            baseUri,
+//            merkleProof
+//        );
+//        airdrops.push(address(nftDropContract));
+//        totalAirdropsCount++;
+//        emit NewAirdrop(rewardedNftCollection, address(nftDropContract));
+//    }
 
     /// @notice Creates a new airdrop claim contract for specific NFT collection holders
     /// @param rewardedNftCollection - Rewarded NFT collection address
