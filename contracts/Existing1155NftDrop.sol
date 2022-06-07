@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.14;
 
-
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "@openzeppelin/contracts/token/ERC1155/IERC1155.sol";
 import "@openzeppelin/contracts/token/ERC1155/IERC1155Receiver.sol";
@@ -28,6 +27,7 @@ contract Existing1155NftDrop is AirdropInfo, AirdropMerkleProof, IERC1155Receive
     error AlreadyFunded();
     error InsufficientAmount();
     error InsufficientLiquidity();
+    error AirdropExpired();
 
     mapping(uint256 => bool) public hasClaimed;
 
@@ -35,12 +35,17 @@ contract Existing1155NftDrop is AirdropInfo, AirdropMerkleProof, IERC1155Receive
     // to provide this as a bytes32 type and not string. Ox should be prepended.
     bytes32 public immutable merkleRoot;
 
+    uint256 public immutable airdropDuration;
+    uint256 public immutable airdropStartTime;
+    uint256 public immutable airdropFinishTime;
+
     constructor(
         address _rewardedNft,
         address _reward1155Nft,
         uint256 _tokensPerClaim,
         uint256 _tokenId,
         uint256 _totalAirdropAmount,
+        uint256 _airdropDuration,
         bytes32 _merkleRoot
     ) {
         rewardedNft = IERC721(_rewardedNft);
@@ -49,6 +54,9 @@ contract Existing1155NftDrop is AirdropInfo, AirdropMerkleProof, IERC1155Receive
         rewardToken = IERC1155(_reward1155Nft);
         rewardTokenId = _tokenId;
         merkleRoot = _merkleRoot;
+        airdropDuration = _airdropDuration * 1 days;
+        airdropStartTime = block.timestamp;
+        airdropFinishTime = block.timestamp + airdropDuration;
     }
 
     /// @notice Allows the airdrop creator to provide funds for airdrop reward
@@ -65,7 +73,7 @@ contract Existing1155NftDrop is AirdropInfo, AirdropMerkleProof, IERC1155Receive
     /// @notice Allows the airdrop creator to withdraw back his funds after the airdrop has finished
     function withdrawAirdropFunds() external {
         if (airdropFundingHolder != msg.sender) revert NotOwner();
-        if (block.timestamp < airdropFundBlockTimestamp + 30 days) revert AirdropStillInProgress();
+        if (block.timestamp < airdropFinishTime) revert AirdropStillInProgress();
         rewardToken.safeTransferFrom(
             address(this),
             msg.sender,
@@ -80,6 +88,7 @@ contract Existing1155NftDrop is AirdropInfo, AirdropMerkleProof, IERC1155Receive
         if (hasClaimed[tokenId]) revert AlreadyRedeemed();
         if (rewardToken.balanceOf(address(this), rewardTokenId) < tokensPerClaim) revert InsufficientLiquidity();
         if (rewardedNft.ownerOf(tokenId) != msg.sender) revert NotOwner();
+        if (block.timestamp > airdropFinishTime) revert AirdropExpired();
 
         checkProof(_merkleProof, merkleRoot);
 
@@ -92,6 +101,8 @@ contract Existing1155NftDrop is AirdropInfo, AirdropMerkleProof, IERC1155Receive
     function batchClaim(uint256[] memory tokenIds, bytes32[] calldata _merkleProof) external {
         if (rewardToken.balanceOf(address(this), rewardTokenId) < tokensPerClaim * tokenIds.length)
             revert InsufficientLiquidity();
+
+        if (block.timestamp > airdropFinishTime) revert AirdropExpired();
 
         checkProof(_merkleProof, merkleRoot);
 
@@ -128,6 +139,18 @@ contract Existing1155NftDrop is AirdropInfo, AirdropMerkleProof, IERC1155Receive
 
     function supportsInterface(bytes4 interfaceId) external view override returns (bool) {
         return interfaceId == 0xf23a6e61;
+    }
+
+    function getAirdropFinishTime() external view override returns (uint256) {
+        return airdropFinishTime;
+    }
+
+    function getAirdropDuration() external view override returns (uint256) {
+        return airdropDuration;
+    }
+
+    function getAirdropStartTime() external view override returns (uint256) {
+        return airdropStartTime;
     }
 
     function onERC1155Received(

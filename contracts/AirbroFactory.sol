@@ -22,13 +22,17 @@ contract AirbroFactory {
         address rewardedNftCollection,
         string memory newTokenName,
         string memory newTokenSymbol,
-        uint256 tokensPerClaim
+        uint256 tokensPerClaim,
+        uint256 airdropDuration,
+        bytes32 merkleProof
     ) external {
         TokenDrop tokenDropContract = new TokenDrop(
             rewardedNftCollection,
             tokensPerClaim,
             newTokenName,
-            newTokenSymbol
+            newTokenSymbol,
+            airdropDuration,
+            merkleProof
         );
 
         airdrops.push(address(tokenDropContract));
@@ -46,6 +50,7 @@ contract AirbroFactory {
         uint256 tokensPerClaim,
         address rewardToken,
         uint256 totalAirdropAmount,
+        uint256 airdropDuration,
         bytes32 merkleProof
     ) external {
         ExistingTokenDrop tokenDropContract = new ExistingTokenDrop(
@@ -53,6 +58,7 @@ contract AirbroFactory {
             tokensPerClaim,
             rewardToken,
             totalAirdropAmount,
+            airdropDuration,
             merkleProof
         );
         airdrops.push(address(tokenDropContract));
@@ -65,26 +71,28 @@ contract AirbroFactory {
     /// @param newNftCollectionName - new ERC721 name
     /// @param newNftCollectionSymbol - new ERC721 symbol
     /// @param baseUri - new ERC721 baseUri
-//    function dropNftsToNftHolders(
-//        address rewardedNftCollection,
-//        string memory newNftCollectionName,
-//        string memory newNftCollectionSymbol,
-//        uint256 newNftSupply,
-//        string memory baseUri,
-//        bytes32 merkleProof
-//    ) external {
-//        NFTDrop nftDropContract = new NFTDrop(
-//            rewardedNftCollection,
-//            newNftSupply,
-//            newNftCollectionName,
-//            newNftCollectionSymbol,
-//            baseUri,
-//            merkleProof
-//        );
-//        airdrops.push(address(nftDropContract));
-//        totalAirdropsCount++;
-//        emit NewAirdrop(rewardedNftCollection, address(nftDropContract));
-//    }
+    //    function dropNftsToNftHolders(
+    //        address rewardedNftCollection,
+    //        string memory newNftCollectionName,
+    //        string memory newNftCollectionSymbol,
+    //        uint256 newNftSupply,
+    //        string memory baseUri,
+    //        uint256 aidropDuration
+    //        bytes32 merkleProof
+    //    ) external {
+    //        NFTDrop nftDropContract = new NFTDrop(
+    //            rewardedNftCollection,
+    //            newNftSupply,
+    //            newNftCollectionName,
+    //            newNftCollectionSymbol,
+    //            baseUri,
+    //            aidropDuration,
+    //            merkleProof
+    //        );
+    //        airdrops.push(address(nftDropContract));
+    //        totalAirdropsCount++;
+    //        emit NewAirdrop(rewardedNftCollection, address(nftDropContract));
+    //    }
 
     /// @notice Creates a new airdrop claim contract for specific NFT collection holders
     /// @param rewardedNftCollection - Rewarded NFT collection address
@@ -98,6 +106,7 @@ contract AirbroFactory {
         uint256 tokensPerClaim,
         uint256 tokenId,
         uint256 totalAirdropAmount,
+        uint256 airdropDuration,
         bytes32 merkleProof
     ) external {
         Existing1155NftDrop tokenDropContract = new Existing1155NftDrop(
@@ -106,6 +115,7 @@ contract AirbroFactory {
             tokensPerClaim,
             tokenId,
             totalAirdropAmount,
+            airdropDuration,
             merkleProof
         );
         airdrops.push(address(tokenDropContract));
