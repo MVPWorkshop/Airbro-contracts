@@ -78,7 +78,7 @@ const config: HardhatUserConfig = {
       gasPrice: 40000000000 // default is 'auto' which breaks chains without the london hardfork
     },
     mumbai: {
-      url: "https://rpc-mumbai.maticvigil.com",
+      url: "https://polygon-mumbai.g.alchemy.com/v2/" + process.env.POLYGON_RPC_MUMBAI_ALCHEMY_API_KEY,
       accounts: {
         count: 10,
         initialIndex: 0,

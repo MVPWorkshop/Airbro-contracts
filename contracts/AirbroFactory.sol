@@ -24,7 +24,7 @@ contract AirbroFactory {
         string memory newTokenSymbol,
         uint256 tokensPerClaim,
         uint256 airdropDuration,
-        bytes32 merkleProof
+        bytes32 merkleRootHash
     ) external {
         TokenDrop tokenDropContract = new TokenDrop(
             rewardedNftCollection,
@@ -32,7 +32,7 @@ contract AirbroFactory {
             newTokenName,
             newTokenSymbol,
             airdropDuration,
-            merkleProof
+            merkleRootHash
         );
 
         airdrops.push(address(tokenDropContract));
@@ -51,7 +51,7 @@ contract AirbroFactory {
         address rewardToken,
         uint256 totalAirdropAmount,
         uint256 airdropDuration,
-        bytes32 merkleProof
+        bytes32 merkleRootHash
     ) external {
         ExistingTokenDrop tokenDropContract = new ExistingTokenDrop(
             rewardedNftCollection,
@@ -59,7 +59,7 @@ contract AirbroFactory {
             rewardToken,
             totalAirdropAmount,
             airdropDuration,
-            merkleProof
+            merkleRootHash
         );
         airdrops.push(address(tokenDropContract));
         totalAirdropsCount++;
@@ -78,7 +78,7 @@ contract AirbroFactory {
     //        uint256 newNftSupply,
     //        string memory baseUri,
     //        uint256 aidropDuration
-    //        bytes32 merkleProof
+    //        bytes32 merkleRootHash
     //    ) external {
     //        NFTDrop nftDropContract = new NFTDrop(
     //            rewardedNftCollection,
@@ -87,7 +87,7 @@ contract AirbroFactory {
     //            newNftCollectionSymbol,
     //            baseUri,
     //            aidropDuration,
-    //            merkleProof
+    //            merkleRootHash
     //        );
     //        airdrops.push(address(nftDropContract));
     //        totalAirdropsCount++;
@@ -107,7 +107,7 @@ contract AirbroFactory {
         uint256 tokenId,
         uint256 totalAirdropAmount,
         uint256 airdropDuration,
-        bytes32 merkleProof
+        bytes32 merkleRootHash
     ) external {
         Existing1155NftDrop tokenDropContract = new Existing1155NftDrop(
             rewardedNftCollection,
@@ -116,7 +116,7 @@ contract AirbroFactory {
             tokenId,
             totalAirdropAmount,
             airdropDuration,
-            merkleProof
+            merkleRootHash
         );
         airdrops.push(address(tokenDropContract));
         totalAirdropsCount++;
