@@ -2,9 +2,9 @@ import { artifacts, ethers, waffle } from "hardhat";
 import type { Artifact } from "hardhat/types";
 import type { SignerWithAddress } from "@nomiclabs/hardhat-ethers/dist/src/signer-with-address";
 
-import type { AirbroFactory } from "../../src/types/AirbroFactory";
-import type { TestNftCollection } from "../../src/types/TestNftCollection";
-import type { TestToken } from "../../src/types/TestToken";
+import type { AirbroFactory } from "../../src/types/contracts/AirbroFactory";
+import type { TestNftCollection } from "../../src/types/contracts/TestNftCollection";
+import type { TestToken } from "../../src/types/contracts/TestToken";
 import { Signers } from "../types";
 import { shouldBehaveLikeFactory } from "./Factory.behavior";
 

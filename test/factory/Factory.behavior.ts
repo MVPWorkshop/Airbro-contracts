@@ -56,6 +56,9 @@ export function shouldBehaveLikeFactory(): void {
   });
 
   it("should create contract with merkle proof", async function() {
+
+    //TODO generate a real hash of a CSV file
+
     await expect(
       await this.airbroFactory.connect(this.signers.admin).dropNewTokensToNftHolders(
         this.testNftCollection.address, // rewardedNftCollection,

@@ -12,7 +12,7 @@ contract AirbroFactory {
     address[] public airdrops;
     uint256 public totalAirdropsCount = 0;
 
-    event NewAirdrop(address indexed rewardedNftCollection, address indexed airdropContract);
+    event NewAirdrop(address indexed rewardedNftCollection, address indexed airdropContract, address indexed airdropCreator);
 
     constructor() {}
 
@@ -37,7 +37,7 @@ contract AirbroFactory {
 
         airdrops.push(address(tokenDropContract));
         totalAirdropsCount++;
-        emit NewAirdrop(rewardedNftCollection, address(tokenDropContract));
+        emit NewAirdrop(rewardedNftCollection, address(tokenDropContract), msg.sender);
     }
 
     /// @notice Creates a new airdrop claim contract for specific NFT collection holders
@@ -63,7 +63,7 @@ contract AirbroFactory {
         );
         airdrops.push(address(tokenDropContract));
         totalAirdropsCount++;
-        emit NewAirdrop(rewardedNftCollection, address(tokenDropContract));
+        emit NewAirdrop(rewardedNftCollection, address(tokenDropContract), msg.sender);
     }
 
     /// @notice Creates a new airdrop ERC721 claim contract for specific NFT collection holders
@@ -91,7 +91,7 @@ contract AirbroFactory {
     //        );
     //        airdrops.push(address(nftDropContract));
     //        totalAirdropsCount++;
-    //        emit NewAirdrop(rewardedNftCollection, address(nftDropContract));
+    //        emit NewAirdrop(rewardedNftCollection, address(nftDropContract), msg.sender);
     //    }
 
     /// @notice Creates a new airdrop claim contract for specific NFT collection holders
@@ -120,6 +120,6 @@ contract AirbroFactory {
         );
         airdrops.push(address(tokenDropContract));
         totalAirdropsCount++;
-        emit NewAirdrop(rewardedNftCollection, address(tokenDropContract));
+        emit NewAirdrop(rewardedNftCollection, address(tokenDropContract), msg.sender);
     }
 }

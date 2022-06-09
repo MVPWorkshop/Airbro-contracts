@@ -1,7 +1,7 @@
 import type { SignerWithAddress } from "@nomiclabs/hardhat-ethers/dist/src/signer-with-address";
 import type { Fixture } from "ethereum-waffle";
 
-import type { AirbroFactory } from "../src/types/AirbroFactory";
+import type { AirbroFactory } from "../src/types/contracts/AirbroFactory";
 
 declare module "mocha" {
   export interface Context {
