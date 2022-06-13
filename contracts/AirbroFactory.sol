@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.14;
 
-import "./TokenDrop.sol";
-import "./ExistingTokenDrop.sol";
+import "./airdrops/TokenDrop.sol";
+import "./airdrops/ExistingTokenDrop.sol";
 //import "./NFTDrop.sol";
-import "./Existing1155NftDrop.sol";
+import "./airdrops/Existing1155NftDrop.sol";
 
 /// @title Airbro - NFT airdrop tool factory contract
 contract AirbroFactory {

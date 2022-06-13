@@ -4,9 +4,10 @@ pragma solidity ^0.8.14;
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "@openzeppelin/contracts/token/ERC1155/IERC1155.sol";
 import "@openzeppelin/contracts/token/ERC1155/IERC1155Receiver.sol";
-import "./AirdropMerkleProof.sol";
-import "./AirdropInfo.sol";
+import "../interfaces/AirdropMerkleProof.sol";
+import "../interfaces/AirdropInfo.sol";
 
+/// @title Airdrops existing ERC1155 tokens for airdrop recipients
 contract Existing1155NftDrop is AirdropInfo, AirdropMerkleProof, IERC1155Receiver {
     IERC721 public immutable rewardedNft;
     IERC1155 public immutable rewardToken;
