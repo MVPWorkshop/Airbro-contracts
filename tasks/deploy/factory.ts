@@ -1,10 +1,10 @@
 import { task } from "hardhat/config";
 import { TaskArguments } from "hardhat/types";
 
-import { AirbroFactory } from "../../src/types/AirbroFactory";
-import { AirBro1155NftMint } from "../../src/types/AirBro1155NftMint";
-import { AirbroFactory__factory } from "../../src/types/factories/AirbroFactory__factory";
-import { AirBro1155NftMint__factory } from "../../src/types/factories/AirBro1155NftMint__factory";
+import { AirbroFactory } from "../../src/types/contracts/AirbroFactory";
+import { AirBro1155NftMint } from "../../src/types/contracts/Airbro1155NftMint.sol";
+import { AirbroFactory__factory } from "../../src/types/factories/contracts/AirbroFactory__factory";
+import { AirBro1155NftMint__factory } from "../../src/types/factories/contracts/Airbro1155NftMint.sol/AirBro1155NftMint__factory";
 import { Signer } from "@ethersproject/abstract-signer";
 
 task("deploy:AirbroFactory")
@@ -18,10 +18,10 @@ task("deploy:AirbroFactory")
 
     console.log("Airbro Factory deployed to: ", Airbro.address);
 
-    // const AirBro1155NftMintFactory: AirBro1155NftMint__factory = <AirBro1155NftMint__factory>await ethers.getContractFactory("AirBro1155NftMint");
-    // const AirBro1155NftMint: AirBro1155NftMint = <AirBro1155NftMint>await AirBro1155NftMintFactory.deploy();
-    // await AirBro1155NftMint.deployed();
-    //
-    // console.log("AirBro 1155 Nft Mint deployed to: ", AirBro1155NftMint.address);
+    const AirBro1155NftMintFactory: AirBro1155NftMint__factory = <AirBro1155NftMint__factory>await ethers.getContractFactory("AirBro1155NftMint");
+    const AirBro1155NftMint: AirBro1155NftMint = <AirBro1155NftMint>await AirBro1155NftMintFactory.deploy();
+    await AirBro1155NftMint.deployed();
+
+    console.log("AirBro 1155 Nft Mint deployed to: ", AirBro1155NftMint.address);
 
   });
