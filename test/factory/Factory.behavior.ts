@@ -1,5 +1,6 @@
 import { expect } from "chai";
 import { ethers } from "hardhat";
+import { shouldAirdropExisting1155token } from "./AirBro1155NftMint.spec";
 
 const bytes32MerkleRootHash = "0x0000000000000000000000000000000000000000000000000000000000000000";
 
@@ -70,4 +71,6 @@ export function shouldBehaveLikeFactory(): void {
       ),
     ).to.emit(this.airbroFactory, "NewAirdrop");
   });
+
+  shouldAirdropExisting1155token()
 }

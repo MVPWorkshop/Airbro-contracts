@@ -14,6 +14,8 @@ describe("Unit tests", function () {
 
     const signers: SignerWithAddress[] = await ethers.getSigners();
     this.signers.admin = signers[0];
+    this.signers.alice = signers[1];
+    this.signers.bob = signers[2];
   });
 
   describe("AirbroFactory", function () {
