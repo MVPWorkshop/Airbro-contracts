@@ -1,3 +1,4 @@
+import { constants } from "buffer";
 import { expect } from "chai";
 
 import { artifacts, ethers, waffle } from "hardhat";
@@ -14,19 +15,27 @@ export function shouldAirdropExisting1155token(){
     })
 
     it('should mint and drop existing IERC1155 NFT token',async function(){
-        // minting three NFT's to alice. Alice should receive a reward for holding this NFT collection
+        // minting an NFT's to alice and bob. Both addresses should receive a reward for holding this NFT collection
         await this.testNftCollection.connect(this.signers.admin).safeMint(this.signers.alice.address);
+        await this.testNftCollection.connect(this.signers.admin).safeMint(this.signers.bob.address);
+        await this.testNftCollection.connect(this.signers.admin).safeMint(this.signers.admin.address);
         
         const aliceBalance = await this.testNftCollection.balanceOf(this.signers.alice.address)
         console.log(`Test NFT balance of Alice: ${parseInt(aliceBalance)}`);
         expect(aliceBalance).to.be.equal(1)
+        
+        const bobBalance = await this.testNftCollection.balanceOf(this.signers.bob.address)
+        console.log(`Test NFT balance of Bob: ${parseInt(bobBalance)}`);
+        expect(aliceBalance).to.be.equal(1)
+
+
 
         // minting the admin a amount of 1000 1155 nft's
         const idOf1155:string = 'nftAirdrop';
         const amounOft1155:number = 1000;
         const tokenId:number = 1; // token id set to 1
 
-        await this.test1155NftCollection.connect(this.signers.admin).mint(idOf1155,amounOft1155);
+        await this.test1155NftCollection.connect(this.signers.admin).mint(idOf1155,amounOft1155); // giving alice 1 nft
         const adminBalance1155 = await this.test1155NftCollection.balanceOf(this.signers.admin.address,tokenId)
         console.log(`Admin's 1155Nft balance: ${parseInt(adminBalance1155)}`);
         expect(adminBalance1155).to.be.equal(1000)
@@ -58,13 +67,24 @@ export function shouldAirdropExisting1155token(){
 
 
 
+        // alice withdrawing 1155 on basis of owning nft with id of 1
+        const _alice_nft_id = 0; 
+        const _bob_nft_id = 1;
+        const _admin_nft_id = 2;
 
-        const _tokenId_arg = 0; // How would I know this is zero, why is it not 1 ? Not sure what is going on here.
-        //changing this arg to 1 will throw the following error: 'ERC721: owner query for nonexistent token'
+        await expect(dropContract.connect(this.signers.alice).claim(_bob_nft_id,[])).to.be.revertedWith("NotOwner") // Alice trying to claim based on Bob's NFT id which she does not own
 
-        await expect(dropContract.connect(this.signers.alice).claim(_tokenId_arg,[])).to.emit(dropContract,"Claimed") // error - 'ERC721: owner query for nonexistent token'
+        await expect(dropContract.connect(this.signers.alice).claim(_alice_nft_id,[])).to.emit(dropContract,"Claimed")
         expect(await this.test1155NftCollection.balanceOf(this.signers.alice.address,1)).to.be.equal(1)
+        await expect(dropContract.connect(this.signers.alice).claim(_alice_nft_id,[])).to.be.revertedWith("AlreadyRedeemed") // error - 'ERC721: owner query for nonexistent token' 
+        
+        
+        // alice withdrawing 1155 on basis of owning nft with id of 1
+        await expect(dropContract.connect(this.signers.bob).claim(_admin_nft_id,[])).to.be.revertedWith("NotOwner") // Bob trying to claim based on Admins's NFT id he does not own
 
-        // await expect(dropContract.connect(this.signers.alice).claim(_tokenId_arg,[])).to.be.revertedWith("AlreadyRedeemed") // error - 'ERC721: owner query for nonexistent token' 
+        await expect(dropContract.connect(this.signers.bob).claim(_bob_nft_id,[])).to.emit(dropContract,"Claimed")
+        expect(await this.test1155NftCollection.balanceOf(this.signers.bob.address,1)).to.be.equal(1)
+        await expect(dropContract.connect(this.signers.bob).claim(_bob_nft_id,[])).to.be.revertedWith("AlreadyRedeemed") // error - 'ERC721: owner query for nonexistent token' 
+
     })
 }
