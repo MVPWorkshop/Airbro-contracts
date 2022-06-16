@@ -3,11 +3,12 @@ pragma solidity ^0.8.14;
 
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 import "../interfaces/AirdropInfo.sol";
 import "../interfaces/AirdropMerkleProof.sol";
 
 /// @title Airdrops existing ERC20 tokens for airdrop recipients
-contract ExistingTokenDrop is AirdropInfo, AirdropMerkleProof {
+contract ExistingTokenDrop is AirdropInfo, AirdropMerkleProof, Ownable {
     IERC721 public immutable rewardedNft;
     IERC20 public immutable rewardToken;
     uint256 public immutable tokensPerClaim;
@@ -16,9 +17,11 @@ contract ExistingTokenDrop is AirdropInfo, AirdropMerkleProof {
     bool public airdropFunded = false;
     uint256 public airdropFundBlockTimestamp;
     address internal airdropFundingHolder;
+    address public admin;
 
     event Claimed(uint256 indexed tokenId, address indexed claimer);
     event AirdropFunded();
+    event AdminChanged(address indexed adminAddress);
 
     error NotOwner();
     error AirdropStillInProgress();
@@ -27,6 +30,7 @@ contract ExistingTokenDrop is AirdropInfo, AirdropMerkleProof {
     error InsufficientAmount();
     error InsufficientLiquidity();
     error AirdropExpired();
+    error NotAdmin();
 
     mapping(uint256 => bool) public hasClaimed;
 
@@ -37,6 +41,11 @@ contract ExistingTokenDrop is AirdropInfo, AirdropMerkleProof {
     uint256 public immutable airdropDuration;
     uint256 public immutable airdropStartTime;
     uint256 public immutable airdropFinishTime;
+
+    modifier onlyAdmin(){
+        if(msg.sender != admin) revert NotAdmin();
+        _;
+    }
 
     constructor(
         address _rewardedNft,
@@ -54,6 +63,15 @@ contract ExistingTokenDrop is AirdropInfo, AirdropMerkleProof {
         airdropDuration = _airdropDuration * 1 days;
         airdropStartTime = block.timestamp;
         airdropFinishTime = block.timestamp + airdropDuration;
+
+        admin = msg.sender; // the admin of this contract will be the same as the owner (who is the deployer)
+    }
+
+    /// @notice Updates the address for the admin of this contract (different from the contract owner)
+    /// @param _newAdmin - New address for the admin of this contract
+    function changeAdmin(address _newAdmin) external onlyOwner {
+        admin = _newAdmin;
+        emit AdminChanged(_newAdmin);
     }
 
     /// @notice Allows the airdrop creator to provide funds for airdrop reward

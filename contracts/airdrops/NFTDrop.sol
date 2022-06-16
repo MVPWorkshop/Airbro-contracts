@@ -3,25 +3,29 @@ pragma solidity ^0.8.14;
 
 import "@rari-capital/solmate/src/tokens/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 import "../interfaces/AirdropInfo.sol";
 import "../interfaces/AirdropMerkleProof.sol";
 
 /// @title Airdrops new ERC721 tokens for airdrop recipients
-contract NFTDrop is ERC721, AirdropInfo, AirdropMerkleProof {
+contract NFTDrop is ERC721, AirdropInfo, AirdropMerkleProof, Ownable {
     uint256 public immutable maxSupply;
     uint256 public totalSupply;
+    address public admin;
 
     string public baseURI;
 
     IERC721 public immutable rewardedNft;
 
     event Claimed(uint256 indexed tokenId, address indexed claimer);
+    event AdminChanged(address indexed adminAddress);
 
     error NotOwner();
     error AlreadyRedeemed();
     error DoesNotExist();
     error NoTokensLeft();
     error AirdropExpired();
+    error NotAdmin();
 
     mapping(uint256 => bool) public hasClaimed;
 
@@ -32,6 +36,11 @@ contract NFTDrop is ERC721, AirdropInfo, AirdropMerkleProof {
     uint256 public immutable airdropDuration;
     uint256 public immutable airdropStartTime;
     uint256 public immutable airdropFinishTime;
+
+    modifier onlyAdmin(){
+        if(msg.sender != admin) revert NotAdmin();
+        _;
+    }
 
     constructor(
         address _rewardedNft,
@@ -49,6 +58,15 @@ contract NFTDrop is ERC721, AirdropInfo, AirdropMerkleProof {
         airdropDuration = _airdropDuration * 1 days;
         airdropStartTime = block.timestamp;
         airdropFinishTime = block.timestamp + airdropDuration;
+
+        admin = msg.sender; // the admin of this contract will be the same as the owner (who is the deployer)
+    }
+
+    /// @notice Updates the address for the admin of this contract (different from the contract owner)
+    /// @param _newAdmin - New address for the admin of this contract
+    function changeAdmin(address _newAdmin) external onlyOwner {
+        admin = _newAdmin;
+        emit AdminChanged(_newAdmin);
     }
 
     function claim(uint256 tokenId, bytes32[] calldata _merkleProof) external {

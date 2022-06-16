@@ -4,11 +4,12 @@ pragma solidity ^0.8.14;
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "@openzeppelin/contracts/token/ERC1155/IERC1155.sol";
 import "@openzeppelin/contracts/token/ERC1155/IERC1155Receiver.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 import "../interfaces/AirdropMerkleProof.sol";
 import "../interfaces/AirdropInfo.sol";
 
 /// @title Airdrops existing ERC1155 tokens for airdrop recipients
-contract Existing1155NftDrop is AirdropInfo, AirdropMerkleProof, IERC1155Receiver {
+contract Existing1155NftDrop is AirdropInfo, AirdropMerkleProof, IERC1155Receiver, Ownable {
     IERC721 public immutable rewardedNft;
     IERC1155 public immutable rewardToken;
     uint256 public immutable rewardTokenId;
@@ -18,9 +19,11 @@ contract Existing1155NftDrop is AirdropInfo, AirdropMerkleProof, IERC1155Receive
     bool public airdropFunded = false;
     uint256 public airdropFundBlockTimestamp;
     address internal airdropFundingHolder;
+    address public admin;
 
     event Claimed(uint256 indexed tokenId, address indexed claimer);
     event AirdropFunded();
+    event AdminChanged(address indexed adminAddress);
 
     error NotOwner();
     error AirdropStillInProgress();
@@ -29,6 +32,7 @@ contract Existing1155NftDrop is AirdropInfo, AirdropMerkleProof, IERC1155Receive
     error InsufficientAmount();
     error InsufficientLiquidity();
     error AirdropExpired();
+    error NotAdmin();
 
     mapping(uint256 => bool) public hasClaimed;
 
@@ -39,6 +43,11 @@ contract Existing1155NftDrop is AirdropInfo, AirdropMerkleProof, IERC1155Receive
     uint256 public immutable airdropDuration;
     uint256 public immutable airdropStartTime;
     uint256 public immutable airdropFinishTime;
+
+    modifier onlyAdmin(){
+        if(msg.sender != admin) revert NotAdmin();
+        _;
+    }
 
     constructor(
         address _rewardedNft,
@@ -58,6 +67,15 @@ contract Existing1155NftDrop is AirdropInfo, AirdropMerkleProof, IERC1155Receive
         airdropDuration = _airdropDuration * 1 days;
         airdropStartTime = block.timestamp;
         airdropFinishTime = block.timestamp + airdropDuration;
+
+        admin = msg.sender; // the admin of this contract will be the same as the owner (who is the deployer)
+    }
+
+    /// @notice Updates the address for the admin of this contract (different from the contract owner)
+    /// @param _newAdmin - New address for the admin of this contract
+    function changeAdmin(address _newAdmin) external onlyOwner {
+        admin = _newAdmin;
+        emit AdminChanged(_newAdmin);
     }
 
     /// @notice Allows the airdrop creator to provide funds for airdrop reward
