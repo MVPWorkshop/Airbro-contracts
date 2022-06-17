@@ -23,16 +23,16 @@ contract AirbroFactory {
         string memory newTokenName,
         string memory newTokenSymbol,
         uint256 tokensPerClaim,
-        uint256 airdropDuration,
-        bytes32 merkleRootHash
+        uint256 airdropDuration
+        // bytes32 merkleRootHash
     ) external {
         TokenDrop tokenDropContract = new TokenDrop(
             rewardedNftCollection,
             tokensPerClaim,
             newTokenName,
             newTokenSymbol,
-            airdropDuration,
-            merkleRootHash
+            airdropDuration
+            // merkleRootHash
         );
 
         airdrops.push(address(tokenDropContract));
@@ -50,16 +50,16 @@ contract AirbroFactory {
         uint256 tokensPerClaim,
         address rewardToken,
         uint256 totalAirdropAmount,
-        uint256 airdropDuration,
-        bytes32 merkleRootHash
+        uint256 airdropDuration
+        // bytes32 merkleRootHash
     ) external {
         ExistingTokenDrop tokenDropContract = new ExistingTokenDrop(
             rewardedNftCollection,
             tokensPerClaim,
             rewardToken,
             totalAirdropAmount,
-            airdropDuration,
-            merkleRootHash
+            airdropDuration
+            // merkleRootHash
         );
         airdrops.push(address(tokenDropContract));
         totalAirdropsCount++;
@@ -106,8 +106,8 @@ contract AirbroFactory {
         uint256 tokensPerClaim,
         uint256 tokenId,
         uint256 totalAirdropAmount,
-        uint256 airdropDuration,
-        bytes32 merkleRootHash
+        uint256 airdropDuration
+        // bytes32 merkleRootHash
     ) external {
         Existing1155NftDrop tokenDropContract = new Existing1155NftDrop(
             rewardedNftCollection,
@@ -115,8 +115,8 @@ contract AirbroFactory {
             tokensPerClaim,
             tokenId,
             totalAirdropAmount,
-            airdropDuration,
-            merkleRootHash
+            airdropDuration
+            // merkleRootHash
         );
         airdrops.push(address(tokenDropContract));
         totalAirdropsCount++;

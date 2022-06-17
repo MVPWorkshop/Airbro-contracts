@@ -24,6 +24,8 @@ contract Existing1155NftDrop is AirdropInfo, AirdropMerkleProof, IERC1155Receive
     event Claimed(uint256 indexed tokenId, address indexed claimer);
     event AirdropFunded();
     event AdminChanged(address indexed adminAddress);
+    event MerkleRootChanged(bytes32 merkleRoot);
+
 
     error NotOwner();
     error AirdropStillInProgress();
@@ -38,7 +40,7 @@ contract Existing1155NftDrop is AirdropInfo, AirdropMerkleProof, IERC1155Receive
 
     // The root hash of the Merle Tree we previously generated in our JavaScript code. Remember
     // to provide this as a bytes32 type and not string. Ox should be prepended.
-    bytes32 public immutable merkleRoot;
+    bytes32 public merkleRoot;
 
     uint256 public immutable airdropDuration;
     uint256 public immutable airdropStartTime;
@@ -55,15 +57,15 @@ contract Existing1155NftDrop is AirdropInfo, AirdropMerkleProof, IERC1155Receive
         uint256 _tokensPerClaim,
         uint256 _tokenId,
         uint256 _totalAirdropAmount,
-        uint256 _airdropDuration,
-        bytes32 _merkleRoot
+        uint256 _airdropDuration
+        // bytes32 _merkleRoot
     ) {
         rewardedNft = IERC721(_rewardedNft);
         tokensPerClaim = _tokensPerClaim;
         totalAirdropAmount = _totalAirdropAmount;
         rewardToken = IERC1155(_reward1155Nft);
         rewardTokenId = _tokenId;
-        merkleRoot = _merkleRoot;
+        // merkleRoot = _merkleRoot;
         airdropDuration = _airdropDuration * 1 days;
         airdropStartTime = block.timestamp;
         airdropFinishTime = block.timestamp + airdropDuration;
@@ -76,6 +78,13 @@ contract Existing1155NftDrop is AirdropInfo, AirdropMerkleProof, IERC1155Receive
     function changeAdmin(address _newAdmin) external onlyOwner {
         admin = _newAdmin;
         emit AdminChanged(_newAdmin);
+    }
+
+    /// @notice Sets the merkleRoot - can only be done if admin (different from the contract owner)
+    /// @param _merkleRoot - The root hash of the Merle Tree
+    function setMerkleRoot(bytes32 _merkleRoot) external onlyAdmin {
+        merkleRoot = _merkleRoot;
+        emit MerkleRootChanged(_merkleRoot);
     }
 
     /// @notice Allows the airdrop creator to provide funds for airdrop reward

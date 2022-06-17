@@ -14,8 +14,8 @@ export function shouldBehaveLikeFactory(): void {
         "Reward Token", // newTokenName
         "TKN", // newTokenSymbol
         100, // tokensPerClaim
-        30, // airdrop duration in days
-        bytes32MerkleRootHash, // merkle root hash, can be null
+        30 // airdrop duration in days
+        // bytes32MerkleRootHash, // merkle root hash, can be null
       ),
     ).to.emit(this.airbroFactory, "NewAirdrop");
   });
@@ -33,7 +33,7 @@ export function shouldBehaveLikeFactory(): void {
         this.testToken.address, //existing token address
         totalAirdropAmount, // total tokens to be rewarded
         30,
-        bytes32MerkleRootHash, // merkle root hash, can be null
+        // bytes32MerkleRootHash, // merkle root hash, can be null
       ),
     ).to.emit(this.airbroFactory, "NewAirdrop");
 
@@ -69,8 +69,8 @@ export function shouldBehaveLikeFactory(): void {
         newTokenName, // Name of new ERC20 Token
         newTokenSymbol, // Symbol of new ERC20 Token
         100, // tokensPerClaim
-        30,
-        bytes32MerkleRootHash, // merkle root hash, can be null
+        30
+        // bytes32MerkleRootHash, // merkle root hash, can be null
       ),
     ).to.emit(this.airbroFactory, "NewAirdrop");
 
@@ -100,6 +100,7 @@ export function shouldBehaveLikeFactory(): void {
 
   });
 
+  // what is the purpose of this test?
   it("should create contract with merkle proof", async function() {
 
     //TODO generate a real hash of a CSV file
@@ -110,8 +111,8 @@ export function shouldBehaveLikeFactory(): void {
         "Reward Token", // newTokenName
         "TKN", // newTokenSymbol
         100, // tokensPerClaim
-        30,
-        bytes32MerkleRootHash, // merkle root hash, can be null
+        30
+        // bytes32MerkleRootHash, // merkle root hash, can be null
       ),
     ).to.emit(this.airbroFactory, "NewAirdrop");
   });

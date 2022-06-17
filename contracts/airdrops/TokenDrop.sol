@@ -17,6 +17,7 @@ contract TokenDrop is ERC20, AirdropInfo, AirdropMerkleProof, Ownable {
 
     event Claimed(uint256 indexed tokenId, address indexed claimer);
     event AdminChanged(address indexed adminAddress);
+    event MerkleRootChanged(bytes32 merkleRoot);
 
     error NotOwner();
     error AlreadyRedeemed();
@@ -27,7 +28,7 @@ contract TokenDrop is ERC20, AirdropInfo, AirdropMerkleProof, Ownable {
 
     // The root hash of the Merle Tree we previously generated in our JavaScript code. Remember
     // to provide this as a bytes32 type and not string. Ox should be prepended.
-    bytes32 public immutable merkleRoot;
+    bytes32 public merkleRoot;
 
     uint256 public immutable airdropDuration;
     uint256 public immutable airdropStartTime;
@@ -43,12 +44,10 @@ contract TokenDrop is ERC20, AirdropInfo, AirdropMerkleProof, Ownable {
         uint256 _tokensPerClaim,
         string memory name,
         string memory symbol,
-        uint256 _airdropDuration,
-        bytes32 _merkleRoot
+        uint256 _airdropDuration
     ) ERC20(name, symbol, 18) {
         rewardedNft = IERC721(_rewardedNft);
         tokensPerClaim = _tokensPerClaim;
-        merkleRoot = _merkleRoot;
         airdropDuration = _airdropDuration * 1 days;
         airdropStartTime = block.timestamp;
         airdropFinishTime = block.timestamp + airdropDuration;
@@ -61,6 +60,13 @@ contract TokenDrop is ERC20, AirdropInfo, AirdropMerkleProof, Ownable {
     function changeAdmin(address _newAdmin) external onlyOwner {
         admin = _newAdmin;
         emit AdminChanged(_newAdmin);
+    }
+
+    /// @notice Sets the merkleRoot - can only be done if admin (different from the contract owner)
+    /// @param _merkleRoot - The root hash of the Merle Tree
+    function setMerkleRoot(bytes32 _merkleRoot) external onlyAdmin {
+        merkleRoot = _merkleRoot;
+        emit MerkleRootChanged(_merkleRoot);
     }
 
     function claim(uint256 tokenId, bytes32[] calldata _merkleProof) external {

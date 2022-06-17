@@ -20,6 +20,8 @@ contract ItemNFTDrop is ERC1155, AirdropInfo, AirdropMerkleProof, Ownable {
 
     event Claimed(uint256 indexed tokenId, address indexed claimer);
     event AdminChanged(address indexed adminAddress);
+    event MerkleRootChanged(bytes32 merkleRoot);
+
 
     error NotOwner();
     error AlreadyRedeemed();
@@ -32,7 +34,7 @@ contract ItemNFTDrop is ERC1155, AirdropInfo, AirdropMerkleProof, Ownable {
 
     // The root hash of the Merle Tree we previously generated in our JavaScript code. Remember
     // to provide this as a bytes32 type and not string. Ox should be prepended.
-    bytes32 public immutable merkleRoot;
+    bytes32 public merkleRoot;
 
     uint256 public immutable airdropDuration;
     uint256 public immutable airdropStartTime;
@@ -48,14 +50,14 @@ contract ItemNFTDrop is ERC1155, AirdropInfo, AirdropMerkleProof, Ownable {
         uint256 _maxSupply,
         string memory _baseURI,
         bytes memory _data,
-        uint256 _airdropDuration,
-        bytes32 _merkleRoot
+        uint256 _airdropDuration
+        // bytes32 _merkleRoot
     ) ERC1155() {
         baseURI = _baseURI;
         rewardedNft = IERC721(_rewardedNft);
         maxSupply = _maxSupply;
         data = _data;
-        merkleRoot = _merkleRoot;
+        // merkleRoot = _merkleRoot;
         airdropDuration = _airdropDuration * 1 days;
         airdropStartTime = block.timestamp;
         airdropFinishTime = block.timestamp + airdropDuration;
@@ -68,6 +70,13 @@ contract ItemNFTDrop is ERC1155, AirdropInfo, AirdropMerkleProof, Ownable {
     function changeAdmin(address _newAdmin) external onlyOwner {
         admin = _newAdmin;
         emit AdminChanged(_newAdmin);
+    }
+
+    /// @notice Sets the merkleRoot - can only be done if admin (different from the contract owner)
+    /// @param _merkleRoot - The root hash of the Merle Tree
+    function setMerkleRoot(bytes32 _merkleRoot) external onlyAdmin {
+        merkleRoot = _merkleRoot;
+        emit MerkleRootChanged(_merkleRoot);
     }
 
     function claim(uint256 tokenId, bytes32[] calldata _merkleProof) external {

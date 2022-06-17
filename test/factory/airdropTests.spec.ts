@@ -1,6 +1,9 @@
 import { expect } from "chai";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 
+const bytes32MerkleRootHash = "0x0000000000000000000000000000000000000000000000000000000000000000";
+
+
 export function airdropTests(){  
    describe('existing 1155 nft drop',async function(){
         it('should have contract owner to address of deployer upon deployment',async function(){
@@ -18,6 +21,20 @@ export function airdropTests(){
         it('should revert admin change from non owner account',async function(){
             const nonOwnerAccount:SignerWithAddress = this.signers.alice;
             await expect(this.Existing1155NftDrop.connect(nonOwnerAccount).changeAdmin(this.signers.bob.address)).to.be.revertedWith('Ownable: caller is not the owner')
+        })
+
+        it('should set merkleRoot',async function(){
+            await this.Existing1155NftDrop.connect(this.signers.admin).changeAdmin(this.signers.bob.address);
+            
+            expect(await this.Existing1155NftDrop.admin()).to.equal(this.signers.bob.address)
+
+            await expect(this.Existing1155NftDrop.connect(this.signers.bob).setMerkleRoot(bytes32MerkleRootHash))
+            .to.emit(this.Existing1155NftDrop, "MerkleRootChanged").withArgs(bytes32MerkleRootHash);
+    
+        }) 
+        it('should revert merkleRoot change from non admin account',async function(){
+            const nonOwnerAccount:SignerWithAddress = this.signers.alice;
+            await expect(this.Existing1155NftDrop.connect(nonOwnerAccount).setMerkleRoot(bytes32MerkleRootHash)).to.be.revertedWith('NotAdmin')
         })
    })
     
@@ -39,6 +56,20 @@ export function airdropTests(){
             const nonOwnerAccount:SignerWithAddress = this.signers.alice;
             await expect(this.ExistingTokenDrop.connect(nonOwnerAccount).changeAdmin(this.signers.bob.address)).to.be.revertedWith('Ownable: caller is not the owner')
         })
+
+        it('should set merkleRoot',async function(){
+            await this.ExistingTokenDrop.connect(this.signers.admin).changeAdmin(this.signers.bob.address);
+            
+            expect(await this.ExistingTokenDrop.admin()).to.equal(this.signers.bob.address)
+
+            await expect(this.ExistingTokenDrop.connect(this.signers.bob).setMerkleRoot(bytes32MerkleRootHash))
+            .to.emit(this.ExistingTokenDrop, "MerkleRootChanged").withArgs(bytes32MerkleRootHash);
+    
+        }) 
+        it('should revert merkleRoot change from non admin account',async function(){
+            const nonOwnerAccount:SignerWithAddress = this.signers.alice;
+            await expect(this.ExistingTokenDrop.connect(nonOwnerAccount).setMerkleRoot(bytes32MerkleRootHash)).to.be.revertedWith('NotAdmin')
+        })
     })
     
 
@@ -58,6 +89,20 @@ export function airdropTests(){
         it('should revert admin change from non owner account',async function(){
             const nonOwnerAccount:SignerWithAddress = this.signers.alice;
             await expect(this.ItemNFTDrop.connect(nonOwnerAccount).changeAdmin(this.signers.bob.address)).to.be.revertedWith('Ownable: caller is not the owner')
+        })
+
+        it('should set merkleRoot',async function(){
+            await this.ItemNFTDrop.connect(this.signers.admin).changeAdmin(this.signers.bob.address);
+            
+            expect(await this.ItemNFTDrop.admin()).to.equal(this.signers.bob.address)
+
+            await expect(this.ItemNFTDrop.connect(this.signers.bob).setMerkleRoot(bytes32MerkleRootHash))
+            .to.emit(this.ItemNFTDrop, "MerkleRootChanged").withArgs(bytes32MerkleRootHash);
+    
+        }) 
+        it('should revert merkleRoot change from non admin account',async function(){
+            const nonOwnerAccount:SignerWithAddress = this.signers.alice;
+            await expect(this.ItemNFTDrop.connect(nonOwnerAccount).setMerkleRoot(bytes32MerkleRootHash)).to.be.revertedWith('NotAdmin')
         })
     })
     
@@ -79,6 +124,20 @@ export function airdropTests(){
             const nonOwnerAccount:SignerWithAddress = this.signers.alice;
             await expect(this.NFTDrop.connect(nonOwnerAccount).changeAdmin(this.signers.bob.address)).to.be.revertedWith('Ownable: caller is not the owner')
         })
+
+        it('should set merkleRoot',async function(){
+            await this.NFTDrop.connect(this.signers.admin).changeAdmin(this.signers.bob.address);
+            
+            expect(await this.NFTDrop.admin()).to.equal(this.signers.bob.address)
+
+            await expect(this.NFTDrop.connect(this.signers.bob).setMerkleRoot(bytes32MerkleRootHash))
+            .to.emit(this.NFTDrop, "MerkleRootChanged").withArgs(bytes32MerkleRootHash);
+    
+        }) 
+        it('should revert merkleRoot change from non admin account',async function(){
+            const nonOwnerAccount:SignerWithAddress = this.signers.alice;
+            await expect(this.NFTDrop.connect(nonOwnerAccount).setMerkleRoot(bytes32MerkleRootHash)).to.be.revertedWith('NotAdmin')
+        })
     })
     
     
@@ -98,6 +157,20 @@ export function airdropTests(){
         it('should revert admin change from non owner account',async function(){
             const nonOwnerAccount:SignerWithAddress = this.signers.alice;
             await expect(this.TokenDrop.connect(nonOwnerAccount).changeAdmin(this.signers.bob.address)).to.be.revertedWith('Ownable: caller is not the owner')
+        })
+
+        it('should set merkleRoot',async function(){
+            await this.TokenDrop.connect(this.signers.admin).changeAdmin(this.signers.bob.address);
+            
+            expect(await this.TokenDrop.admin()).to.equal(this.signers.bob.address)
+
+            await expect(this.TokenDrop.connect(this.signers.bob).setMerkleRoot(bytes32MerkleRootHash))
+            .to.emit(this.TokenDrop, "MerkleRootChanged").withArgs(bytes32MerkleRootHash);
+    
+        }) 
+        it('should revert merkleRoot change from non admin account',async function(){
+            const nonOwnerAccount:SignerWithAddress = this.signers.alice;
+            await expect(this.TokenDrop.connect(nonOwnerAccount).setMerkleRoot(bytes32MerkleRootHash)).to.be.revertedWith('NotAdmin')
         })
     })
     

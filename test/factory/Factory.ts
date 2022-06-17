@@ -41,11 +41,11 @@ describe("Unit tests", function () {
       const ItemNFTDropArtifact: Artifact = await artifacts.readArtifact("ItemNFTDrop");
       const NFTDropArtifact: Artifact = await artifacts.readArtifact("NFTDrop");
       const TokenDropArtifact: Artifact = await artifacts.readArtifact("TokenDrop");
-      this.Existing1155NftDrop =<Existing1155NftDrop> await waffle.deployContract(this.signers.admin,Existing1155NftDropArtifact,[randomAddress,randomAddress,2,2,2,2,bytes32MerkleRootHash])
-      this.ExistingTokenDrop =<ExistingTokenDrop> await waffle.deployContract(this.signers.admin,ExistingTokenDropArtifact,[randomAddress,2,randomAddress,2,2,bytes32MerkleRootHash])
-      this.ItemNFTDrop =<ItemNFTDrop> await waffle.deployContract(this.signers.admin,ItemNFTDropArtifact,[randomAddress,2,'eee','0x00',1,bytes32MerkleRootHash])
-      this.NFTDrop =<NFTDrop> await waffle.deployContract(this.signers.admin,NFTDropArtifact,[randomAddress,2,'e','e','e',2,bytes32MerkleRootHash])
-      this.TokenDrop =<TokenDrop> await waffle.deployContract(this.signers.admin,TokenDropArtifact,[randomAddress,2,'eee','ee',2,bytes32MerkleRootHash])
+      this.Existing1155NftDrop =<Existing1155NftDrop> await waffle.deployContract(this.signers.admin,Existing1155NftDropArtifact,[randomAddress,randomAddress,2,2,2,2])
+      this.ExistingTokenDrop =<ExistingTokenDrop> await waffle.deployContract(this.signers.admin,ExistingTokenDropArtifact,[randomAddress,2,randomAddress,2,2])
+      this.ItemNFTDrop =<ItemNFTDrop> await waffle.deployContract(this.signers.admin,ItemNFTDropArtifact,[randomAddress,2,'eee','0x00',1])
+      this.NFTDrop =<NFTDrop> await waffle.deployContract(this.signers.admin,NFTDropArtifact,[randomAddress,2,'e','e','e',2])
+      this.TokenDrop =<TokenDrop> await waffle.deployContract(this.signers.admin,TokenDropArtifact,[randomAddress,2,'eee','ee',2])
     });
 
     shouldBehaveLikeFactory()
