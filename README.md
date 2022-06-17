@@ -82,6 +82,12 @@ $ yarn clean
 
 ### Deploy
 
+### Important note
+
+- Before deploying the smart contracts, make sure to update the hardcoded ```admin``` variable in each smart contract in the ```./contracts/airdrops``` folder. The variable should be set to a valid backend wallet address.
+
+- For testing, make sure the variable ```contractAdminAddress``` (found in ```./tests/shared/constants.ts```) is the same as the previously mentioned smart contract ```admin``` variable.
+
 Deploy the contracts to Hardhat Network:
 
 ```sh
