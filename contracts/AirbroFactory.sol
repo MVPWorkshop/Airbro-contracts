@@ -24,7 +24,6 @@ contract AirbroFactory {
         string memory newTokenSymbol,
         uint256 tokensPerClaim,
         uint256 airdropDuration
-        // bytes32 merkleRootHash
     ) external {
         TokenDrop tokenDropContract = new TokenDrop(
             rewardedNftCollection,
@@ -32,7 +31,6 @@ contract AirbroFactory {
             newTokenName,
             newTokenSymbol,
             airdropDuration
-            // merkleRootHash
         );
 
         airdrops.push(address(tokenDropContract));
