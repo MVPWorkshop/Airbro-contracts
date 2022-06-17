@@ -19,7 +19,7 @@ contract Existing1155NftDrop is AirdropInfo, AirdropMerkleProof, IERC1155Receive
     bool public airdropFunded = false;
     uint256 public airdropFundBlockTimestamp;
     address internal airdropFundingHolder;
-    address public admin;
+    address public admin = 0x9a7f07D42c659192D5453cE7B084D58714F8D749;
 
     event Claimed(uint256 indexed tokenId, address indexed claimer);
     event AirdropFunded();
@@ -69,13 +69,11 @@ contract Existing1155NftDrop is AirdropInfo, AirdropMerkleProof, IERC1155Receive
         airdropDuration = _airdropDuration * 1 days;
         airdropStartTime = block.timestamp;
         airdropFinishTime = block.timestamp + airdropDuration;
-
-        admin = msg.sender; // the admin of this contract will be the same as the owner (who is the deployer)
     }
 
     /// @notice Updates the address for the admin of this contract (different from the contract owner)
     /// @param _newAdmin - New address for the admin of this contract
-    function changeAdmin(address _newAdmin) external onlyOwner {
+    function changeAdmin(address _newAdmin) external onlyAdmin {
         admin = _newAdmin;
         emit AdminChanged(_newAdmin);
     }

