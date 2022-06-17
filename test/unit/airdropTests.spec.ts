@@ -8,7 +8,7 @@ export const airdropTests = (): void => {
 // export function airdropTests(){  
    describe('existing 1155 nft drop',async function(){
         it('should have contract owner to address of deployer upon deployment',async function(){
-            expect(await this.Existing1155NftDrop.owner()).to.be.equal(this.signers.admin.address)
+            expect(await this.Existing1155NftDrop.owner()).to.be.equal(this.signers.deployer.address)
         })
         it('should set contract admin to a hardcoded address',async function(){
             expect(await this.Existing1155NftDrop.admin()).to.be.equal(this.signers.backendWallet.address)
@@ -38,7 +38,7 @@ export const airdropTests = (): void => {
     
     describe('existing token drop',async function(){
         it('should have contract owner to address of deployer upon deployment',async function(){
-            expect(await this.ExistingTokenDrop.owner()).to.be.equal(this.signers.admin.address)
+            expect(await this.ExistingTokenDrop.owner()).to.be.equal(this.signers.deployer.address)
         })
         it('should set contract admin to a hardcoded address',async function(){
             expect(await this.ExistingTokenDrop.admin()).to.be.equal(this.signers.backendWallet.address)
@@ -68,7 +68,7 @@ export const airdropTests = (): void => {
 
     describe('item nft drop',async function(){
         it('should have contract owner to address of deployer upon deployment',async function(){
-            expect(await this.ItemNFTDrop.owner()).to.be.equal(this.signers.admin.address)
+            expect(await this.ItemNFTDrop.owner()).to.be.equal(this.signers.deployer.address)
         })
         it('should set contract admin to a hardcoded address',async function(){
             expect(await this.ItemNFTDrop.admin()).to.be.equal(this.signers.backendWallet.address)
@@ -98,7 +98,7 @@ export const airdropTests = (): void => {
 
     describe('nft drop',async function(){
         it('should have contract owner to address of deployer upon deployment',async function(){
-            expect(await this.NFTDrop.owner()).to.be.equal(this.signers.admin.address)
+            expect(await this.NFTDrop.owner()).to.be.equal(this.signers.deployer.address)
         })
         it('should set contract admin to a hardcoded address',async function(){
             expect(await this.NFTDrop.admin()).to.be.equal(this.signers.backendWallet.address)
@@ -128,7 +128,7 @@ export const airdropTests = (): void => {
     
     describe('token drop',async function(){
         it('should have contract owner to address of deployer upon deployment',async function(){
-            expect(await this.TokenDrop.owner()).to.be.equal(this.signers.admin.address)
+            expect(await this.TokenDrop.owner()).to.be.equal(this.signers.deployer.address)
         })
         it('should set contract admin to a hardcoded address',async function(){
             expect(await this.TokenDrop.admin()).to.be.equal(this.signers.backendWallet.address)

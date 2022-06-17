@@ -12,7 +12,7 @@ import { Signers } from "../shared/types";
 import { shouldBehaveLikeFactory } from "./Factory.behavior.spec";
 
 const randomAddress = '0x6b175474e89094c44da98b954eedeac495271d0f';
-describe("Tests", function () {
+describe("Integration tests", function () {
   before(async function () {
     this.signers = {} as Signers;
     
@@ -36,21 +36,4 @@ describe("Tests", function () {
     shouldBehaveLikeFactory()
   });
   
-  
-  // describe('/airdrops unit tests',()=>{
-  //   beforeEach(async function(){
-  //     const Existing1155NftDropArtifact: Artifact = await artifacts.readArtifact("Existing1155NftDrop");
-  //     const ExistingTokenDropArtifact: Artifact = await artifacts.readArtifact("ExistingTokenDrop");
-  //     const ItemNFTDropArtifact: Artifact = await artifacts.readArtifact("ItemNFTDrop");
-  //     const NFTDropArtifact: Artifact = await artifacts.readArtifact("NFTDrop");
-  //     const TokenDropArtifact: Artifact = await artifacts.readArtifact("TokenDrop");
-  //     this.Existing1155NftDrop =<Existing1155NftDrop> await waffle.deployContract(this.signers.deployer,Existing1155NftDropArtifact,[randomAddress,randomAddress,2,2,2,2])
-  //     this.ExistingTokenDrop =<ExistingTokenDrop> await waffle.deployContract(this.signers.deployer,ExistingTokenDropArtifact,[randomAddress,2,randomAddress,2,2])
-  //     this.ItemNFTDrop =<ItemNFTDrop> await waffle.deployContract(this.signers.deployer,ItemNFTDropArtifact,[randomAddress,2,'eee','0x00',1])
-  //     this.NFTDrop =<NFTDrop> await waffle.deployContract(this.signers.deployer,NFTDropArtifact,[randomAddress,2,'e','e','e',2])
-  //     this.TokenDrop =<TokenDrop> await waffle.deployContract(this.signers.deployer,TokenDropArtifact,[randomAddress,2,'eee','ee',2])
-  //   })
-    
-  //   airdropTests()
-  // })
 });
