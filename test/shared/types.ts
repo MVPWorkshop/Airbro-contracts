@@ -13,7 +13,7 @@ declare module "mocha" {
 }
 
 export interface Signers {
-  admin: SignerWithAddress;
+  deployer: SignerWithAddress;
   alice: SignerWithAddress;
   bob: SignerWithAddress;
   backendWallet: SignerWithAddress;

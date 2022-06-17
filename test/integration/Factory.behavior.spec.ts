@@ -1,15 +1,11 @@
 import { expect } from "chai";
 import { ethers } from "hardhat";
 import { shouldAirdropExisting1155token } from "./AirBro1155NftMint.spec";
-import { constants } from "ethers";
-
-
-const bytes32MerkleRootHash = "0x0000000000000000000000000000000000000000000000000000000000000000";
 
 export function shouldBehaveLikeFactory(): void {
   it("should emit NewAirdrop event", async function() {
     await expect(
-      await this.airbroFactory.connect(this.signers.admin).dropNewTokensToNftHolders(
+      await this.airbroFactory.connect(this.signers.deployer).dropNewTokensToNftHolders(
         this.testNftCollection.address, // rewardedNftCollection,
         "Reward Token", // newTokenName
         "TKN", // newTokenSymbol
@@ -22,11 +18,11 @@ export function shouldBehaveLikeFactory(): void {
   it("should fund and claim existing token airdrop", async function() {
     const totalAirdropAmount = ethers.utils.parseEther("1000");
 
-    await this.testToken.connect(this.signers.admin).mint(this.signers.admin.address, totalAirdropAmount);
-    console.log("Test token balance of: " + (await this.testToken.balanceOf(this.signers.admin.address)));
+    await this.testToken.connect(this.signers.deployer).mint(this.signers.deployer.address, totalAirdropAmount);
+    console.log("Test token balance of: " + (await this.testToken.balanceOf(this.signers.deployer.address)));
 
     await expect(
-      await this.airbroFactory.connect(this.signers.admin).dropExistingTokensToNftHolders(
+      await this.airbroFactory.connect(this.signers.deployer).dropExistingTokensToNftHolders(
         this.testNftCollection.address, // rewardedNftCollection,
         100, // tokensPerClaim
         this.testToken.address, //existing token address
@@ -38,17 +34,17 @@ export function shouldBehaveLikeFactory(): void {
     const existingDropFactory = await ethers.getContractFactory("ExistingTokenDrop");
     const tokenDropContract = existingDropFactory.attach(await this.airbroFactory.airdrops(0));
 
-    await this.testToken.connect(this.signers.admin).approve(tokenDropContract.address, totalAirdropAmount);
+    await this.testToken.connect(this.signers.deployer).approve(tokenDropContract.address, totalAirdropAmount);
 
-    await expect(await this.airbroFactory.connect(this.signers.admin).totalAirdropsCount()).to.equal(1);
+    await expect(await this.airbroFactory.connect(this.signers.deployer).totalAirdropsCount()).to.equal(1);
     await expect(tokenDropContract.fundAirdrop()).to.emit(tokenDropContract, "AirdropFunded");
-    await this.testNftCollection.connect(this.signers.admin).safeMint(this.signers.admin.address);
+    await this.testNftCollection.connect(this.signers.deployer).safeMint(this.signers.deployer.address);
 
     await expect(tokenDropContract.claim(0, [])).to.emit(tokenDropContract, "Claimed");
     await expect(tokenDropContract.claim(0, [])).to.be.revertedWith("AlreadyRedeemed");
 
-    await this.testNftCollection.connect(this.signers.admin).safeMint(this.signers.admin.address);
-    await this.testNftCollection.connect(this.signers.admin).safeMint(this.signers.admin.address);
+    await this.testNftCollection.connect(this.signers.deployer).safeMint(this.signers.deployer.address);
+    await this.testNftCollection.connect(this.signers.deployer).safeMint(this.signers.deployer.address);
 
     await expect(tokenDropContract.batchClaim([1, 2], [])).to.emit(tokenDropContract, "Claimed");
 
@@ -62,7 +58,7 @@ export function shouldBehaveLikeFactory(): void {
     const newTokenSymbol: string = "WKND";
 
     // create new airdrop, along with new ERC20
-    expect( await this.airbroFactory.connect(this.signers.admin).dropNewTokensToNftHolders(
+    expect( await this.airbroFactory.connect(this.signers.deployer).dropNewTokensToNftHolders(
         this.testNftCollection.address, // rewardedNftCollection,
         newTokenName, // Name of new ERC20 Token
         newTokenSymbol, // Symbol of new ERC20 Token
@@ -75,25 +71,25 @@ export function shouldBehaveLikeFactory(): void {
     const newDropFactory = await ethers.getContractFactory("TokenDrop");
     const tokenDropContract = newDropFactory.attach(await this.airbroFactory.airdrops(0));
 
-    expect(await this.airbroFactory.connect(this.signers.admin).totalAirdropsCount()).to.equal(1);
+    expect(await this.airbroFactory.connect(this.signers.deployer).totalAirdropsCount()).to.equal(1);
 
     // minting NFT to admin so admin is able to claim tokens
-    await this.testNftCollection.connect(this.signers.admin).safeMint(this.signers.admin.address);
+    await this.testNftCollection.connect(this.signers.deployer).safeMint(this.signers.deployer.address);
 
     // test to see if claiming is successfull when eligible and after tokens are claimed
     await expect(tokenDropContract.claim(0, [])).to.emit(tokenDropContract, "Claimed");
     await expect(tokenDropContract.claim(0, [])).to.be.revertedWith("AlreadyRedeemed");
 
     // minting 2 NFTs to admin so admin is able to batch claim tokens
-    await this.testNftCollection.connect(this.signers.admin).safeMint(this.signers.admin.address);
-    await this.testNftCollection.connect(this.signers.admin).safeMint(this.signers.admin.address);
+    await this.testNftCollection.connect(this.signers.deployer).safeMint(this.signers.deployer.address);
+    await this.testNftCollection.connect(this.signers.deployer).safeMint(this.signers.deployer.address);
 
     await expect(tokenDropContract.batchClaim([1, 2], [])).to.emit(tokenDropContract, "Claimed");
 
     expect(await tokenDropContract.hasClaimed(1)).to.be.equal(true);
     expect(await tokenDropContract.hasClaimed(3)).to.be.equal(false);
 
-    // expect(await this.tokenDropContract.balanceOf(this.signers.admin.address)).to.be.equal(300);
+    // expect(await this.tokenDropContract.balanceOf(this.signers.deployer.address)).to.be.equal(300);
 
   });
 
@@ -103,7 +99,7 @@ export function shouldBehaveLikeFactory(): void {
     //TODO generate a real hash of a CSV file
 
     await expect(
-      await this.airbroFactory.connect(this.signers.admin).dropNewTokensToNftHolders(
+      await this.airbroFactory.connect(this.signers.deployer).dropNewTokensToNftHolders(
         this.testNftCollection.address, // rewardedNftCollection,
         "Reward Token", // newTokenName
         "TKN", // newTokenSymbol
