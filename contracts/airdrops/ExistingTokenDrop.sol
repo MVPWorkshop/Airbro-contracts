@@ -55,13 +55,11 @@ contract ExistingTokenDrop is AirdropInfo, AirdropMerkleProof, Ownable {
         address _rewardToken,
         uint256 _totalAirdropAmount,
         uint256 _airdropDuration
-        // bytes32 _merkleRoot
     ) {
         rewardedNft = IERC721(_rewardedNft);
         tokensPerClaim = _tokensPerClaim;
         totalAirdropAmount = _totalAirdropAmount;
         rewardToken = IERC20(_rewardToken);
-        // merkleRoot = _merkleRoot;
         airdropDuration = _airdropDuration * 1 days;
         airdropStartTime = block.timestamp;
         airdropFinishTime = block.timestamp + airdropDuration;

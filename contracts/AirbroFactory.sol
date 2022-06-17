@@ -51,7 +51,6 @@ contract AirbroFactory {
         address rewardToken,
         uint256 totalAirdropAmount,
         uint256 airdropDuration
-        // bytes32 merkleRootHash
     ) external {
         ExistingTokenDrop tokenDropContract = new ExistingTokenDrop(
             rewardedNftCollection,
@@ -59,7 +58,6 @@ contract AirbroFactory {
             rewardToken,
             totalAirdropAmount,
             airdropDuration
-            // merkleRootHash
         );
         airdrops.push(address(tokenDropContract));
         totalAirdropsCount++;
@@ -107,7 +105,6 @@ contract AirbroFactory {
         uint256 tokenId,
         uint256 totalAirdropAmount,
         uint256 airdropDuration
-        // bytes32 merkleRootHash
     ) external {
         Existing1155NftDrop tokenDropContract = new Existing1155NftDrop(
             rewardedNftCollection,
@@ -116,7 +113,6 @@ contract AirbroFactory {
             tokenId,
             totalAirdropAmount,
             airdropDuration
-            // merkleRootHash
         );
         airdrops.push(address(tokenDropContract));
         totalAirdropsCount++;

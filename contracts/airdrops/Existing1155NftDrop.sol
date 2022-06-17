@@ -58,14 +58,12 @@ contract Existing1155NftDrop is AirdropInfo, AirdropMerkleProof, IERC1155Receive
         uint256 _tokenId,
         uint256 _totalAirdropAmount,
         uint256 _airdropDuration
-        // bytes32 _merkleRoot
     ) {
         rewardedNft = IERC721(_rewardedNft);
         tokensPerClaim = _tokensPerClaim;
         totalAirdropAmount = _totalAirdropAmount;
         rewardToken = IERC1155(_reward1155Nft);
         rewardTokenId = _tokenId;
-        // merkleRoot = _merkleRoot;
         airdropDuration = _airdropDuration * 1 days;
         airdropStartTime = block.timestamp;
         airdropFinishTime = block.timestamp + airdropDuration;

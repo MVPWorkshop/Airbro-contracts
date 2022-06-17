@@ -3,8 +3,9 @@ import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 
 const bytes32MerkleRootHash = "0x0000000000000000000000000000000000000000000000000000000000000000";
 
+export const airdropTests = (): void => {
 
-export function airdropTests(){  
+// export function airdropTests(){  
    describe('existing 1155 nft drop',async function(){
         it('should have contract owner to address of deployer upon deployment',async function(){
             expect(await this.Existing1155NftDrop.owner()).to.be.equal(this.signers.admin.address)

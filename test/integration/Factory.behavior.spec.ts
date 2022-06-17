@@ -15,7 +15,6 @@ export function shouldBehaveLikeFactory(): void {
         "TKN", // newTokenSymbol
         100, // tokensPerClaim
         30 // airdrop duration in days
-        // bytes32MerkleRootHash, // merkle root hash, can be null
       ),
     ).to.emit(this.airbroFactory, "NewAirdrop");
   });
@@ -33,7 +32,6 @@ export function shouldBehaveLikeFactory(): void {
         this.testToken.address, //existing token address
         totalAirdropAmount, // total tokens to be rewarded
         30,
-        // bytes32MerkleRootHash, // merkle root hash, can be null
       ),
     ).to.emit(this.airbroFactory, "NewAirdrop");
 
@@ -70,7 +68,6 @@ export function shouldBehaveLikeFactory(): void {
         newTokenSymbol, // Symbol of new ERC20 Token
         100, // tokensPerClaim
         30
-        // bytes32MerkleRootHash, // merkle root hash, can be null
       ),
     ).to.emit(this.airbroFactory, "NewAirdrop");
 
@@ -112,7 +109,6 @@ export function shouldBehaveLikeFactory(): void {
         "TKN", // newTokenSymbol
         100, // tokensPerClaim
         30
-        // bytes32MerkleRootHash, // merkle root hash, can be null
       ),
     ).to.emit(this.airbroFactory, "NewAirdrop");
   });

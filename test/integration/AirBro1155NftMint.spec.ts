@@ -51,7 +51,6 @@ export function shouldAirdropExisting1155token(){
             tokenId, //is this right?
             amounOft1155,
             durationInDays
-            // bytes32MerkleRootHash
         )).to.emit(this.airbroFactory,'NewAirdrop')
 
 

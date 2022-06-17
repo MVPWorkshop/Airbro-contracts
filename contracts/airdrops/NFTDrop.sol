@@ -51,12 +51,10 @@ contract NFTDrop is ERC721, AirdropInfo, AirdropMerkleProof, Ownable {
         string memory symbol,
         string memory _baseURI,
         uint256 _airdropDuration
-        // bytes32 _merkleRoot
     ) ERC721(name, symbol) {
         baseURI = _baseURI;
         rewardedNft = IERC721(_rewardedNft);
         maxSupply = _maxSupply;
-        // merkleRoot = _merkleRoot;
         airdropDuration = _airdropDuration * 1 days;
         airdropStartTime = block.timestamp;
         airdropFinishTime = block.timestamp + airdropDuration;

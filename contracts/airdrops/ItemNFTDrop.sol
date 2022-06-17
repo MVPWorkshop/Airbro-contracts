@@ -51,13 +51,11 @@ contract ItemNFTDrop is ERC1155, AirdropInfo, AirdropMerkleProof, Ownable {
         string memory _baseURI,
         bytes memory _data,
         uint256 _airdropDuration
-        // bytes32 _merkleRoot
     ) ERC1155() {
         baseURI = _baseURI;
         rewardedNft = IERC721(_rewardedNft);
         maxSupply = _maxSupply;
         data = _data;
-        // merkleRoot = _merkleRoot;
         airdropDuration = _airdropDuration * 1 days;
         airdropStartTime = block.timestamp;
         airdropFinishTime = block.timestamp + airdropDuration;
