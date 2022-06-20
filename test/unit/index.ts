@@ -3,11 +3,14 @@ import type { Artifact } from "hardhat/types";
 import type { SignerWithAddress } from "@nomiclabs/hardhat-ethers/dist/src/signer-with-address";
 
 import type { Existing1155NftDrop, ExistingTokenDrop, ItemNFTDrop, NFTDrop, TokenDrop } from "../../src/types/contracts/airdrops/index"
+import type { AirbroFactory } from "../../src/types/contracts/AirbroFactory";
 import { Signers } from "../shared/types";
 
 import {contractAdminAddress } from "../shared/constants";
 import { airdropTests } from "./airdropTests.spec";
 
+import { shouldBeCorrectAdmin } from "./AirbroFactory/AirbroFactoryShouldBeCorrectAdmin.spec";
+import { shouldChangeAdminAddress } from "./AirbroFactory/AirbroFactoryShouldChangeAdmin.spec";
 import { TokenDropShouldDeploy } from "./TokenDrop/TokenDropShouldBeDeployed.spec";
 import { TokenDropShouldChangeAdmin } from "./TokenDrop/TokenDropShouldChangeAdmin.spec";
 import { TokenDropShouldSetMerkleRoot } from "./TokenDrop/TokenDropShouldSetMerkleRoot.spec";
@@ -26,7 +29,8 @@ import { Existing1155NftDropShouldChangeAdmin } from "./Existing1155NftDrop/Exis
 
 
 
-const randomAddress = '0x6b175474e89094c44da98b954eedeac495271d0f';
+
+const randomAddress = '0x6B175474E89094C44Da98b954EedeAC495271d0F';
 
 
 describe("Unit tests", function () {
@@ -51,6 +55,17 @@ describe("Unit tests", function () {
     
     this.signers.backendWallet = await ethers.getSigner(contractAdminAddress);
   });
+
+
+  describe('AirBrofactory',()=>{
+    beforeEach(async function(){
+      const factoryArtifact: Artifact = await artifacts.readArtifact("AirbroFactory");
+      this.airbroFactory = <AirbroFactory>await waffle.deployContract(this.signers.deployer, factoryArtifact, []);
+    })
+
+    shouldBeCorrectAdmin()
+    shouldChangeAdminAddress()
+  })
   
   describe('Existing1155NftDrop',()=>{
     beforeEach(async function(){
