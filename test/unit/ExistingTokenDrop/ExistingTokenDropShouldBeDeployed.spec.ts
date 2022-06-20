@@ -4,10 +4,10 @@ export const ExistingTokenDropShouldDeploy = (): void => {
 
     describe('should deploy',async function(){
         it('should have contract owner to address of deployer upon deployment',async function(){
-            expect(await this.ExistingTokenDrop.owner()).to.be.equal(this.signers.deployer.address)
+            expect(await this.existingTokenDrop.owner()).to.be.equal(this.signers.deployer.address)
         })
         it('should set contract admin to a hardcoded address',async function(){
-            expect(await this.ExistingTokenDrop.admin()).to.be.equal(this.signers.backendWallet.address)
+            expect(await this.existingTokenDrop.admin()).to.be.equal(this.signers.backendWallet.address)
         })
     })
 };

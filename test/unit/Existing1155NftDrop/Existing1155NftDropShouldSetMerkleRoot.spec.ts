@@ -7,13 +7,13 @@ export const Existing1155NftDropShouldSetMerkleRoot = (): void => {
 
     describe('should set merkleRoot',async function(){
         it('should allow admin to set merkleRoot',async function(){            
-            await expect(this.Existing1155NftDrop.connect(this.signers.backendWallet).setMerkleRoot(bytes32MerkleRootHash))
-            .to.emit(this.Existing1155NftDrop, "MerkleRootChanged").withArgs(bytes32MerkleRootHash);
+            await expect(this.existing1155NFTDrop.connect(this.signers.backendWallet).setMerkleRoot(bytes32MerkleRootHash))
+            .to.emit(this.existing1155NFTDrop, "MerkleRootChanged").withArgs(bytes32MerkleRootHash);
     
         }) 
         it('should revert merkleRoot change from non admin account',async function(){
             const nonOwnerAccount = this.signers.alice;
-            await expect(this.Existing1155NftDrop.connect(nonOwnerAccount).setMerkleRoot(bytes32MerkleRootHash)).to.be.revertedWith('NotAdmin')
+            await expect(this.existing1155NFTDrop.connect(nonOwnerAccount).setMerkleRoot(bytes32MerkleRootHash)).to.be.revertedWith('NotAdmin')
         })
     })
 };

@@ -1,5 +1,6 @@
 import { expect } from "chai";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
+import { Wallet } from "@ethersproject/wallet";
 
 export const TokenDropShouldSetMerkleRoot = (): void => {
 
@@ -7,13 +8,13 @@ export const TokenDropShouldSetMerkleRoot = (): void => {
 
     describe('should set merkleRoot',async function(){
         it('should allow admin to set merkleRoot',async function(){            
-            await expect(this.TokenDrop.connect(this.signers.backendWallet).setMerkleRoot(bytes32MerkleRootHash))
-            .to.emit(this.TokenDrop, "MerkleRootChanged").withArgs(bytes32MerkleRootHash);
+            await expect(this.tokenDrop.connect(this.signers.backendWallet).setMerkleRoot(bytes32MerkleRootHash))
+            .to.emit(this.tokenDrop, "MerkleRootChanged").withArgs(bytes32MerkleRootHash);
     
         }) 
         it('should revert merkleRoot change from non admin account',async function(){
-            const nonOwnerAccount = this.signers.alice;
-            await expect(this.TokenDrop.connect(nonOwnerAccount).setMerkleRoot(bytes32MerkleRootHash)).to.be.revertedWith('NotAdmin')
+            const nonOwnerAccount: Wallet = this.signers.alice;
+            await expect(this.tokenDrop.connect(nonOwnerAccount).setMerkleRoot(bytes32MerkleRootHash)).to.be.revertedWith('NotAdmin')
         })
     })
 };

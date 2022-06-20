@@ -1,9 +1,5 @@
-import { artifacts, ethers, waffle } from "hardhat";
-import type { Artifact } from "hardhat/types";
+import { ethers, waffle } from "hardhat";
 import { contractAdminAddress } from "../shared/constants";
-
-import type { TestNftCollection } from "../../src/types/contracts/mocks/TestNftCollection";
-import type { TestToken } from "../../src/types/contracts/mocks/TestToken";
 
 import { Signers } from "../shared/types";
 
