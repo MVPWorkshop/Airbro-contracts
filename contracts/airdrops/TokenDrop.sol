@@ -12,7 +12,7 @@ import "../interfaces/AirdropMerkleProof.sol";
 contract TokenDrop is ERC20, AirdropInfo, AirdropMerkleProof, Ownable {
     IERC721 public immutable rewardedNft;
     uint256 public immutable tokensPerClaim;
-    address public admin = 0x9a7f07D42c659192D5453cE7B084D58714F8D749;
+    address public admin;
 
     event Claimed(uint256 indexed tokenId, address indexed claimer);
     event AdminChanged(address indexed adminAddress);
@@ -43,13 +43,15 @@ contract TokenDrop is ERC20, AirdropInfo, AirdropMerkleProof, Ownable {
         uint256 _tokensPerClaim,
         string memory name,
         string memory symbol,
-        uint256 _airdropDuration
+        uint256 _airdropDuration,
+        address _admin
     ) ERC20(name, symbol, 18) {
         rewardedNft = IERC721(_rewardedNft);
         tokensPerClaim = _tokensPerClaim;
         airdropDuration = _airdropDuration * 1 days;
         airdropStartTime = block.timestamp;
         airdropFinishTime = block.timestamp + airdropDuration;
+        admin = _admin;
     }
 
     /// @notice Updates the address for the admin of this contract (different from the contract owner)

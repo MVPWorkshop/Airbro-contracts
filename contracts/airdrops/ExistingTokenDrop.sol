@@ -17,7 +17,7 @@ contract ExistingTokenDrop is AirdropInfo, AirdropMerkleProof, Ownable {
     bool public airdropFunded = false;
     uint256 public airdropFundBlockTimestamp;
     address internal airdropFundingHolder;
-    address public admin = 0x9a7f07D42c659192D5453cE7B084D58714F8D749;
+    address public admin;
 
     event Claimed(uint256 indexed tokenId, address indexed claimer);
     event AirdropFunded();
@@ -54,7 +54,8 @@ contract ExistingTokenDrop is AirdropInfo, AirdropMerkleProof, Ownable {
         uint256 _tokensPerClaim,
         address _rewardToken,
         uint256 _totalAirdropAmount,
-        uint256 _airdropDuration
+        uint256 _airdropDuration,
+        address _admin
     ) {
         rewardedNft = IERC721(_rewardedNft);
         tokensPerClaim = _tokensPerClaim;
@@ -63,6 +64,7 @@ contract ExistingTokenDrop is AirdropInfo, AirdropMerkleProof, Ownable {
         airdropDuration = _airdropDuration * 1 days;
         airdropStartTime = block.timestamp;
         airdropFinishTime = block.timestamp + airdropDuration;
+        admin = _admin;
     }
 
     /// @notice Updates the address for the admin of this contract (different from the contract owner)
