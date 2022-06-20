@@ -28,14 +28,10 @@ describe("Integration tests", function () {
   
   describe("AirbroFactory",  ()=> {
     beforeEach(async function () {
-      const { airbroFactory } = await this.loadFixture(integrationsFixture)
+      const { airbroFactory, testNftCollection, testToken } = await this.loadFixture(integrationsFixture)
       this.airbroFactory = airbroFactory;
-
-      const testNftArtifact: Artifact = await artifacts.readArtifact("TestNftCollection");
-      this.testNftCollection = <TestNftCollection>await waffle.deployContract(this.signers.deployer, testNftArtifact, []);
-
-      const testTokenArtifact: Artifact = await artifacts.readArtifact("TestToken");
-      this.testToken = <TestToken>await waffle.deployContract(this.signers.deployer, testTokenArtifact, []);
+      this.testNftCollection = testNftCollection;
+      this.testToken = testToken;
 
     });
     
