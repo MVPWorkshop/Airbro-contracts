@@ -1,9 +1,4 @@
 import { artifacts, ethers, network, waffle } from "hardhat";
-import type { Artifact } from "hardhat/types";
-import type { SignerWithAddress } from "@nomiclabs/hardhat-ethers/dist/src/signer-with-address";
-
-import type { Existing1155NftDrop, ExistingTokenDrop, ItemNFTDrop, NFTDrop, TokenDrop } from "../../src/types/contracts/airdrops/index"
-import type { AirbroFactory } from "../../src/types/contracts/AirbroFactory";
 import { Signers } from "../shared/types";
 
 import {contractAdminAddress } from "../shared/constants";
@@ -75,8 +70,6 @@ describe("Unit tests", function () {
       const { existing1155NftDrop } = await this.loadFixture(unitExisting1155NFTDropFixture);
       this.existing1155NFTDrop = existing1155NftDrop;
 
-      // const Existing1155NftDropArtifact: Artifact = await artifacts.readArtifact("Existing1155NftDrop");
-      // this.Existing1155NftDrop =<Existing1155NftDrop> await waffle.deployContract(this.signers.deployer,Existing1155NftDropArtifact,[randomAddress,randomAddress,2,2,2,2, contractAdminAddress])
     })
     
     Existing1155NftDropShouldDeploy();
@@ -90,8 +83,6 @@ describe("Unit tests", function () {
       const { existingTokenDrop } = await this.loadFixture(unitExistingTokenDropFixture);
       this.existingTokenDrop = existingTokenDrop;
 
-      // const ExistingTokenDropArtifact: Artifact = await artifacts.readArtifact("ExistingTokenDrop");
-      // this.ExistingTokenDrop =<ExistingTokenDrop> await waffle.deployContract(this.signers.deployer,ExistingTokenDropArtifact,[randomAddress,2,randomAddress,2,2,contractAdminAddress])
     })
     
     ExistingTokenDropShouldDeploy();
@@ -105,8 +96,6 @@ describe("Unit tests", function () {
       const { itemNFTDrop } = await this.loadFixture(unitItemNFTDropFixture);
       this.itemNFTDrop = itemNFTDrop;
 
-      // const ItemNFTDropArtifact: Artifact = await artifacts.readArtifact("ItemNFTDrop");
-      // this.ItemNFTDrop =<ItemNFTDrop> await waffle.deployContract(this.signers.deployer,ItemNFTDropArtifact,[randomAddress,2,'eee','0x00',1,contractAdminAddress])
     })
     
     ItemNFTDropShouldDeploy();
@@ -120,8 +109,6 @@ describe("Unit tests", function () {
       const { nftDrop } = await this.loadFixture(unitNFTDropFixture);
       this.nftDrop = nftDrop;
 
-      // const NFTDropArtifact: Artifact = await artifacts.readArtifact("NFTDrop");
-      // this.NFTDrop =<NFTDrop> await waffle.deployContract(this.signers.deployer,NFTDropArtifact,[randomAddress,2,'e','e','e',2,contractAdminAddress])
     })
     
     NFTDropShouldDeploy();

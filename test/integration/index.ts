@@ -3,7 +3,9 @@ import { contractAdminAddress } from "../shared/constants";
 
 import { Signers } from "../shared/types";
 
-import { shouldBehaveLikeFactory } from "./Factory.behavior.spec";
+import { shouldBehaveLikeFactory } from "./AirBroDropCreationShouldEmitEvent.spec";
+import { shouldAirDropExistingToken } from "./AirBroExistingTokenDrop.spec";
+import { shouldAirDropNewToken } from "./AirBroTokenDrop.spec";
 import { shouldAirdropExisting1155token } from "./AirBro1155NftMint.spec";
 import { integrationsFixture } from "../shared/fixtures";
 
@@ -31,7 +33,9 @@ describe("Integration tests", function () {
 
     });
     
-    shouldBehaveLikeFactory()
+    shouldBehaveLikeFactory();
+    shouldAirDropExistingToken();
+    shouldAirDropNewToken();
     shouldAirdropExisting1155token()
   });
   
