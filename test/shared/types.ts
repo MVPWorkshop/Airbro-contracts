@@ -1,6 +1,6 @@
 import type { SignerWithAddress } from "@nomiclabs/hardhat-ethers/dist/src/signer-with-address";
 import type { Fixture } from "ethereum-waffle";
-import { Signer } from "ethers";
+import { Wallet } from "@ethersproject/wallet";
 
 import type { AirbroFactory } from "../../src/types/contracts/AirbroFactory";
 
@@ -13,8 +13,8 @@ declare module "mocha" {
 }
 
 export interface Signers {
-  deployer: SignerWithAddress;
-  alice: SignerWithAddress;
-  bob: SignerWithAddress;
+  deployer: Wallet;
+  alice: Wallet;
+  bob: Wallet;
   backendWallet: SignerWithAddress;
 }

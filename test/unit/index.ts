@@ -7,7 +7,7 @@ import type { AirbroFactory } from "../../src/types/contracts/AirbroFactory";
 import { Signers } from "../shared/types";
 
 import {contractAdminAddress } from "../shared/constants";
-import { airdropTests } from "./airdropTests.spec";
+import { integrationsFixture } from "../shared/fixtures";
 
 import { shouldBeCorrectAdmin } from "./AirbroFactory/AirbroFactoryShouldBeCorrectAdmin.spec";
 import { shouldChangeAdminAddress } from "./AirbroFactory/AirbroFactoryShouldChangeAdmin.spec";
@@ -37,7 +37,7 @@ describe("Unit tests", function () {
   before(async function () {
     this.signers = {} as Signers;
     
-    const signers: SignerWithAddress[] = await ethers.getSigners();
+    const signers= waffle.provider.getWallets();
     this.signers.deployer = signers[0];
     this.signers.alice = signers[1];
     this.signers.bob = signers[2];
@@ -54,13 +54,16 @@ describe("Unit tests", function () {
     });
     
     this.signers.backendWallet = await ethers.getSigner(contractAdminAddress);
+
+    this.loadFixture = waffle.createFixtureLoader(signers)
   });
 
 
-  describe('AirBrofactory',()=>{
-    beforeEach(async function(){
-      const factoryArtifact: Artifact = await artifacts.readArtifact("AirbroFactory");
-      this.airbroFactory = <AirbroFactory>await waffle.deployContract(this.signers.deployer, factoryArtifact, []);
+  describe('AirbroFactory',() => {
+    beforeEach(async function() {
+      const { airbroFactory } = await this.loadFixture(integrationsFixture)
+      this.airbroFactory = airbroFactory;
+
     })
 
     shouldBeCorrectAdmin()

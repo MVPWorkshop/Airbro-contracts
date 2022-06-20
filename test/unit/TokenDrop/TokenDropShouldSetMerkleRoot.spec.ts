@@ -12,7 +12,7 @@ export const TokenDropShouldSetMerkleRoot = (): void => {
     
         }) 
         it('should revert merkleRoot change from non admin account',async function(){
-            const nonOwnerAccount:SignerWithAddress = this.signers.alice;
+            const nonOwnerAccount = this.signers.alice;
             await expect(this.TokenDrop.connect(nonOwnerAccount).setMerkleRoot(bytes32MerkleRootHash)).to.be.revertedWith('NotAdmin')
         })
     })

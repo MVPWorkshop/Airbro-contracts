@@ -11,7 +11,7 @@ export const ExistingTokenDropShouldChangeAdmin = (): void => {
             expect(await this.ExistingTokenDrop.admin()).to.equal(this.signers.bob.address)
         }) 
         it('should revert admin change from non admin account',async function(){
-            const nonOwnerAccount:SignerWithAddress = this.signers.alice;
+            const nonOwnerAccount = this.signers.alice;
             await expect(this.ExistingTokenDrop.connect(nonOwnerAccount).changeAdmin(this.signers.bob.address)).to.be.revertedWith('NotAdmin')
         })
     })

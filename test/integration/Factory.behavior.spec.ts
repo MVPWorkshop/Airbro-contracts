@@ -1,6 +1,5 @@
 import { expect } from "chai";
 import { ethers } from "hardhat";
-import { shouldAirdropExisting1155token } from "./AirBro1155NftMint.spec";
 
 export function shouldBehaveLikeFactory(): void {
   it("should emit NewAirdrop event", async function() {
@@ -19,7 +18,7 @@ export function shouldBehaveLikeFactory(): void {
     const totalAirdropAmount = ethers.utils.parseEther("1000");
 
     await this.testToken.connect(this.signers.deployer).mint(this.signers.deployer.address, totalAirdropAmount);
-    console.log("Test token balance of: " + (await this.testToken.balanceOf(this.signers.deployer.address)));
+    // console.log("Test token balance of: " + (await this.testToken.balanceOf(this.signers.deployer.address)));
 
     await expect(
       await this.airbroFactory.connect(this.signers.deployer).dropExistingTokensToNftHolders(
@@ -36,7 +35,7 @@ export function shouldBehaveLikeFactory(): void {
 
     await this.testToken.connect(this.signers.deployer).approve(tokenDropContract.address, totalAirdropAmount);
 
-    await expect(await this.airbroFactory.connect(this.signers.deployer).totalAirdropsCount()).to.equal(1);
+    expect(await this.airbroFactory.connect(this.signers.deployer).totalAirdropsCount()).to.equal(1);
     await expect(tokenDropContract.fundAirdrop()).to.emit(tokenDropContract, "AirdropFunded");
     await this.testNftCollection.connect(this.signers.deployer).safeMint(this.signers.deployer.address);
 
@@ -108,6 +107,4 @@ export function shouldBehaveLikeFactory(): void {
       ),
     ).to.emit(this.airbroFactory, "NewAirdrop");
   });
-
-  shouldAirdropExisting1155token()
 }

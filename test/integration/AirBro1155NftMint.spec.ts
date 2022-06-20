@@ -20,11 +20,11 @@ export function shouldAirdropExisting1155token(){
         await this.testNftCollection.connect(this.signers.deployer).safeMint(this.signers.deployer.address);
         
         const aliceBalance = await this.testNftCollection.balanceOf(this.signers.alice.address)
-        console.log(`Test NFT balance of Alice: ${parseInt(aliceBalance)}`);
+        // console.log(`Test NFT balance of Alice: ${parseInt(aliceBalance)}`);
         expect(aliceBalance).to.be.equal(1)
         
         const bobBalance = await this.testNftCollection.balanceOf(this.signers.bob.address)
-        console.log(`Test NFT balance of Bob: ${parseInt(bobBalance)}`);
+        // console.log(`Test NFT balance of Bob: ${parseInt(bobBalance)}`);
         expect(aliceBalance).to.be.equal(1)
 
 
@@ -36,7 +36,7 @@ export function shouldAirdropExisting1155token(){
 
         await this.test1155NftCollection.connect(this.signers.deployer).mint(idOf1155,amounOft1155); // giving alice 1 nft
         const adminBalance1155 = await this.test1155NftCollection.balanceOf(this.signers.deployer.address,tokenId)
-        console.log(`Admin's 1155Nft balance: ${parseInt(adminBalance1155)}`);
+        // console.log(`Admin's 1155Nft balance: ${parseInt(adminBalance1155)}`);
         expect(adminBalance1155).to.be.equal(1000)
 
         const tokensPerClaim:number = 1;
