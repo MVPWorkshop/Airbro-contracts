@@ -11,8 +11,17 @@ contract AirbroFactory {
     // index of deployed airdrop contracts
     address[] public airdrops;
     uint256 public totalAirdropsCount = 0;
+    address public admin = 0xF4b5bFB92dD4E6D529476bCab28A65bb6B32EFb3;
 
     event NewAirdrop(address indexed rewardedNftCollection, address indexed airdropContract, address indexed airdropCreator);
+    event AdminChanged(address indexed adminAddress);
+
+    error NotAdmin();
+
+    modifier onlyAdmin(){
+        if(msg.sender != admin) revert NotAdmin();
+        _;
+    }
 
     constructor() {}
 
@@ -23,8 +32,7 @@ contract AirbroFactory {
         string memory newTokenName,
         string memory newTokenSymbol,
         uint256 tokensPerClaim,
-        uint256 airdropDuration,
-        bytes32 merkleRootHash
+        uint256 airdropDuration
     ) external {
         TokenDrop tokenDropContract = new TokenDrop(
             rewardedNftCollection,
@@ -32,7 +40,7 @@ contract AirbroFactory {
             newTokenName,
             newTokenSymbol,
             airdropDuration,
-            merkleRootHash
+            admin
         );
 
         airdrops.push(address(tokenDropContract));
@@ -50,8 +58,7 @@ contract AirbroFactory {
         uint256 tokensPerClaim,
         address rewardToken,
         uint256 totalAirdropAmount,
-        uint256 airdropDuration,
-        bytes32 merkleRootHash
+        uint256 airdropDuration
     ) external {
         ExistingTokenDrop tokenDropContract = new ExistingTokenDrop(
             rewardedNftCollection,
@@ -59,7 +66,7 @@ contract AirbroFactory {
             rewardToken,
             totalAirdropAmount,
             airdropDuration,
-            merkleRootHash
+            admin
         );
         airdrops.push(address(tokenDropContract));
         totalAirdropsCount++;
@@ -106,8 +113,7 @@ contract AirbroFactory {
         uint256 tokensPerClaim,
         uint256 tokenId,
         uint256 totalAirdropAmount,
-        uint256 airdropDuration,
-        bytes32 merkleRootHash
+        uint256 airdropDuration
     ) external {
         Existing1155NftDrop tokenDropContract = new Existing1155NftDrop(
             rewardedNftCollection,
@@ -116,10 +122,17 @@ contract AirbroFactory {
             tokenId,
             totalAirdropAmount,
             airdropDuration,
-            merkleRootHash
+            admin
         );
         airdrops.push(address(tokenDropContract));
         totalAirdropsCount++;
         emit NewAirdrop(rewardedNftCollection, address(tokenDropContract), msg.sender);
+    }
+
+    /// @notice Updates the address of the admin variable
+    /// @param _newAdmin - New address for the admin of this contract, and the address for all newly created airdrop contracts
+    function changeAdmin(address _newAdmin) external onlyAdmin {
+        admin = _newAdmin;
+        emit AdminChanged(_newAdmin);
     }
 }

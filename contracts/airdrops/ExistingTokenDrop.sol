@@ -3,11 +3,12 @@ pragma solidity ^0.8.14;
 
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 import "../interfaces/AirdropInfo.sol";
 import "../interfaces/AirdropMerkleProof.sol";
 
 /// @title Airdrops existing ERC20 tokens for airdrop recipients
-contract ExistingTokenDrop is AirdropInfo, AirdropMerkleProof {
+contract ExistingTokenDrop is AirdropInfo, AirdropMerkleProof, Ownable {
     IERC721 public immutable rewardedNft;
     IERC20 public immutable rewardToken;
     uint256 public immutable tokensPerClaim;
@@ -16,9 +17,13 @@ contract ExistingTokenDrop is AirdropInfo, AirdropMerkleProof {
     bool public airdropFunded = false;
     uint256 public airdropFundBlockTimestamp;
     address internal airdropFundingHolder;
+    address public admin;
 
     event Claimed(uint256 indexed tokenId, address indexed claimer);
     event AirdropFunded();
+    event AdminChanged(address indexed adminAddress);
+    event MerkleRootChanged(bytes32 merkleRoot);
+
 
     error NotOwner();
     error AirdropStillInProgress();
@@ -27,16 +32,22 @@ contract ExistingTokenDrop is AirdropInfo, AirdropMerkleProof {
     error InsufficientAmount();
     error InsufficientLiquidity();
     error AirdropExpired();
+    error NotAdmin();
 
     mapping(uint256 => bool) public hasClaimed;
 
     // The root hash of the Merle Tree we previously generated in our JavaScript code. Remember
     // to provide this as a bytes32 type and not string. Ox should be prepended.
-    bytes32 public immutable merkleRoot;
+    bytes32 public merkleRoot;
 
     uint256 public immutable airdropDuration;
     uint256 public immutable airdropStartTime;
     uint256 public immutable airdropFinishTime;
+
+    modifier onlyAdmin(){
+        if(msg.sender != admin) revert NotAdmin();
+        _;
+    }
 
     constructor(
         address _rewardedNft,
@@ -44,16 +55,30 @@ contract ExistingTokenDrop is AirdropInfo, AirdropMerkleProof {
         address _rewardToken,
         uint256 _totalAirdropAmount,
         uint256 _airdropDuration,
-        bytes32 _merkleRoot
+        address _admin
     ) {
         rewardedNft = IERC721(_rewardedNft);
         tokensPerClaim = _tokensPerClaim;
         totalAirdropAmount = _totalAirdropAmount;
         rewardToken = IERC20(_rewardToken);
-        merkleRoot = _merkleRoot;
         airdropDuration = _airdropDuration * 1 days;
         airdropStartTime = block.timestamp;
         airdropFinishTime = block.timestamp + airdropDuration;
+        admin = _admin;
+    }
+
+    /// @notice Updates the address for the admin of this contract (different from the contract owner)
+    /// @param _newAdmin - New address for the admin of this contract
+    function changeAdmin(address _newAdmin) external onlyAdmin {
+        admin = _newAdmin;
+        emit AdminChanged(_newAdmin);
+    }
+
+    /// @notice Sets the merkleRoot - can only be done if admin (different from the contract owner)
+    /// @param _merkleRoot - The root hash of the Merle Tree
+    function setMerkleRoot(bytes32 _merkleRoot) external onlyAdmin {
+        merkleRoot = _merkleRoot;
+        emit MerkleRootChanged(_merkleRoot);
     }
 
     /// @notice Allows the airdrop creator to provide funds for airdrop reward
