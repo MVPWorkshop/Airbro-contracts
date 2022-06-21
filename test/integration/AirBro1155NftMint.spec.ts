@@ -1,17 +1,9 @@
 import { expect } from "chai";
+import { ethers } from "hardhat";
 
-import { artifacts, ethers, waffle } from "hardhat";
-import type { Artifact } from "hardhat/types";
-import type { AirBro1155NftMint } from "../../src/types/contracts/Airbro1155NftMint.sol/AirBro1155NftMint";
 
 export function shouldAirdropExisting1155token(){
     const bytes32MerkleRootHash = "0x0000000000000000000000000000000000000000000000000000000000000000";
-
-    beforeEach(async function(){
-        // deploying test1155Nft contract (reward token) - folder structure should be updated later
-        const AirBro1155NftMintArtifact:Artifact = await artifacts.readArtifact("AirBro1155NftMint");
-        this.test1155NftCollection = <AirBro1155NftMint>await waffle.deployContract(this.signers.deployer, AirBro1155NftMintArtifact, []);
-    })
 
     it('should mint and drop existing IERC1155 NFT token',async function(){
         // minting an NFT's to alice and bob. Both addresses should receive a reward for holding this NFT collection

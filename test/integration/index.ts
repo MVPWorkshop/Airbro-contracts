@@ -26,10 +26,11 @@ describe("Integration tests", function () {
   
   describe("AirbroFactory",  ()=> {
     beforeEach(async function () {
-      const { airbroFactory, testNftCollection, testToken } = await this.loadFixture(integrationsFixture)
+      const { airbroFactory, testNftCollection, testToken, airBro1155NftMint } = await this.loadFixture(integrationsFixture)
       this.airbroFactory = airbroFactory;
       this.testNftCollection = testNftCollection;
       this.testToken = testToken;
+      this.test1155NftCollection = airBro1155NftMint;
 
     });
     

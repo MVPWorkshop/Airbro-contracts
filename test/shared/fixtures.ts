@@ -6,6 +6,7 @@ import { TestNftCollection } from "../../src/types/contracts/mocks/TestNftCollec
 import { TestToken } from "../../src/types/contracts/mocks/TestToken";
 import { Wallet } from "@ethersproject/wallet";
 import { Existing1155NftDrop, ExistingTokenDrop, ItemNFTDrop, NFTDrop, TokenDrop } from "../../src/types/contracts/airdrops";
+import { AirBro1155NftMint } from "../../src/types/contracts/Airbro1155NftMint.sol/AirBro1155NftMint";
 
 import {contractAdminAddress } from "../shared/constants";
 
@@ -34,6 +35,7 @@ type IntegrationFixtureType = {
     airbroFactory: AirbroFactory;
     testNftCollection: TestNftCollection;
     testToken: TestToken;
+    airBro1155NftMint: AirBro1155NftMint;
 };
 
 const randomAddress = '0x6B175474E89094C44Da98b954EedeAC495271d0F';
@@ -121,6 +123,15 @@ export const integrationsFixture: Fixture<IntegrationFixtureType> = async (signe
 
     await testToken.deployed();
 
+    const airBro1155NftMintFactory: ContractFactory = await ethers.getContractFactory(`AirBro1155NftMint`);
+
+    const airBro1155NftMint: AirBro1155NftMint = (await airBro1155NftMintFactory.connect(deployer).deploy()) as AirBro1155NftMint;
+
+    await airBro1155NftMint.deployed();
+    // console.log(await airBro1155NftMint.address);
+
     
-    return { airbroFactory, testNftCollection, testToken };
+
+    
+    return { airbroFactory, testNftCollection, testToken, airBro1155NftMint  };
 };
