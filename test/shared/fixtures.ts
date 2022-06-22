@@ -1,14 +1,16 @@
-import { Fixture } from "ethereum-waffle";
+import { Fixture, MockContract } from "ethereum-waffle";
 import { ContractFactory } from "ethers";
 import { ethers } from "hardhat";
 import { AirbroFactory } from "../../src/types/contracts/AirbroFactory";
 import { TestNftCollection } from "../../src/types/contracts/mocks/TestNftCollection";
 import { TestToken } from "../../src/types/contracts/mocks/TestToken";
 import { Wallet } from "@ethersproject/wallet";
-import { Existing1155NftDrop, ExistingTokenDrop, ItemNFTDrop, NFTDrop, TokenDrop } from "../../src/types/contracts/airdrops";
+import { Existing1155NftDrop, ExistingTokenDrop, ItemNFTDrop, NFTDrop } from "../../src/types/contracts/airdrops";
+import { TokenDrop } from "../../src/types/contracts/airdrops/TokenDrop.sol/index"
 import { AirBro1155NftMint } from "../../src/types/contracts/Airbro1155NftMint.sol/AirBro1155NftMint";
 
 import {contractAdminAddress } from "../shared/constants";
+import { deployMockAirBroFactory } from "./mocks";
 
 
 type UnitExisting1155NFTDropFixtureType = {
@@ -29,6 +31,7 @@ type UnitNFTDropFixtureType = {
 
 type UnitTokenDropFixtureType = {
     tokenDrop: TokenDrop;
+    mockAirBroFactory: MockContract;
 }
 
 type IntegrationFixtureType = {
@@ -92,13 +95,18 @@ export const unitNFTDropFixture: Fixture<UnitNFTDropFixtureType> = async (signer
 export const unitTokenDropFixture: Fixture<UnitTokenDropFixtureType> = async (signers: Wallet[]) => {
     const deployer: Wallet = signers[0];
 
-    const tokenDropFactory: ContractFactory = await ethers.getContractFactory(`TokenDrop`);
+    const mockAirBroFactory = await deployMockAirBroFactory(deployer);
+    // console.log(await mockAirBroFactory.address);
 
-    const tokenDrop: TokenDrop = (await tokenDropFactory.connect(deployer).deploy(randomAddress,2,'eee','ee',2,contractAdminAddress)) as TokenDrop;
+    const tokenDropFactory: ContractFactory = await ethers.getContractFactory(`TokenDrop`);
+    const tokenDrop: TokenDrop = (await tokenDropFactory.connect(deployer).deploy(randomAddress,2,'eee','ee',2,mockAirBroFactory.address)) as TokenDrop;
 
     await tokenDrop.deployed();
 
-    return { tokenDrop };
+    // console.log(await tokenDrop.address);
+    // console.log(await tokenDrop.airBroFactoryAddress());
+
+    return { tokenDrop, mockAirBroFactory };
 };
 
 
@@ -128,10 +136,6 @@ export const integrationsFixture: Fixture<IntegrationFixtureType> = async (signe
     const airBro1155NftMint: AirBro1155NftMint = (await airBro1155NftMintFactory.connect(deployer).deploy()) as AirBro1155NftMint;
 
     await airBro1155NftMint.deployed();
-    // console.log(await airBro1155NftMint.address);
-
-    
-
     
     return { airbroFactory, testNftCollection, testToken, airBro1155NftMint  };
 };

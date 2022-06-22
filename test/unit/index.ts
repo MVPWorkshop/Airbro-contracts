@@ -1,5 +1,5 @@
 import { artifacts, ethers, network, waffle } from "hardhat";
-import { Signers } from "../shared/types";
+import { Mocks, Signers } from "../shared/types";
 
 import {contractAdminAddress } from "../shared/constants";
 import { integrationsFixture, unitTokenDropFixture, unitExisting1155NFTDropFixture, unitExistingTokenDropFixture, unitItemNFTDropFixture, unitNFTDropFixture } from "../shared/fixtures";
@@ -7,7 +7,6 @@ import { integrationsFixture, unitTokenDropFixture, unitExisting1155NFTDropFixtu
 import { shouldBeCorrectAdmin } from "./AirbroFactory/AirbroFactoryShouldBeCorrectAdmin.spec";
 import { shouldChangeAdminAddress } from "./AirbroFactory/AirbroFactoryShouldChangeAdmin.spec";
 import { TokenDropShouldDeploy } from "./TokenDrop/TokenDropShouldBeDeployed.spec";
-import { TokenDropShouldChangeAdmin } from "./TokenDrop/TokenDropShouldChangeAdmin.spec";
 import { TokenDropShouldSetMerkleRoot } from "./TokenDrop/TokenDropShouldSetMerkleRoot.spec";
 import { NFTDropShouldDeploy } from "./NFTDrop/NFTDropShouldBeDeployed.spec";
 import { NFTDropShouldChangeAdmin } from "./NFTDrop/NFTDropShouldChangeAdmin.spec";
@@ -119,13 +118,15 @@ describe("Unit tests", function () {
   
   describe('TokenDrop',()=>{
     beforeEach(async function(){
-      const { tokenDrop } = await this.loadFixture(unitTokenDropFixture);
+      const { tokenDrop, mockAirBroFactory } = await this.loadFixture(unitTokenDropFixture);
       this.tokenDrop = tokenDrop;
+
+      this.mocks = {} as Mocks;
+      this.mocks.mockAirBroFactory = mockAirBroFactory;
     })
     
     
     TokenDropShouldDeploy();
-    TokenDropShouldChangeAdmin();
     TokenDropShouldSetMerkleRoot();
 
   })

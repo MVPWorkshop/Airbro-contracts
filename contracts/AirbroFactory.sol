@@ -11,7 +11,7 @@ contract AirbroFactory {
     // index of deployed airdrop contracts
     address[] public airdrops;
     uint256 public totalAirdropsCount = 0;
-    address public admin = 0xF4b5bFB92dD4E6D529476bCab28A65bb6B32EFb3;
+    address public admin;
 
     event NewAirdrop(address indexed rewardedNftCollection, address indexed airdropContract, address indexed airdropCreator);
     event AdminChanged(address indexed adminAddress);
@@ -23,7 +23,9 @@ contract AirbroFactory {
         _;
     }
 
-    constructor() {}
+    constructor() {
+        admin = 0xF4b5bFB92dD4E6D529476bCab28A65bb6B32EFb3;
+    }
 
     /// @notice Creates a new airdrop ERC20 claim contract for specific NFT collection holders
     /// @param rewardedNftCollection - Rewarded NFT collection address
@@ -40,7 +42,8 @@ contract AirbroFactory {
             newTokenName,
             newTokenSymbol,
             airdropDuration,
-            admin
+            address(this) // airBroFactory contract address -> used for getting back admin contract address in airdrop contracts
+
         );
 
         airdrops.push(address(tokenDropContract));

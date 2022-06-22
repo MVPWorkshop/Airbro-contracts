@@ -1,5 +1,5 @@
 import type { SignerWithAddress } from "@nomiclabs/hardhat-ethers/dist/src/signer-with-address";
-import type { Fixture } from "ethereum-waffle";
+import type { Fixture, MockContract } from "ethereum-waffle";
 import { Wallet } from "@ethersproject/wallet";
 
 import type { AirbroFactory } from "../../src/types/contracts/AirbroFactory";
@@ -21,4 +21,9 @@ export interface Signers {
   alice: Wallet;
   bob: Wallet;
   backendWallet: SignerWithAddress;
+}
+
+export interface Mocks {
+  mockAirBroFactory: MockContract;
+
 }
