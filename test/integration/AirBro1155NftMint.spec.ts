@@ -17,7 +17,7 @@ export function shouldAirdropExisting1155token(){
         
         const bobBalance = await this.testNftCollection.balanceOf(this.signers.bob.address)
         // console.log(`Test NFT balance of Bob: ${parseInt(bobBalance)}`);
-        expect(aliceBalance).to.be.equal(1)
+        expect(bobBalance).to.be.equal(1)
 
 
 

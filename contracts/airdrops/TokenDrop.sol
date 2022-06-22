@@ -7,15 +7,15 @@ import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "../interfaces/AirdropInfo.sol";
 import "../interfaces/AirdropMerkleProof.sol";
+import "../interfaces/IAirBroFactory.sol";
 
 /// @title Airdrops new ERC20 tokens for airdrop recipients
 contract TokenDrop is ERC20, AirdropInfo, AirdropMerkleProof, Ownable {
     IERC721 public immutable rewardedNft;
     uint256 public immutable tokensPerClaim;
-    address public admin;
+    address public immutable airBroFactoryAddress;
 
     event Claimed(uint256 indexed tokenId, address indexed claimer);
-    event AdminChanged(address indexed adminAddress);
     event MerkleRootChanged(bytes32 merkleRoot);
 
     error NotOwner();
@@ -34,7 +34,7 @@ contract TokenDrop is ERC20, AirdropInfo, AirdropMerkleProof, Ownable {
     uint256 public immutable airdropFinishTime;
 
     modifier onlyAdmin(){
-        if(msg.sender != admin) revert NotAdmin();
+        if(msg.sender != IAirBroFactory(airBroFactoryAddress).admin()) revert NotAdmin();
         _;
     }
 
@@ -44,21 +44,14 @@ contract TokenDrop is ERC20, AirdropInfo, AirdropMerkleProof, Ownable {
         string memory name,
         string memory symbol,
         uint256 _airdropDuration,
-        address _admin
+        address _airBroFactoryAddress
     ) ERC20(name, symbol, 18) {
         rewardedNft = IERC721(_rewardedNft);
         tokensPerClaim = _tokensPerClaim;
         airdropDuration = _airdropDuration * 1 days;
         airdropStartTime = block.timestamp;
         airdropFinishTime = block.timestamp + airdropDuration;
-        admin = _admin;
-    }
-
-    /// @notice Updates the address for the admin of this contract (different from the contract owner)
-    /// @param _newAdmin - New address for the admin of this contract
-    function changeAdmin(address _newAdmin) external onlyAdmin {
-        admin = _newAdmin;
-        emit AdminChanged(_newAdmin);
+        airBroFactoryAddress = _airBroFactoryAddress;
     }
 
     /// @notice Sets the merkleRoot - can only be done if admin (different from the contract owner)
