@@ -7,6 +7,11 @@ import "@openzeppelin/contracts/token/ERC1155/IERC1155Receiver.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "../interfaces/AirdropMerkleProof.sol";
 import "../interfaces/AirdropInfo.sol";
+// import "../interfaces/IAirBroFactory.sol";
+
+interface IAirBroFactoryExisting1155Nft {
+    function admin() external returns (address);
+}
 
 /// @title Airdrops existing ERC1155 tokens for airdrop recipients
 contract Existing1155NftDrop is AirdropInfo, AirdropMerkleProof, IERC1155Receiver, Ownable {
@@ -19,11 +24,10 @@ contract Existing1155NftDrop is AirdropInfo, AirdropMerkleProof, IERC1155Receive
     bool public airdropFunded = false;
     uint256 public airdropFundBlockTimestamp;
     address internal airdropFundingHolder;
-    address public admin;
+    address public airBroFactoryAddress;
 
     event Claimed(uint256 indexed tokenId, address indexed claimer);
     event AirdropFunded();
-    event AdminChanged(address indexed adminAddress);
     event MerkleRootChanged(bytes32 merkleRoot);
 
 
@@ -47,7 +51,7 @@ contract Existing1155NftDrop is AirdropInfo, AirdropMerkleProof, IERC1155Receive
     uint256 public immutable airdropFinishTime;
 
     modifier onlyAdmin(){
-        if(msg.sender != admin) revert NotAdmin();
+        if(msg.sender != IAirBroFactoryExisting1155Nft(airBroFactoryAddress).admin()) revert NotAdmin();
         _;
     }
 
@@ -58,7 +62,7 @@ contract Existing1155NftDrop is AirdropInfo, AirdropMerkleProof, IERC1155Receive
         uint256 _tokenId,
         uint256 _totalAirdropAmount,
         uint256 _airdropDuration,
-        address _admin
+        address _airBroFactoryAddress
     ) {
         rewardedNft = IERC721(_rewardedNft);
         tokensPerClaim = _tokensPerClaim;
@@ -68,15 +72,8 @@ contract Existing1155NftDrop is AirdropInfo, AirdropMerkleProof, IERC1155Receive
         airdropDuration = _airdropDuration * 1 days;
         airdropStartTime = block.timestamp;
         airdropFinishTime = block.timestamp + airdropDuration;
-        admin = _admin;
+        airBroFactoryAddress = _airBroFactoryAddress;
 
-    }
-
-    /// @notice Updates the address for the admin of this contract (different from the contract owner)
-    /// @param _newAdmin - New address for the admin of this contract
-    function changeAdmin(address _newAdmin) external onlyAdmin {
-        admin = _newAdmin;
-        emit AdminChanged(_newAdmin);
     }
 
     /// @notice Sets the merkleRoot - can only be done if admin (different from the contract owner)

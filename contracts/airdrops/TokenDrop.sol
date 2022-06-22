@@ -7,8 +7,8 @@ import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "../interfaces/AirdropInfo.sol";
 import "../interfaces/AirdropMerkleProof.sol";
-
-interface IAirBroFactory {
+// import "../interfaces/IAirBroFactory.sol";
+interface IAirBroFactoryToken {
     function admin() external returns (address);
 }
 
@@ -19,7 +19,6 @@ contract TokenDrop is ERC20, AirdropInfo, AirdropMerkleProof, Ownable {
     address public airBroFactoryAddress;
 
     event Claimed(uint256 indexed tokenId, address indexed claimer);
-    event AdminChanged(address indexed adminAddress);
     event MerkleRootChanged(bytes32 merkleRoot);
 
     error NotOwner();
@@ -38,7 +37,7 @@ contract TokenDrop is ERC20, AirdropInfo, AirdropMerkleProof, Ownable {
     uint256 public immutable airdropFinishTime;
 
     modifier onlyAdmin(){
-        if(msg.sender != IAirBroFactory(airBroFactoryAddress).admin()) revert NotAdmin();
+        if(msg.sender != IAirBroFactoryToken(airBroFactoryAddress).admin()) revert NotAdmin();
         _;
     }
 

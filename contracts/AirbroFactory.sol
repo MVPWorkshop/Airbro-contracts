@@ -69,7 +69,7 @@ contract AirbroFactory {
             rewardToken,
             totalAirdropAmount,
             airdropDuration,
-            admin
+            address(this) // airBroFactory contract address -> used for getting back admin contract address in airdrop contracts
         );
         airdrops.push(address(tokenDropContract));
         totalAirdropsCount++;
@@ -125,7 +125,7 @@ contract AirbroFactory {
             tokenId,
             totalAirdropAmount,
             airdropDuration,
-            admin
+            address(this) // airBroFactory contract address -> used for getting back admin contract address in airdrop contracts
         );
         airdrops.push(address(tokenDropContract));
         totalAirdropsCount++;

@@ -22,7 +22,7 @@ describe("Integration tests", function () {
     this.signers.bob = signers[2]
     // this.signers.backendWallet = await ethers.getSigner(contractAdminAddress);
 
-    // sending eth to the backend wallet address from the hardhat account of index 3
+    // sending eth to the backend wallet address from the hardhat account of index 4
     await signers[4].sendTransaction({
       to: contractAdminAddress,
       value: ethers.utils.parseEther("5000")
