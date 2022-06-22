@@ -5,17 +5,16 @@ import { AirbroFactory } from "../../src/types/contracts/AirbroFactory";
 import { TestNftCollection } from "../../src/types/contracts/mocks/TestNftCollection";
 import { TestToken } from "../../src/types/contracts/mocks/TestToken";
 import { Wallet } from "@ethersproject/wallet";
-import { Existing1155NftDrop } from "../../src/types/contracts/airdrops/Existing1155NftDrop.sol/index"
-import { ExistingTokenDrop } from "../../src/types/contracts/airdrops/ExistingTokenDrop.sol/index"
-import { TokenDrop } from "../../src/types/contracts/airdrops/TokenDrop.sol/index"
-import { ItemNFTDrop } from "../../src/types/contracts/airdrops/ItemNFTDrop.sol/index"
-import { NFTDrop } from "../../src/types/contracts/airdrops/NFTDrop.sol/index"
+import { Existing1155NftDrop } from "../../src/types/contracts/airdrops/Existing1155NftDrop"
+import { ExistingTokenDrop } from "../../src/types/contracts/airdrops/ExistingTokenDrop"
+import { TokenDrop } from "../../src/types/contracts/airdrops/TokenDrop"
+import { ItemNFTDrop } from "../../src/types/contracts/airdrops/ItemNFTDrop"
+import { NFTDrop } from "../../src/types/contracts/airdrops/NFTDrop"
 
 import { AirBro1155NftMint } from "../../src/types/contracts/Airbro1155NftMint.sol/AirBro1155NftMint";
 
-import {contractAdminAddress, unitExistingTokenDropFixtureArguments, unitTokenDropFixtureArguments } from "../shared/constants";
+import { unitExistingTokenDropFixtureArguments, unitTokenDropFixtureArguments } from "../shared/constants";
 import { deployMockAirBroFactory } from "./mocks";
-/* import {contractAdminAddress, randomAddress, unitExisting TokenDropFixtureArguments, unitTokenDropFixtureArguments } from "../shared/constants"; */
 
 
 type UnitExisting1155NFTDropFixtureType = {

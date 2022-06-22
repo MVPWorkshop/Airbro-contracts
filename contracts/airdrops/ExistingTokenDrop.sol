@@ -6,11 +6,7 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "../interfaces/AirdropInfo.sol";
 import "../interfaces/AirdropMerkleProof.sol";
-// import "../interfaces/IAirBroFactory.sol";
-
-interface IAirBroFactoryExistingToken {
-    function admin() external returns (address);
-}
+import "../interfaces/IAirBroFactory.sol";
 
 /// @title Airdrops existing ERC20 tokens for airdrop recipients
 contract ExistingTokenDrop is AirdropInfo, AirdropMerkleProof, Ownable {
@@ -49,7 +45,7 @@ contract ExistingTokenDrop is AirdropInfo, AirdropMerkleProof, Ownable {
     uint256 public immutable airdropFinishTime;
 
     modifier onlyAdmin(){
-        if(msg.sender != IAirBroFactoryExistingToken(airBroFactoryAddress).admin()) revert NotAdmin();
+        if(msg.sender != IAirBroFactory(airBroFactoryAddress).admin()) revert NotAdmin();
         _;
     }
 

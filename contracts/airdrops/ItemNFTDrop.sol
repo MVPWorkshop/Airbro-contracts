@@ -6,11 +6,8 @@ import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "../interfaces/AirdropInfo.sol";
 import "../interfaces/AirdropMerkleProof.sol";
+import "../interfaces/IAirBroFactory.sol";
 
-
-interface IAirBroFactoryItemNft {
-    function admin() external returns (address);
-}
 
 /// @title Airdrops new ERC1155 tokens for airdrop recipients
 contract ItemNFTDrop is ERC1155, AirdropInfo, AirdropMerkleProof, Ownable {
@@ -46,7 +43,7 @@ contract ItemNFTDrop is ERC1155, AirdropInfo, AirdropMerkleProof, Ownable {
     uint256 public immutable airdropFinishTime;
 
     modifier onlyAdmin(){
-        if(msg.sender != IAirBroFactoryItemNft(airBroFactoryAddress).admin()) revert NotAdmin();
+        if(msg.sender != IAirBroFactory(airBroFactoryAddress).admin()) revert NotAdmin();
         _;
     }
 
