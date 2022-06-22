@@ -5,10 +5,11 @@ import { AirbroFactory } from "../../src/types/contracts/AirbroFactory";
 import { TestNftCollection } from "../../src/types/contracts/mocks/TestNftCollection";
 import { TestToken } from "../../src/types/contracts/mocks/TestToken";
 import { Wallet } from "@ethersproject/wallet";
-import { ItemNFTDrop, NFTDrop } from "../../src/types/contracts/airdrops";
 import { Existing1155NftDrop } from "../../src/types/contracts/airdrops/Existing1155NftDrop.sol/index"
 import { ExistingTokenDrop } from "../../src/types/contracts/airdrops/ExistingTokenDrop.sol/index"
 import { TokenDrop } from "../../src/types/contracts/airdrops/TokenDrop.sol/index"
+import { ItemNFTDrop } from "../../src/types/contracts/airdrops/ItemNFTDrop.sol/index"
+import { NFTDrop } from "../../src/types/contracts/airdrops/NFTDrop.sol/index"
 
 import { AirBro1155NftMint } from "../../src/types/contracts/Airbro1155NftMint.sol/AirBro1155NftMint";
 
@@ -28,10 +29,12 @@ type UnitExistingTokenDropFixtureType = {
 
 type UnitItemNFTDropFixtureType = {
     itemNFTDrop: ItemNFTDrop;
+    mockAirBroFactory: MockContract;
 }
 
 type UnitNFTDropFixtureType = {
     nftDrop: NFTDrop;
+    mockAirBroFactory: MockContract;
 }
 
 type UnitTokenDropFixtureType = {
@@ -80,25 +83,29 @@ export const unitExistingTokenDropFixture: Fixture<UnitExistingTokenDropFixtureT
 export const unitItemNFTDropFixture: Fixture<UnitItemNFTDropFixtureType> = async (signers: Wallet[]) => {
     const deployer: Wallet = signers[0];
 
+    const mockAirBroFactory = await deployMockAirBroFactory(deployer);
+
     const itemNFTDropFactory: ContractFactory = await ethers.getContractFactory(`ItemNFTDrop`);
 
-    const itemNFTDrop: ItemNFTDrop = (await itemNFTDropFactory.connect(deployer).deploy(randomAddress,2,'eee','0x00',1,contractAdminAddress)) as ItemNFTDrop;
+    const itemNFTDrop: ItemNFTDrop = (await itemNFTDropFactory.connect(deployer).deploy(randomAddress,2,'eee','0x00',1,mockAirBroFactory.address)) as ItemNFTDrop;
 
     await itemNFTDrop.deployed();
 
-    return { itemNFTDrop };
+    return { itemNFTDrop, mockAirBroFactory };
 };
 
 export const unitNFTDropFixture: Fixture<UnitNFTDropFixtureType> = async (signers: Wallet[]) => {
     const deployer: Wallet = signers[0];
 
+    const mockAirBroFactory = await deployMockAirBroFactory(deployer);
+
     const nftDropFactory: ContractFactory = await ethers.getContractFactory(`NFTDrop`);
 
-    const nftDrop: NFTDrop = (await nftDropFactory.connect(deployer).deploy(randomAddress,2,'e','e','e',2,contractAdminAddress)) as NFTDrop;
+    const nftDrop: NFTDrop = (await nftDropFactory.connect(deployer).deploy(randomAddress,2,'e','e','e',2,mockAirBroFactory.address)) as NFTDrop;
 
     await nftDrop.deployed();
 
-    return { nftDrop };
+    return { nftDrop, mockAirBroFactory };
 };
 
 export const unitTokenDropFixture: Fixture<UnitTokenDropFixtureType> = async (signers: Wallet[]) => {

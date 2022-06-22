@@ -90,8 +90,11 @@ describe("Unit tests", function () {
   
   describe('ItemNFTDrop',()=>{
     beforeEach(async function(){
-      const { itemNFTDrop } = await this.loadFixture(unitItemNFTDropFixture);
+      const { itemNFTDrop, mockAirBroFactory } = await this.loadFixture(unitItemNFTDropFixture);
       this.itemNFTDrop = itemNFTDrop;
+
+      this.mocks = {} as Mocks;
+      this.mocks.mockAirBroFactory = mockAirBroFactory;
 
     })
     
@@ -102,8 +105,11 @@ describe("Unit tests", function () {
   
   describe('NFTDrop',()=>{
     beforeEach(async function(){
-      const { nftDrop } = await this.loadFixture(unitNFTDropFixture);
+      const { nftDrop, mockAirBroFactory } = await this.loadFixture(unitNFTDropFixture);
       this.nftDrop = nftDrop;
+
+      this.mocks = {} as Mocks;
+      this.mocks.mockAirBroFactory = mockAirBroFactory;
 
     })
     

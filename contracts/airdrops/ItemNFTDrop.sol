@@ -7,11 +7,16 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "../interfaces/AirdropInfo.sol";
 import "../interfaces/AirdropMerkleProof.sol";
 
+
+interface IAirBroFactoryItemNft {
+    function admin() external returns (address);
+}
+
 /// @title Airdrops new ERC1155 tokens for airdrop recipients
 contract ItemNFTDrop is ERC1155, AirdropInfo, AirdropMerkleProof, Ownable {
     uint256 public immutable maxSupply;
     uint256 public totalSupply;
-    address public admin;
+    address public airBroFactoryAddress;
 
     string public baseURI;
     bytes data;
@@ -41,7 +46,7 @@ contract ItemNFTDrop is ERC1155, AirdropInfo, AirdropMerkleProof, Ownable {
     uint256 public immutable airdropFinishTime;
 
     modifier onlyAdmin(){
-        if(msg.sender != admin) revert NotAdmin();
+        if(msg.sender != IAirBroFactoryItemNft(airBroFactoryAddress).admin()) revert NotAdmin();
         _;
     }
 
@@ -51,7 +56,7 @@ contract ItemNFTDrop is ERC1155, AirdropInfo, AirdropMerkleProof, Ownable {
         string memory _baseURI,
         bytes memory _data,
         uint256 _airdropDuration,
-        address _admin
+        address _airBroFactoryAddress
     ) ERC1155() {
         baseURI = _baseURI;
         rewardedNft = IERC721(_rewardedNft);
@@ -60,14 +65,7 @@ contract ItemNFTDrop is ERC1155, AirdropInfo, AirdropMerkleProof, Ownable {
         airdropDuration = _airdropDuration * 1 days;
         airdropStartTime = block.timestamp;
         airdropFinishTime = block.timestamp + airdropDuration;
-        admin = _admin;
-    }
-
-    /// @notice Updates the address for the admin of this contract (different from the contract owner)
-    /// @param _newAdmin - New address for the admin of this contract
-    function changeAdmin(address _newAdmin) external onlyAdmin {
-        admin = _newAdmin;
-        emit AdminChanged(_newAdmin);
+        airBroFactoryAddress = _airBroFactoryAddress;
     }
 
     /// @notice Sets the merkleRoot - can only be done if admin (different from the contract owner)
