@@ -8,7 +8,7 @@ import { Wallet } from "@ethersproject/wallet";
 import { Existing1155NftDrop, ExistingTokenDrop, ItemNFTDrop, NFTDrop, TokenDrop } from "../../src/types/contracts/airdrops";
 import { AirBro1155NftMint } from "../../src/types/contracts/Airbro1155NftMint.sol/AirBro1155NftMint";
 
-import {contractAdminAddress } from "../shared/constants";
+import {contractAdminAddress, randomAddress, unitExistingTokenDropFixtureArguments, unitTokenDropFixtureArguments } from "../shared/constants";
 
 
 type UnitExisting1155NFTDropFixtureType = {
@@ -38,8 +38,6 @@ type IntegrationFixtureType = {
     airBro1155NftMint: AirBro1155NftMint;
 };
 
-const randomAddress = '0x6B175474E89094C44Da98b954EedeAC495271d0F';
-
 
 export const unitExisting1155NFTDropFixture: Fixture<UnitExisting1155NFTDropFixtureType> = async (signers: Wallet[]) => {
     const deployer: Wallet = signers[0];
@@ -58,7 +56,9 @@ export const unitExistingTokenDropFixture: Fixture<UnitExistingTokenDropFixtureT
 
     const existingTokenDropFactory: ContractFactory = await ethers.getContractFactory(`ExistingTokenDrop`);
 
-    const existingTokenDrop: ExistingTokenDrop = (await existingTokenDropFactory.connect(deployer).deploy(randomAddress,2,randomAddress,2,2,contractAdminAddress)) as ExistingTokenDrop;
+    const args = Object.values(unitExistingTokenDropFixtureArguments)
+
+    const existingTokenDrop: ExistingTokenDrop = (await existingTokenDropFactory.connect(deployer).deploy(...args)) as ExistingTokenDrop;
 
     await existingTokenDrop.deployed();
 
@@ -94,7 +94,9 @@ export const unitTokenDropFixture: Fixture<UnitTokenDropFixtureType> = async (si
 
     const tokenDropFactory: ContractFactory = await ethers.getContractFactory(`TokenDrop`);
 
-    const tokenDrop: TokenDrop = (await tokenDropFactory.connect(deployer).deploy(randomAddress,2,'eee','ee',2,contractAdminAddress)) as TokenDrop;
+    const deploymentArgs = Object.values(unitTokenDropFixtureArguments)
+
+    const tokenDrop: TokenDrop = (await tokenDropFactory.connect(deployer).deploy(...deploymentArgs)) as TokenDrop;
 
     await tokenDrop.deployed();
 
