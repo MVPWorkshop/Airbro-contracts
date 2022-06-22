@@ -16,7 +16,7 @@ interface IAirBroFactoryItemNft {
 contract ItemNFTDrop is ERC1155, AirdropInfo, AirdropMerkleProof, Ownable {
     uint256 public immutable maxSupply;
     uint256 public totalSupply;
-    address public airBroFactoryAddress;
+    address public immutable airBroFactoryAddress;
 
     string public baseURI;
     bytes data;

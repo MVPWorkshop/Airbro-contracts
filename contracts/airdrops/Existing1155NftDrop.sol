@@ -24,7 +24,7 @@ contract Existing1155NftDrop is AirdropInfo, AirdropMerkleProof, IERC1155Receive
     bool public airdropFunded = false;
     uint256 public airdropFundBlockTimestamp;
     address internal airdropFundingHolder;
-    address public airBroFactoryAddress;
+    address public immutable airBroFactoryAddress;
 
     event Claimed(uint256 indexed tokenId, address indexed claimer);
     event AirdropFunded();

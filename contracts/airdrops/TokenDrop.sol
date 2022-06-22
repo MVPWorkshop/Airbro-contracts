@@ -16,7 +16,7 @@ interface IAirBroFactoryToken {
 contract TokenDrop is ERC20, AirdropInfo, AirdropMerkleProof, Ownable {
     IERC721 public immutable rewardedNft;
     uint256 public immutable tokensPerClaim;
-    address public airBroFactoryAddress;
+    address public immutable airBroFactoryAddress;
 
     event Claimed(uint256 indexed tokenId, address indexed claimer);
     event MerkleRootChanged(bytes32 merkleRoot);

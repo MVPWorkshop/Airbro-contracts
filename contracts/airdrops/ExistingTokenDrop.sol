@@ -22,7 +22,7 @@ contract ExistingTokenDrop is AirdropInfo, AirdropMerkleProof, Ownable {
     bool public airdropFunded = false;
     uint256 public airdropFundBlockTimestamp;
     address internal airdropFundingHolder;
-    address public airBroFactoryAddress;
+    address public immutable airBroFactoryAddress;
 
     event Claimed(uint256 indexed tokenId, address indexed claimer);
     event AirdropFunded();
