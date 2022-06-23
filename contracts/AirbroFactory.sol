@@ -11,7 +11,7 @@ contract AirbroFactory {
     // index of deployed airdrop contracts
     address[] public airdrops;
     uint256 public totalAirdropsCount = 0;
-    address public admin;
+    address public admin = 0xF4b5bFB92dD4E6D529476bCab28A65bb6B32EFb3;
 
     event NewAirdrop(address indexed rewardedNftCollection, address indexed airdropContract, address indexed airdropCreator);
     event AdminChanged(address indexed adminAddress);
@@ -23,9 +23,7 @@ contract AirbroFactory {
         _;
     }
 
-    constructor() {
-        admin = 0xF4b5bFB92dD4E6D529476bCab28A65bb6B32EFb3;
-    }
+    constructor() {}
 
     /// @notice Creates a new airdrop ERC20 claim contract for specific NFT collection holders
     /// @param rewardedNftCollection - Rewarded NFT collection address
