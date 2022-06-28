@@ -11,7 +11,7 @@ import "../interfaces/IAirBroFactory.sol";
 
 /// @title Airdrops existing ERC1155 tokens for airdrop recipients
 contract Existing1155NftDrop1155 is AirdropInfo, AirdropMerkleProof, IERC1155Receiver, Ownable {
-    IERC721 public immutable rewardedNft;
+    IERC1155 public immutable rewardedNft;
     IERC1155 public immutable rewardToken;
     uint256 public immutable rewardTokenId;
     uint256 public immutable tokensPerClaim;
@@ -152,7 +152,7 @@ contract Existing1155NftDrop1155 is AirdropInfo, AirdropMerkleProof, IERC1155Rec
     //@notice Returns the amount(number) of airdrop tokens to claim
     //@param tokenId is the rewarded NFT collections token ID
     function getAirdropAmount() external view returns (uint256) {
-        return rewardedNft.balanceOf(msg.sender) * tokensPerClaim;
+        return rewardedNft.balanceOf(msg.sender, 0) * tokensPerClaim;
     }
 
     function supportsInterface(bytes4 interfaceId) external view override returns (bool) {
