@@ -4,6 +4,8 @@ pragma solidity ^0.8.14;
 import "./airdrops1155Holder/TokenDrop1155.sol";
 import "./airdrops1155Holder/ExistingTokenDrop1155.sol";
 import "./airdrops1155Holder/Existing1155NftDrop1155.sol";
+import "./Airbro1155Contract.sol";
+
 
 /// @title Airbro - NFT airdrop tool factory contract - for owners of 1155 Nfts
 contract AirbroFactory1155Holder {
@@ -12,8 +14,14 @@ contract AirbroFactory1155Holder {
     uint256 public totalAirdropsCount = 0;
     address public admin = 0xF4b5bFB92dD4E6D529476bCab28A65bb6B32EFb3;
 
+    address[] public nft1155Contracts;
+    uint256 public totalNft1155ContractsCount = 0;
+
     event NewAirdrop(address indexed rewardedNftCollection, address indexed airdropContract, address indexed airdropCreator);
+    event NewNft1155Contract(address indexed nft1155Contract, address indexed contractCreator);
+    
     event AdminChanged(address indexed adminAddress);
+
 
     error NotAdmin();
 
@@ -23,6 +31,20 @@ contract AirbroFactory1155Holder {
     }
 
     constructor() {}
+
+    /// @notice Creates a new ERC1155 collection
+    /// @param uri - IPFS link to the NFT image
+    function createNewNft1155Contract (
+        string memory uri
+    ) public {
+        AirBro1155Contract nft1155Contract = new AirBro1155Contract(
+            uri
+        );
+
+        nft1155Contracts.push(address(nft1155Contract));
+        totalNft1155ContractsCount++;
+        emit NewNft1155Contract(address(nft1155Contract), msg.sender);
+    }
 
     /// @notice Creates a new airdrop ERC20 claim contract for specific NFT collection holders
     /// @param rewardedNftCollection - Rewarded NFT collection address

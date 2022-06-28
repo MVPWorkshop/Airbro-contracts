@@ -6,11 +6,11 @@ import "@openzeppelin/contracts/token/ERC1155/IERC1155.sol";
 import "@openzeppelin/contracts/token/ERC1155/IERC1155Receiver.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "../interfaces/AirdropMerkleProof.sol";
-import "../interfaces/AirdropInfo.sol";
+import "../interfaces/AirdropInfo1155.sol";
 import "../interfaces/IAirBroFactory.sol";
 
 /// @title Airdrops existing ERC1155 tokens for airdrop recipients
-contract Existing1155NftDrop1155 is AirdropInfo, AirdropMerkleProof, IERC1155Receiver, Ownable {
+contract Existing1155NftDrop1155 is AirdropInfo1155, AirdropMerkleProof, IERC1155Receiver, Ownable {
     IERC1155 public immutable rewardedNft;
     IERC1155 public immutable rewardToken;
     uint256 public immutable rewardTokenId;
@@ -22,7 +22,7 @@ contract Existing1155NftDrop1155 is AirdropInfo, AirdropMerkleProof, IERC1155Rec
     address internal airdropFundingHolder;
     address public immutable airBroFactoryAddress;
 
-    event Claimed(uint256 indexed tokenId, address indexed claimer);
+    event Claimed(address indexed claimer);
     event AirdropFunded();
     event MerkleRootChanged(bytes32 merkleRoot);
 
@@ -36,7 +36,7 @@ contract Existing1155NftDrop1155 is AirdropInfo, AirdropMerkleProof, IERC1155Rec
     error AirdropExpired();
     error NotAdmin();
 
-    mapping(uint256 => bool) public hasClaimed;
+    mapping(address => bool) public hasClaimed;
 
     // The root hash of the Merle Tree we previously generated in our JavaScript code. Remember
     // to provide this as a bytes32 type and not string. Ox should be prepended.
@@ -104,55 +104,37 @@ contract Existing1155NftDrop1155 is AirdropInfo, AirdropMerkleProof, IERC1155Rec
     }
 
     /// @notice Allows the NFT holder to claim his ERC20 airdrop
-    function claim(uint256 tokenId, bytes32[] calldata _merkleProof) external {
-        if (hasClaimed[tokenId]) revert AlreadyRedeemed();
+    function claim(bytes32[] calldata _merkleProof) external {
+        if (hasClaimed[msg.sender]) revert AlreadyRedeemed();
         if (rewardToken.balanceOf(address(this), rewardTokenId) < tokensPerClaim) revert InsufficientLiquidity();
         if (block.timestamp > airdropFinishTime) revert AirdropExpired();
 
         checkProof(_merkleProof, merkleRoot);
 
-        hasClaimed[tokenId] = true;
-        emit Claimed(tokenId, msg.sender);
+        hasClaimed[msg.sender] = true;
+        emit Claimed(msg.sender);
 
         rewardToken.safeTransferFrom(address(this), msg.sender, rewardTokenId, tokensPerClaim, "");
     }
 
-    function batchClaim(uint256[] memory tokenIds, bytes32[] calldata _merkleProof) external {
-        if (rewardToken.balanceOf(address(this), rewardTokenId) < tokensPerClaim * tokenIds.length)
-            revert InsufficientLiquidity();
-
-        if (block.timestamp > airdropFinishTime) revert AirdropExpired();
-
-        checkProof(_merkleProof, merkleRoot);
-
-        for (uint256 index = 0; index < tokenIds.length; index++) {
-            uint256 tokenId = tokenIds[index];
-
-            if (hasClaimed[tokenId]) revert AlreadyRedeemed();
-
-            hasClaimed[tokenId] = true;
-            emit Claimed(tokenId, msg.sender);
-        }
-
-        rewardToken.safeTransferFrom(address(this), msg.sender, rewardTokenId, tokensPerClaim * tokenIds.length, "");
-    }
-
+    
     //@notice Get the type of airdrop, it's either ERC20, ERC721, ERC1155
     function getAirdropType() external pure override returns (string memory) {
         return "ERC1155";
     }
 
     //@notice Checks if the user is eligible for this airdrop
-    function isEligibleForReward(uint256 tokenId) external view returns (bool) {
-        if (hasClaimed[tokenId]) revert AlreadyRedeemed();
-        if (rewardToken.balanceOf(address(this), rewardTokenId) < tokensPerClaim) revert InsufficientLiquidity();
+    function isEligibleForReward(bytes32[] calldata _merkleProof) public view returns (bool) {
+        if (hasClaimed[msg.sender]) revert AlreadyRedeemed();
+        if (rewardToken.balanceOf(address(this), rewardTokenId) < tokensPerClaim) revert InsufficientLiquidity();        
+        // checkProof(_merkleProof, merkleRoot); // implement this later
         return true;
     }
 
     //@notice Returns the amount(number) of airdrop tokens to claim
     //@param tokenId is the rewarded NFT collections token ID
-    function getAirdropAmount() external view returns (uint256) {
-        return rewardedNft.balanceOf(msg.sender, 0) * tokensPerClaim;
+    function getAirdropAmount(bytes32[] calldata _merkleProof) external view returns (uint256) {
+        return isEligibleForReward(_merkleProof)? tokensPerClaim : 0;
     }
 
     function supportsInterface(bytes4 interfaceId) external view override returns (bool) {

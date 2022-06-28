@@ -20,7 +20,7 @@ contract ExistingTokenDrop1155 is AirdropInfo1155, AirdropMerkleProof, Ownable {
     address internal airdropFundingHolder;
     address public immutable airBroFactoryAddress;
 
-    event Claimed(uint256 indexed tokenId, address indexed claimer);
+    event Claimed(address indexed claimer);
     event AirdropFunded();
     event MerkleRootChanged(bytes32 merkleRoot);
 
@@ -102,7 +102,7 @@ contract ExistingTokenDrop1155 is AirdropInfo1155, AirdropMerkleProof, Ownable {
         checkProof(_merkleProof, merkleRoot);
 
         hasClaimed[msg.sender] = true; // nek se izvrti u odnosu na adresu true
-        // emit Claimed(tokenId, msg.sender);
+        emit Claimed(msg.sender);
 
         rewardToken.transfer(msg.sender, tokensPerClaim);
     }
@@ -114,17 +114,17 @@ contract ExistingTokenDrop1155 is AirdropInfo1155, AirdropMerkleProof, Ownable {
     }
 
     //@notice Checks if the user is eligible for this airdrop
-    function isEligibleForReward(bytes32[] calldata _merkleProof) public view returns (bool) {
+    function isEligibleForReward(bytes32[] calldata _merkleProof) public returns (bool) {
         if (hasClaimed[msg.sender]) revert AlreadyRedeemed();
         if (rewardToken.balanceOf(address(this)) < tokensPerClaim) revert InsufficientLiquidity();
         // if (rewardedNft.ownerOf(tokenId) != msg.sender) revert NotOwner(); //not used
-        // checkProof(_merkleProof, merkleRoot); // implement this later
+        checkProof(_merkleProof, merkleRoot); // implement this later
         return true;
     }
 
     //@notice Returns the amount(number) of airdrop tokens to claim
     //@param tokenId is the rewarded NFT collections token ID
-    function getAirdropAmount(bytes32[] calldata _merkleProof) external view returns (uint256) {
+    function getAirdropAmount(bytes32[] calldata _merkleProof) external returns (uint256) {
         return isEligibleForReward(_merkleProof)? tokensPerClaim : 0;
     }
 

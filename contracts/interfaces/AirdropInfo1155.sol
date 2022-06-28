@@ -16,10 +16,10 @@ interface AirdropInfo1155 {
     function getAirdropType() external view returns (string memory);
 
     //@notice Checks if the user is eligible for this airdrop
-    function isEligibleForReward(bytes32[] calldata _merkleProof) external view returns (bool);
+    function isEligibleForReward(bytes32[] calldata _merkleProof) external returns (bool);
 
     //@notice Returns the amount(number) of airdrop tokens to claim
     //@param tokenId is the rewarded NFT collections token ID
-    function getAirdropAmount(bytes32[] calldata _merkleProof) external view returns (uint256);
+    function getAirdropAmount(bytes32[] calldata _merkleProof) external returns (uint256);
 }
 
