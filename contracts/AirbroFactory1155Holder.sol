@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.14;
 
-import "./1155HolderAirdrops/TokenDrop1155.sol";
-import "./1155HolderAirdrops/ExistingTokenDrop1155.sol";
-import "./1155HolderAirdrops/Existing1155NftDrop1155.sol";
+import "./airdrops1155Holder/TokenDrop1155.sol";
+import "./airdrops1155Holder/ExistingTokenDrop1155.sol";
+import "./airdrops1155Holder/Existing1155NftDrop1155.sol";
 
 /// @title Airbro - NFT airdrop tool factory contract - for owners of 1155 Nfts
-contract AirbroFactory {
+contract AirbroFactory1155Holder {
     // index of deployed airdrop contracts
     address[] public airdrops;
     uint256 public totalAirdropsCount = 0;
