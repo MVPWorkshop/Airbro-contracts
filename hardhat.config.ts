@@ -91,7 +91,10 @@ const config: HardhatUserConfig = {
   etherscan: {
     // Your API key for Etherscan
     // Obtain one at https://etherscan.io/
-    apiKey: process.env.ETHERSCAN_API_KEY
+    apiKey: {
+      mainnet:process.env.ETHERSCAN_API_KEY,
+      polygonMumbai: process.env.POLYGON_MUMBAI_API_KEY
+    }
   },
   paths: {
     artifacts: "./artifacts",
