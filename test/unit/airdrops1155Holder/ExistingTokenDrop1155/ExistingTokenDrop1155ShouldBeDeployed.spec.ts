@@ -1,6 +1,6 @@
 import { expect } from "chai";
 import { ethers } from "hardhat";
-import { unitExistingTokenDropFixtureArguments as constructorArgs } from "../../shared/constants";
+import { unitExistingTokenDropFixtureArguments as constructorArgs } from "../../../shared/constants";
 
 const dayInSeconds:number = 86400;
 

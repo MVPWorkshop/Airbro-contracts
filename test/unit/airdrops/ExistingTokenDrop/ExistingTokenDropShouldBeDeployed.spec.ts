@@ -1,8 +1,8 @@
 import { expect } from "chai";
 import { ethers } from "hardhat";
-import { unitExistingTokenDropFixtureArguments as constructorArgs } from "../../shared/constants";
+import { unitExistingTokenDropFixtureArguments as constructorArgs } from "../../../shared/constants";
 
-import { deployMockAirBroFactory } from "../../shared/mocks";
+import { deployMockAirBroFactory } from "../../../shared/mocks";
 
 const dayInSeconds:number = 86400;
 

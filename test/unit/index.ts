@@ -6,18 +6,18 @@ import { integrationsFixture, unitTokenDropFixture, unitExisting1155NFTDropFixtu
 
 import { shouldBeCorrectAdmin } from "./AirbroFactory/AirbroFactoryShouldBeCorrectAdmin.spec";
 import { shouldChangeAdminAddress } from "./AirbroFactory/AirbroFactoryShouldChangeAdmin.spec";
-import { TokenDropShouldDeploy } from "./TokenDrop/TokenDropShouldBeDeployed.spec";
-import { TokenDropShouldSetMerkleRoot } from "./TokenDrop/TokenDropShouldSetMerkleRoot.spec";
-import { NFTDropShouldDeploy } from "./NFTDrop/NFTDropShouldBeDeployed.spec";
-import { NFTDropShouldSetMerkleRoot } from "./NFTDrop/NFTDropShouldSetMerkleRoot.spec";
-import { ItemNFTDropShouldDeploy } from "./ItemNFTDrop/ItemNFTDropShouldBeDeployed.spec";
-import { ItemNFTDropShouldSetMerkleRoot } from "./ItemNFTDrop/ItemNFTDropShouldSetMerkleRoot.spec";
-import { ExistingTokenDropShouldDeploy } from "./ExistingTokenDrop/ExistingTokenDropShouldBeDeployed.spec";
-import { Existing1155NftDropShouldSetMerkleRoot } from "./Existing1155NftDrop/Existing1155NftDropShouldSetMerkleRoot.spec";
-import { Existing1155NftDropShouldDeploy } from "./Existing1155NftDrop/Existing1155NftDropShouldBeDeployed.spec";
-import { ExistingTokenDropShouldSetMerkleRoot } from "./ExistingTokenDrop/ExistingTokenDropShouldSetMerkleRoot.spec";
-import { ExistingTokenDrop1155ShouldDeploy } from "./ExistingTokenDrop1155/ExistingTokenDrop1155ShouldBeDeployed.spec";
-import { ExistingTokenDrop1155ShouldSetMerkleRoot } from "./ExistingTokenDrop1155/ExistingTokenDrop1155ShouldSetMerkleRoot.spec";
+import { TokenDropShouldDeploy } from "./airdrops/TokenDrop/TokenDropShouldBeDeployed.spec";
+import { TokenDropShouldSetMerkleRoot } from "./airdrops/TokenDrop/TokenDropShouldSetMerkleRoot.spec";
+import { NFTDropShouldDeploy } from "./airdrops/NFTDrop/NFTDropShouldBeDeployed.spec";
+import { NFTDropShouldSetMerkleRoot } from "./airdrops/NFTDrop/NFTDropShouldSetMerkleRoot.spec";
+import { ItemNFTDropShouldDeploy } from "./airdrops/ItemNFTDrop/ItemNFTDropShouldBeDeployed.spec";
+import { ItemNFTDropShouldSetMerkleRoot } from "./airdrops/ItemNFTDrop/ItemNFTDropShouldSetMerkleRoot.spec";
+import { ExistingTokenDropShouldDeploy } from "./airdrops/ExistingTokenDrop/ExistingTokenDropShouldBeDeployed.spec";
+import { Existing1155NftDropShouldSetMerkleRoot } from "./airdrops/Existing1155NftDrop/Existing1155NftDropShouldSetMerkleRoot.spec";
+import { Existing1155NftDropShouldDeploy } from "./airdrops/Existing1155NftDrop/Existing1155NftDropShouldBeDeployed.spec";
+import { ExistingTokenDropShouldSetMerkleRoot } from "./airdrops/ExistingTokenDrop/ExistingTokenDropShouldSetMerkleRoot.spec";
+import { ExistingTokenDrop1155ShouldDeploy } from "./airdrops1155Holder/ExistingTokenDrop1155/ExistingTokenDrop1155ShouldBeDeployed.spec";
+import { ExistingTokenDrop1155ShouldSetMerkleRoot } from "./airdrops1155Holder/ExistingTokenDrop1155/ExistingTokenDrop1155ShouldSetMerkleRoot.spec";
 
 
 describe("Unit tests", function () {

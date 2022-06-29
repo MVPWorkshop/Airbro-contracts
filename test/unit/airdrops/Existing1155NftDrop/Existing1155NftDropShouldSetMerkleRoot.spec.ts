@@ -1,5 +1,4 @@
 import { expect } from "chai";
-import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 
 export const Existing1155NftDropShouldSetMerkleRoot = (): void => {
 
