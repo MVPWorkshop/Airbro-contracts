@@ -12,14 +12,14 @@ export const unitTokenDropFixtureArguments = {
     // airBroFactoryAddress: // not found here, added manually in constructor in fixtures
 }
 
-/*  Arguments for ExistingTokenDrop fixture deployment */
+/*  Arguments for ExistingTokenDrop and ExistingTokenDrop1155 fixture deployment */
 export const unitExistingTokenDropFixtureArguments = {
     rewardedNft:randomAddress,
     tokensPerClaim:2,
     rewardToken:randomAddress,
     totalAirdropAmount:2,
     airdropDuration:1,
-    // airBroFactoryAddress: // not found here, added manually in constructor in fixtures
+    // airBroFactory1155HolderAddress: // not found here, added manually in constructor in fixtures
 }
 
 

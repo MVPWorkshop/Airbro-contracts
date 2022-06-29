@@ -18,7 +18,7 @@ contract ExistingTokenDrop1155 is AirdropInfo1155, AirdropMerkleProof, Ownable {
     bool public airdropFunded = false;
     uint256 public airdropFundBlockTimestamp;
     address internal airdropFundingHolder;
-    address public immutable airBroFactoryAddress;
+    address public immutable airBroFactory1155HolderAddress;
 
     event Claimed(address indexed claimer);
     event AirdropFunded();
@@ -45,7 +45,7 @@ contract ExistingTokenDrop1155 is AirdropInfo1155, AirdropMerkleProof, Ownable {
     uint256 public immutable airdropFinishTime;
 
     modifier onlyAdmin(){
-        if(msg.sender != IAirBroFactory(airBroFactoryAddress).admin()) revert NotAdmin();
+        if(msg.sender != IAirBroFactory(airBroFactory1155HolderAddress).admin()) revert NotAdmin();
         _;
     }
 
@@ -55,7 +55,7 @@ contract ExistingTokenDrop1155 is AirdropInfo1155, AirdropMerkleProof, Ownable {
         address _rewardToken,
         uint256 _totalAirdropAmount,
         uint256 _airdropDuration,
-        address _airBroFactoryAddress
+        address _airBroFactory1155HolderAddress
     ) {
         rewardedNft = ERC1155(_rewardedNft);
         tokensPerClaim = _tokensPerClaim;
@@ -64,7 +64,7 @@ contract ExistingTokenDrop1155 is AirdropInfo1155, AirdropMerkleProof, Ownable {
         airdropDuration = _airdropDuration * 1 days;
         airdropStartTime = block.timestamp;
         airdropFinishTime = block.timestamp + airdropDuration;
-        airBroFactoryAddress = _airBroFactoryAddress;
+        airBroFactory1155HolderAddress = _airBroFactory1155HolderAddress;
     }
 
     /// @notice Sets the merkleRoot - can only be done if admin (different from the contract owner)
@@ -125,7 +125,7 @@ contract ExistingTokenDrop1155 is AirdropInfo1155, AirdropMerkleProof, Ownable {
     //@notice Returns the amount(number) of airdrop tokens to claim
     //@param tokenId is the rewarded NFT collections token ID
     function getAirdropAmount(bytes32[] calldata _merkleProof) external returns (uint256) {
-        return isEligibleForReward(_merkleProof)? tokensPerClaim : 0;
+        return isEligibleForReward(_merkleProof) ? tokensPerClaim : 0;
     }
 
     function getAirdropFinishTime() external view override returns (uint256) {
