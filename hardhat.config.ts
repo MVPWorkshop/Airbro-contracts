@@ -93,7 +93,7 @@ const config: HardhatUserConfig = {
     // Obtain one at https://etherscan.io/
     apiKey: {
       mainnet:process.env.ETHERSCAN_API_KEY,
-      polygonMumbai: process.env.POLYGON_MUMBAI_API_KEY
+      polygonMumbai: process.env.POLYGON_API_KEY
     }
   },
   paths: {
