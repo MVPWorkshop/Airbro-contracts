@@ -17,6 +17,7 @@ import { AirBro1155NftMint } from "../../src/types/contracts/Airbro1155NftMint.s
 import { AirbroFactory1155Holder } from "../../src/types/contracts/AirbroFactory1155Holder";
 import { Existing1155NftDrop1155 } from "../../src/types/contracts/airdrops1155Holder/Existing1155NftDrop1155"
 import { ExistingTokenDrop1155 } from "../../src/types/contracts/airdrops1155Holder/ExistingTokenDrop1155"
+import { TokenDrop1155 } from "../../src/types/contracts/airdrops1155Holder/TokenDrop1155"
 
 
 
@@ -57,6 +58,11 @@ type UnitTokenDropFixtureType = {
 
 type UnitExistingTokenDrop1155FixtureType = {
     existingTokenDrop1155:ExistingTokenDrop1155;
+    mockAirBroFactory1155Holder: MockContract;
+}
+
+type UnitTokenDrop1155FixtureType = {
+    tokenDrop1155:TokenDrop1155;
     mockAirBroFactory1155Holder: MockContract;
 }
 
@@ -178,6 +184,22 @@ export const unitExistingTokenDrop1155Fixture: Fixture<UnitExistingTokenDrop1155
     await existingTokenDrop1155.deployed();
     
     return { existingTokenDrop1155, mockAirBroFactory1155Holder }
+}
+
+
+export const unitTokenDrop1155Fixture: Fixture<UnitTokenDrop1155FixtureType> = async (signers: Wallet[]) => {
+    const deployer: Wallet = signers[0];
+
+    const mockAirBroFactory1155Holder = await deployMockAirBroFactory1155Holder(deployer);
+    
+    const tokenDrop1155Factory = await ethers.getContractFactory("TokenDrop1155")
+
+    const args = Object.values(unitTokenDropFixtureArguments)
+    const tokenDrop1155: TokenDrop1155 = (await tokenDrop1155Factory.connect(deployer).deploy(...args, mockAirBroFactory1155Holder.address)) as TokenDrop1155;
+
+    await tokenDrop1155.deployed();
+    
+    return { tokenDrop1155, mockAirBroFactory1155Holder }
 }
 
 

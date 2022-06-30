@@ -2,7 +2,7 @@ import { ethers, network, waffle } from "hardhat";
 import { Mocks, Signers } from "../shared/types";
 
 import {contractAdminAddress } from "../shared/constants";
-import { integrationsFixture, unitTokenDropFixture, unitExisting1155NFTDropFixture, unitExistingTokenDropFixture, unitItemNFTDropFixture, unitNFTDropFixture, unitExistingTokenDrop1155Fixture, integrations1155HolderFixture, unitExisting1155NFTDrop1155Fixture } from "../shared/fixtures";
+import { integrationsFixture, unitTokenDropFixture, unitExisting1155NFTDropFixture, unitExistingTokenDropFixture, unitItemNFTDropFixture, unitNFTDropFixture, unitExistingTokenDrop1155Fixture, integrations1155HolderFixture, unitExisting1155NFTDrop1155Fixture, unitTokenDrop1155Fixture } from "../shared/fixtures";
 
 import { shouldBeCorrectAdmin } from "./AirbroFactory/AirbroFactoryShouldBeCorrectAdmin.spec";
 import { shouldChangeAdminAddress } from "./AirbroFactory/AirbroFactoryShouldChangeAdmin.spec";
@@ -23,6 +23,8 @@ import { Existing1155NftDrop1155ShouldSetMerkleRoot } from "./airdrops1155Holder
 import { Existing1155NftDrop1155ShouldDeploy } from "./airdrops1155Holder/Existing1155NftDrop1155/Existing1155NftDrop1155ShouldBeDeployed.spec";
 import { ExistingTokenDrop1155ShouldDeploy } from "./airdrops1155Holder/ExistingTokenDrop1155/ExistingTokenDrop1155ShouldBeDeployed.spec";
 import { ExistingTokenDrop1155ShouldSetMerkleRoot } from "./airdrops1155Holder/ExistingTokenDrop1155/ExistingTokenDrop1155ShouldSetMerkleRoot.spec";
+import { TokenDrop1155ShouldDeploy } from "./airdrops1155Holder/TokenDrop1155/TokenDrop1155ShouldBeDeployed.spec";
+import { TokenDrop1155ShouldSetMerkleRoot } from "./airdrops1155Holder/TokenDrop1155/TokenDrop1155ShouldSetMerkleRoot.spec";
 
 
 describe("Unit tests", function () {
@@ -185,6 +187,21 @@ describe("Airbro - ERC1155 Holder", function () {
     ExistingTokenDrop1155ShouldDeploy();
     ExistingTokenDrop1155ShouldSetMerkleRoot();
 
+  })
+
+  describe('TokenDrop1155',()=>{
+    beforeEach(async function(){
+      const { tokenDrop1155, mockAirBroFactory1155Holder } = await this.loadFixture(unitTokenDrop1155Fixture)
+
+      this.tokenDrop1155 = tokenDrop1155;
+
+      this.mocks = {} as Mocks;
+      this.mocks.mockAirBroFactory1155Holder = mockAirBroFactory1155Holder;
+    })
+
+
+    TokenDrop1155ShouldDeploy();
+    TokenDrop1155ShouldSetMerkleRoot();
   })
   
 }) 
