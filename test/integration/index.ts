@@ -11,6 +11,7 @@ import { shouldAirdropExisting1155NftDrop } from "./AirBro/AirBroExisting1155Nft
 import { integrationsFixture } from "../shared/fixtures";
 
 import { AirbroFactory1155ShouldBehaveLikeFactory } from "./AirBro1155Holder/AirBroDropCreation1155ShouldBehaveLikeFactory.spec";
+import { AirbroFactory1155HolderShouldChangeAdminInAllAirDrops } from "./AirBro1155Holder/AirBroFactory1155HolderShouldChangeAdmin.spec";
 import { AirbroFactory1155HolderShouldAirdropExisting1155NftDrop1155 } from "./AirBro1155Holder/AirBroExisting1155NftDrop1155.spec";
 import { integrations1155HolderFixture } from "../shared/fixtures";
 
@@ -72,7 +73,7 @@ describe("Integration tests", function () {
     });
     
     AirbroFactory1155ShouldBehaveLikeFactory();
-    // AirbroFactory1155HolderShouldChangeAdminInAllAirDrops();
+    AirbroFactory1155HolderShouldChangeAdminInAllAirDrops();
     // AirbroFactory1155HolderShouldAirDropExistingToken();
     // AirbroFactory1155HolderShouldAirDropNewToken();
     // AirbroFactory1155HolderShouldAirdropExisting1155NftDrop1155()
