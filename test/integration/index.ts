@@ -3,12 +3,17 @@ import { contractAdminAddress } from "../shared/constants";
 
 import { Signers } from "../shared/types";
 
-import { shouldBehaveLikeFactory } from "./AirBroDropCreationShouldEmitEvent.spec";
-import { shouldChangeAdminInAllAirDrops } from "./AirBroFactoryShouldChangeAdmin.spec";
-import { shouldAirDropExistingToken } from "./AirBroExistingTokenDrop.spec";
-import { shouldAirDropNewToken } from "./AirBroTokenDrop.spec";
-import { shouldAirdropExisting1155token } from "./AirBro1155NftMint.spec";
+import { shouldBehaveLikeFactory } from "./AirBro/AirBroDropCreationShouldBehaveLikeFactory.spec";
+import { shouldChangeAdminInAllAirDrops } from "./AirBro/AirBroFactoryShouldChangeAdmin.spec";
+import { shouldAirDropExistingToken } from "./AirBro/AirBroExistingTokenDrop.spec";
+import { shouldAirDropNewToken } from "./AirBro/AirBroTokenDrop.spec";
+import { shouldAirdropExisting1155NftDrop } from "./AirBro/AirBroExisting1155NftDrop.spec";
 import { integrationsFixture } from "../shared/fixtures";
+
+import { AirbroFactory1155ShouldBehaveLikeFactory } from "./AirBro1155Holder/AirBroDropCreation1155ShouldBehaveLikeFactory.spec";
+import { AirbroFactory1155HolderShouldAirdropExisting1155NftDrop1155 } from "./AirBro1155Holder/AirBroExisting1155NftDrop1155.spec";
+import { integrations1155HolderFixture } from "../shared/fixtures";
+
 
 const randomAddress = '0x6b175474e89094c44da98b954eedeac495271d0f';
 describe("Integration tests", function () {
@@ -39,7 +44,7 @@ describe("Integration tests", function () {
     this.loadFixture = waffle.createFixtureLoader(signers)
   });
   
-  describe("AirbroFactory",  ()=> {
+  describe("AirbroFactory", ()=> {
     beforeEach(async function () {
       const { airbroFactory, testNftCollection, testToken, airBro1155NftMint } = await this.loadFixture(integrationsFixture)
       this.airbroFactory = airbroFactory;
@@ -53,7 +58,24 @@ describe("Integration tests", function () {
     shouldChangeAdminInAllAirDrops();
     shouldAirDropExistingToken();
     shouldAirDropNewToken();
-    shouldAirdropExisting1155token()
+    shouldAirdropExisting1155NftDrop()
+  });
+
+  describe("AirbroFactory1155Holder", ()=> {
+    beforeEach(async function () {
+      const { airbroFactory1155Holder, testNftCollection, testToken, airBro1155NftMint } = await this.loadFixture(integrations1155HolderFixture)
+      this.airbroFactory1155Holder = airbroFactory1155Holder;
+      this.testNftCollection = testNftCollection;
+      this.testToken = testToken;
+      this.test1155NftCollection = airBro1155NftMint;
+
+    });
+    
+    AirbroFactory1155ShouldBehaveLikeFactory();
+    // AirbroFactory1155HolderShouldChangeAdminInAllAirDrops();
+    // AirbroFactory1155HolderShouldAirDropExistingToken();
+    // AirbroFactory1155HolderShouldAirDropNewToken();
+    // AirbroFactory1155HolderShouldAirdropExisting1155NftDrop1155()
   });
   
 });

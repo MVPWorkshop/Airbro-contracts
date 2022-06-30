@@ -2,7 +2,7 @@ import { expect } from "chai";
 import { ethers } from "hardhat";
 
 
-export function shouldAirdropExisting1155token(){
+export function shouldAirdropExisting1155NftDrop(){
     const bytes32MerkleRootHash = "0x0000000000000000000000000000000000000000000000000000000000000000";
 
     it('should mint and drop existing IERC1155 NFT token',async function(){
