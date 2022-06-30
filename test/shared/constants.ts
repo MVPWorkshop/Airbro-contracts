@@ -21,5 +21,3 @@ export const unitExistingTokenDropFixtureArguments = {
     airdropDuration:1,
     // airBroFactory1155HolderAddress: // not found here, added manually in constructor in fixtures
 }
-
-

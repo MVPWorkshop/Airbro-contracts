@@ -2,7 +2,7 @@ import { ethers, network, waffle } from "hardhat";
 import { Mocks, Signers } from "../shared/types";
 
 import {contractAdminAddress } from "../shared/constants";
-import { integrationsFixture, unitTokenDropFixture, unitExisting1155NFTDropFixture, unitExistingTokenDropFixture, unitItemNFTDropFixture, unitNFTDropFixture, unitExistingTokenDrop1155Fixture } from "../shared/fixtures";
+import { integrationsFixture, unitTokenDropFixture, unitExisting1155NFTDropFixture, unitExistingTokenDropFixture, unitItemNFTDropFixture, unitNFTDropFixture, unitExistingTokenDrop1155Fixture, integrations1155HolderFixture, unitExisting1155NFTDrop1155Fixture } from "../shared/fixtures";
 
 import { shouldBeCorrectAdmin } from "./AirbroFactory/AirbroFactoryShouldBeCorrectAdmin.spec";
 import { shouldChangeAdminAddress } from "./AirbroFactory/AirbroFactoryShouldChangeAdmin.spec";
@@ -16,6 +16,11 @@ import { ExistingTokenDropShouldDeploy } from "./airdrops/ExistingTokenDrop/Exis
 import { Existing1155NftDropShouldSetMerkleRoot } from "./airdrops/Existing1155NftDrop/Existing1155NftDropShouldSetMerkleRoot.spec";
 import { Existing1155NftDropShouldDeploy } from "./airdrops/Existing1155NftDrop/Existing1155NftDropShouldBeDeployed.spec";
 import { ExistingTokenDropShouldSetMerkleRoot } from "./airdrops/ExistingTokenDrop/ExistingTokenDropShouldSetMerkleRoot.spec";
+
+import { AirbroFactory1155HolderShouldBeCorrectAdmin } from "./AirbroFactory1155Holder/AirbroFactoryShouldBeCorrectAdmin.spec";
+import { AirbroFactory1155HolderShouldChangeAdminAddress } from "./AirbroFactory1155Holder/AirbroFactoryShouldChangeAdmin.spec";
+import { Existing1155NftDrop1155ShouldSetMerkleRoot } from "./airdrops1155Holder/Existing1155NftDrop1155/Existing1155NftDrop1155ShouldSetMerkleRoot.spec";
+import { Existing1155NftDrop1155ShouldDeploy } from "./airdrops1155Holder/Existing1155NftDrop1155/Existing1155NftDrop1155ShouldBeDeployed.spec";
 import { ExistingTokenDrop1155ShouldDeploy } from "./airdrops1155Holder/ExistingTokenDrop1155/ExistingTokenDrop1155ShouldBeDeployed.spec";
 import { ExistingTokenDrop1155ShouldSetMerkleRoot } from "./airdrops1155Holder/ExistingTokenDrop1155/ExistingTokenDrop1155ShouldSetMerkleRoot.spec";
 
@@ -45,6 +50,8 @@ describe("Unit tests", function () {
     this.loadFixture = waffle.createFixtureLoader(signers);
   });
 
+
+describe("Airbro - ERC721 Holder", function () {
 
   describe('AirbroFactory',() => {
     beforeEach(async function() {
@@ -132,7 +139,38 @@ describe("Unit tests", function () {
 
   })
 
-  /* airdrops1155Holder */
+})
+
+describe("Airbro - ERC1155 Holder", function () {
+
+  describe('AirbroFactory1155holder', ()=>{
+    beforeEach(async function(){
+      const { airbroFactory1155Holder } = await this.loadFixture(integrations1155HolderFixture)
+
+      this.airbroFactory1155Holder = airbroFactory1155Holder;
+
+    })
+
+    // AirbroFactory1155HolderShouldBeCorrectAdmin();
+    // AirbroFactory1155HolderShouldChangeAdminAddress();
+  })
+
+  describe('ExistingNft1155Drop1155',()=>{
+    beforeEach(async function(){
+      const { existing1155NftDrop1155, mockAirBroFactory1155Holder } = await this.loadFixture(unitExisting1155NFTDrop1155Fixture)
+
+      this.existing1155NFTDrop1155 = existing1155NftDrop1155;
+
+      this.mocks = {} as Mocks;
+      this.mocks.mockAirBroFactory1155Holder = mockAirBroFactory1155Holder;
+    })
+
+
+    Existing1155NftDrop1155ShouldDeploy();
+    Existing1155NftDrop1155ShouldSetMerkleRoot();
+
+  })
+
   describe('ExistingTokenDrop1155',()=>{
     beforeEach(async function(){
       const { existingTokenDrop1155, mockAirBroFactory1155Holder } = await this.loadFixture(unitExistingTokenDrop1155Fixture)
@@ -149,5 +187,6 @@ describe("Unit tests", function () {
 
   })
   
+}) 
 
 });
