@@ -14,6 +14,7 @@ import { AirbroFactory1155ShouldBehaveLikeFactory } from "./AirBro1155Holder/Air
 import { AirbroFactory1155HolderShouldChangeAdminInAllAirDrops } from "./AirBro1155Holder/AirBroFactory1155HolderShouldChangeAdmin.spec";
 import { AirbroFactory1155HolderShouldAirdropExisting1155NftDrop1155 } from "./AirBro1155Holder/AirBroExisting1155NftDrop1155.spec";
 import { integrations1155HolderFixture } from "../shared/fixtures";
+import { AirbroFactory1155HolderShouldAirDropExistingToken } from "./AirBro1155Holder/AirBroExistingTokenNftDrop1155.spec";
 
 
 const randomAddress = '0x6b175474e89094c44da98b954eedeac495271d0f';
@@ -26,10 +27,12 @@ describe("Integration tests", function () {
     this.signers.deployer = signers[0];
     this.signers.alice = signers[1];
     this.signers.bob = signers[2]
+    this.signers.jerry = signers[3]
+    this.signers.lisa = signers[4]
     // this.signers.backendWallet = await ethers.getSigner(contractAdminAddress);
 
     // sending eth to the backend wallet address from the hardhat account of index 4
-    await signers[4].sendTransaction({
+    await signers[5].sendTransaction({
       to: contractAdminAddress,
       value: ethers.utils.parseEther("5000")
     })
@@ -74,7 +77,7 @@ describe("Integration tests", function () {
     
     AirbroFactory1155ShouldBehaveLikeFactory();
     AirbroFactory1155HolderShouldChangeAdminInAllAirDrops();
-    // AirbroFactory1155HolderShouldAirDropExistingToken();
+    AirbroFactory1155HolderShouldAirDropExistingToken(); // has error
     // AirbroFactory1155HolderShouldAirDropNewToken();
     // AirbroFactory1155HolderShouldAirdropExisting1155NftDrop1155()
   });

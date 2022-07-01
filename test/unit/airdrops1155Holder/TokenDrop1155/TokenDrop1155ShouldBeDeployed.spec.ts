@@ -50,7 +50,7 @@ export const TokenDrop1155ShouldDeploy = (): void => {
             expect(await this.tokenDrop1155.airdropFinishTime()).to.be.equal(blockBefore.timestamp + constructorArgs.airdropDuration * dayInSeconds)
         })
         
-        it('should return correct airdrp type',async function(){
+        it('should return correct airdrop type',async function(){
             expect(await this.tokenDrop1155.getAirdropType()).to.be.equal("ERC20")
         })
 
