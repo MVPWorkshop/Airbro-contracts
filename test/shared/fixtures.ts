@@ -74,8 +74,8 @@ type IntegrationFixtureType = {
 };
 
 type Integration1155HolderFixtureType = {
-    airbroFactory1155Holder: AirbroFactory; // temporary for testing
-    // airbroFactory1155Holder: AirbroFactory1155Holder;
+    // airbroFactory1155Holder: AirbroFactory; // temporary for testing
+    airbroFactory1155Holder: AirbroFactory1155Holder;
     testNftCollection: TestNftCollection;
     testToken: TestToken;
     airBro1155NftMint: AirBro1155NftMint;
@@ -251,17 +251,17 @@ export const integrationsFixture: Fixture<IntegrationFixtureType> = async (signe
 export const integrations1155HolderFixture: Fixture<Integration1155HolderFixtureType> = async (signers: Wallet[]) => {
     const deployer: Wallet = signers[0];
     
-    const airbroFactoryFactory: ContractFactory = await ethers.getContractFactory(`AirbroFactory`);
+    // const airbroFactoryFactory: ContractFactory = await ethers.getContractFactory(`AirbroFactory`);
     
-    const airbroFactory1155Holder: AirbroFactory = (await airbroFactoryFactory.connect(deployer).deploy()) as AirbroFactory;
-    
-    await airbroFactory1155Holder.deployed();
-
-    // const airbroFactory1155HolderFactory: ContractFactory = await ethers.getContractFactory(`AirbroFactory1155Holder`);
-    
-    // const airbroFactory1155Holder: AirbroFactory1155Holder = (await airbroFactory1155HolderFactory.connect(deployer).deploy()) as AirbroFactory1155Holder;
+    // const airbroFactory1155Holder: AirbroFactory = (await airbroFactoryFactory.connect(deployer).deploy()) as AirbroFactory;
     
     // await airbroFactory1155Holder.deployed();
+
+    const airbroFactory1155HolderFactory: ContractFactory = await ethers.getContractFactory(`AirbroFactory1155Holder`);
+    
+    const airbroFactory1155Holder: AirbroFactory1155Holder = (await airbroFactory1155HolderFactory.connect(deployer).deploy()) as AirbroFactory1155Holder;
+    
+    await airbroFactory1155Holder.deployed();
 
     const testNftCollectionFactory: ContractFactory = await ethers.getContractFactory(`TestNftCollection`);
 

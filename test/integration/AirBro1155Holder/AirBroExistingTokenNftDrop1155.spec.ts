@@ -7,6 +7,8 @@ const { keccak256 } = ethers.utils
 export function AirbroFactory1155HolderShouldAirDropExistingToken(){
     it('should fund and drop tokens to newly minted nft1155 holders',async function(){
         const totalAirdropAmount = ethers.utils.parseEther("1000");
+        const tokensPerClaim = 100;
+        const airdropDurationInDays = 30 //days
         
         // minging the admin 1000 of the existing tokens
         await this.testToken.connect(this.signers.deployer).mint(this.signers.deployer.address, totalAirdropAmount);
@@ -14,10 +16,10 @@ export function AirbroFactory1155HolderShouldAirDropExistingToken(){
         // creating new airdrop
         const newAirdrop = await this.airbroFactory1155Holder.connect(this.signers.deployer).dropExistingTokensToNftHolders(
             this.test1155NftCollection.address, // rewardedNftCollection,
-            100, // tokensPerClaim
+            tokensPerClaim,
             this.testToken.address, //existing token address
             totalAirdropAmount, // total tokens to be rewarded
-            30, //duration of 30 days
+            airdropDurationInDays,
             )
             
             expect(newAirdrop).to.emit(this.airbroFactory1155Holder, "NewAirdrop");
@@ -46,14 +48,16 @@ export function AirbroFactory1155HolderShouldAirDropExistingToken(){
             const merkleTree = new MerkleTree(leaves, keccak256, { sort: true })
             const roothash = merkleTree.getHexRoot();
             
-            expect(await tokenDropContract.connect(this.signers.backendWallet).setMerkleRoot(roothash)).to.emit(tokenDropContract,"MerkleRootChanged").withArgs(roothash); //backend setting the merkleRoot
-            expect(await this.testToken.balanceOf(this.signers.alice.address)).to.be.equal(0) // alice has not claimed any tokens yet
-
+            await expect(tokenDropContract.connect(this.signers.backendWallet).setMerkleRoot(roothash)).to.emit(tokenDropContract,"MerkleRootChanged").withArgs(roothash); //backend setting the merkleRoot
+            
             // Claiming funds (alice)
             const hexProof = merkleTree.getHexProof(leaves[0]);
+            expect(await this.testToken.balanceOf(this.signers.alice.address)).to.be.equal(0) // alice has not claimed any tokens yet
 
-            // ERROR: Alice trying to claim. This fails. Unrecognized funciton selector
-            await tokenDropContract.connect(this.signers.alice).claim(hexProof)
+            await expect(tokenDropContract.connect(this.signers.alice).claim(hexProof)).to.emit(tokenDropContract,"Claimed").withArgs(this.signers.alice.address)
+            expect(await this.testToken.balanceOf(this.signers.alice.address)).to.be.equal(tokensPerClaim) //alice should additional tokens matching the tokensPerClaim amount
+            
+            await expect(tokenDropContract.connect(this.signers.alice).claim(hexProof)).to.be.revertedWith("AlreadyRedeemed") // should be reverted since Alice already redeemed
             
         })
     }
