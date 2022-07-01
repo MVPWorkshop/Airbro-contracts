@@ -7,13 +7,15 @@ error InvalidProof();
 
 abstract contract AirdropMerkleProof {
 
-    function checkProof(bytes32[] calldata _merkleProof, bytes32 merkleRoot) public {
+    function checkProof(bytes32[] calldata _merkleProof, bytes32 merkleRoot) public view returns(bool){
         //check if merkle root hash exists
         if (merkleRoot != 0) {
             // Verify the provided _merkleProof, given to us through the API call on our website.
             bytes32 leaf = keccak256(abi.encodePacked(msg.sender));
-            if (!MerkleProof.verify(_merkleProof, merkleRoot, leaf)) revert InvalidProof();
+            if (MerkleProof.verify(_merkleProof, merkleRoot, leaf)) return true;
+            // return true;
         }
+        return false;   
     }
 
 }

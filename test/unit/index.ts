@@ -21,6 +21,7 @@ import { AirbroFactory1155HolderShouldBeCorrectAdmin } from "./AirbroFactory1155
 import { AirbroFactory1155HolderShouldChangeAdminAddress } from "./AirbroFactory1155Holder/AirbroFactoryShouldChangeAdmin.spec";
 import { Existing1155NftDrop1155ShouldSetMerkleRoot } from "./airdrops1155Holder/Existing1155NftDrop1155/Existing1155NftDrop1155ShouldSetMerkleRoot.spec";
 import { Existing1155NftDrop1155ShouldDeploy } from "./airdrops1155Holder/Existing1155NftDrop1155/Existing1155NftDrop1155ShouldBeDeployed.spec";
+import { Existing1155NftDrop1155ShouldClaimReward } from "./airdrops1155Holder/Existing1155NftDrop1155/Existing1155NftDrop1155ShouldClaimReward.spec";
 import { ExistingTokenDrop1155ShouldDeploy } from "./airdrops1155Holder/ExistingTokenDrop1155/ExistingTokenDrop1155ShouldBeDeployed.spec";
 import { ExistingTokenDrop1155ShouldSetMerkleRoot } from "./airdrops1155Holder/ExistingTokenDrop1155/ExistingTokenDrop1155ShouldSetMerkleRoot.spec";
 import { TokenDrop1155ShouldDeploy } from "./airdrops1155Holder/TokenDrop1155/TokenDrop1155ShouldBeDeployed.spec";
@@ -35,9 +36,18 @@ describe("Unit tests", function () {
     this.signers.deployer = signers[0];
     this.signers.alice = signers[1];
     this.signers.bob = signers[2];
-    
+    this.signers.jerry = signers[3];
+    this.signers.lisa = signers[4];
+    this.signers.peter = signers[5];
+
+    // console.log("alice: " + this.signers.alice.address);
+    // console.log("bob: " + this.signers.bob.address);
+    // console.log("jerry: " + this.signers.jerry.address);
+    // console.log("lisa: " + this.signers.lisa.address);
+    // console.log("peter: " + this.signers.peter.address);
+
     // sending eth to the backend wallet address from the hardhat account of index 3
-    await signers[3].sendTransaction({
+    await signers[6].sendTransaction({
       to: contractAdminAddress,
       value: ethers.utils.parseEther("5000")
     })
@@ -170,6 +180,7 @@ describe("Airbro - ERC1155 Holder", function () {
 
     Existing1155NftDrop1155ShouldDeploy();
     Existing1155NftDrop1155ShouldSetMerkleRoot();
+    Existing1155NftDrop1155ShouldClaimReward();
 
   })
 
@@ -178,7 +189,6 @@ describe("Airbro - ERC1155 Holder", function () {
       const { existingTokenDrop1155, mockAirBroFactory1155Holder } = await this.loadFixture(unitExistingTokenDrop1155Fixture)
 
       this.existingTokenDrop1155 = existingTokenDrop1155;
-
       this.mocks = {} as Mocks;
       this.mocks.mockAirBroFactory1155Holder = mockAirBroFactory1155Holder;
     })

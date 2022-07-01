@@ -98,13 +98,27 @@ export const unitExisting1155NFTDropFixture: Fixture<UnitExisting1155NFTDropFixt
 export const unitExisting1155NFTDrop1155Fixture: Fixture<UnitExisting1155NFTDrop1155FixtureType> = async (signers: Wallet[]) => {
     const deployer: Wallet = signers[0];
     
+    const airBro1155NftMintFactory: ContractFactory = await ethers.getContractFactory(`AirBro1155NftMint`);
+
+    const airBro1155NftMint: AirBro1155NftMint = (await airBro1155NftMintFactory.connect(deployer).deploy()) as AirBro1155NftMint;
+
+    await airBro1155NftMint.deployed();
+
     const mockAirBroFactory1155Holder = await deployMockAirBroFactory1155Holder(deployer);
     
     const existing1155NftDrop1155Factory: ContractFactory = await ethers.getContractFactory(`Existing1155NftDrop1155`);
     
-    const existing1155NftDrop1155: Existing1155NftDrop1155 = (await existing1155NftDrop1155Factory.connect(deployer).deploy(randomAddress,randomAddress,2,2,2,2, mockAirBroFactory1155Holder.address)) as Existing1155NftDrop1155;
+    const existing1155NftDrop1155: Existing1155NftDrop1155 = (await existing1155NftDrop1155Factory.connect(deployer).deploy(randomAddress, airBro1155NftMint.address,2,1,1000,2, mockAirBroFactory1155Holder.address)) as Existing1155NftDrop1155;
     
     await existing1155NftDrop1155.deployed();
+
+    const idOf1155:string = 'nftAirdrop';
+    const amounOft1155:number = 1000;
+
+    await airBro1155NftMint.connect(deployer).mint(idOf1155,amounOft1155);
+
+    await airBro1155NftMint.connect(deployer).setApprovalForAll(existing1155NftDrop1155.address,true);
+    await existing1155NftDrop1155.connect(deployer).fundAirdrop();
     
     return { existing1155NftDrop1155, mockAirBroFactory1155Holder};
 };

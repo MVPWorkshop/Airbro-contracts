@@ -22,6 +22,9 @@ export interface Signers {
   deployer: Wallet;
   alice: Wallet;
   bob: Wallet;
+  jerry: Wallet;
+  lisa: Wallet;
+  peter: Wallet;
   backendWallet: SignerWithAddress;
 }
 

@@ -25,7 +25,7 @@ contract Existing1155NftDrop1155 is AirdropInfo1155, AirdropMerkleProof, IERC115
     event Claimed(address indexed claimer);
     event AirdropFunded();
     event MerkleRootChanged(bytes32 merkleRoot);
-
+    // event isEligibleForReward(bool);
 
     error NotOwner();
     error AirdropStillInProgress();
@@ -35,6 +35,8 @@ contract Existing1155NftDrop1155 is AirdropInfo1155, AirdropMerkleProof, IERC115
     error InsufficientLiquidity();
     error AirdropExpired();
     error NotAdmin();
+    error NotEligible();
+
 
     mapping(address => bool) public hasClaimed;
 
@@ -109,12 +111,14 @@ contract Existing1155NftDrop1155 is AirdropInfo1155, AirdropMerkleProof, IERC115
         if (rewardToken.balanceOf(address(this), rewardTokenId) < tokensPerClaim) revert InsufficientLiquidity();
         if (block.timestamp > airdropFinishTime) revert AirdropExpired();
 
-        checkProof(_merkleProof, merkleRoot);
-
+        bool isEligible = checkProof(_merkleProof, merkleRoot);
+        if(isEligible) {
         hasClaimed[msg.sender] = true;
-        emit Claimed(msg.sender);
-
         rewardToken.safeTransferFrom(address(this), msg.sender, rewardTokenId, tokensPerClaim, "");
+        emit Claimed(msg.sender);
+        } else {
+            revert NotEligible();
+        }
     }
 
     
@@ -123,12 +127,13 @@ contract Existing1155NftDrop1155 is AirdropInfo1155, AirdropMerkleProof, IERC115
         return "ERC1155";
     }
 
+// returns (bool)
     //@notice Checks if the user is eligible for this airdrop
-    function isEligibleForReward(bytes32[] calldata _merkleProof) public view returns (bool) {
+    function isEligibleForReward(bytes32[] calldata _merkleProof) public view returns(bool) {
         if (hasClaimed[msg.sender]) revert AlreadyRedeemed();
         if (rewardToken.balanceOf(address(this), rewardTokenId) < tokensPerClaim) revert InsufficientLiquidity();        
-        // checkProof(_merkleProof, merkleRoot); // implement this later
-        return true;
+        bool isEligible = checkProof(_merkleProof, merkleRoot);
+        return isEligible;
     }
 
     //@notice Returns the amount(number) of airdrop tokens to claim
@@ -137,7 +142,7 @@ contract Existing1155NftDrop1155 is AirdropInfo1155, AirdropMerkleProof, IERC115
         return isEligibleForReward(_merkleProof)? tokensPerClaim : 0;
     }
 
-    function supportsInterface(bytes4 interfaceId) external view override returns (bool) {
+    function supportsInterface(bytes4 interfaceId) external pure override returns (bool) {
         return interfaceId == 0xf23a6e61;
     }
 
