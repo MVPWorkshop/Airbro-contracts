@@ -2,9 +2,9 @@ import { task } from "hardhat/config";
 import { TaskArguments } from "hardhat/types";
 
 import { AirbroFactory } from "../../src/types/contracts/AirbroFactory";
-import { AirBro1155NftMint } from "../../src/types/contracts/Airbro1155NftMint.sol";
+import { AirBro1155NftMint } from "../../src/types/contracts/mocks/Airbro1155NftMint.sol";
 import { AirbroFactory__factory } from "../../src/types/factories/contracts/AirbroFactory__factory";
-import { AirBro1155NftMint__factory } from "../../src/types/factories/contracts/Airbro1155NftMint.sol/AirBro1155NftMint__factory";
+import { AirBro1155NftMint__factory } from "../../src/types/factories/contracts/mocks/Airbro1155NftMint.sol/AirBro1155NftMint__factory";
 import { Signer } from "@ethersproject/abstract-signer";
 
 task("deploy:AirbroFactory")

@@ -26,6 +26,8 @@ import { ExistingTokenDrop1155ShouldDeploy } from "./airdrops1155Holder/Existing
 import { ExistingTokenDrop1155ShouldSetMerkleRoot } from "./airdrops1155Holder/ExistingTokenDrop1155/ExistingTokenDrop1155ShouldSetMerkleRoot.spec";
 import { TokenDrop1155ShouldDeploy } from "./airdrops1155Holder/TokenDrop1155/TokenDrop1155ShouldBeDeployed.spec";
 import { TokenDrop1155ShouldSetMerkleRoot } from "./airdrops1155Holder/TokenDrop1155/TokenDrop1155ShouldSetMerkleRoot.spec";
+import { TokenDrop1155ShouldClaimReward } from "./airdrops1155Holder/TokenDrop1155/TokenDrop1155ShouldClaimReward.spec";
+import { ExistingTokenDrop1155ShouldClaimReward } from "./airdrops1155Holder/ExistingTokenDrop1155/ExistingTokenDrop1155ShouldClaimReward.spec";
 
 
 describe("Unit tests", function () {
@@ -196,6 +198,7 @@ describe("Airbro - ERC1155 Holder", function () {
 
     ExistingTokenDrop1155ShouldDeploy();
     ExistingTokenDrop1155ShouldSetMerkleRoot();
+    ExistingTokenDrop1155ShouldClaimReward();
 
   })
 
@@ -212,6 +215,7 @@ describe("Airbro - ERC1155 Holder", function () {
 
     TokenDrop1155ShouldDeploy();
     TokenDrop1155ShouldSetMerkleRoot();
+    TokenDrop1155ShouldClaimReward();
   })
   
 }) 

@@ -33,6 +33,7 @@ contract ExistingTokenDrop1155 is AirdropInfo1155, AirdropMerkleProof, Ownable {
     error InsufficientLiquidity();
     error AirdropExpired();
     error NotAdmin();
+    error NotEligible();
 
     mapping(address => bool) public hasClaimed;
 
@@ -89,22 +90,24 @@ contract ExistingTokenDrop1155 is AirdropInfo1155, AirdropMerkleProof, Ownable {
     function withdrawAirdropFunds() external {
         if (airdropFundingHolder != msg.sender) revert NotOwner();
         if (block.timestamp < airdropFinishTime) revert AirdropStillInProgress();
+
         rewardToken.transfer(msg.sender, rewardToken.balanceOf(address(this)));
     }
 
     /// @notice Allows the NFT holder to claim his ERC20 airdrop
     function claim(bytes32[] calldata _merkleProof) external {
-        if (hasClaimed[msg.sender]) revert AlreadyRedeemed(); // treba da prima adresu osobe
+        if (hasClaimed[msg.sender]) revert AlreadyRedeemed();
         if (rewardToken.balanceOf(address(this)) < tokensPerClaim) revert InsufficientLiquidity();
-        // if (rewardedNft.ownerOf(tokenId) != msg.sender) revert NotOwner(); //not used
         if (block.timestamp > airdropFinishTime) revert AirdropExpired();
 
-        checkProof(_merkleProof, merkleRoot);
-
-        hasClaimed[msg.sender] = true; // nek se izvrti u odnosu na adresu true
-        emit Claimed(msg.sender);
-
-        rewardToken.transfer(msg.sender, tokensPerClaim);
+        bool isEligible = checkProof(_merkleProof, merkleRoot);
+        if(isEligible) {
+            hasClaimed[msg.sender] = true;
+            rewardToken.transfer(msg.sender, tokensPerClaim);
+            emit Claimed(msg.sender);
+        } else {
+            revert NotEligible();
+        }
     }
 
 
@@ -114,17 +117,17 @@ contract ExistingTokenDrop1155 is AirdropInfo1155, AirdropMerkleProof, Ownable {
     }
 
     //@notice Checks if the user is eligible for this airdrop
-    function isEligibleForReward(bytes32[] calldata _merkleProof) public returns (bool) {
+    function isEligibleForReward(bytes32[] calldata _merkleProof) public view returns (bool) {
         if (hasClaimed[msg.sender]) revert AlreadyRedeemed();
+        if (block.timestamp > airdropFinishTime) revert AirdropExpired();
         if (rewardToken.balanceOf(address(this)) < tokensPerClaim) revert InsufficientLiquidity();
-        // if (rewardedNft.ownerOf(tokenId) != msg.sender) revert NotOwner(); //not used
-        checkProof(_merkleProof, merkleRoot); // implement this later
-        return true;
+        bool isEligible = checkProof(_merkleProof, merkleRoot);
+        return isEligible;
     }
 
     //@notice Returns the amount(number) of airdrop tokens to claim
     //@param tokenId is the rewarded NFT collections token ID
-    function getAirdropAmount(bytes32[] calldata _merkleProof) external returns (uint256) {
+    function getAirdropAmount(bytes32[] calldata _merkleProof) external view returns (uint256) {
         return isEligibleForReward(_merkleProof) ? tokensPerClaim : 0;
     }
 

@@ -1,6 +1,6 @@
 import { expect } from "chai";
 import { ethers } from "hardhat";
-const { MerkleTree } = require('merkletreejs')
+import { MerkleTree } from "merkletreejs"
 const { keccak256 } = ethers.utils
 
 export const Existing1155NftDrop1155ShouldClaimReward = (): void => {

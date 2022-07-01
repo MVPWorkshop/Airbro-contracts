@@ -11,7 +11,7 @@ import { ExistingTokenDrop } from "../../src/types/contracts/airdrops/ExistingTo
 import { TokenDrop } from "../../src/types/contracts/airdrops/TokenDrop"
 import { ItemNFTDrop } from "../../src/types/contracts/airdrops/ItemNFTDrop"
 import { NFTDrop } from "../../src/types/contracts/airdrops/NFTDrop"
-import { AirBro1155NftMint } from "../../src/types/contracts/Airbro1155NftMint.sol/AirBro1155NftMint";
+import { AirBro1155NftMint } from "../../src/types/contracts/mocks/Airbro1155NftMint.sol/AirBro1155NftMint";
 
 
 import { AirbroFactory1155Holder } from "../../src/types/contracts/AirbroFactory1155Holder";
