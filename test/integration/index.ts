@@ -29,7 +29,7 @@ describe("Integration tests", function () {
     this.signers.bob = signers[2]
     this.signers.jerry = signers[3]
     this.signers.lisa = signers[4]
-    // this.signers.backendWallet = await ethers.getSigner(contractAdminAddress);
+    this.signers.backendWallet = await ethers.getSigner(contractAdminAddress);
 
     // sending eth to the backend wallet address from the hardhat account of index 4
     await signers[5].sendTransaction({
@@ -79,7 +79,7 @@ describe("Integration tests", function () {
     AirbroFactory1155HolderShouldChangeAdminInAllAirDrops();
     AirbroFactory1155HolderShouldAirDropExistingToken(); // has error
     // AirbroFactory1155HolderShouldAirDropNewToken();
-    // AirbroFactory1155HolderShouldAirdropExisting1155NftDrop1155()
+    AirbroFactory1155HolderShouldAirdropExisting1155NftDrop1155()
   });
   
 });

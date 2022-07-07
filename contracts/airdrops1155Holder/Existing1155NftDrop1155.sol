@@ -105,7 +105,7 @@ contract Existing1155NftDrop1155 is AirdropInfo1155, AirdropMerkleProof, IERC115
         );
     }
 
-    /// @notice Allows the NFT holder to claim his ERC20 airdrop
+    /// @notice Allows the NFT holder to claim his ERC1155 airdrop
     function claim(bytes32[] calldata _merkleProof) external {
         if (hasClaimed[msg.sender]) revert AlreadyRedeemed();
         if (rewardToken.balanceOf(address(this), rewardTokenId) < tokensPerClaim) revert InsufficientLiquidity();

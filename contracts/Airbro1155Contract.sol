@@ -8,7 +8,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
  * @title An ERC1155 contract for minting tokens.
  * @notice This contract is intended to reference it's metadata on IPFS.
  */
-contract AirBro1155Contract is ERC1155, Ownable {
+contract Airbro1155Contract is ERC1155, Ownable {
 
     uint256 private constant _tokenID = 0;
 

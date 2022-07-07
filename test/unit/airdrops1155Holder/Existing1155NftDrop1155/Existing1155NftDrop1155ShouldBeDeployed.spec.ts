@@ -10,7 +10,7 @@ export const Existing1155NftDrop1155ShouldDeploy = (): void => {
         it('should have contract owner to address of deployer upon deployment',async function(){
             expect(await this.existing1155NFTDrop1155.owner()).to.be.equal(this.signers.deployer.address)
         })
-
+        // not sure why they do not work
         // it('expect airdropStartTime to be the block timestamp',async function(){
         //     const blockNumBefore = await ethers.provider.getBlockNumber();
         //     const blockBefore = await ethers.provider.getBlock(blockNumBefore);

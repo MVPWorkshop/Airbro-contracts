@@ -22,7 +22,6 @@ contract AirbroFactory1155Holder {
     
     event AdminChanged(address indexed adminAddress);
 
-
     error NotAdmin();
 
     modifier onlyAdmin(){
@@ -37,7 +36,7 @@ contract AirbroFactory1155Holder {
     function createNewNft1155Contract (
         string memory uri
     ) public {
-        AirBro1155Contract nft1155Contract = new AirBro1155Contract(
+        Airbro1155Contract nft1155Contract = new Airbro1155Contract(
             uri
         );
 
