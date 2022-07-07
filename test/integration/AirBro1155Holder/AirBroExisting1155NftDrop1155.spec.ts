@@ -7,7 +7,7 @@ import { constants } from "ethers";
 
 export function AirbroFactory1155HolderShouldAirdropExisting1155NftDrop1155(){
 
-    it.only('should create new 1155 Collection and create drop for existing IERC1155 NFT token',async function(){
+    it('should create new 1155 Collection and create drop for existing IERC1155 NFT token',async function(){
         // write test for totalNft1155ContractsCount
         // write test for NewNft1155Contract(address(nft1155Contract), msg.sender); event params
 
