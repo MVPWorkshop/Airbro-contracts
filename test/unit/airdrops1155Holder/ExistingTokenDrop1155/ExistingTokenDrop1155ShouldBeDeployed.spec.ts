@@ -1,33 +1,34 @@
 import { expect } from "chai";
 import { ethers } from "hardhat";
-import { unitExistingTokenDropFixtureArguments as constructorArgs } from "../../../shared/constants";
+// import { unitExistingTokenDropFixtureArguments as constructorArgs } from "../../../shared/constants";
 
 const dayInSeconds:number = 86400;
 
 export const ExistingTokenDrop1155ShouldDeploy = (): void => {
     describe('should deploy',async function(){
+
         it('should have contract owner to address of deployer upon deployment',async function(){
             expect(await this.existingTokenDrop1155.owner()).to.be.equal(this.signers.deployer.address)
         })
         
         it('should have rewardedNft set to correct hardcoded address',async function(){
-            expect(await this.existingTokenDrop1155.rewardedNft()).to.be.equal(constructorArgs.rewardedNft)
+            expect(await this.existingTokenDrop1155.rewardedNft()).to.be.equal(this.existingTokenDrop1155ConstructorArgs.rewardedNft)
         })
         
         it('should have tokensPerClaim set to correct amount',async function(){
-            expect(await this.existingTokenDrop1155.tokensPerClaim()).to.be.equal(constructorArgs.tokensPerClaim)
+            expect(await this.existingTokenDrop1155.tokensPerClaim()).to.be.equal(this.existingTokenDrop1155ConstructorArgs.tokensPerClaim)
         })
         
         it('should have rewardToken set to correct hardcoded address',async function(){
-            expect(await this.existingTokenDrop1155.rewardToken()).to.be.equal(constructorArgs.rewardToken)
+            expect(await this.existingTokenDrop1155.rewardToken()).to.be.equal(this.existingTokenDrop1155ConstructorArgs.rewardToken)
         })
         
         it('should have totalAirdropAmount set to correct value',async function(){
-            expect(await this.existingTokenDrop1155.totalAirdropAmount()).to.be.equal(constructorArgs.totalAirdropAmount)
+            expect(await this.existingTokenDrop1155.totalAirdropAmount()).to.be.equal(this.existingTokenDrop1155ConstructorArgs.totalAirdropAmount)
         })
         
         it('should have airdropDuration set to 1 day (specifically, 86400 seconds)',async function(){
-            expect(await this.existingTokenDrop1155.airdropDuration()).to.be.equal(constructorArgs.airdropDuration * dayInSeconds)
+            expect(await this.existingTokenDrop1155.airdropDuration()).to.be.equal(this.existingTokenDrop1155ConstructorArgs.airdropDuration * dayInSeconds)
         })
         
         it('expect airdropStartTime to be the block timestamp',async function(){
@@ -41,7 +42,7 @@ export const ExistingTokenDrop1155ShouldDeploy = (): void => {
             const blockNumBefore = await ethers.provider.getBlockNumber();
             const blockBefore = await ethers.provider.getBlock(blockNumBefore);
             
-            expect(await this.existingTokenDrop1155.airdropFinishTime()).to.be.equal(blockBefore.timestamp + constructorArgs.airdropDuration * dayInSeconds)
+            expect(await this.existingTokenDrop1155.airdropFinishTime()).to.be.equal(blockBefore.timestamp + this.existingTokenDrop1155ConstructorArgs.airdropDuration * dayInSeconds)
         })
         
         it('should return correct airdrop type',async function(){

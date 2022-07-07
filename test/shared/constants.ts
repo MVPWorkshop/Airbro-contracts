@@ -1,3 +1,6 @@
+import { Address } from "cluster";
+import { MockContract } from "ethereum-waffle";
+
 // change this to the backend wallet address which is hardcoded in the /airdrop SC’s
 export const contractAdminAddress: string = "0xF4b5bFB92dD4E6D529476bCab28A65bb6B32EFb3";
 export const randomAddress:string = "0x6B175474E89094C44Da98b954EedeAC495271d0F";
@@ -20,4 +23,16 @@ export const unitExistingTokenDropFixtureArguments = {
     totalAirdropAmount:2,
     airdropDuration:1,
     // airBroFactory1155HolderAddress: // not found here, added manually in constructor in fixtures
+}
+
+
+export async function unitExistingTokenDrop1155FixtureArguments(mockTokenAddress: String, mockAirBroFactory1155Holder:String){
+    return {
+        rewardedNft:randomAddress,
+        tokensPerClaim:2,
+        rewardToken: mockTokenAddress,
+        totalAirdropAmount:2,
+        airdropDuration:1,
+        airBroFactory1155HolderAddress: mockAirBroFactory1155Holder
+    }
 }

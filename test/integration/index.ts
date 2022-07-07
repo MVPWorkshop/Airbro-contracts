@@ -15,6 +15,7 @@ import { AirbroFactory1155HolderShouldChangeAdminInAllAirDrops } from "./AirBro1
 import { AirbroFactory1155HolderShouldAirdropExisting1155NftDrop1155 } from "./AirBro1155Holder/AirBroExisting1155NftDrop1155.spec";
 import { integrations1155HolderFixture } from "../shared/fixtures";
 import { AirbroFactory1155HolderShouldAirDropExistingToken } from "./AirBro1155Holder/AirBroExistingTokenNftDrop1155.spec";
+import { AirbroFactory1155HolderShouldAirDropNewToken } from "./AirBro1155Holder/AirBroTokenNftDrop1155.spec";
 
 
 const randomAddress = '0x6b175474e89094c44da98b954eedeac495271d0f';
@@ -77,8 +78,8 @@ describe("Integration tests", function () {
     
     AirbroFactory1155ShouldBehaveLikeFactory();
     AirbroFactory1155HolderShouldChangeAdminInAllAirDrops();
-    AirbroFactory1155HolderShouldAirDropExistingToken(); // has error
-    // AirbroFactory1155HolderShouldAirDropNewToken();
+    AirbroFactory1155HolderShouldAirDropExistingToken();
+    AirbroFactory1155HolderShouldAirDropNewToken();
     // AirbroFactory1155HolderShouldAirdropExisting1155NftDrop1155()
   });
   
