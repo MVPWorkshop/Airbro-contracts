@@ -50,12 +50,12 @@ export function AirbroFactory1155HolderShouldAirDropExistingToken(){
             
             await expect(tokenDropContract.connect(this.signers.backendWallet).setMerkleRoot(roothash)).to.emit(tokenDropContract,"MerkleRootChanged").withArgs(roothash); //backend setting the merkleRoot
             
-            // Claiming funds (alice)
+            // Alice claiming new token
             const hexProof = merkleTree.getHexProof(leaves[0]);
-            expect(await this.testToken.balanceOf(this.signers.alice.address)).to.be.equal(0) // alice has not claimed any tokens yet
+            expect(await this.testToken.balanceOf(this.signers.alice.address)).to.be.equal(0) // alice has not claimed any tokens yet and should have balance of 0
 
             await expect(tokenDropContract.connect(this.signers.alice).claim(hexProof)).to.emit(tokenDropContract,"Claimed").withArgs(this.signers.alice.address)
-            expect(await this.testToken.balanceOf(this.signers.alice.address)).to.be.equal(tokensPerClaim) //alice should additional tokens matching the tokensPerClaim amount
+            expect(await this.testToken.balanceOf(this.signers.alice.address)).to.be.equal(tokensPerClaim) //alice should have additional tokens matching the tokensPerClaim amount
             
             await expect(tokenDropContract.connect(this.signers.alice).claim(hexProof)).to.be.revertedWith("AlreadyRedeemed") // should be reverted since Alice already redeemed
             
