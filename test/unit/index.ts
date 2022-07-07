@@ -17,8 +17,8 @@ import { Existing1155NftDropShouldSetMerkleRoot } from "./airdrops/Existing1155N
 import { Existing1155NftDropShouldDeploy } from "./airdrops/Existing1155NftDrop/Existing1155NftDropShouldBeDeployed.spec";
 import { ExistingTokenDropShouldSetMerkleRoot } from "./airdrops/ExistingTokenDrop/ExistingTokenDropShouldSetMerkleRoot.spec";
 
-import { AirbroFactory1155HolderShouldBeCorrectAdmin } from "./AirbroFactory1155Holder/AirbroFactoryShouldBeCorrectAdmin.spec";
-import { AirbroFactory1155HolderShouldChangeAdminAddress } from "./AirbroFactory1155Holder/AirbroFactoryShouldChangeAdmin.spec";
+import { AirbroFactory1155HolderShouldBeCorrectAdmin } from "./AirbroFactory1155Holder/AirbroFactory1155HolderShouldBeCorrectAdmin.spec";
+import { AirbroFactory1155HolderShouldChangeAdminAddress } from "./AirbroFactory1155Holder/AirbroFactory1155HolderShouldChangeAdmin.spec";
 import { Existing1155NftDrop1155ShouldSetMerkleRoot } from "./airdrops1155Holder/Existing1155NftDrop1155/Existing1155NftDrop1155ShouldSetMerkleRoot.spec";
 import { Existing1155NftDrop1155ShouldDeploy } from "./airdrops1155Holder/Existing1155NftDrop1155/Existing1155NftDrop1155ShouldBeDeployed.spec";
 import { Existing1155NftDrop1155ShouldClaimReward } from "./airdrops1155Holder/Existing1155NftDrop1155/Existing1155NftDrop1155ShouldClaimReward.spec";
@@ -165,8 +165,8 @@ describe("Unit tests", function () {
         
       })
       
-      // AirbroFactory1155HolderShouldBeCorrectAdmin();
-      // AirbroFactory1155HolderShouldChangeAdminAddress();
+      AirbroFactory1155HolderShouldBeCorrectAdmin();
+      AirbroFactory1155HolderShouldChangeAdminAddress();
     })
     
     describe('ExistingNft1155Drop1155',()=>{

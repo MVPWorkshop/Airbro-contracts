@@ -8,10 +8,7 @@ import { constants } from "ethers";
 export function AirbroFactory1155HolderShouldAirdropExisting1155NftDrop1155(){
 
     it('should create new 1155 Collection and create drop for existing IERC1155 NFT token',async function(){
-        // write test for totalNft1155ContractsCount
-        // write test for NewNft1155Contract(address(nft1155Contract), msg.sender); event params
-
-    
+        
         // create new 1155 nft collection
         expect(await this.airbroFactory1155Holder.createNewNft1155Contract("ipfs://bafybeict2kq6gt4ikgulypt7h7nwj4hmfi2kevrqvnx2osibfulyy5x3hu/no-time-to-explain.jpeg"))
         .to.emit(this.airbroFactory1155Holder, "NewNft1155Contract");
@@ -116,7 +113,6 @@ export function AirbroFactory1155HolderShouldAirdropExisting1155NftDrop1155(){
         await expect(dropContract.connect(this.signers.deployer).withdrawAirdropFunds()).to.be.revertedWith('AirdropStillInProgress');
 
         const oneWeek = 604800;
-        
         await ethers.provider.send("evm_increaseTime", [oneWeek]); // add one week worth of seconds
 
         const balanceBeforeWithdraw =  await this.test1155NftCollection.balanceOf(this.signers.deployer.address, tokenId);
@@ -124,10 +120,6 @@ export function AirbroFactory1155HolderShouldAirdropExisting1155NftDrop1155(){
         const balanceAfterWithdraw =  await this.test1155NftCollection.balanceOf(this.signers.deployer.address, tokenId);
 
         expect(balanceAfterWithdraw.toNumber()).to.be.equal(balanceBeforeWithdraw.toNumber() + leftoverNftAmount);
-
-        // // alice trying to claim reward after aidrop has expired
-        // await expect(dropContract.connect(this.signers.alice).claim(hexProof))
-        // .to.be.revertedWith('AirdropExpired');
 
     })
 
