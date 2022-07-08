@@ -34,7 +34,7 @@ export function AirbroFactory1155HolderShouldAirDropExistingToken(){
             expect(await tokenDropContract.airdropFunded()).to.be.equal(false)
             
             await this.testToken.connect(this.signers.deployer).approve(tokenDropContract.address, totalAirdropAmount); //deployer approving tokens
-            await expect(tokenDropContract.fundAirdrop()).to.emit(tokenDropContract,"AirdropFunded"); // funding airdrop contract
+            await expect(tokenDropContract.fundAirdrop()).to.emit(tokenDropContract,"AirdropFunded").withArgs(tokenDropContract.address); // funding airdrop contract
             expect(await tokenDropContract.airdropFunded()).to.be.equal(true) // should be funded
             
             /**

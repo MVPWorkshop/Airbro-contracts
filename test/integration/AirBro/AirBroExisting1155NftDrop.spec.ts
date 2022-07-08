@@ -53,7 +53,7 @@ export function shouldAirdropExisting1155NftDrop(){
 
         //funding our airdrop contract with existing 1155 nfts
         await expect(this.test1155NftCollection.connect(this.signers.deployer).setApprovalForAll(dropContract.address,true)).to.emit(this.test1155NftCollection,'ApprovalForAll')
-        await expect(dropContract.fundAirdrop()).to.emit(dropContract,'AirdropFunded')
+        await expect(dropContract.fundAirdrop()).to.emit(dropContract,'AirdropFunded').withArgs(dropContract.address)
 
         const blockNumBefore = await ethers.provider.getBlockNumber();
         const blockBefore = await ethers.provider.getBlock(blockNumBefore);
