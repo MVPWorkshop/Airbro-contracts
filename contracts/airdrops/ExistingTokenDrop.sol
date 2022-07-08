@@ -21,7 +21,7 @@ contract ExistingTokenDrop is AirdropInfo, AirdropMerkleProof, Ownable {
     address public immutable airBroFactoryAddress;
 
     event Claimed(uint256 indexed tokenId, address indexed claimer);
-    event AirdropFunded();
+    event AirdropFunded(address contractAddress);
     event MerkleRootChanged(bytes32 merkleRoot);
 
 
@@ -82,7 +82,7 @@ contract ExistingTokenDrop is AirdropInfo, AirdropMerkleProof, Ownable {
         airdropFunded = true;
         airdropFundBlockTimestamp = block.timestamp;
         airdropFundingHolder = msg.sender;
-        emit AirdropFunded();
+        emit AirdropFunded(address(this));
     }
 
     /// @notice Allows the airdrop creator to withdraw back his funds after the airdrop has finished

@@ -23,7 +23,7 @@ contract Existing1155NftDrop1155 is AirdropInfo1155, AirdropMerkleProof, IERC115
     address public immutable airBroFactoryAddress;
 
     event Claimed(address indexed claimer);
-    event AirdropFunded();
+    event AirdropFunded(address contractAddress);
     event MerkleRootChanged(bytes32 merkleRoot);
     // event isEligibleForReward(bool);
 
@@ -89,7 +89,7 @@ contract Existing1155NftDrop1155 is AirdropInfo1155, AirdropMerkleProof, IERC115
         airdropFunded = true;
         airdropFundBlockTimestamp = block.timestamp;
         airdropFundingHolder = msg.sender;
-        emit AirdropFunded();
+        emit AirdropFunded(address(this));
     }
 
     /// @notice Allows the airdrop creator to withdraw back his funds after the airdrop has finished
