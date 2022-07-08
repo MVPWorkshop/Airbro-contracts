@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.14;
 
-import "./airdrops1155Holder/TokenDrop1155.sol";
-import "./airdrops1155Holder/ExistingTokenDrop1155.sol";
-import "./airdrops1155Holder/Existing1155NftDrop1155.sol";
+import "./airdropsSMCampaign/TokenDropSMCampaign.sol";
+import "./airdropsSMCampaign/ExistingTokenDropSMCampaign.sol";
+import "./airdropsSMCampaign/Existing1155NftDropSMCampaign.sol";
 import "./Airbro1155Contract.sol";
 
 
 /// @title Airbro - NFT airdrop tool factory contract - for owners of 1155 Nfts
-contract AirbroFactory1155Holder {
+contract AirbroFactorySMCampaign {
     // index of deployed airdrop contracts
     address[] public airdrops;
     uint256 public totalAirdropsCount = 0;
@@ -54,7 +54,7 @@ contract AirbroFactory1155Holder {
         uint256 tokensPerClaim,
         uint256 airdropDuration
     ) external {
-        TokenDrop1155 tokenDropContract = new TokenDrop1155(
+        TokenDropSMCampaign tokenDropContract = new TokenDropSMCampaign(
             rewardedNftCollection,
             tokensPerClaim,
             newTokenName,
@@ -81,7 +81,7 @@ contract AirbroFactory1155Holder {
         uint256 totalAirdropAmount,
         uint256 airdropDuration
     ) external {
-        ExistingTokenDrop1155 tokenDropContract = new ExistingTokenDrop1155(
+        ExistingTokenDropSMCampaign tokenDropContract = new ExistingTokenDropSMCampaign(
             rewardedNftCollection,
             tokensPerClaim,
             rewardToken,
@@ -109,7 +109,7 @@ contract AirbroFactory1155Holder {
         uint256 totalAirdropAmount,
         uint256 airdropDuration
     ) external {
-        Existing1155NftDrop1155 tokenDropContract = new Existing1155NftDrop1155(
+        Existing1155NftDropSMCampaign tokenDropContract = new Existing1155NftDropSMCampaign(
             rewardedNftCollection,
             reward1155Nft,
             tokensPerClaim,

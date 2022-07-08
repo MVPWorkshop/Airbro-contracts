@@ -1,31 +1,29 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.14;
 
-import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
-import "@openzeppelin/contracts/token/ERC1155/IERC1155.sol";
-import "@openzeppelin/contracts/token/ERC1155/IERC1155Receiver.sol";
+import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "../interfaces/AirdropInfoSMCampaign.sol";
 import "../interfaces/AirdropMerkleProof.sol";
-import "../interfaces/AirdropInfo1155.sol";
 import "../interfaces/IAirBroFactory.sol";
 
-/// @title Airdrops existing ERC1155 tokens for airdrop recipients
-contract Existing1155NftDrop1155 is AirdropInfo1155, AirdropMerkleProof, IERC1155Receiver, Ownable {
-    IERC1155 public immutable rewardedNft;
-    IERC1155 public immutable rewardToken;
-    uint256 public immutable rewardTokenId;
+/// @title Airdrops existing ERC20 tokens for airdrop recipients
+contract ExistingTokenDropSMCampaign is AirdropInfoSMCampaign, AirdropMerkleProof, Ownable {
+    ERC1155 public immutable rewardedNft;
+    IERC20 public immutable rewardToken;
     uint256 public immutable tokensPerClaim;
     uint256 public immutable totalAirdropAmount;
 
     bool public airdropFunded = false;
     uint256 public airdropFundBlockTimestamp;
     address internal airdropFundingHolder;
-    address public immutable airBroFactoryAddress;
+    address public immutable airBroFactorySMCampaignAddress;
 
     event Claimed(address indexed claimer);
     event AirdropFunded(address contractAddress);
     event MerkleRootChanged(bytes32 merkleRoot);
-    // event isEligibleForReward(bool);
+
 
     error NotOwner();
     error AirdropStillInProgress();
@@ -36,7 +34,6 @@ contract Existing1155NftDrop1155 is AirdropInfo1155, AirdropMerkleProof, IERC115
     error AirdropExpired();
     error NotAdmin();
     error NotEligible();
-
 
     mapping(address => bool) public hasClaimed;
 
@@ -49,29 +46,26 @@ contract Existing1155NftDrop1155 is AirdropInfo1155, AirdropMerkleProof, IERC115
     uint256 public immutable airdropFinishTime;
 
     modifier onlyAdmin(){
-        if(msg.sender != IAirBroFactory(airBroFactoryAddress).admin()) revert NotAdmin();
+        if(msg.sender != IAirBroFactory(airBroFactorySMCampaignAddress).admin()) revert NotAdmin();
         _;
     }
 
     constructor(
         address _rewardedNft,
-        address _reward1155Nft,
         uint256 _tokensPerClaim,
-        uint256 _tokenId,
+        address _rewardToken,
         uint256 _totalAirdropAmount,
         uint256 _airdropDuration,
-        address _airBroFactoryAddress
+        address _airBroFactorySMCampaignAddress
     ) {
-        rewardedNft = IERC1155(_rewardedNft);
+        rewardedNft = ERC1155(_rewardedNft);
         tokensPerClaim = _tokensPerClaim;
         totalAirdropAmount = _totalAirdropAmount;
-        rewardToken = IERC1155(_reward1155Nft);
-        rewardTokenId = _tokenId;
+        rewardToken = IERC20(_rewardToken);
         airdropDuration = _airdropDuration * 1 days;
         airdropStartTime = block.timestamp;
         airdropFinishTime = block.timestamp + airdropDuration;
-        airBroFactoryAddress = _airBroFactoryAddress;
-
+        airBroFactorySMCampaignAddress = _airBroFactorySMCampaignAddress;
     }
 
     /// @notice Sets the merkleRoot - can only be done if admin (different from the contract owner)
@@ -83,9 +77,9 @@ contract Existing1155NftDrop1155 is AirdropInfo1155, AirdropMerkleProof, IERC115
 
     /// @notice Allows the airdrop creator to provide funds for airdrop reward
     function fundAirdrop() external {
-        if (rewardToken.balanceOf(msg.sender, rewardTokenId) < totalAirdropAmount) revert InsufficientAmount();
+        if (rewardToken.balanceOf(msg.sender) < totalAirdropAmount) revert InsufficientAmount();
         if (airdropFunded) revert AlreadyFunded();
-        rewardToken.safeTransferFrom(msg.sender, address(this), rewardTokenId, totalAirdropAmount, "");
+        rewardToken.transferFrom(msg.sender, address(this), totalAirdropAmount);
         airdropFunded = true;
         airdropFundBlockTimestamp = block.timestamp;
         airdropFundingHolder = msg.sender;
@@ -96,42 +90,37 @@ contract Existing1155NftDrop1155 is AirdropInfo1155, AirdropMerkleProof, IERC115
     function withdrawAirdropFunds() external {
         if (airdropFundingHolder != msg.sender) revert NotOwner();
         if (block.timestamp < airdropFinishTime) revert AirdropStillInProgress();
-        rewardToken.safeTransferFrom(
-            address(this),
-            msg.sender,
-            rewardTokenId,
-            rewardToken.balanceOf(address(this), rewardTokenId),
-            ""
-        );
+
+        rewardToken.transfer(msg.sender, rewardToken.balanceOf(address(this)));
     }
 
-    /// @notice Allows the NFT holder to claim his ERC1155 airdrop
+    /// @notice Allows the NFT holder to claim his ERC20 airdrop
     function claim(bytes32[] calldata _merkleProof) external {
         if (hasClaimed[msg.sender]) revert AlreadyRedeemed();
-        if (rewardToken.balanceOf(address(this), rewardTokenId) < tokensPerClaim) revert InsufficientLiquidity();
+        if (rewardToken.balanceOf(address(this)) < tokensPerClaim) revert InsufficientLiquidity();
         if (block.timestamp > airdropFinishTime) revert AirdropExpired();
 
         bool isEligible = checkProof(_merkleProof, merkleRoot);
         if(isEligible) {
-        hasClaimed[msg.sender] = true;
-        rewardToken.safeTransferFrom(address(this), msg.sender, rewardTokenId, tokensPerClaim, "");
-        emit Claimed(msg.sender);
+            hasClaimed[msg.sender] = true;
+            rewardToken.transfer(msg.sender, tokensPerClaim);
+            emit Claimed(msg.sender);
         } else {
             revert NotEligible();
         }
     }
 
-    
+
     //@notice Get the type of airdrop, it's either ERC20, ERC721, ERC1155
     function getAirdropType() external pure override returns (string memory) {
-        return "ERC1155";
+        return "ERC20";
     }
 
-// returns (bool)
     //@notice Checks if the user is eligible for this airdrop
-    function isEligibleForReward(bytes32[] calldata _merkleProof) public view returns(bool) {
+    function isEligibleForReward(bytes32[] calldata _merkleProof) public view returns (bool) {
         if (hasClaimed[msg.sender]) revert AlreadyRedeemed();
-        if (rewardToken.balanceOf(address(this), rewardTokenId) < tokensPerClaim) revert InsufficientLiquidity();        
+        if (block.timestamp > airdropFinishTime) revert AirdropExpired();
+        if (rewardToken.balanceOf(address(this)) < tokensPerClaim) revert InsufficientLiquidity();
         bool isEligible = checkProof(_merkleProof, merkleRoot);
         return isEligible;
     }
@@ -139,11 +128,7 @@ contract Existing1155NftDrop1155 is AirdropInfo1155, AirdropMerkleProof, IERC115
     //@notice Returns the amount(number) of airdrop tokens to claim
     //@param tokenId is the rewarded NFT collections token ID
     function getAirdropAmount(bytes32[] calldata _merkleProof) external view returns (uint256) {
-        return isEligibleForReward(_merkleProof)? tokensPerClaim : 0;
-    }
-
-    function supportsInterface(bytes4 interfaceId) external pure override returns (bool) {
-        return interfaceId == 0xf23a6e61;
+        return isEligibleForReward(_merkleProof) ? tokensPerClaim : 0;
     }
 
     function getAirdropFinishTime() external view override returns (uint256) {
@@ -156,25 +141,5 @@ contract Existing1155NftDrop1155 is AirdropInfo1155, AirdropMerkleProof, IERC115
 
     function getAirdropStartTime() external view override returns (uint256) {
         return airdropStartTime;
-    }
-
-    function onERC1155Received(
-        address operator,
-        address from,
-        uint256 id,
-        uint256 value,
-        bytes calldata data
-    ) external override returns (bytes4) {
-        return this.onERC1155Received.selector;
-    }
-
-    function onERC1155BatchReceived(
-        address operator,
-        address from,
-        uint256[] calldata ids,
-        uint256[] calldata values,
-        bytes calldata data
-    ) external override returns (bytes4) {
-        return this.onERC1155BatchReceived.selector;
     }
 }

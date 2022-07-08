@@ -4,7 +4,7 @@ import { MerkleTree } from "merkletreejs"
 import { randomAddress } from "../../shared/constants";
 const { keccak256 } = ethers.utils
 
-export function AirbroFactory1155HolderShouldAirDropNewToken(){
+export function AirbroFactorySMCampaignShouldAirDropNewToken(){
     const tokenName = 'NewToken';
     const tokenSymbol = "NTK";
     const tokensPerClaim = 2;
@@ -12,17 +12,17 @@ export function AirbroFactory1155HolderShouldAirDropNewToken(){
 
     it('should create new token and airdrop it to users with valid merkleProof', async function(){
         
-         const newAirdrop = await this.airbroFactory1155Holder.connect(this.signers.deployer).dropNewTokensToNftHolders(
+         const newAirdrop = await this.airbroFactorySMCampaign.connect(this.signers.deployer).dropNewTokensToNftHolders(
             randomAddress,
             tokenName,
             tokenSymbol,
             tokensPerClaim,
             airdropDuration
          );
-        await expect(newAirdrop).to.emit(this.airbroFactory1155Holder,"NewAirdrop");
+        await expect(newAirdrop).to.emit(this.airbroFactorySMCampaign,"NewAirdrop");
 
-        const TokenDrop1155Factory = await ethers.getContractFactory("TokenDrop1155");
-        const tokenDropContract = TokenDrop1155Factory.attach(await this.airbroFactory1155Holder.airdrops(0)); // Address of newly created airdrop. How will this be sent to the frontend ?
+        const TokenDropSMCampaignFactory = await ethers.getContractFactory("TokenDropSMCampaign");
+        const tokenDropContract = TokenDropSMCampaignFactory.attach(await this.airbroFactorySMCampaign.airdrops(0)); // Address of newly created airdrop. How will this be sent to the frontend ?
 
         // whitelisting Alice and other account to have this new token minted to them
         const whitelisted = [this.signers.alice.address, this.signers.bob.address, this.signers.jerry.address, this.signers.lisa.address];
@@ -30,7 +30,7 @@ export function AirbroFactory1155HolderShouldAirDropNewToken(){
         const merkleTree = new MerkleTree(leaves, keccak256, { sort: true })
         const roothash = merkleTree.getHexRoot();
 
-        // updating root hash on tokenDrop1155 with alice whitelisted
+        // updating root hash on tokenDropSMCampaign with alice whitelisted
         await expect(tokenDropContract.connect(this.signers.backendWallet).setMerkleRoot(roothash))
         .to.emit(tokenDropContract, "MerkleRootChanged").withArgs(roothash);
 

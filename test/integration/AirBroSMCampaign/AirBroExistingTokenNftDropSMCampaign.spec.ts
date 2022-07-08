@@ -4,7 +4,7 @@ import { MerkleTree } from "merkletreejs"
 const { keccak256 } = ethers.utils
 
 
-export function AirbroFactory1155HolderShouldAirDropExistingToken(){
+export function AirbroFactorySMCampaignShouldAirDropExistingToken(){
     it('should fund and drop tokens to newly minted nft1155 holders',async function(){
         const totalAirdropAmount = ethers.utils.parseEther("1000");
         const tokensPerClaim = 100;
@@ -14,7 +14,7 @@ export function AirbroFactory1155HolderShouldAirDropExistingToken(){
         await this.testToken.connect(this.signers.deployer).mint(this.signers.deployer.address, totalAirdropAmount);
         
         // creating new airdrop
-        const newAirdrop = await this.airbroFactory1155Holder.connect(this.signers.deployer).dropExistingTokensToNftHolders(
+        const newAirdrop = await this.airbroFactorySMCampaign.connect(this.signers.deployer).dropExistingTokensToNftHolders(
             this.test1155NftCollection.address, // rewardedNftCollection,
             tokensPerClaim,
             this.testToken.address, //existing token address
@@ -22,11 +22,11 @@ export function AirbroFactory1155HolderShouldAirDropExistingToken(){
             airdropDurationInDays,
             )
             
-            expect(newAirdrop).to.emit(this.airbroFactory1155Holder, "NewAirdrop");
+            expect(newAirdrop).to.emit(this.airbroFactorySMCampaign, "NewAirdrop");
             
             
-            const existingDropFactory = await ethers.getContractFactory("ExistingTokenDrop1155");
-            const tokenDropContract = existingDropFactory.attach(await this.airbroFactory1155Holder.airdrops(0)); // Address of newly created airdrop. How will this be sent to the frontend ?
+            const existingDropFactory = await ethers.getContractFactory("ExistingTokenDropSMCampaign");
+            const tokenDropContract = existingDropFactory.attach(await this.airbroFactorySMCampaign.airdrops(0)); // Address of newly created airdrop. How will this be sent to the frontend ?
             
             expect(await tokenDropContract.totalAirdropAmount()).to.be.equal(totalAirdropAmount)
             

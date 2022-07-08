@@ -5,17 +5,17 @@ const { keccak256 } = ethers.utils
 import { constants } from "ethers";
 
 
-export function AirbroFactory1155HolderShouldAirdropExisting1155NftDrop1155(){
+export function AirbroFactorySMCampaignShouldAirdropExisting1155NftDropSMCampaign(){
 
     it('should create new 1155 Collection and create drop for existing IERC1155 NFT token',async function(){
         
         // create new 1155 nft collection
-        expect(await this.airbroFactory1155Holder.createNewNft1155Contract("ipfs://bafybeict2kq6gt4ikgulypt7h7nwj4hmfi2kevrqvnx2osibfulyy5x3hu/no-time-to-explain.jpeg"))
-        .to.emit(this.airbroFactory1155Holder, "NewNft1155Contract");
+        expect(await this.airbroFactorySMCampaign.createNewNft1155Contract("ipfs://bafybeict2kq6gt4ikgulypt7h7nwj4hmfi2kevrqvnx2osibfulyy5x3hu/no-time-to-explain.jpeg"))
+        .to.emit(this.airbroFactorySMCampaign, "NewNft1155Contract");
 
-        // getting the deployed Airbro1155 contract found at the 0th index in the nft1155Contracts array of AirbroFactory1155Holder.sol
+        // getting the deployed Airbro1155 contract found at the 0th index in the nft1155Contracts array of AirbroFactorySMCampaign.sol
         const new1155NftCollectionFactory = await ethers.getContractFactory("Airbro1155Contract");
-        const collection1155 = new1155NftCollectionFactory.attach(await this.airbroFactory1155Holder.nft1155Contracts(constants.Zero));
+        const collection1155 = new1155NftCollectionFactory.attach(await this.airbroFactorySMCampaign.nft1155Contracts(constants.Zero));
 
         // creating campaign (airdrop) for Nft holders of collection1155, with reward being Nfts from other 1155 collection
 
@@ -35,19 +35,19 @@ export function AirbroFactory1155HolderShouldAirdropExisting1155NftDrop1155(){
         const durationInDays:number = 1;
 
         // dropping the existing 1155 tokens to holders
-        await expect(await this.airbroFactory1155Holder.connect(this.signers.deployer).dropExisting1155NftsToNftHolders(
+        await expect(await this.airbroFactorySMCampaign.connect(this.signers.deployer).dropExisting1155NftsToNftHolders(
             collection1155.address,
             this.test1155NftCollection.address,
             tokensPerClaim,
             tokenId,
             amounOft1155,
             durationInDays
-        )).to.emit(this.airbroFactory1155Holder,'NewAirdrop')
+        )).to.emit(this.airbroFactorySMCampaign,'NewAirdrop')
 
 
-        // getting the deployed airdrop contract found at the 0th index in the airdrops array of AirbroFactory1155Holder.sol
-        const existingDropFactory = await ethers.getContractFactory("Existing1155NftDrop1155");
-        const dropContract = existingDropFactory.attach(await this.airbroFactory1155Holder.airdrops(constants.Zero));
+        // getting the deployed airdrop contract found at the 0th index in the airdrops array of AirbroFactorySMCampaign.sol
+        const existingDropFactory = await ethers.getContractFactory("Existing1155NftDropSMCampaign");
+        const dropContract = existingDropFactory.attach(await this.airbroFactorySMCampaign.airdrops(constants.Zero));
 
 
         // alice and bob minting 1155 NFTs in order to be eligible for reward later

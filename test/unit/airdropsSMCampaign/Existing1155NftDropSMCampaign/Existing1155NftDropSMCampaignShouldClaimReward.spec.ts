@@ -4,7 +4,7 @@ import { MerkleTree } from "merkletreejs"
 const { keccak256 } = ethers.utils
 import { constants } from "ethers";
 
-export const Existing1155NftDrop1155ShouldClaimReward = (): void => {
+export const Existing1155NftDropSMCampaignShouldClaimReward = (): void => {
 
     describe('user should be able to claim reward', async function() {
 
@@ -14,13 +14,13 @@ export const Existing1155NftDrop1155ShouldClaimReward = (): void => {
             const merkleTree = new MerkleTree(leaves, keccak256, { sort: true })
             const roothash = merkleTree.getHexRoot();
 
-            expect(await this.existing1155NFTDrop1155.connect(this.signers.backendWallet).setMerkleRoot(roothash))
-            .to.emit(this.existing1155NFTDrop1155, "MerkleRootChanged").withArgs(roothash);
+            expect(await this.existing1155NFTDropSMCampaign.connect(this.signers.backendWallet).setMerkleRoot(roothash))
+            .to.emit(this.existing1155NFTDropSMCampaign, "MerkleRootChanged").withArgs(roothash);
 
             const hexProof = merkleTree.getHexProof(leaves[0]);
 
-            expect(await this.existing1155NFTDrop1155.connect(this.signers.alice).claim(hexProof))
-            .to.emit(this.existing1155NFTDrop1155, "Claimed").withArgs(this.signers.alice.address);
+            expect(await this.existing1155NFTDropSMCampaign.connect(this.signers.alice).claim(hexProof))
+            .to.emit(this.existing1155NFTDropSMCampaign, "Claimed").withArgs(this.signers.alice.address);
         })
 
         it("should revert claim if airdrop has expired", async function(){
@@ -33,12 +33,12 @@ export const Existing1155NftDrop1155ShouldClaimReward = (): void => {
             const merkleTree = new MerkleTree(leaves, keccak256, { sort: true })
             const roothash = merkleTree.getHexRoot();
 
-            expect(await this.existing1155NFTDrop1155.connect(this.signers.backendWallet).setMerkleRoot(roothash))
-            .to.emit(this.existing1155NFTDrop1155, "MerkleRootChanged").withArgs(roothash);
+            expect(await this.existing1155NFTDropSMCampaign.connect(this.signers.backendWallet).setMerkleRoot(roothash))
+            .to.emit(this.existing1155NFTDropSMCampaign, "MerkleRootChanged").withArgs(roothash);
 
             const hexProof = merkleTree.getHexProof(leaves[0]);
 
-            await expect(this.existing1155NFTDrop1155.connect(this.signers.alice).claim(hexProof))
+            await expect(this.existing1155NFTDropSMCampaign.connect(this.signers.alice).claim(hexProof))
             .to.be.revertedWith(`AirdropExpired`);
         })
 
@@ -48,12 +48,12 @@ export const Existing1155NftDrop1155ShouldClaimReward = (): void => {
             const merkleTree = new MerkleTree(leaves, keccak256, { sort: true })
             const roothash = merkleTree.getHexRoot();
 
-            expect(await this.existing1155NFTDrop1155.connect(this.signers.backendWallet).setMerkleRoot(roothash))
-            .to.emit(this.existing1155NFTDrop1155, "MerkleRootChanged").withArgs(roothash);
+            expect(await this.existing1155NFTDropSMCampaign.connect(this.signers.backendWallet).setMerkleRoot(roothash))
+            .to.emit(this.existing1155NFTDropSMCampaign, "MerkleRootChanged").withArgs(roothash);
 
             const hexProof = merkleTree.getHexProof(leaves[0]);
 
-            await expect(this.existing1155NFTDrop1155.connect(this.signers.peter)
+            await expect(this.existing1155NFTDropSMCampaign.connect(this.signers.peter)
             .claim(hexProof))
             .to.be.revertedWith(`NotEligible`);
         })
@@ -65,12 +65,12 @@ export const Existing1155NftDrop1155ShouldClaimReward = (): void => {
             const merkleTree = new MerkleTree(leaves, keccak256, { sort: true })
             const roothash = merkleTree.getHexRoot();
 
-            expect(await this.existing1155NFTDrop1155.connect(this.signers.backendWallet).setMerkleRoot(roothash))
-            .to.emit(this.existing1155NFTDrop1155, "MerkleRootChanged").withArgs(roothash);
+            expect(await this.existing1155NFTDropSMCampaign.connect(this.signers.backendWallet).setMerkleRoot(roothash))
+            .to.emit(this.existing1155NFTDropSMCampaign, "MerkleRootChanged").withArgs(roothash);
 
             const hexProof = merkleTree.getHexProof(leaves[0]);
 
-            const isEligibleForReward = await this.existing1155NFTDrop1155.connect(this.signers.alice).isEligibleForReward(hexProof);
+            const isEligibleForReward = await this.existing1155NFTDropSMCampaign.connect(this.signers.alice).isEligibleForReward(hexProof);
             
             expect(isEligibleForReward).to.equal(true);
 
@@ -83,12 +83,12 @@ export const Existing1155NftDrop1155ShouldClaimReward = (): void => {
             const merkleTree = new MerkleTree(leaves, keccak256, { sort: true })
             const roothash = merkleTree.getHexRoot();
 
-            expect(await this.existing1155NFTDrop1155.connect(this.signers.backendWallet).setMerkleRoot(roothash))
-            .to.emit(this.existing1155NFTDrop1155, "MerkleRootChanged").withArgs(roothash);
+            expect(await this.existing1155NFTDropSMCampaign.connect(this.signers.backendWallet).setMerkleRoot(roothash))
+            .to.emit(this.existing1155NFTDropSMCampaign, "MerkleRootChanged").withArgs(roothash);
 
             const hexProof = merkleTree.getHexProof(leaves[0]);
 
-            const airdropAmount = await this.existing1155NFTDrop1155.connect(this.signers.alice).getAirdropAmount(hexProof);
+            const airdropAmount = await this.existing1155NFTDropSMCampaign.connect(this.signers.alice).getAirdropAmount(hexProof);
             
             expect(airdropAmount).to.not.equal(constants.Zero);
 
@@ -101,12 +101,12 @@ export const Existing1155NftDrop1155ShouldClaimReward = (): void => {
             const merkleTree = new MerkleTree(leaves, keccak256, { sort: true })
             const roothash = merkleTree.getHexRoot();
 
-            expect(await this.existing1155NFTDrop1155.connect(this.signers.backendWallet).setMerkleRoot(roothash))
-            .to.emit(this.existing1155NFTDrop1155, "MerkleRootChanged").withArgs(roothash);
+            expect(await this.existing1155NFTDropSMCampaign.connect(this.signers.backendWallet).setMerkleRoot(roothash))
+            .to.emit(this.existing1155NFTDropSMCampaign, "MerkleRootChanged").withArgs(roothash);
 
             const hexProof = merkleTree.getHexProof(leaves[0]);
 
-            const airdropAmount = await this.existing1155NFTDrop1155.connect(this.signers.peter).getAirdropAmount(hexProof);
+            const airdropAmount = await this.existing1155NFTDropSMCampaign.connect(this.signers.peter).getAirdropAmount(hexProof);
             
             expect(airdropAmount).to.equal(constants.Zero);
 

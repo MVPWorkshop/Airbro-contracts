@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.14;
 
-interface AirdropInfo1155 {
+interface AirdropInfoSMCampaign {
 
     //@notice Returns the end timestamp of an airdrop
     function getAirdropFinishTime() external view returns (uint256);

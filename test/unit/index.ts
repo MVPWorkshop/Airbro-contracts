@@ -2,10 +2,11 @@ import { ethers, network, waffle } from "hardhat";
 import { Mocks, Signers } from "../shared/types";
 
 import {contractAdminAddress } from "../shared/constants";
-import { integrationsFixture, unitTokenDropFixture, unitExisting1155NFTDropFixture, unitExistingTokenDropFixture, unitItemNFTDropFixture, unitNFTDropFixture, unitExistingTokenDrop1155Fixture, integrations1155HolderFixture, unitExisting1155NFTDrop1155Fixture, unitTokenDrop1155Fixture } from "../shared/fixtures";
+import { integrationsFixture, unitTokenDropFixture, unitExisting1155NFTDropFixture, unitExistingTokenDropFixture, unitItemNFTDropFixture, unitNFTDropFixture, unitExistingTokenDropSMCampaignFixture, integrationsSMCampaignFixture, unitExisting1155NFTDropSMCampaignFixture, unitTokenDropSMCampaignFixture } from "../shared/fixtures";
 
 import { shouldBeCorrectAdmin } from "./AirbroFactory/AirbroFactoryShouldBeCorrectAdmin.spec";
 import { shouldChangeAdminAddress } from "./AirbroFactory/AirbroFactoryShouldChangeAdmin.spec";
+
 import { TokenDropShouldDeploy } from "./airdrops/TokenDrop/TokenDropShouldBeDeployed.spec";
 import { TokenDropShouldSetMerkleRoot } from "./airdrops/TokenDrop/TokenDropShouldSetMerkleRoot.spec";
 import { NFTDropShouldDeploy } from "./airdrops/NFTDrop/NFTDropShouldBeDeployed.spec";
@@ -17,17 +18,19 @@ import { Existing1155NftDropShouldSetMerkleRoot } from "./airdrops/Existing1155N
 import { Existing1155NftDropShouldDeploy } from "./airdrops/Existing1155NftDrop/Existing1155NftDropShouldBeDeployed.spec";
 import { ExistingTokenDropShouldSetMerkleRoot } from "./airdrops/ExistingTokenDrop/ExistingTokenDropShouldSetMerkleRoot.spec";
 
-import { AirbroFactory1155HolderShouldBeCorrectAdmin } from "./AirbroFactory1155Holder/AirbroFactory1155HolderShouldBeCorrectAdmin.spec";
-import { AirbroFactory1155HolderShouldChangeAdminAddress } from "./AirbroFactory1155Holder/AirbroFactory1155HolderShouldChangeAdmin.spec";
-import { Existing1155NftDrop1155ShouldSetMerkleRoot } from "./airdrops1155Holder/Existing1155NftDrop1155/Existing1155NftDrop1155ShouldSetMerkleRoot.spec";
-import { Existing1155NftDrop1155ShouldDeploy } from "./airdrops1155Holder/Existing1155NftDrop1155/Existing1155NftDrop1155ShouldBeDeployed.spec";
-import { Existing1155NftDrop1155ShouldClaimReward } from "./airdrops1155Holder/Existing1155NftDrop1155/Existing1155NftDrop1155ShouldClaimReward.spec";
-import { ExistingTokenDrop1155ShouldDeploy } from "./airdrops1155Holder/ExistingTokenDrop1155/ExistingTokenDrop1155ShouldBeDeployed.spec";
-import { ExistingTokenDrop1155ShouldSetMerkleRoot } from "./airdrops1155Holder/ExistingTokenDrop1155/ExistingTokenDrop1155ShouldSetMerkleRoot.spec";
-import { TokenDrop1155ShouldDeploy } from "./airdrops1155Holder/TokenDrop1155/TokenDrop1155ShouldBeDeployed.spec";
-import { TokenDrop1155ShouldSetMerkleRoot } from "./airdrops1155Holder/TokenDrop1155/TokenDrop1155ShouldSetMerkleRoot.spec";
-import { TokenDrop1155ShouldClaimReward } from "./airdrops1155Holder/TokenDrop1155/TokenDrop1155ShouldClaimReward.spec";
-import { ExistingTokenDrop1155ShouldClaimReward } from "./airdrops1155Holder/ExistingTokenDrop1155/ExistingTokenDrop1155ShouldClaimReward.spec";
+import { AirbroFactorySMCampaignShouldBeCorrectAdmin } from "./AirbroFactorySMCampaign/AirbroFactorySMCampaignShouldBeCorrectAdmin.spec";
+import { AirbroFactorySMCampaignShouldChangeAdminAddress } from "./AirbroFactorySMCampaign/AirbroFactorySMCampaignShouldChangeAdmin.spec";
+import { AirbroFactorySMCampaignShouldDelpoyAirbro1155Contract } from "./AirbroFactorySMCampaign/AirbroFactorySMCampaignShouldDeployAirbro1155Contract.spec";
+
+import { Existing1155NftDropSMCampaignShouldSetMerkleRoot } from "./airdropsSMCampaign/Existing1155NftDropSMCampaign/Existing1155NftDropSMCampaignShouldSetMerkleRoot.spec";
+import { Existing1155NftDropSMCampaignShouldDeploy } from "./airdropsSMCampaign/Existing1155NftDropSMCampaign/Existing1155NftDropSMCampaignShouldBeDeployed.spec";
+import { Existing1155NftDropSMCampaignShouldClaimReward } from "./airdropsSMCampaign/Existing1155NftDropSMCampaign/Existing1155NftDropSMCampaignShouldClaimReward.spec";
+import { ExistingTokenDropSMCampaignShouldDeploy } from "./airdropsSMCampaign/ExistingTokenDropSMCampaign/ExistingTokenDropSMCampaignShouldBeDeployed.spec";
+import { ExistingTokenDropSMCampaignShouldSetMerkleRoot } from "./airdropsSMCampaign/ExistingTokenDropSMCampaign/ExistingTokenDropSMCampaignShouldSetMerkleRoot.spec";
+import { TokenDropSMCampaignShouldDeploy } from "./airdropsSMCampaign/TokenDropSMCampaign/TokenDropSMCampaignShouldBeDeployed.spec";
+import { TokenDropSMCampaignShouldSetMerkleRoot } from "./airdropsSMCampaign/TokenDropSMCampaign/TokenDropSMCampaignShouldSetMerkleRoot.spec";
+import { TokenDropSMCampaignShouldClaimReward } from "./airdropsSMCampaign/TokenDropSMCampaign/TokenDropSMCampaignShouldClaimReward.spec";
+import { ExistingTokenDropSMCampaignShouldClaimReward } from "./airdropsSMCampaign/ExistingTokenDropSMCampaign/ExistingTokenDropSMCampaignShouldClaimReward.spec";
 
 
 describe("Unit tests", function () {
@@ -42,13 +45,7 @@ describe("Unit tests", function () {
     this.signers.lisa = signers[4];
     this.signers.peter = signers[5];
     
-    // console.log("alice: " + this.signers.alice.address);
-    // console.log("bob: " + this.signers.bob.address);
-    // console.log("jerry: " + this.signers.jerry.address);
-    // console.log("lisa: " + this.signers.lisa.address);
-    // console.log("peter: " + this.signers.peter.address);
-    
-    // sending eth to the backend wallet address from the hardhat account of index 3
+    // sending eth to the backend wallet address from the hardhat account of index 6
     await signers[6].sendTransaction({
       to: contractAdminAddress,
       value: ethers.utils.parseEther("5000")
@@ -102,7 +99,7 @@ describe("Unit tests", function () {
         this.mocks.mockAirBroFactory = mockAirBroFactory;
         this.mocks.mockDAItoken = mockDAItoken;
 
-        // Here are the arguments used to deploy the existingTokenDrop1155 contract. 
+        // Here are the arguments used to deploy the existingTokenDropSMCampaign contract. 
         // They are dependant on two mock contracts deployed in fixutres, 
         // so this is why they are exported from the fixture as the 2nd module.
         this.constructorArgs = existingTokenDropConstructorArgs;
@@ -165,73 +162,74 @@ describe("Unit tests", function () {
   
   describe("Airbro - ERC1155 Holder", function () {
     
-    describe('AirbroFactory1155holder', ()=>{
+    describe('AirbroFactorySMCampaign', ()=>{
       beforeEach(async function(){
-        const { airbroFactory1155Holder } = await this.loadFixture(integrations1155HolderFixture)
+        const { airbroFactorySMCampaign } = await this.loadFixture(integrationsSMCampaignFixture)
         
-        this.airbroFactory1155Holder = airbroFactory1155Holder;
+        this.airbroFactorySMCampaign = airbroFactorySMCampaign;
         
       })
       
-      AirbroFactory1155HolderShouldBeCorrectAdmin();
-      AirbroFactory1155HolderShouldChangeAdminAddress();
+      AirbroFactorySMCampaignShouldBeCorrectAdmin();
+      AirbroFactorySMCampaignShouldChangeAdminAddress();
+      AirbroFactorySMCampaignShouldDelpoyAirbro1155Contract();
     })
     
-    describe('ExistingNft1155Drop1155',()=>{
+    describe('ExistingNft1155DropSMCampaign',()=>{
       beforeEach(async function(){
-        const { existing1155NftDrop1155, mockAirBroFactory1155Holder } = await this.loadFixture(unitExisting1155NFTDrop1155Fixture)
+        const { existing1155NftDropSMCampaign, mockAirBroFactorySMCampaign } = await this.loadFixture(unitExisting1155NFTDropSMCampaignFixture)
         
-        this.existing1155NFTDrop1155 = existing1155NftDrop1155;
+        this.existing1155NFTDropSMCampaign = existing1155NftDropSMCampaign;
         
         this.mocks = {} as Mocks;
-        this.mocks.mockAirBroFactory1155Holder = mockAirBroFactory1155Holder;
+        this.mocks.mockAirBroFactorySMCampaign = mockAirBroFactorySMCampaign;
       })
       
       
-      Existing1155NftDrop1155ShouldDeploy();
-      Existing1155NftDrop1155ShouldSetMerkleRoot();
-      Existing1155NftDrop1155ShouldClaimReward();
+      Existing1155NftDropSMCampaignShouldDeploy();
+      Existing1155NftDropSMCampaignShouldSetMerkleRoot();
+      Existing1155NftDropSMCampaignShouldClaimReward();
       
     })
     
-    describe('ExistingTokenDrop1155',()=>{
+    describe('ExistingTokenDropSMCampaign',()=>{
       beforeEach(async function(){
-        const { existingTokenDrop1155, existingTokenDrop1155ConstructorArgs, mockAirBroFactory1155Holder, mockDAItoken } = await this.loadFixture(unitExistingTokenDrop1155Fixture)
+        const { existingTokenDropSMCampaign, existingTokenDropSMCampaignConstructorArgs, mockAirBroFactorySMCampaign, mockDAItoken } = await this.loadFixture(unitExistingTokenDropSMCampaignFixture)
         
-        this.existingTokenDrop1155 = existingTokenDrop1155;
+        this.existingTokenDropSMCampaign = existingTokenDropSMCampaign;
         this.mocks = {} as Mocks;
-        this.mocks.mockAirBroFactory1155Holder = mockAirBroFactory1155Holder;
+        this.mocks.mockAirBroFactorySMCampaign = mockAirBroFactorySMCampaign;
         this.mocks.mockDAItoken = mockDAItoken;
         
-        // Here are the arguments used to deploy the existingTokenDrop1155 contract. 
+        // Here are the arguments used to deploy the existingTokenDropSMCampaign contract. 
         // They are dependant on two mock contracts deployed in fixutres, 
         // so this is why they are exported from the fixture as the 2nd module.
-        this.constructorArgs = existingTokenDrop1155ConstructorArgs;
+        this.constructorArgs = existingTokenDropSMCampaignConstructorArgs;
       })
       
       
-      ExistingTokenDrop1155ShouldDeploy();
-      ExistingTokenDrop1155ShouldSetMerkleRoot();
-      ExistingTokenDrop1155ShouldClaimReward();
+      ExistingTokenDropSMCampaignShouldDeploy();
+      ExistingTokenDropSMCampaignShouldSetMerkleRoot();
+      ExistingTokenDropSMCampaignShouldClaimReward();
       
     })
     
-    describe('TokenDrop1155',()=>{
+    describe('TokenDropSMCampaign',()=>{
       beforeEach(async function(){
-        const { tokenDrop1155, mockAirBroFactory1155Holder, tokenDrop1155ConstructorArgs } = await this.loadFixture(unitTokenDrop1155Fixture)
+        const { tokenDropSMCampaign, mockAirBroFactorySMCampaign, tokenDropSMCampaignConstructorArgs } = await this.loadFixture(unitTokenDropSMCampaignFixture)
         
-        this.tokenDrop1155 = tokenDrop1155;
+        this.tokenDropSMCampaign = tokenDropSMCampaign;
         
         this.mocks = {} as Mocks;
-        this.mocks.mockAirBroFactory1155Holder = mockAirBroFactory1155Holder;
+        this.mocks.mockAirBroFactorySMCampaign = mockAirBroFactorySMCampaign;
         
-        this.constructorArgs = tokenDrop1155ConstructorArgs
+        this.constructorArgs = tokenDropSMCampaignConstructorArgs
       })
       
       
-      TokenDrop1155ShouldDeploy();
-      TokenDrop1155ShouldSetMerkleRoot();
-      TokenDrop1155ShouldClaimReward();
+      TokenDropSMCampaignShouldDeploy();
+      TokenDropSMCampaignShouldSetMerkleRoot();
+      TokenDropSMCampaignShouldClaimReward();
     })
     
   }) 

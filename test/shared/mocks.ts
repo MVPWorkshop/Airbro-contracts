@@ -2,7 +2,7 @@ import { MockContract } from "ethereum-waffle";
 import { ethers, Signer } from "ethers";
 import { waffle } from "hardhat";
 import AirBroFactory from "../../artifacts/contracts/AirbroFactory.sol/AirbroFactory.json"
-import AirBroFactory1155Holder from "../../artifacts/contracts/AirbroFactory1155Holder.sol/AirbroFactory1155Holder.json"
+import AirBroFactorySMCampaign from "../../artifacts/contracts/AirbroFactorySMCampaign.sol/AirbroFactorySMCampaign.json"
 import ERC20 from "../../artifacts/@openzeppelin/contracts/token/ERC20/ERC20.sol/ERC20.json"
 import { contractAdminAddress } from "./constants";
 
@@ -14,12 +14,12 @@ export async function deployMockAirBroFactory(deployer: Signer): Promise<MockCon
   return airBroFactory;
 }
 
-export async function deployMockAirBroFactory1155Holder(deployer: Signer): Promise<MockContract> {
-  const airBroFactory1155Holder: MockContract = await waffle.deployMockContract(deployer, AirBroFactory1155Holder.abi);
+export async function deployMockAirBroFactorySMCampaign(deployer: Signer): Promise<MockContract> {
+  const airBroFactorySMCampaign: MockContract = await waffle.deployMockContract(deployer, AirBroFactorySMCampaign.abi);
 
-  await airBroFactory1155Holder.mock.admin.returns(contractAdminAddress);
+  await airBroFactorySMCampaign.mock.admin.returns(contractAdminAddress);
 
-  return airBroFactory1155Holder;
+  return airBroFactorySMCampaign;
 }
 
 export async function deployMockDAItoken(deployer:Signer): Promise<MockContract> {

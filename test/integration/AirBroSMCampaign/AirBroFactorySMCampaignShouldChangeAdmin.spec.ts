@@ -1,7 +1,7 @@
 import { expect } from "chai";
 import { ethers } from "hardhat";
 
-export function AirbroFactory1155HolderShouldChangeAdminInAllAirDrops(): void {
+export function AirbroFactorySMCampaignShouldChangeAdminInAllAirDrops(): void {
 
     const bytes32MerkleRootHash = "0x0000000000000000000000000000000000000000000000000000000000000000";
 
@@ -11,26 +11,26 @@ export function AirbroFactory1155HolderShouldChangeAdminInAllAirDrops(): void {
     const newTokenSymbol: string = "WKND";
 
     // create new airdrop, along with new ERC20
-    expect( await this.airbroFactory1155Holder.connect(this.signers.deployer).dropNewTokensToNftHolders(
+    expect( await this.airbroFactorySMCampaign.connect(this.signers.deployer).dropNewTokensToNftHolders(
         this.testNftCollection.address, // rewardedNftCollection,
         newTokenName, // Name of new ERC20 Token
         newTokenSymbol, // Symbol of new ERC20 Token
         100, // tokensPerClaim
         30
       ),
-    ).to.emit(this.airbroFactory1155Holder, "NewAirdrop");
+    ).to.emit(this.airbroFactorySMCampaign, "NewAirdrop");
 
     // attaching deployed airdrop contract to this test
     const newDropFactory = await ethers.getContractFactory("TokenDrop");
-    const tokenDropContract = newDropFactory.attach(await this.airbroFactory1155Holder.airdrops(0));
+    const tokenDropContract = newDropFactory.attach(await this.airbroFactorySMCampaign.airdrops(0));
 
     // checking if initial admin address is able to set MerkleRootHash
     expect(await tokenDropContract.connect(this.signers.backendWallet).setMerkleRoot(bytes32MerkleRootHash))
     .to.emit(tokenDropContract, "MerkleRootChanged").withArgs(bytes32MerkleRootHash);
 
-    await this.airbroFactory1155Holder.connect(this.signers.backendWallet).changeAdmin(this.signers.alice.address);
-    expect(await this.airbroFactory1155Holder.admin()).to.be.equal(this.signers.alice.address)
-        .and.to.emit(this.airbroFactory1155Holder,"AdminChanged").withArgs(this.signers.alice.address);
+    await this.airbroFactorySMCampaign.connect(this.signers.backendWallet).changeAdmin(this.signers.alice.address);
+    expect(await this.airbroFactorySMCampaign.admin()).to.be.equal(this.signers.alice.address)
+        .and.to.emit(this.airbroFactorySMCampaign,"AdminChanged").withArgs(this.signers.alice.address);
 
     // checking if new admin address is able to set MerkleRootHash
     expect(await tokenDropContract.connect(this.signers.alice).setMerkleRoot(bytes32MerkleRootHash))
@@ -44,26 +44,26 @@ export function AirbroFactory1155HolderShouldChangeAdminInAllAirDrops(): void {
     await this.testToken.connect(this.signers.deployer).mint(this.signers.deployer.address, totalAirdropAmount);
 
     // create new airdrop, along with existing ERC20
-    expect( await this.airbroFactory1155Holder.connect(this.signers.deployer).dropExistingTokensToNftHolders(
+    expect( await this.airbroFactorySMCampaign.connect(this.signers.deployer).dropExistingTokensToNftHolders(
         this.testNftCollection.address, // rewardedNftCollection,
         100, // tokensPerClaim
         this.testToken.address, //existing token address
         totalAirdropAmount, // total tokens to be rewarded
         30,
       ),
-    ).to.emit(this.airbroFactory1155Holder, "NewAirdrop");
+    ).to.emit(this.airbroFactorySMCampaign, "NewAirdrop");
 
     // attaching deployed airdrop contract to this test
     const existingDropFactory = await ethers.getContractFactory("ExistingTokenDrop");
-    const tokenDropContract = existingDropFactory.attach(await this.airbroFactory1155Holder.airdrops(0));
+    const tokenDropContract = existingDropFactory.attach(await this.airbroFactorySMCampaign.airdrops(0));
 
     // checking if initial admin address is able to set MerkleRootHash
     expect(await tokenDropContract.connect(this.signers.backendWallet).setMerkleRoot(bytes32MerkleRootHash))
     .to.emit(tokenDropContract, "MerkleRootChanged").withArgs(bytes32MerkleRootHash);
 
-    await this.airbroFactory1155Holder.connect(this.signers.backendWallet).changeAdmin(this.signers.alice.address);
-    expect(await this.airbroFactory1155Holder.admin()).to.be.equal(this.signers.alice.address)
-        .and.to.emit(this.airbroFactory1155Holder,"AdminChanged").withArgs(this.signers.alice.address);
+    await this.airbroFactorySMCampaign.connect(this.signers.backendWallet).changeAdmin(this.signers.alice.address);
+    expect(await this.airbroFactorySMCampaign.admin()).to.be.equal(this.signers.alice.address)
+        .and.to.emit(this.airbroFactorySMCampaign,"AdminChanged").withArgs(this.signers.alice.address);
 
     // checking if new admin address is able to set MerkleRootHash
     expect(await tokenDropContract.connect(this.signers.alice).setMerkleRoot(bytes32MerkleRootHash))
@@ -80,7 +80,7 @@ export function AirbroFactory1155HolderShouldChangeAdminInAllAirDrops(): void {
 
 
     // create new airdrop, along with existing 1155
-    expect( await this.airbroFactory1155Holder.connect(this.signers.deployer).dropExisting1155NftsToNftHolders(
+    expect( await this.airbroFactorySMCampaign.connect(this.signers.deployer).dropExisting1155NftsToNftHolders(
         this.testNftCollection.address,
         this.test1155NftCollection.address,
         tokensPerClaim,
@@ -88,19 +88,19 @@ export function AirbroFactory1155HolderShouldChangeAdminInAllAirDrops(): void {
         amounOft1155,
         durationInDays
       ),
-    ).to.emit(this.airbroFactory1155Holder, "NewAirdrop");
+    ).to.emit(this.airbroFactorySMCampaign, "NewAirdrop");
 
     // attaching deployed airdrop contract to this test
     const existing1155NftDropFactory = await ethers.getContractFactory("Existing1155NftDrop");
-    const existing1155NftDropContract = existing1155NftDropFactory.attach(await this.airbroFactory1155Holder.airdrops(0));
+    const existing1155NftDropContract = existing1155NftDropFactory.attach(await this.airbroFactorySMCampaign.airdrops(0));
 
     // checking if initial admin address is able to set MerkleRootHash
     expect(await existing1155NftDropContract.connect(this.signers.backendWallet).setMerkleRoot(bytes32MerkleRootHash))
     .to.emit(existing1155NftDropContract, "MerkleRootChanged").withArgs(bytes32MerkleRootHash);
 
-    await this.airbroFactory1155Holder.connect(this.signers.backendWallet).changeAdmin(this.signers.alice.address);
-    expect(await this.airbroFactory1155Holder.admin()).to.be.equal(this.signers.alice.address)
-        .and.to.emit(this.airbroFactory1155Holder,"AdminChanged").withArgs(this.signers.alice.address);
+    await this.airbroFactorySMCampaign.connect(this.signers.backendWallet).changeAdmin(this.signers.alice.address);
+    expect(await this.airbroFactorySMCampaign.admin()).to.be.equal(this.signers.alice.address)
+        .and.to.emit(this.airbroFactorySMCampaign,"AdminChanged").withArgs(this.signers.alice.address);
 
     // checking if new admin address is able to set MerkleRootHash
     expect(await existing1155NftDropContract.connect(this.signers.alice).setMerkleRoot(bytes32MerkleRootHash))
