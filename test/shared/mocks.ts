@@ -27,7 +27,6 @@ export async function deployMockDAItoken(deployer:Signer): Promise<MockContract>
   
   await mockDAItoken.mock.name.returns("DAI token");
   await mockDAItoken.mock.symbol.returns("DAI");
-  await mockDAItoken.mock.balanceOf.returns(ethers.utils.parseEther("1000")); //so this contract will have 1000 units of something
   
   return mockDAItoken;
 

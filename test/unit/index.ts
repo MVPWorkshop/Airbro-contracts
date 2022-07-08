@@ -95,11 +95,17 @@ describe("Unit tests", function () {
     
     describe('ExistingTokenDrop',()=>{
       beforeEach(async function(){
-        const { existingTokenDrop, mockAirBroFactory } = await this.loadFixture(unitExistingTokenDropFixture);
+        const { existingTokenDrop, mockAirBroFactory, existingTokenDropConstructorArgs, mockDAItoken } = await this.loadFixture(unitExistingTokenDropFixture);
         this.existingTokenDrop = existingTokenDrop;
         
         this.mocks = {} as Mocks;
         this.mocks.mockAirBroFactory = mockAirBroFactory;
+        this.mocks.mockDAItoken = mockDAItoken;
+
+        // Here are the arguments used to deploy the existingTokenDrop1155 contract. 
+        // They are dependant on two mock contracts deployed in fixutres, 
+        // so this is why they are exported from the fixture as the 2nd module.
+        this.constructorArgs = existingTokenDropConstructorArgs;
         
       })
       
@@ -140,11 +146,13 @@ describe("Unit tests", function () {
     
     describe('TokenDrop',()=>{
       beforeEach(async function(){
-        const { tokenDrop, mockAirBroFactory } = await this.loadFixture(unitTokenDropFixture);
+        const { tokenDrop, mockAirBroFactory, tokenDropConstructorArgs } = await this.loadFixture(unitTokenDropFixture);
         this.tokenDrop = tokenDrop;
         
         this.mocks = {} as Mocks;
         this.mocks.mockAirBroFactory = mockAirBroFactory;
+
+        this.constructorArgs = tokenDropConstructorArgs;
       })
       
       
@@ -188,16 +196,17 @@ describe("Unit tests", function () {
     
     describe('ExistingTokenDrop1155',()=>{
       beforeEach(async function(){
-        const { existingTokenDrop1155, existingTokenDrop1155ConstructorArgs, mockAirBroFactory1155Holder } = await this.loadFixture(unitExistingTokenDrop1155Fixture)
+        const { existingTokenDrop1155, existingTokenDrop1155ConstructorArgs, mockAirBroFactory1155Holder, mockDAItoken } = await this.loadFixture(unitExistingTokenDrop1155Fixture)
         
         this.existingTokenDrop1155 = existingTokenDrop1155;
         this.mocks = {} as Mocks;
         this.mocks.mockAirBroFactory1155Holder = mockAirBroFactory1155Holder;
+        this.mocks.mockDAItoken = mockDAItoken;
         
         // Here are the arguments used to deploy the existingTokenDrop1155 contract. 
         // They are dependant on two mock contracts deployed in fixutres, 
         // so this is why they are exported from the fixture as the 2nd module.
-        this.existingTokenDrop1155ConstructorArgs = existingTokenDrop1155ConstructorArgs;
+        this.constructorArgs = existingTokenDrop1155ConstructorArgs;
       })
       
       
@@ -209,12 +218,14 @@ describe("Unit tests", function () {
     
     describe('TokenDrop1155',()=>{
       beforeEach(async function(){
-        const { tokenDrop1155, mockAirBroFactory1155Holder } = await this.loadFixture(unitTokenDrop1155Fixture)
+        const { tokenDrop1155, mockAirBroFactory1155Holder, tokenDrop1155ConstructorArgs } = await this.loadFixture(unitTokenDrop1155Fixture)
         
         this.tokenDrop1155 = tokenDrop1155;
         
         this.mocks = {} as Mocks;
         this.mocks.mockAirBroFactory1155Holder = mockAirBroFactory1155Holder;
+        
+        this.constructorArgs = tokenDrop1155ConstructorArgs
       })
       
       

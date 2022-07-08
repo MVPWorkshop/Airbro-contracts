@@ -20,11 +20,9 @@ export function ExistingTokenDrop1155ShouldClaimReward(){
             expect(await this.existingTokenDrop1155.connect(this.signers.bob).checkProof(aliceHexProof, roothash)).to.equal(false); // bob doesn't have correct hexProof
         })
 
-        /**
-         * There is a problem with this test here. The smart contract 'ExistingTokenDrop1155' is supposed to
-         * check if the balance of this contract has enough funds to drop the existing token (in the function isEligibleForReward).
-         * */
         it("isEligibleForReward method should return true only if eligible based on merkleProof", async function(){
+            await this.mocks.mockDAItoken.mock.balanceOf.returns(ethers.utils.parseEther("1000")); // mocking the contract balance
+
             const whitelisted = [this.signers.alice.address, this.signers.bob.address, this.signers.jerry.address, this.signers.lisa.address];
             const leaves = whitelisted.map(addr => keccak256(addr))
             const merkleTree = new MerkleTree(leaves, keccak256, { sort: true })

@@ -1,5 +1,4 @@
 import { expect } from "chai";
-import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { Wallet } from "@ethersproject/wallet";
 
 export const TokenDropShouldSetMerkleRoot = (): void => {

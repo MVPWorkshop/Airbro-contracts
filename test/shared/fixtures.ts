@@ -22,7 +22,7 @@ import { TokenDrop1155 } from "../../src/types/contracts/airdrops1155Holder/Toke
 
 
 
-import { randomAddress, unitExistingTokenDrop1155FixtureArguments, unitExistingTokenDropFixtureArguments, unitTokenDropFixtureArguments } from "../shared/constants";
+import { randomAddress, unitExistingTokenDrop1155FixtureArguments, unitExistingTokenDropFixtureArguments, unitTokenDrop1155FixtureArguments, unitTokenDropFixtureArguments } from "../shared/constants";
 import { deployMockAirBroFactory, deployMockAirBroFactory1155Holder, deployMockDAItoken } from "./mocks";
 
 
@@ -39,6 +39,8 @@ type UnitExisting1155NFTDrop1155FixtureType = {
 type UnitExistingTokenDropFixtureType = {
     existingTokenDrop: ExistingTokenDrop;
     mockAirBroFactory: MockContract;
+    existingTokenDropConstructorArgs:any;
+    mockDAItoken: MockContract;
 }
 
 type UnitItemNFTDropFixtureType = {
@@ -54,17 +56,20 @@ type UnitNFTDropFixtureType = {
 type UnitTokenDropFixtureType = {
     tokenDrop: TokenDrop;
     mockAirBroFactory: MockContract;
+    tokenDropConstructorArgs: any;
 }
 
 type UnitExistingTokenDrop1155FixtureType = {
     existingTokenDrop1155:ExistingTokenDrop1155;
-    existingTokenDrop1155ConstructorArgs:any; // the arguments used to deploy the existingTokenDrop1155 contrat, needed for testing
     mockAirBroFactory1155Holder: MockContract;
+    existingTokenDrop1155ConstructorArgs:any;
+    mockDAItoken: MockContract;
 }
 
 type UnitTokenDrop1155FixtureType = {
     tokenDrop1155:TokenDrop1155;
     mockAirBroFactory1155Holder: MockContract;
+    tokenDrop1155ConstructorArgs:any;
 }
 
 type IntegrationFixtureType = {
@@ -75,7 +80,6 @@ type IntegrationFixtureType = {
 };
 
 type Integration1155HolderFixtureType = {
-    // airbroFactory1155Holder: AirbroFactory; // temporary for testing
     airbroFactory1155Holder: AirbroFactory1155Holder;
     testNftCollection: TestNftCollection;
     testToken: TestToken;
@@ -128,14 +132,16 @@ export const unitExistingTokenDropFixture: Fixture<UnitExistingTokenDropFixtureT
     const deployer: Wallet = signers[0];
     
     const mockAirBroFactory = await deployMockAirBroFactory(deployer);
-    
+    const mockDAItoken = await deployMockDAItoken(deployer);
+
     const existingTokenDropFactory: ContractFactory = await ethers.getContractFactory(`ExistingTokenDrop`);
-    
-    const existingTokenDrop: ExistingTokenDrop = (await existingTokenDropFactory.connect(deployer).deploy(...Object.values(unitExistingTokenDropFixtureArguments), mockAirBroFactory.address)) as ExistingTokenDrop;
+
+    const existingTokenDropConstructorArgs = await unitExistingTokenDropFixtureArguments(mockDAItoken.address, mockAirBroFactory.address)
+    const existingTokenDrop: ExistingTokenDrop = await existingTokenDropFactory.connect(deployer).deploy(...Object.values(existingTokenDropConstructorArgs)) as ExistingTokenDrop;
     
     await existingTokenDrop.deployed();
     
-    return { existingTokenDrop, mockAirBroFactory };
+    return { existingTokenDrop, mockAirBroFactory, existingTokenDropConstructorArgs, mockDAItoken };
 };
 
 export const unitItemNFTDropFixture: Fixture<UnitItemNFTDropFixtureType> = async (signers: Wallet[]) => {
@@ -173,12 +179,12 @@ export const unitTokenDropFixture: Fixture<UnitTokenDropFixtureType> = async (si
     
     const tokenDropFactory: ContractFactory = await ethers.getContractFactory(`TokenDrop`);
     
-    const deploymentArgs = unitTokenDropFixtureArguments
-    const tokenDrop: TokenDrop = (await tokenDropFactory.connect(deployer).deploy(...Object.values(deploymentArgs), mockAirBroFactory.address)) as TokenDrop;
+    const tokenDropConstructorArgs = await unitTokenDropFixtureArguments(mockAirBroFactory.address)
+    const tokenDrop: TokenDrop = await tokenDropFactory.connect(deployer).deploy(...Object.values(tokenDropConstructorArgs)) as TokenDrop;
     
     await tokenDrop.deployed();
     
-    return { tokenDrop, mockAirBroFactory };
+    return { tokenDrop, mockAirBroFactory, tokenDropConstructorArgs };
 };
 
 export const unitExistingTokenDrop1155Fixture: Fixture<UnitExistingTokenDrop1155FixtureType> = async (signers: Wallet[]) => {
@@ -186,19 +192,15 @@ export const unitExistingTokenDrop1155Fixture: Fixture<UnitExistingTokenDrop1155
 
     const mockAirBroFactory1155Holder = await deployMockAirBroFactory1155Holder(deployer);
     const mockDAItoken = await deployMockDAItoken(deployer) // mock DAI token
-
+    
     const ExistingTokenDrop1155Factory = await ethers.getContractFactory("ExistingTokenDrop1155")
     
-    // here are the arguments used to deploy the existingTokenDrop1155 contract. 
-    // They are dependant on two mock contracts deployed in fixutres, 
-    // so this is why they are exported from the fixture as the 2nd module.
     const existingTokenDrop1155ConstructorArgs = await unitExistingTokenDrop1155FixtureArguments(mockDAItoken.address, mockAirBroFactory1155Holder.address)
-
     const existingTokenDrop1155: ExistingTokenDrop1155 = (await ExistingTokenDrop1155Factory.connect(deployer).deploy(...Object.values(existingTokenDrop1155ConstructorArgs))) as ExistingTokenDrop1155;
 
     await existingTokenDrop1155.deployed();
     
-    return { existingTokenDrop1155, existingTokenDrop1155ConstructorArgs, mockAirBroFactory1155Holder }
+    return { existingTokenDrop1155, existingTokenDrop1155ConstructorArgs, mockAirBroFactory1155Holder, mockDAItoken }
 }
 
 
@@ -209,11 +211,12 @@ export const unitTokenDrop1155Fixture: Fixture<UnitTokenDrop1155FixtureType> = a
     
     const tokenDrop1155Factory = await ethers.getContractFactory("TokenDrop1155")
 
-    const tokenDrop1155: TokenDrop1155 = (await tokenDrop1155Factory.connect(deployer).deploy(...Object.values(unitTokenDropFixtureArguments), mockAirBroFactory1155Holder.address)) as TokenDrop1155;
+    const tokenDrop1155ConstructorArgs = await  unitTokenDrop1155FixtureArguments(mockAirBroFactory1155Holder.address)
+    const tokenDrop1155: TokenDrop1155 = await tokenDrop1155Factory.connect(deployer).deploy(...Object.values(tokenDrop1155ConstructorArgs)) as TokenDrop1155;
 
     await tokenDrop1155.deployed();
     
-    return { tokenDrop1155, mockAirBroFactory1155Holder }
+    return { tokenDrop1155, mockAirBroFactory1155Holder, tokenDrop1155ConstructorArgs }
 }
 
 
@@ -250,12 +253,6 @@ export const integrationsFixture: Fixture<IntegrationFixtureType> = async (signe
 
 export const integrations1155HolderFixture: Fixture<Integration1155HolderFixtureType> = async (signers: Wallet[]) => {
     const deployer: Wallet = signers[0];
-    
-    // const airbroFactoryFactory: ContractFactory = await ethers.getContractFactory(`AirbroFactory`);
-    
-    // const airbroFactory1155Holder: AirbroFactory = (await airbroFactoryFactory.connect(deployer).deploy()) as AirbroFactory;
-    
-    // await airbroFactory1155Holder.deployed();
 
     const airbroFactory1155HolderFactory: ContractFactory = await ethers.getContractFactory(`AirbroFactory1155Holder`);
     
