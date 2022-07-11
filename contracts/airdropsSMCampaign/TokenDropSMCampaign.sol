@@ -2,7 +2,6 @@
 pragma solidity ^0.8.14;
 
 import "@rari-capital/solmate/src/tokens/ERC20.sol";
-// import "@rari-capital/solmate/src/tokens/ERC1155.sol"; // have to comment it out otherwise error
 import "@openzeppelin/contracts/token/ERC1155/IERC1155.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "../interfaces/AirdropInfoSMCampaign.sol";
@@ -56,12 +55,14 @@ contract TokenDropSMCampaign is ERC20, AirdropInfoSMCampaign, AirdropMerkleProof
     }
 
     /// @notice Sets the merkleRoot - can only be done if admin (different from the contract owner)
-    /// @param _merkleRoot - The root hash of the Merle Tree
+    /// @param _merkleRoot The root hash of the Merle Tree
     function setMerkleRoot(bytes32 _merkleRoot) external onlyAdmin {
         merkleRoot = _merkleRoot;
         emit MerkleRootChanged(_merkleRoot);
     }
 
+    /// @notice Sets the merkleRoot - can only be done if admin (different from the contract owner)
+    /// @param _merkleProof The proof a user can claim a reward
     function claim(bytes32[] calldata _merkleProof) external {
         if (hasClaimed[msg.sender]) revert AlreadyRedeemed();
         if (block.timestamp > airdropFinishTime) revert AirdropExpired();
@@ -78,12 +79,13 @@ contract TokenDropSMCampaign is ERC20, AirdropInfoSMCampaign, AirdropMerkleProof
         }
     }
 
-    ///@notice Get the type of airdrop, it's either ERC20, ERC721, ERC1155
+    /// @notice Get the type of airdrop, it's either ERC20, ERC721, ERC1155
     function getAirdropType() external pure returns (string memory) {
         return "ERC20";
     }
 
-    ///@notice Checks if the user is eligible for this airdrop
+    /// @notice Checks if the user is eligible for this airdrop
+    /// @param _merkleProof The proof a user can claim a reward
     function isEligibleForReward(bytes32[] calldata _merkleProof) public view returns (bool) {
         if (hasClaimed[msg.sender]) revert AlreadyRedeemed();
         if (block.timestamp > airdropFinishTime) revert AirdropExpired();
@@ -91,8 +93,8 @@ contract TokenDropSMCampaign is ERC20, AirdropInfoSMCampaign, AirdropMerkleProof
         return isEligible;
     }
 
-    ///@notice Returns the amount(number) of airdrop tokens to claim
-    //@param tokenId is the rewarded NFT collections token ID
+    /// @notice Returns the amount(number) of airdrop tokens to claim
+    /// @param _merkleProof The proof a user can claim a reward
     function getAirdropAmount(bytes32[] calldata _merkleProof) external view returns (uint256) {
         return isEligibleForReward(_merkleProof) ? tokensPerClaim : 0;
     }
