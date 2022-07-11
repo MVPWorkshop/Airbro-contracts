@@ -22,7 +22,6 @@ contract NFTDrop is ERC721, AirdropInfo, AirdropMerkleProof, Ownable {
     event AdminChanged(address indexed adminAddress);
     event MerkleRootChanged(bytes32 merkleRoot);
 
-
     error NotOwner();
     error AlreadyRedeemed();
     error DoesNotExist();
@@ -40,8 +39,8 @@ contract NFTDrop is ERC721, AirdropInfo, AirdropMerkleProof, Ownable {
     uint256 public immutable airdropStartTime;
     uint256 public immutable airdropFinishTime;
 
-    modifier onlyAdmin(){
-        if(msg.sender != IAirBroFactory(airBroFactoryAddress).admin()) revert NotAdmin();
+    modifier onlyAdmin() {
+        if (msg.sender != IAirBroFactory(airBroFactoryAddress).admin()) revert NotAdmin();
         _;
     }
 

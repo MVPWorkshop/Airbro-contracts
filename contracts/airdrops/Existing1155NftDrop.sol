@@ -26,7 +26,6 @@ contract Existing1155NftDrop is AirdropInfo, AirdropMerkleProof, IERC1155Receive
     event AirdropFunded(address contractAddress);
     event MerkleRootChanged(bytes32 merkleRoot);
 
-
     error NotOwner();
     error AirdropStillInProgress();
     error AlreadyRedeemed();
@@ -46,8 +45,8 @@ contract Existing1155NftDrop is AirdropInfo, AirdropMerkleProof, IERC1155Receive
     uint256 public immutable airdropStartTime;
     uint256 public immutable airdropFinishTime;
 
-    modifier onlyAdmin(){
-        if(msg.sender != IAirBroFactory(airBroFactoryAddress).admin()) revert NotAdmin();
+    modifier onlyAdmin() {
+        if (msg.sender != IAirBroFactory(airBroFactoryAddress).admin()) revert NotAdmin();
         _;
     }
 
@@ -69,7 +68,6 @@ contract Existing1155NftDrop is AirdropInfo, AirdropMerkleProof, IERC1155Receive
         airdropStartTime = block.timestamp;
         airdropFinishTime = block.timestamp + airdropDuration;
         airBroFactoryAddress = _airBroFactoryAddress;
-
     }
 
     /// @notice Sets the merkleRoot - can only be done if admin (different from the contract owner)
@@ -94,13 +92,7 @@ contract Existing1155NftDrop is AirdropInfo, AirdropMerkleProof, IERC1155Receive
     function withdrawAirdropFunds() external {
         if (airdropFundingHolder != msg.sender) revert NotOwner();
         if (block.timestamp < airdropFinishTime) revert AirdropStillInProgress();
-        rewardToken.safeTransferFrom(
-            address(this),
-            msg.sender,
-            rewardTokenId,
-            rewardToken.balanceOf(address(this), rewardTokenId),
-            ""
-        );
+        rewardToken.safeTransferFrom(address(this), msg.sender, rewardTokenId, rewardToken.balanceOf(address(this), rewardTokenId), "");
     }
 
     /// @notice Allows the NFT holder to claim his ERC20 airdrop
@@ -119,8 +111,7 @@ contract Existing1155NftDrop is AirdropInfo, AirdropMerkleProof, IERC1155Receive
     }
 
     function batchClaim(uint256[] memory tokenIds, bytes32[] calldata _merkleProof) external {
-        if (rewardToken.balanceOf(address(this), rewardTokenId) < tokensPerClaim * tokenIds.length)
-            revert InsufficientLiquidity();
+        if (rewardToken.balanceOf(address(this), rewardTokenId) < tokensPerClaim * tokenIds.length) revert InsufficientLiquidity();
 
         if (block.timestamp > airdropFinishTime) revert AirdropExpired();
 

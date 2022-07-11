@@ -24,7 +24,6 @@ contract ExistingTokenDrop is AirdropInfo, AirdropMerkleProof, Ownable {
     event AirdropFunded(address contractAddress);
     event MerkleRootChanged(bytes32 merkleRoot);
 
-
     error NotOwner();
     error AirdropStillInProgress();
     error AlreadyRedeemed();
@@ -44,8 +43,8 @@ contract ExistingTokenDrop is AirdropInfo, AirdropMerkleProof, Ownable {
     uint256 public immutable airdropStartTime;
     uint256 public immutable airdropFinishTime;
 
-    modifier onlyAdmin(){
-        if(msg.sender != IAirBroFactory(airBroFactoryAddress).admin()) revert NotAdmin();
+    modifier onlyAdmin() {
+        if (msg.sender != IAirBroFactory(airBroFactoryAddress).admin()) revert NotAdmin();
         _;
     }
 

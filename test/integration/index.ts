@@ -17,70 +17,67 @@ import { integrationsSMCampaignFixture } from "../shared/fixtures";
 import { AirbroFactorySMCampaignShouldAirDropExistingToken } from "./AirBroSMCampaign/AirBroExistingTokenNftDropSMCampaign.spec";
 import { AirbroFactorySMCampaignShouldAirDropNewToken } from "./AirBroSMCampaign/AirBroTokenNftDropSMCampaign.spec";
 
- 
-const randomAddress = '0x6b175474e89094c44da98b954eedeac495271d0f';
+const randomAddress = "0x6b175474e89094c44da98b954eedeac495271d0f";
 describe("Integration tests", function () {
   before(async function () {
     this.signers = {} as Signers;
-    
-    const signers = waffle.provider.getWallets()
-    
+
+    const signers = waffle.provider.getWallets();
+
     this.signers.deployer = signers[0];
     this.signers.alice = signers[1];
-    this.signers.bob = signers[2]
-    this.signers.jerry = signers[3]
-    this.signers.lisa = signers[4]
+    this.signers.bob = signers[2];
+    this.signers.jerry = signers[3];
+    this.signers.lisa = signers[4];
     this.signers.backendWallet = await ethers.getSigner(contractAdminAddress);
 
     // sending eth to the backend wallet address from the hardhat account of index 4
     await signers[5].sendTransaction({
       to: contractAdminAddress,
-      value: ethers.utils.parseEther("5000")
-    })
-    
+      value: ethers.utils.parseEther("5000"),
+    });
+
     await network.provider.request({
       method: "hardhat_impersonateAccount",
       params: [contractAdminAddress],
     });
-    
+
     this.signers.backendWallet = await ethers.getSigner(contractAdminAddress);
 
-
-    this.loadFixture = waffle.createFixtureLoader(signers)
+    this.loadFixture = waffle.createFixtureLoader(signers);
   });
-  
-  describe("AirbroFactory", ()=> {
+
+  describe("AirbroFactory", () => {
     beforeEach(async function () {
-      const { airbroFactory, testNftCollection, testToken, airBro1155NftMint } = await this.loadFixture(integrationsFixture)
+      const { airbroFactory, testNftCollection, testToken, airBro1155NftMint } = await this.loadFixture(integrationsFixture);
       this.airbroFactory = airbroFactory;
       this.testNftCollection = testNftCollection;
       this.testToken = testToken;
       this.test1155NftCollection = airBro1155NftMint;
-
     });
-    
+
     shouldBehaveLikeFactory();
     shouldChangeAdminInAllAirDrops();
     shouldAirDropExistingToken();
     shouldAirDropNewToken();
-    shouldAirdropExisting1155NftDrop()
+    shouldAirdropExisting1155NftDrop();
   });
 
-  describe("AirbroFactorySMCampaign", ()=> {
+  describe("AirbroFactorySMCampaign", () => {
     beforeEach(async function () {
-      const { airbroFactorySMCampaign, testNftCollection, testToken, airBro1155NftMint } = await this.loadFixture(integrationsSMCampaignFixture)
+      const { airbroFactorySMCampaign, testNftCollection, testToken, airBro1155NftMint } = await this.loadFixture(
+        integrationsSMCampaignFixture,
+      );
       this.airbroFactorySMCampaign = airbroFactorySMCampaign;
       this.testNftCollection = testNftCollection;
       this.testToken = testToken;
       this.test1155NftCollection = airBro1155NftMint;
-
     });
-    
+
     AirbroFactorySMCampaignShouldBehaveLikeFactory();
     AirbroFactorySMCampaignShouldChangeAdminInAllAirDrops();
     AirbroFactorySMCampaignShouldAirDropExistingToken();
     AirbroFactorySMCampaignShouldAirDropNewToken();
-    AirbroFactorySMCampaignShouldAirdropExisting1155NftDropSMCampaign()
+    AirbroFactorySMCampaignShouldAirdropExisting1155NftDropSMCampaign();
   });
-  
 });

@@ -2,7 +2,6 @@
 pragma solidity ^0.8.14;
 
 interface AirdropInfo {
-
     //@notice Returns the end timestamp of an airdrop
     function getAirdropFinishTime() external view returns (uint256);
 
@@ -22,4 +21,3 @@ interface AirdropInfo {
     //@param tokenId is the rewarded NFT collections token ID
     function getAirdropAmount() external view returns (uint256);
 }
-

@@ -2,19 +2,19 @@ import { expect } from "chai";
 import { ethers } from "hardhat";
 
 export function shouldAirDropNewToken(): void {
-
-  it("should fund and claim new token airdrop", async function() {
+  it("should fund and claim new token airdrop", async function () {
     // naming of ERC20 to be created
     const newTokenName: string = "Wakanda Coin";
     const newTokenSymbol: string = "WKND";
 
     // create new airdrop, along with new ERC20
-    expect( await this.airbroFactory.connect(this.signers.deployer).dropNewTokensToNftHolders(
+    expect(
+      await this.airbroFactory.connect(this.signers.deployer).dropNewTokensToNftHolders(
         this.testNftCollection.address, // rewardedNftCollection,
         newTokenName, // Name of new ERC20 Token
         newTokenSymbol, // Symbol of new ERC20 Token
         100, // tokensPerClaim
-        30
+        30,
       ),
     ).to.emit(this.airbroFactory, "NewAirdrop");
 
@@ -41,7 +41,5 @@ export function shouldAirDropNewToken(): void {
     expect(await tokenDropContract.hasClaimed(3)).to.be.equal(false);
 
     expect(await tokenDropContract.balanceOf(this.signers.deployer.address)).to.be.equal(300);
-
   });
-
 }

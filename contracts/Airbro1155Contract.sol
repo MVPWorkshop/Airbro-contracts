@@ -9,7 +9,6 @@ import "@openzeppelin/contracts/access/Ownable.sol";
  * @notice This contract is intended to reference it's metadata on IPFS.
  */
 contract Airbro1155Contract is ERC1155, Ownable {
-
     uint256 private constant _tokenID = 0;
 
     string public name = "Airbro";
@@ -18,9 +17,7 @@ contract Airbro1155Contract is ERC1155, Ownable {
     // mapping(string => uint256) public idMap;
     // mapping(uint256 => string) public lookupMap;
 
-    constructor(string memory uri_) ERC1155(uri_) {
-
-    }
+    constructor(string memory uri_) ERC1155(uri_) {}
 
     // function setURI(string memory newUri) public onlyOwner {
     //     _setURI(newUri);
@@ -34,7 +31,7 @@ contract Airbro1155Contract is ERC1155, Ownable {
     // function uri(uint256 id) public view virtual override returns (string memory){
     //     return string(abi.encodePacked(super.uri(id), lookupMap[id]));
     // }
-// string memory cid
+    // string memory cid
     function mint() public {
         // _currentTokenID = _currentTokenID + 1;
         // // add to reference maps
@@ -43,5 +40,4 @@ contract Airbro1155Contract is ERC1155, Ownable {
         // bytes(cid)
         _mint(msg.sender, _tokenID, 1, "0x");
     }
-
 }

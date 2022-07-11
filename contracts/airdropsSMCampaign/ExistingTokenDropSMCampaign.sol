@@ -24,7 +24,6 @@ contract ExistingTokenDropSMCampaign is AirdropInfoSMCampaign, AirdropMerkleProo
     event AirdropFunded(address contractAddress);
     event MerkleRootChanged(bytes32 merkleRoot);
 
-
     error NotOwner();
     error AirdropStillInProgress();
     error AlreadyRedeemed();
@@ -45,8 +44,8 @@ contract ExistingTokenDropSMCampaign is AirdropInfoSMCampaign, AirdropMerkleProo
     uint256 public immutable airdropStartTime;
     uint256 public immutable airdropFinishTime;
 
-    modifier onlyAdmin(){
-        if(msg.sender != IAirBroFactory(airBroFactorySMCampaignAddress).admin()) revert NotAdmin();
+    modifier onlyAdmin() {
+        if (msg.sender != IAirBroFactory(airBroFactorySMCampaignAddress).admin()) revert NotAdmin();
         _;
     }
 
@@ -101,7 +100,7 @@ contract ExistingTokenDropSMCampaign is AirdropInfoSMCampaign, AirdropMerkleProo
         if (block.timestamp > airdropFinishTime) revert AirdropExpired();
 
         bool isEligible = checkProof(_merkleProof, merkleRoot);
-        if(isEligible) {
+        if (isEligible) {
             hasClaimed[msg.sender] = true;
             rewardToken.transfer(msg.sender, tokensPerClaim);
             emit Claimed(msg.sender);
@@ -109,7 +108,6 @@ contract ExistingTokenDropSMCampaign is AirdropInfoSMCampaign, AirdropMerkleProo
             revert NotEligible();
         }
     }
-
 
     //@notice Get the type of airdrop, it's either ERC20, ERC721, ERC1155
     function getAirdropType() external pure override returns (string memory) {

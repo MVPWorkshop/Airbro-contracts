@@ -18,8 +18,8 @@ contract AirbroFactory {
 
     error NotAdmin();
 
-    modifier onlyAdmin(){
-        if(msg.sender != admin) revert NotAdmin();
+    modifier onlyAdmin() {
+        if (msg.sender != admin) revert NotAdmin();
         _;
     }
 
@@ -41,7 +41,6 @@ contract AirbroFactory {
             newTokenSymbol,
             airdropDuration,
             address(this) // airBroFactory contract address -> used for getting back admin contract address in airdrop contracts
-
         );
 
         airdrops.push(address(tokenDropContract));

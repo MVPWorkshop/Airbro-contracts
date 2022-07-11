@@ -8,7 +8,6 @@ import "../interfaces/AirdropInfo.sol";
 import "../interfaces/AirdropMerkleProof.sol";
 import "../interfaces/IAirBroFactory.sol";
 
-
 /// @title Airdrops new ERC1155 tokens for airdrop recipients
 contract ItemNFTDrop is ERC1155, AirdropInfo, AirdropMerkleProof, Ownable {
     uint256 public immutable maxSupply;
@@ -23,7 +22,6 @@ contract ItemNFTDrop is ERC1155, AirdropInfo, AirdropMerkleProof, Ownable {
     event Claimed(uint256 indexed tokenId, address indexed claimer);
     event AdminChanged(address indexed adminAddress);
     event MerkleRootChanged(bytes32 merkleRoot);
-
 
     error NotOwner();
     error AlreadyRedeemed();
@@ -42,8 +40,8 @@ contract ItemNFTDrop is ERC1155, AirdropInfo, AirdropMerkleProof, Ownable {
     uint256 public immutable airdropStartTime;
     uint256 public immutable airdropFinishTime;
 
-    modifier onlyAdmin(){
-        if(msg.sender != IAirBroFactory(airBroFactoryAddress).admin()) revert NotAdmin();
+    modifier onlyAdmin() {
+        if (msg.sender != IAirBroFactory(airBroFactoryAddress).admin()) revert NotAdmin();
         _;
     }
 

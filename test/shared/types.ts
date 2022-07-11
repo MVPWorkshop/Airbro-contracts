@@ -13,8 +13,8 @@ declare module "mocha" {
     AirbroSMCampaign: AirbroFactorySMCampaign;
     loadFixture: <T>(fixture: Fixture<T>) => Promise<T>;
     signers: Signers;
-    testNftCollection: TestNftCollection,
-    testToken: TestToken
+    testNftCollection: TestNftCollection;
+    testToken: TestToken;
   }
 }
 
@@ -31,5 +31,4 @@ export interface Signers {
 export interface Mocks {
   mockAirBroFactory: MockContract;
   mockAirBroFactorySMCampaign: MockContract;
-
 }

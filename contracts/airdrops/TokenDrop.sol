@@ -33,8 +33,8 @@ contract TokenDrop is ERC20, AirdropInfo, AirdropMerkleProof, Ownable {
     uint256 public immutable airdropStartTime;
     uint256 public immutable airdropFinishTime;
 
-    modifier onlyAdmin(){
-        if(msg.sender != IAirBroFactory(airBroFactoryAddress).admin()) revert NotAdmin();
+    modifier onlyAdmin() {
+        if (msg.sender != IAirBroFactory(airBroFactoryAddress).admin()) revert NotAdmin();
         _;
     }
 

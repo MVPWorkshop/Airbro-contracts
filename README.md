@@ -4,7 +4,6 @@
 
 You can find the frontend repo here: https://github.com/MVPWorkshop/Airbro-interfaces
 
-
 ### Pre Requisites
 
 Before running any command, you need to create a `.env` file and set a BIP-39 compatible mnemonic as an environment
@@ -84,9 +83,9 @@ $ yarn clean
 
 ### Important note
 
-- Before deploying the smart contracts, make sure to update the hardcoded ```admin``` variable in each smart contract in the ```./contracts/airdrops``` folder. The variable should be set to a valid backend wallet address.
+- Before deploying the smart contracts, make sure to update the hardcoded `admin` variable in each smart contract in the `./contracts/airdrops` folder. The variable should be set to a valid backend wallet address.
 
-- For testing, make sure the variable ```contractAdminAddress``` (found in ```./tests/shared/constants.ts```) is the same as the previously mentioned smart contract ```admin``` variable.
+- For testing, make sure the variable `contractAdminAddress` (found in `./tests/shared/constants.ts`) is the same as the previously mentioned smart contract `admin` variable.
 
 Deploy the contracts to Hardhat Network:
 
@@ -95,6 +94,7 @@ $ yarn deploy --greeting "Bonjour, le monde!"
 ```
 
 ### Latest verified polygon mumbai testnet deployment
+
 https://mumbai.polygonscan.com/address/0x1Cf717072285dC1CE9DBcED31d51e4Ad5dE6fB7f#code
 
 ## Syntax Highlighting

@@ -34,8 +34,8 @@ contract TokenDropSMCampaign is ERC20, AirdropInfoSMCampaign, AirdropMerkleProof
     uint256 public immutable airdropStartTime;
     uint256 public immutable airdropFinishTime;
 
-    modifier onlyAdmin(){
-        if(msg.sender != IAirBroFactory(airBroFactoryAddress).admin()) revert NotAdmin();
+    modifier onlyAdmin() {
+        if (msg.sender != IAirBroFactory(airBroFactoryAddress).admin()) revert NotAdmin();
         _;
     }
 
@@ -68,7 +68,7 @@ contract TokenDropSMCampaign is ERC20, AirdropInfoSMCampaign, AirdropMerkleProof
 
         bool isEligible = checkProof(_merkleProof, merkleRoot);
 
-        if(isEligible){
+        if (isEligible) {
             hasClaimed[msg.sender] = true;
             emit Claimed(msg.sender);
 
