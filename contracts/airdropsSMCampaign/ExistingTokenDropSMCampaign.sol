@@ -10,43 +10,45 @@ import "../interfaces/AirdropMerkleProof.sol";
 import "../interfaces/IAirBroFactory.sol";
 
 /// @title Airdrops existing ERC20 tokens for airdrop recipients
-contract ExistingTokenDropSMCampaign is AirdropInfoSMCampaign, AirdropMerkleProof, Ownable {
+contract ExistingTokenDropSMCampaign is AirdropInfoSMCampaign, AirdropMerkleProof, Ownable  {
+    using SafeERC20 for IERC20;
+
     ERC1155 public immutable rewardedNft;
     IERC20 public immutable rewardToken;
     uint256 public immutable tokensPerClaim;
+    uint256 public immutable airdropDuration;
+    uint256 public immutable airdropStartTime;
+    uint256 public immutable airdropFinishTime;
     uint256 public immutable totalAirdropAmount;
+    address public immutable airBroFactorySMCampaignAddress;
 
     bool public airdropFunded;
     uint256 public airdropFundBlockTimestamp;
     address internal airdropFundingHolder;
-    address public immutable airBroFactorySMCampaignAddress;
+
+    // The root hash of the Merle Tree we previously generated in our JavaScript code. Remember
+    // to provide this as a bytes32 type and not string. Ox should be prepended.
+    bytes32 public merkleRoot;
+
+    mapping(address => bool) public hasClaimed;
+
 
     event Claimed(address indexed claimer);
     event AirdropFunded(address contractAddress);
     event MerkleRootChanged(bytes32 merkleRoot);
 
-    error NotOwner();
     error AirdropStillInProgress();
     error AlreadyRedeemed();
     error AlreadyFunded();
     error InsufficientAmount();
     error InsufficientLiquidity();
     error AirdropExpired();
-    error NotAdmin();
     error NotEligible();
-
-    mapping(address => bool) public hasClaimed;
-
-    // The root hash of the Merle Tree we previously generated in our JavaScript code. Remember
-    // to provide this as a bytes32 type and not string. Ox should be prepended.
-    bytes32 public merkleRoot;
-
-    uint256 public immutable airdropDuration;
-    uint256 public immutable airdropStartTime;
-    uint256 public immutable airdropFinishTime;
+    error Unauthorized();
+    
 
     modifier onlyAdmin() {
-        if (msg.sender != IAirBroFactory(airBroFactorySMCampaignAddress).admin()) revert NotAdmin();
+        if (msg.sender != IAirBroFactory(airBroFactorySMCampaignAddress).admin()) revert Unauthorized();
         _;
     }
 
@@ -77,34 +79,30 @@ contract ExistingTokenDropSMCampaign is AirdropInfoSMCampaign, AirdropMerkleProo
 
     /// @notice Allows the airdrop creator to provide funds for airdrop reward
     function fundAirdrop() external {
-        if (rewardToken.balanceOf(msg.sender) < totalAirdropAmount) revert InsufficientAmount();
         if (airdropFunded) revert AlreadyFunded();
-        rewardToken.transferFrom(msg.sender, address(this), totalAirdropAmount);
+        
         airdropFunded = true;
         airdropFundBlockTimestamp = block.timestamp;
         airdropFundingHolder = msg.sender;
+
+        rewardToken.safeTransferFrom(msg.sender, address(this), totalAirdropAmount);
         emit AirdropFunded(address(this));
     }
 
     /// @notice Allows the airdrop creator to withdraw back his funds after the airdrop has finished
     function withdrawAirdropFunds() external {
-        if (airdropFundingHolder != msg.sender) revert NotOwner();
+        if (airdropFundingHolder != msg.sender) revert Unauthorized();
         if (block.timestamp < airdropFinishTime) revert AirdropStillInProgress();
 
-        rewardToken.transfer(msg.sender, rewardToken.balanceOf(address(this)));
+        rewardToken.safeTransfer(msg.sender, rewardToken.balanceOf(address(this)));
     }
 
     /// @notice Allows the NFT holder to claim his ERC20 airdrop
     /// @param _merkleProof The proof a user can claim a reward
     function claim(bytes32[] calldata _merkleProof) external {
-        if (hasClaimed[msg.sender]) revert AlreadyRedeemed();
-        if (rewardToken.balanceOf(address(this)) < tokensPerClaim) revert InsufficientLiquidity();
-        if (block.timestamp > airdropFinishTime) revert AirdropExpired();
-
-        bool isEligible = checkProof(_merkleProof, merkleRoot);
-        if (isEligible) {
+        if (isEligibleForReward(_merkleProof)) {
             hasClaimed[msg.sender] = true;
-            rewardToken.transfer(msg.sender, tokensPerClaim);
+            rewardToken.safeTransfer(msg.sender, tokensPerClaim);
             emit Claimed(msg.sender);
         } else {
             revert NotEligible();
@@ -123,24 +121,26 @@ contract ExistingTokenDropSMCampaign is AirdropInfoSMCampaign, AirdropMerkleProo
         if (hasClaimed[msg.sender]) revert AlreadyRedeemed();
         if (block.timestamp > airdropFinishTime) revert AirdropExpired();
         if (rewardToken.balanceOf(address(this)) < tokensPerClaim) revert InsufficientLiquidity();
-        bool isEligible = checkProof(_merkleProof, merkleRoot);
-        return isEligible;
+        return checkProof(_merkleProof, merkleRoot);
     }
 
-    /// @notice Returns the amount(number) of airdrop tokens to claim
+    /// @notice Returns the amount of airdrop tokens a user can claim
     /// @param _merkleProof The proof a user can claim a reward
     function getAirdropAmount(bytes32[] calldata _merkleProof) external view returns (uint256) {
         return isEligibleForReward(_merkleProof) ? tokensPerClaim : 0;
     }
 
+    /// @notice Returns the airdrop ending timestamp in seconds
     function getAirdropFinishTime() external view override returns (uint256) {
         return airdropFinishTime;
     }
 
+    /// @notice Returns the airdrop duration in seconds
     function getAirdropDuration() external view override returns (uint256) {
         return airdropDuration;
     }
 
+    /// @notice Returns the airdrop starting timestamp in seconds
     function getAirdropStartTime() external view override returns (uint256) {
         return airdropStartTime;
     }

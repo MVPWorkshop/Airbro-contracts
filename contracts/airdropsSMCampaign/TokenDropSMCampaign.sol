@@ -12,29 +12,27 @@ import "../interfaces/IAirBroFactory.sol";
 contract TokenDropSMCampaign is ERC20, AirdropInfoSMCampaign, AirdropMerkleProof, Ownable {
     IERC1155 public immutable rewardedNft;
     uint256 public immutable tokensPerClaim;
+    uint256 public immutable airdropDuration;
+    uint256 public immutable airdropStartTime;
+    uint256 public immutable airdropFinishTime;
     address public immutable airBroFactoryAddress;
-
-    event Claimed(address indexed claimer);
-    event MerkleRootChanged(bytes32 merkleRoot);
-
-    error NotOwner();
-    error AlreadyRedeemed();
-    error AirdropExpired();
-    error NotAdmin();
-    error NotEligible();
-
-    mapping(address => bool) public hasClaimed;
 
     // The root hash of the Merle Tree we previously generated in our JavaScript code. Remember
     // to provide this as a bytes32 type and not string. Ox should be prepended.
     bytes32 public merkleRoot;
 
-    uint256 public immutable airdropDuration;
-    uint256 public immutable airdropStartTime;
-    uint256 public immutable airdropFinishTime;
+    mapping(address => bool) public hasClaimed;
+
+    event Claimed(address indexed claimer);
+    event MerkleRootChanged(bytes32 merkleRoot);
+
+    error AlreadyRedeemed();
+    error AirdropExpired();
+    error NotEligible();
+    error Unauthorized();
 
     modifier onlyAdmin() {
-        if (msg.sender != IAirBroFactory(airBroFactoryAddress).admin()) revert NotAdmin();
+        if (msg.sender != IAirBroFactory(airBroFactoryAddress).admin()) revert Unauthorized();
         _;
     }
 
@@ -64,16 +62,10 @@ contract TokenDropSMCampaign is ERC20, AirdropInfoSMCampaign, AirdropMerkleProof
     /// @notice Sets the merkleRoot - can only be done if admin (different from the contract owner)
     /// @param _merkleProof The proof a user can claim a reward
     function claim(bytes32[] calldata _merkleProof) external {
-        if (hasClaimed[msg.sender]) revert AlreadyRedeemed();
-        if (block.timestamp > airdropFinishTime) revert AirdropExpired();
-
-        bool isEligible = checkProof(_merkleProof, merkleRoot);
-
-        if (isEligible) {
+        if (isEligibleForReward(_merkleProof)) {
             hasClaimed[msg.sender] = true;
-            emit Claimed(msg.sender);
-
             _mint(msg.sender, tokensPerClaim);
+            emit Claimed(msg.sender);
         } else {
             revert NotEligible();
         }
@@ -89,24 +81,26 @@ contract TokenDropSMCampaign is ERC20, AirdropInfoSMCampaign, AirdropMerkleProof
     function isEligibleForReward(bytes32[] calldata _merkleProof) public view returns (bool) {
         if (hasClaimed[msg.sender]) revert AlreadyRedeemed();
         if (block.timestamp > airdropFinishTime) revert AirdropExpired();
-        bool isEligible = checkProof(_merkleProof, merkleRoot);
-        return isEligible;
+        return checkProof(_merkleProof, merkleRoot);
     }
 
-    /// @notice Returns the amount(number) of airdrop tokens to claim
+    /// @notice Returns the amount of airdrop tokens a user can claim
     /// @param _merkleProof The proof a user can claim a reward
     function getAirdropAmount(bytes32[] calldata _merkleProof) external view returns (uint256) {
         return isEligibleForReward(_merkleProof) ? tokensPerClaim : 0;
     }
 
+    /// @notice Returns the airdrop ending timestamp in seconds
     function getAirdropFinishTime() external view override returns (uint256) {
         return airdropFinishTime;
     }
 
+    /// @notice Returns the airdrop duration in seconds
     function getAirdropDuration() external view override returns (uint256) {
         return airdropDuration;
     }
 
+    /// @notice Returns the airdrop starting timestamp in seconds
     function getAirdropStartTime() external view override returns (uint256) {
         return airdropStartTime;
     }
