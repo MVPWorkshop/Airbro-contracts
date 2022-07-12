@@ -14,37 +14,35 @@ contract ExistingTokenDrop is AirdropInfo, AirdropMerkleProof, Ownable {
     IERC20 public immutable rewardToken;
     uint256 public immutable tokensPerClaim;
     uint256 public immutable totalAirdropAmount;
-
-    bool public airdropFunded = false;
-    uint256 public airdropFundBlockTimestamp;
-    address internal airdropFundingHolder;
+    uint256 public immutable airdropDuration;
+    uint256 public immutable airdropStartTime;
+    uint256 public immutable airdropFinishTime;
     address public immutable airBroFactoryAddress;
 
-    event Claimed(uint256 indexed tokenId, address indexed claimer);
-    event AirdropFunded(address contractAddress);
-    event MerkleRootChanged(bytes32 merkleRoot);
-
-    error NotOwner();
-    error AirdropStillInProgress();
-    error AlreadyRedeemed();
-    error AlreadyFunded();
-    error InsufficientAmount();
-    error InsufficientLiquidity();
-    error AirdropExpired();
-    error NotAdmin();
-
-    mapping(uint256 => bool) public hasClaimed;
+    bool public airdropFunded;
+    uint256 public airdropFundBlockTimestamp;
+    address internal airdropFundingHolder;
 
     // The root hash of the Merle Tree we previously generated in our JavaScript code. Remember
     // to provide this as a bytes32 type and not string. Ox should be prepended.
     bytes32 public merkleRoot;
 
-    uint256 public immutable airdropDuration;
-    uint256 public immutable airdropStartTime;
-    uint256 public immutable airdropFinishTime;
+    mapping(uint256 => bool) public hasClaimed;
+
+    event Claimed(uint256 indexed tokenId, address indexed claimer);
+    event AirdropFunded(address contractAddress);
+    event MerkleRootChanged(bytes32 merkleRoot);
+
+    error AirdropStillInProgress();
+    error AlreadyRedeemed();
+    error AlreadyFunded();
+    error InsufficientAmount();
+    error InsufficientLiquidity(); // remove this ??
+    error AirdropExpired(); 
+    error Unauthorized();
 
     modifier onlyAdmin() {
-        if (msg.sender != IAirBroFactory(airBroFactoryAddress).admin()) revert NotAdmin();
+        if (msg.sender != IAirBroFactory(airBroFactoryAddress).admin()) revert Unauthorized();
         _;
     }
 
@@ -77,45 +75,54 @@ contract ExistingTokenDrop is AirdropInfo, AirdropMerkleProof, Ownable {
     function fundAirdrop() external {
         if (rewardToken.balanceOf(msg.sender) < totalAirdropAmount) revert InsufficientAmount();
         if (airdropFunded) revert AlreadyFunded();
-        rewardToken.transferFrom(msg.sender, address(this), totalAirdropAmount);
+
         airdropFunded = true;
         airdropFundBlockTimestamp = block.timestamp;
         airdropFundingHolder = msg.sender;
+
+        rewardToken.transferFrom(msg.sender, address(this), totalAirdropAmount);
         emit AirdropFunded(address(this));
     }
 
-    /// @notice Allows the airdrop creator to withdraw back his funds after the airdrop has finished
+    /// @notice Allows the airdrop creator to withdraw back the funds after the airdrop has finished
     function withdrawAirdropFunds() external {
-        if (airdropFundingHolder != msg.sender) revert NotOwner();
+        if (airdropFundingHolder != msg.sender) revert Unauthorized();
         if (block.timestamp < airdropFinishTime) revert AirdropStillInProgress();
+
         rewardToken.transfer(msg.sender, rewardToken.balanceOf(address(this)));
     }
 
-    /// @notice Allows the NFT holder to claim his ERC20 airdrop
+    /// @notice Allows the NFT holder to claim their ERC20 airdrop
+    /// @param tokenId is the rewarded NFT collections token ID
+    /// @param _merkleProof is the merkle proof that this user is eligible for claiming the ERC20 airdrop // ---- potentially remove this param !
     function claim(uint256 tokenId, bytes32[] calldata _merkleProof) external {
         if (hasClaimed[tokenId]) revert AlreadyRedeemed();
-        if (rewardToken.balanceOf(address(this)) < tokensPerClaim) revert InsufficientLiquidity();
-        if (rewardedNft.ownerOf(tokenId) != msg.sender) revert NotOwner();
+        if (rewardToken.balanceOf(address(this)) < tokensPerClaim) revert InsufficientLiquidity(); // remove this?
+        if (rewardedNft.ownerOf(tokenId) != msg.sender) revert Unauthorized();
         if (block.timestamp > airdropFinishTime) revert AirdropExpired();
 
         checkProof(_merkleProof, merkleRoot);
 
         hasClaimed[tokenId] = true;
+        rewardToken.transfer(msg.sender, tokensPerClaim);
+
         emit Claimed(tokenId, msg.sender);
 
-        rewardToken.transfer(msg.sender, tokensPerClaim);
     }
 
+    /// @notice Claim multiple ERC20 airdrops at once
+    /// @param tokenIds are the rewarded NFT collections token ID's
+    /// @param _merkleProof is the merkle proof that this user is eligible for claiming the ERC20 airdrops // --- potentially remove this param !
     function batchClaim(uint256[] memory tokenIds, bytes32[] calldata _merkleProof) external {
+        if (block.timestamp > airdropFinishTime) revert AirdropExpired();
         if (rewardToken.balanceOf(address(this)) < tokensPerClaim * tokenIds.length) revert InsufficientLiquidity();
-
         checkProof(_merkleProof, merkleRoot);
 
-        for (uint256 index = 0; index < tokenIds.length; index++) {
+        for (uint256 index = 0; index < tokenIds.length; index++) { // maybe unchecked for this ?
             uint256 tokenId = tokenIds[index];
 
             if (hasClaimed[tokenId]) revert AlreadyRedeemed();
-            if (rewardedNft.ownerOf(tokenId) != msg.sender) revert NotOwner();
+            if (rewardedNft.ownerOf(tokenId) != msg.sender) revert Unauthorized();
 
             hasClaimed[tokenId] = true;
             emit Claimed(tokenId, msg.sender);
@@ -124,33 +131,37 @@ contract ExistingTokenDrop is AirdropInfo, AirdropMerkleProof, Ownable {
         rewardToken.transfer(msg.sender, tokensPerClaim * tokenIds.length);
     }
 
-    //@notice Get the type of airdrop, it's either ERC20, ERC721, ERC1155
+    /// @notice Get the type of airdrop, it's either ERC20, ERC721, ERC1155
     function getAirdropType() external pure override returns (string memory) {
         return "ERC20";
     }
 
-    //@notice Checks if the user is eligible for this airdrop
+    /// @notice Checks if the user is eligible for this airdrop
+    /// @param tokenId is the rewarded NFT token ID
     function isEligibleForReward(uint256 tokenId) external view returns (bool) {
+        if (block.timestamp > airdropFinishTime) revert AirdropExpired();
         if (hasClaimed[tokenId]) revert AlreadyRedeemed();
         if (rewardToken.balanceOf(address(this)) < tokensPerClaim) revert InsufficientLiquidity();
-        if (rewardedNft.ownerOf(tokenId) != msg.sender) revert NotOwner();
+        if (rewardedNft.ownerOf(tokenId) != msg.sender) revert Unauthorized();
         return true;
     }
 
-    //@notice Returns the amount(number) of airdrop tokens to claim
-    //@param tokenId is the rewarded NFT collections token ID
+    /// @notice Returns the amount of airdrop tokens a user can claim
     function getAirdropAmount() external view returns (uint256) {
         return rewardedNft.balanceOf(msg.sender) * tokensPerClaim;
     }
 
+    /// @notice Returns the airdrop ending timestamp in seconds
     function getAirdropFinishTime() external view override returns (uint256) {
         return airdropFinishTime;
     }
 
+    /// @notice Returns the airdrop duration in seconds
     function getAirdropDuration() external view override returns (uint256) {
         return airdropDuration;
     }
 
+    /// @notice Returns the airdrop starting timestamp in seconds
     function getAirdropStartTime() external view override returns (uint256) {
         return airdropStartTime;
     }

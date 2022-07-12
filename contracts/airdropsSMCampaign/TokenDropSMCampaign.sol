@@ -59,7 +59,7 @@ contract TokenDropSMCampaign is ERC20, AirdropInfoSMCampaign, AirdropMerkleProof
         emit MerkleRootChanged(_merkleRoot);
     }
 
-    /// @notice Sets the merkleRoot - can only be done if admin (different from the contract owner)
+    /// @notice Allows an eligible user to claim their ERC20 airdrop
     /// @param _merkleProof The proof a user can claim a reward
     function claim(bytes32[] calldata _merkleProof) external {
         if (isEligibleForReward(_merkleProof)) {

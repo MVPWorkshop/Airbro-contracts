@@ -77,7 +77,7 @@ contract ExistingTokenDropSMCampaign is AirdropInfoSMCampaign, AirdropMerkleProo
         emit MerkleRootChanged(_merkleRoot);
     }
 
-    /// @notice Allows the airdrop creator to provide funds for airdrop reward
+    /// @notice Allows the airdrop creator to provide funds for the airdrop reward
     function fundAirdrop() external {
         if (airdropFunded) revert AlreadyFunded();
         
@@ -89,7 +89,7 @@ contract ExistingTokenDropSMCampaign is AirdropInfoSMCampaign, AirdropMerkleProo
         emit AirdropFunded(address(this));
     }
 
-    /// @notice Allows the airdrop creator to withdraw back his funds after the airdrop has finished
+    /// @notice Allows the airdrop creator to withdraw back the funds after the airdrop has finished
     function withdrawAirdropFunds() external {
         if (airdropFundingHolder != msg.sender) revert Unauthorized();
         if (block.timestamp < airdropFinishTime) revert AirdropStillInProgress();
@@ -97,8 +97,8 @@ contract ExistingTokenDropSMCampaign is AirdropInfoSMCampaign, AirdropMerkleProo
         rewardToken.safeTransfer(msg.sender, rewardToken.balanceOf(address(this)));
     }
 
-    /// @notice Allows the NFT holder to claim his ERC20 airdrop
-    /// @param _merkleProof The proof a user can claim a reward
+    /// @notice Allows eligible users to claim their ERC20 airdrop
+    /// @param _merkleProof is the merkle proof that this user is eligible for claiming the ERC20 airdrop
     function claim(bytes32[] calldata _merkleProof) external {
         if (isEligibleForReward(_merkleProof)) {
             hasClaimed[msg.sender] = true;
@@ -108,7 +108,6 @@ contract ExistingTokenDropSMCampaign is AirdropInfoSMCampaign, AirdropMerkleProo
             revert NotEligible();
         }
     }
-
 
     /// @notice Get the type of airdrop, it's either ERC20, ERC721, ERC1155
     function getAirdropType() external pure override returns (string memory) {
