@@ -3,26 +3,16 @@ pragma solidity ^0.8.14;
 
 import "./airdrops/TokenDrop.sol";
 import "./airdrops/ExistingTokenDrop.sol";
-//import "./NFTDrop.sol";
 import "./airdrops/Existing1155NftDrop.sol";
 
 /// @title Airbro - NFT airdrop tool factory contract
 contract AirbroFactory {
     // index of deployed airdrop contracts
     address[] public airdrops;
-    uint256 public totalAirdropsCount = 0;
-    address public admin = 0xF4b5bFB92dD4E6D529476bCab28A65bb6B32EFb3;
+    uint256 public totalAirdropsCount;
 
     event NewAirdrop(address indexed rewardedNftCollection, address indexed airdropContract, address indexed airdropCreator);
-    event AdminChanged(address indexed adminAddress);
-
-    error NotAdmin();
-
-    modifier onlyAdmin() {
-        if (msg.sender != admin) revert NotAdmin();
-        _;
-    }
-
+    
     constructor() {}
 
     /// @notice Creates a new airdrop ERC20 claim contract for specific NFT collection holders
@@ -39,12 +29,11 @@ contract AirbroFactory {
             tokensPerClaim,
             newTokenName,
             newTokenSymbol,
-            airdropDuration,
-            address(this) // airBroFactory contract address -> used for getting back admin contract address in airdrop contracts
+            airdropDuration
         );
 
         airdrops.push(address(tokenDropContract));
-        totalAirdropsCount++;
+        unchecked { totalAirdropsCount++; }
         emit NewAirdrop(rewardedNftCollection, address(tokenDropContract), msg.sender);
     }
 
@@ -65,41 +54,12 @@ contract AirbroFactory {
             tokensPerClaim,
             rewardToken,
             totalAirdropAmount,
-            airdropDuration,
-            address(this) // airBroFactory contract address -> used for getting back admin contract address in airdrop contracts
+            airdropDuration
         );
         airdrops.push(address(tokenDropContract));
-        totalAirdropsCount++;
+        unchecked { totalAirdropsCount++; }
         emit NewAirdrop(rewardedNftCollection, address(tokenDropContract), msg.sender);
     }
-
-    /// @notice Creates a new airdrop ERC721 claim contract for specific NFT collection holders
-    /// @param rewardedNftCollection - Rewarded NFT collection address
-    /// @param newNftCollectionName - new ERC721 name
-    /// @param newNftCollectionSymbol - new ERC721 symbol
-    /// @param baseUri - new ERC721 baseUri
-    //    function dropNftsToNftHolders(
-    //        address rewardedNftCollection,
-    //        string memory newNftCollectionName,
-    //        string memory newNftCollectionSymbol,
-    //        uint256 newNftSupply,
-    //        string memory baseUri,
-    //        uint256 aidropDuration
-    //        bytes32 merkleRootHash
-    //    ) external {
-    //        NFTDrop nftDropContract = new NFTDrop(
-    //            rewardedNftCollection,
-    //            newNftSupply,
-    //            newNftCollectionName,
-    //            newNftCollectionSymbol,
-    //            baseUri,
-    //            aidropDuration,
-    //            merkleRootHash
-    //        );
-    //        airdrops.push(address(nftDropContract));
-    //        totalAirdropsCount++;
-    //        emit NewAirdrop(rewardedNftCollection, address(nftDropContract), msg.sender);
-    //    }
 
     /// @notice Creates a new airdrop claim contract for specific NFT collection holders
     /// @param rewardedNftCollection - Rewarded NFT collection address
@@ -121,18 +81,11 @@ contract AirbroFactory {
             tokensPerClaim,
             tokenId,
             totalAirdropAmount,
-            airdropDuration,
-            address(this) // airBroFactory contract address -> used for getting back admin contract address in airdrop contracts
+            airdropDuration
         );
         airdrops.push(address(tokenDropContract));
-        totalAirdropsCount++;
+        unchecked { totalAirdropsCount++; }
         emit NewAirdrop(rewardedNftCollection, address(tokenDropContract), msg.sender);
     }
 
-    /// @notice Updates the address of the admin variable
-    /// @param _newAdmin - New address for the admin of this contract, and the address for all newly created airdrop contracts
-    function changeAdmin(address _newAdmin) external onlyAdmin {
-        admin = _newAdmin;
-        emit AdminChanged(_newAdmin);
-    }
 }

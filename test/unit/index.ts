@@ -15,19 +15,13 @@ import {
   unitTokenDropSMCampaignFixture,
 } from "../shared/fixtures";
 
-import { shouldBeCorrectAdmin } from "./AirbroFactory/AirbroFactoryShouldBeCorrectAdmin.spec";
-import { shouldChangeAdminAddress } from "./AirbroFactory/AirbroFactoryShouldChangeAdmin.spec";
+import { shouldDeploy } from "./AirbroFactory/AirbroFactoryShouldDeploy.spec";
 
 import { TokenDropShouldDeploy } from "./airdrops/TokenDrop/TokenDropShouldBeDeployed.spec";
-import { TokenDropShouldSetMerkleRoot } from "./airdrops/TokenDrop/TokenDropShouldSetMerkleRoot.spec";
 import { NFTDropShouldDeploy } from "./airdrops/NFTDrop/NFTDropShouldBeDeployed.spec";
-import { NFTDropShouldSetMerkleRoot } from "./airdrops/NFTDrop/NFTDropShouldSetMerkleRoot.spec";
 import { ItemNFTDropShouldDeploy } from "./airdrops/ItemNFTDrop/ItemNFTDropShouldBeDeployed.spec";
-import { ItemNFTDropShouldSetMerkleRoot } from "./airdrops/ItemNFTDrop/ItemNFTDropShouldSetMerkleRoot.spec";
 import { ExistingTokenDropShouldDeploy } from "./airdrops/ExistingTokenDrop/ExistingTokenDropShouldBeDeployed.spec";
-import { Existing1155NftDropShouldSetMerkleRoot } from "./airdrops/Existing1155NftDrop/Existing1155NftDropShouldSetMerkleRoot.spec";
 import { Existing1155NftDropShouldDeploy } from "./airdrops/Existing1155NftDrop/Existing1155NftDropShouldBeDeployed.spec";
-import { ExistingTokenDropShouldSetMerkleRoot } from "./airdrops/ExistingTokenDrop/ExistingTokenDropShouldSetMerkleRoot.spec";
 
 import { AirbroFactorySMCampaignShouldBeCorrectAdmin } from "./AirbroFactorySMCampaign/AirbroFactorySMCampaignShouldBeCorrectAdmin.spec";
 import { AirbroFactorySMCampaignShouldChangeAdminAddress } from "./AirbroFactorySMCampaign/AirbroFactorySMCampaignShouldChangeAdmin.spec";
@@ -78,8 +72,7 @@ describe("Unit tests", function () {
         this.airbroFactory = airbroFactory;
       });
 
-      shouldBeCorrectAdmin();
-      shouldChangeAdminAddress();
+      shouldDeploy();
     });
 
     describe("Existing1155NftDrop", () => {
@@ -92,7 +85,7 @@ describe("Unit tests", function () {
       });
 
       Existing1155NftDropShouldDeploy();
-      Existing1155NftDropShouldSetMerkleRoot();
+      
     });
 
     describe("ExistingTokenDrop", () => {
@@ -113,7 +106,7 @@ describe("Unit tests", function () {
       });
 
       ExistingTokenDropShouldDeploy();
-      ExistingTokenDropShouldSetMerkleRoot();
+      
     });
 
     describe("ItemNFTDrop", () => {
@@ -126,7 +119,7 @@ describe("Unit tests", function () {
       });
 
       ItemNFTDropShouldDeploy();
-      ItemNFTDropShouldSetMerkleRoot();
+      
     });
 
     describe("NFTDrop", () => {
@@ -139,7 +132,7 @@ describe("Unit tests", function () {
       });
 
       NFTDropShouldDeploy();
-      NFTDropShouldSetMerkleRoot();
+      
     });
 
     describe("TokenDrop", () => {
@@ -154,7 +147,7 @@ describe("Unit tests", function () {
       });
 
       TokenDropShouldDeploy();
-      TokenDropShouldSetMerkleRoot();
+      
     });
   });
 

@@ -4,7 +4,7 @@ import { ethers } from "hardhat";
 export function AirbroFactorySMCampaignShouldChangeAdminInAllAirDrops(): void {
   const bytes32MerkleRootHash = "0x0000000000000000000000000000000000000000000000000000000000000000";
 
-  it("change admin inheritance - TokenDrop", async function () {
+  it("change admin inheritance - TokenDropSMCampaign", async function () {
     // naming of ERC20 to be created
     const newTokenName: string = "Wakanda Coin";
     const newTokenSymbol: string = "WKND";
@@ -21,7 +21,7 @@ export function AirbroFactorySMCampaignShouldChangeAdminInAllAirDrops(): void {
     ).to.emit(this.airbroFactorySMCampaign, "NewAirdrop");
 
     // attaching deployed airdrop contract to this test
-    const newDropFactory = await ethers.getContractFactory("TokenDrop");
+    const newDropFactory = await ethers.getContractFactory("TokenDropSMCampaign");
     const tokenDropContract = newDropFactory.attach(await this.airbroFactorySMCampaign.airdrops(0));
 
     // checking if initial admin address is able to set MerkleRootHash
@@ -41,7 +41,7 @@ export function AirbroFactorySMCampaignShouldChangeAdminInAllAirDrops(): void {
       .withArgs(bytes32MerkleRootHash);
   });
 
-  it("change admin inheritance - ExistingTokenDrop", async function () {
+  it("change admin inheritance - ExistingTokenDropSMCampaign", async function () {
     const totalAirdropAmount = ethers.utils.parseEther("1000");
 
     await this.testToken.connect(this.signers.deployer).mint(this.signers.deployer.address, totalAirdropAmount);
@@ -58,7 +58,7 @@ export function AirbroFactorySMCampaignShouldChangeAdminInAllAirDrops(): void {
     ).to.emit(this.airbroFactorySMCampaign, "NewAirdrop");
 
     // attaching deployed airdrop contract to this test
-    const existingDropFactory = await ethers.getContractFactory("ExistingTokenDrop");
+    const existingDropFactory = await ethers.getContractFactory("ExistingTokenDropSMCampaign");
     const tokenDropContract = existingDropFactory.attach(await this.airbroFactorySMCampaign.airdrops(0));
 
     // checking if initial admin address is able to set MerkleRootHash
@@ -78,7 +78,7 @@ export function AirbroFactorySMCampaignShouldChangeAdminInAllAirDrops(): void {
       .withArgs(bytes32MerkleRootHash);
   });
 
-  it("change admin inheritance - Existing1155NftDrop", async function () {
+  it("change admin inheritance - Existing1155NftDropSMCampaign", async function () {
     const idOf1155: string = "nftAirdrop";
     const amounOft1155: number = 1000;
     const tokensPerClaim: number = 1;
@@ -100,7 +100,7 @@ export function AirbroFactorySMCampaignShouldChangeAdminInAllAirDrops(): void {
     ).to.emit(this.airbroFactorySMCampaign, "NewAirdrop");
 
     // attaching deployed airdrop contract to this test
-    const existing1155NftDropFactory = await ethers.getContractFactory("Existing1155NftDrop");
+    const existing1155NftDropFactory = await ethers.getContractFactory("Existing1155NftDropSMCampaign");
     const existing1155NftDropContract = existing1155NftDropFactory.attach(await this.airbroFactorySMCampaign.airdrops(0));
 
     // checking if initial admin address is able to set MerkleRootHash

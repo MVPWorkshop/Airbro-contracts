@@ -50,12 +50,5 @@ export const ExistingTokenDropShouldDeploy = (): void => {
       expect(await this.existingTokenDrop.getAirdropType()).to.be.equal("ERC20");
     });
 
-    it("should have merkleRoot set to 0x00", async function () {
-      expect(await this.existingTokenDrop.merkleRoot()).to.be.equal("0x0000000000000000000000000000000000000000000000000000000000000000");
-    });
-
-    it("should set airBroFactoryAddress to a the airbroFactory address", async function () {
-      expect(await this.existingTokenDrop.airBroFactoryAddress()).to.be.equal(this.mocks.mockAirBroFactory.address);
-    });
   });
 };

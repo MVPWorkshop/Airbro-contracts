@@ -13,61 +13,38 @@ import "../interfaces/IAirBroFactory.sol";
 contract TokenDrop is ERC20, AirdropInfo, AirdropMerkleProof, Ownable {
     IERC721 public immutable rewardedNft;
     uint256 public immutable tokensPerClaim;
-    address public immutable airBroFactoryAddress;
     uint256 public immutable airdropDuration;
     uint256 public immutable airdropStartTime;
     uint256 public immutable airdropFinishTime;
 
-    // The root hash of the Merle Tree we previously generated in our JavaScript code. Remember
-    // to provide this as a bytes32 type and not string. Ox should be prepended.
-    bytes32 public merkleRoot;
-
     mapping(uint256 => bool) public hasClaimed;
 
     event Claimed(uint256 indexed tokenId, address indexed claimer);
-    event MerkleRootChanged(bytes32 merkleRoot);
 
     error AlreadyRedeemed();
     error AirdropExpired();
     error Unauthorized();
-
-    modifier onlyAdmin() {
-        if (msg.sender != IAirBroFactory(airBroFactoryAddress).admin()) revert Unauthorized();
-        _;
-    }
-
+  
     constructor(
         address _rewardedNft,
         uint256 _tokensPerClaim,
         string memory name,
         string memory symbol,
-        uint256 _airdropDuration,
-        address _airBroFactoryAddress
+        uint256 _airdropDuration
     ) ERC20(name, symbol, 18) {
         rewardedNft = IERC721(_rewardedNft);
         tokensPerClaim = _tokensPerClaim;
         airdropDuration = _airdropDuration * 1 days;
         airdropStartTime = block.timestamp;
         airdropFinishTime = block.timestamp + airdropDuration;
-        airBroFactoryAddress = _airBroFactoryAddress;
-    }
-
-    /// @notice Sets the merkleRoot - can only be done if admin (different from the contract owner)
-    /// @param _merkleRoot - The root hash of the Merle Tree
-    function setMerkleRoot(bytes32 _merkleRoot) external onlyAdmin {
-        merkleRoot = _merkleRoot;
-        emit MerkleRootChanged(_merkleRoot);
     }
 
     /// @notice Allows the NFT holder to claim their ERC20 airdrop
     /// @param tokenId is the rewarded NFT collections token ID
-    /// @param _merkleProof is the merkle proof that this user is eligible for claiming the ERC20 airdrop // ---- potentially remove this param !
-    function claim(uint256 tokenId, bytes32[] calldata _merkleProof) external {
+    function claim(uint256 tokenId) external {
         if (hasClaimed[tokenId]) revert AlreadyRedeemed();
         if (rewardedNft.ownerOf(tokenId) != msg.sender) revert Unauthorized();
         if (block.timestamp > airdropFinishTime) revert AirdropExpired();
-
-        checkProof(_merkleProof, merkleRoot);
 
         hasClaimed[tokenId] = true;
         emit Claimed(tokenId, msg.sender);
@@ -77,10 +54,8 @@ contract TokenDrop is ERC20, AirdropInfo, AirdropMerkleProof, Ownable {
 
     /// @notice Claim multiple ERC20 airdrops at once
     /// @param tokenIds are the rewarded NFT collections token ID's
-    /// @param _merkleProof is the merkle proof that this user is eligible for claiming the ERC20 airdrops // ---- potentially remove this param !
-    function batchClaim(uint256[] memory tokenIds, bytes32[] calldata _merkleProof) external {
+    function batchClaim(uint256[] memory tokenIds) external {
         if (block.timestamp > airdropFinishTime) revert AirdropExpired();
-        checkProof(_merkleProof, merkleRoot);
 
         for (uint256 index = 0; index < tokenIds.length; index++) {
             uint256 tokenId = tokenIds[index];
@@ -103,7 +78,7 @@ contract TokenDrop is ERC20, AirdropInfo, AirdropMerkleProof, Ownable {
     /// @notice Checks if the user is eligible for this airdrop
     /// @param tokenId is the rewarded NFT token ID
     function isEligibleForReward(uint256 tokenId) external view returns (bool) {
-        if (block.timestamp > airdropFinishTime) revert AirdropExpired(); // should I add this here ? Or just have one check in both claim methods?
+        if (block.timestamp > airdropFinishTime) revert AirdropExpired();
         if (hasClaimed[tokenId]) revert AlreadyRedeemed();
         if (rewardedNft.ownerOf(tokenId) != msg.sender) revert Unauthorized();
         return true;

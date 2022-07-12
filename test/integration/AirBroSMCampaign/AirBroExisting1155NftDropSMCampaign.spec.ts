@@ -22,13 +22,13 @@ export function AirbroFactorySMCampaignShouldAirdropExisting1155NftDropSMCampaig
 
     // minting the admin an amount of 2000 1155 nft's
     const idOf1155: string = "nftAirdrop";
-    const fullAmountof1155: number = 2000;
-    const amounOft1155: number = 1000;
+    const fullAmountOf1155: number = 2000;
+    const amountOf1155: number = 1000;
     const tokenId: number = 1; // token id set to 1
 
-    let leftoverNftAmount: number = amounOft1155;
+    let leftoverNftAmount: number = amountOf1155;
 
-    await this.test1155NftCollection.connect(this.signers.deployer).mint(idOf1155, fullAmountof1155); // deployer minting 2000 nfts
+    await this.test1155NftCollection.connect(this.signers.deployer).mint(idOf1155, fullAmountOf1155); // deployer minting 2000 nfts
     const adminBalance1155 = await this.test1155NftCollection.balanceOf(this.signers.deployer.address, tokenId);
     expect(adminBalance1155).to.be.equal(2000);
 
@@ -44,7 +44,7 @@ export function AirbroFactorySMCampaignShouldAirdropExisting1155NftDropSMCampaig
           this.test1155NftCollection.address,
           tokensPerClaim,
           tokenId,
-          amounOft1155,
+          amountOf1155,
           durationInDays,
         ),
     ).to.emit(this.airbroFactorySMCampaign, "NewAirdrop");
@@ -88,8 +88,8 @@ export function AirbroFactorySMCampaignShouldAirdropExisting1155NftDropSMCampaig
     
     await expect(dropContract.fundAirdrop()).to.be.revertedWith("AlreadyFunded");
 
-    expect(await this.test1155NftCollection.balanceOf(dropContract.address, tokenId)).to.be.equal(1000); //our airdrop contract now has 1000 x nft1155 of id 1
-    expect(await this.test1155NftCollection.balanceOf(this.signers.deployer.address, tokenId)).to.be.equal(1000);
+    expect(await this.test1155NftCollection.balanceOf(dropContract.address, tokenId)).to.be.equal(amountOf1155); //our airdrop contract now has 1000 x nft1155 of id 1
+    expect(await this.test1155NftCollection.balanceOf(this.signers.deployer.address, tokenId)).to.be.equal(fullAmountOf1155 - amountOf1155);
 
     //create merkleRootHash
     const whitelisted = [this.signers.alice.address, this.signers.bob.address, this.signers.jerry.address];

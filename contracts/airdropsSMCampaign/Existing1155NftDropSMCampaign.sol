@@ -17,10 +17,19 @@ contract Existing1155NftDropSMCampaign is AirdropInfoSMCampaign, AirdropMerklePr
     uint256 public immutable rewardTokenId;
     uint256 public immutable tokensPerClaim;
     uint256 public immutable totalAirdropAmount;
+    uint256 public immutable airdropDuration;
+    uint256 public immutable airdropStartTime;
+    uint256 public immutable airdropFinishTime;
 
     uint256 public airdropFundBlockTimestamp;
     bool public airdropFunded;
+    
     address internal airdropFundingHolder;
+
+    mapping(address => bool) public hasClaimed;
+
+    /// @notice The root hash of the Merle Tree previously generated offchain when the airdrop concludes.
+    bytes32 public merkleRoot;
 
     event Claimed(address indexed claimer);
     event AirdropFunded(address contractAddress);
@@ -30,19 +39,11 @@ contract Existing1155NftDropSMCampaign is AirdropInfoSMCampaign, AirdropMerklePr
     error AirdropStillInProgress();
     error AlreadyRedeemed();
     error AlreadyFunded();
-    error InsufficientAmount();
     error InsufficientLiquidity();
     error AirdropExpired();
     error NotEligible();
 
-    mapping(address => bool) public hasClaimed;
 
-    /// @notice The root hash of the Merle Tree previously generated offchain when the airdrop concludes.
-    bytes32 public merkleRoot;
-
-    uint256 public immutable airdropDuration;
-    uint256 public immutable airdropStartTime;
-    uint256 public immutable airdropFinishTime;
 
     modifier onlyAdmin() {
         if (msg.sender != IAirBroFactory(airBroFactoryAddress).admin()) revert Unauthorized();

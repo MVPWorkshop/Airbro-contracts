@@ -22,16 +22,14 @@ contract ExistingTokenDropSMCampaign is AirdropInfoSMCampaign, AirdropMerkleProo
     uint256 public immutable totalAirdropAmount;
     address public immutable airBroFactorySMCampaignAddress;
 
-    bool public airdropFunded;
-    uint256 public airdropFundBlockTimestamp;
-    address internal airdropFundingHolder;
-
-    // The root hash of the Merle Tree we previously generated in our JavaScript code. Remember
-    // to provide this as a bytes32 type and not string. Ox should be prepended.
-    bytes32 public merkleRoot;
-
     mapping(address => bool) public hasClaimed;
 
+    address internal airdropFundingHolder;
+    uint256 public airdropFundBlockTimestamp;
+    bool public airdropFunded;
+
+    /// @notice The root hash of the Merle Tree previously generated offchain when the airdrop concludes.
+    bytes32 public merkleRoot;
 
     event Claimed(address indexed claimer);
     event AirdropFunded(address contractAddress);
@@ -46,7 +44,6 @@ contract ExistingTokenDropSMCampaign is AirdropInfoSMCampaign, AirdropMerkleProo
     error NotEligible();
     error Unauthorized();
     
-
     modifier onlyAdmin() {
         if (msg.sender != IAirBroFactory(airBroFactorySMCampaignAddress).admin()) revert Unauthorized();
         _;

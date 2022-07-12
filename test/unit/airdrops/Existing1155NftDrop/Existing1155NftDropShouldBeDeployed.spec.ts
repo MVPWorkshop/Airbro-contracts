@@ -28,12 +28,12 @@ export const Existing1155NftDropShouldDeploy = (): void => {
       expect(await this.existing1155NFTDrop.getAirdropType()).to.be.equal("ERC1155");
     });
 
-    it("should have merkleRoot set to 0x00", async function () {
-      expect(await this.existing1155NFTDrop.merkleRoot()).to.be.equal("0x0000000000000000000000000000000000000000000000000000000000000000");
-    });
+    // it("should have merkleRoot set to 0x00", async function () {
+    //   expect(await this.existing1155NFTDrop.merkleRoot()).to.be.equal("0x0000000000000000000000000000000000000000000000000000000000000000");
+    // });
 
-    it("should set airBroFactoryAddress to the airbroFactory address", async function () {
-      expect(await this.existing1155NFTDrop.airBroFactoryAddress()).to.be.equal(this.mocks.mockAirBroFactory.address);
-    });
+    // it("should set airBroFactoryAddress to the airbroFactory address", async function () {
+    //   expect(await this.existing1155NFTDrop.airBroFactoryAddress()).to.be.equal(this.mocks.mockAirBroFactory.address);
+    // });
   });
 };
