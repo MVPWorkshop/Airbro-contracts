@@ -13,7 +13,15 @@ import "../interfaces/IAirBroFactory.sol";
 contract TokenDrop is ERC20, AirdropInfo, AirdropMerkleProof, Ownable {
     IERC721 public immutable rewardedNft;
     uint256 public immutable tokensPerClaim;
+    uint256 public immutable airdropDuration;
+    uint256 public immutable airdropStartTime;
+    uint256 public immutable airdropFinishTime;
     address public immutable airBroFactoryAddress;
+
+    mapping(uint256 => bool) public hasClaimed;
+
+    /// @notice The root hash of the Merle Tree previously generated offchain when the airdrop concludes.
+    bytes32 public merkleRoot;
 
     event Claimed(uint256 indexed tokenId, address indexed claimer);
     event MerkleRootChanged(bytes32 merkleRoot);
@@ -22,17 +30,6 @@ contract TokenDrop is ERC20, AirdropInfo, AirdropMerkleProof, Ownable {
     error AlreadyRedeemed();
     error AirdropExpired();
     error NotAdmin();
-
-    uint256 public immutable airdropDuration;
-    uint256 public immutable airdropStartTime;
-    uint256 public immutable airdropFinishTime;
-    
-    mapping(uint256 => bool) public hasClaimed;
-
-    // The root hash of the Merle Tree we previously generated in our JavaScript code. Remember
-    // to provide this as a bytes32 type and not string. Ox should be prepended.
-    bytes32 public merkleRoot;
-
 
     modifier onlyAdmin() {
         if (msg.sender != IAirBroFactory(airBroFactoryAddress).admin()) revert NotAdmin();

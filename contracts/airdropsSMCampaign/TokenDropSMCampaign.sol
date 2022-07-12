@@ -17,11 +17,10 @@ contract TokenDropSMCampaign is ERC20, AirdropInfoSMCampaign, AirdropMerkleProof
     uint256 public immutable airdropFinishTime;
     address public immutable airBroFactoryAddress;
 
-    // The root hash of the Merle Tree we previously generated in our JavaScript code. Remember
-    // to provide this as a bytes32 type and not string. Ox should be prepended.
-    bytes32 public merkleRoot;
-
     mapping(address => bool) public hasClaimed;
+    
+    /// @notice The root hash of the Merle Tree previously generated offchain when the airdrop concludes.
+    bytes32 public merkleRoot;
 
     event Claimed(address indexed claimer);
     event MerkleRootChanged(bytes32 merkleRoot);

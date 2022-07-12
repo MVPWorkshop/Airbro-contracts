@@ -21,17 +21,16 @@ contract Existing1155NftDrop is AirdropInfo, AirdropMerkleProof, IERC1155Receive
     uint256 public immutable airdropStartTime;
     uint256 public immutable airdropFinishTime;
 
+    mapping(uint256 => bool) public hasClaimed;
+
     uint256 public airdropFundBlockTimestamp;
     bool public airdropFunded;
 
+    /// @notice The root hash of the Merle Tree previously generated offchain when the airdrop concludes.
+    bytes32 public merkleRoot;
+
     address internal airdropFundingHolder;
 
-    mapping(uint256 => bool) public hasClaimed;
-
-    // The root hash of the Merle Tree we previously generated in our JavaScript code. Remember
-    // to provide this as a bytes32 type and not string. Ox should be prepended.
-    bytes32 public merkleRoot;
-    
     event Claimed(uint256 indexed tokenId, address indexed claimer);
     event AirdropFunded(address contractAddress);
     event MerkleRootChanged(bytes32 merkleRoot);
@@ -43,8 +42,6 @@ contract Existing1155NftDrop is AirdropInfo, AirdropMerkleProof, IERC1155Receive
     error InsufficientAmount();
     error InsufficientLiquidity();
     error AirdropExpired();
-
-
 
     modifier onlyAdmin() {
         if (msg.sender != IAirBroFactory(airBroFactoryAddress).admin()) revert Unauthorized();
@@ -80,7 +77,6 @@ contract Existing1155NftDrop is AirdropInfo, AirdropMerkleProof, IERC1155Receive
 
     /// @notice Allows the airdrop creator to provide funds for airdrop reward
     function fundAirdrop() external {
-        if (rewardToken.balanceOf(msg.sender, rewardTokenId) < totalAirdropAmount) revert InsufficientAmount();
         if (airdropFunded) revert AlreadyFunded();
         rewardToken.safeTransferFrom(msg.sender, address(this), rewardTokenId, totalAirdropAmount, "");
         airdropFunded = true;

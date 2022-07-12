@@ -19,8 +19,13 @@ contract ExistingTokenDrop is AirdropInfo, AirdropMerkleProof, Ownable {
     uint256 public immutable airdropStartTime;
     uint256 public immutable airdropFinishTime;
 
+    mapping(uint256 => bool) public hasClaimed;
+
     uint256 public airdropFundBlockTimestamp;
     bool public airdropFunded;
+    
+    /// @notice The root hash of the Merle Tree previously generated offchain when the airdrop concludes.
+    bytes32 public merkleRoot;
 
     address internal airdropFundingHolder;
 
@@ -38,11 +43,6 @@ contract ExistingTokenDrop is AirdropInfo, AirdropMerkleProof, Ownable {
     error NotAdmin();
 
 
-    // The root hash of the Merle Tree we previously generated in our JavaScript code. Remember
-    // to provide this as a bytes32 type and not string. Ox should be prepended.
-    mapping(uint256 => bool) public hasClaimed;
-    
-    bytes32 public merkleRoot;
 
 
     modifier onlyAdmin() {

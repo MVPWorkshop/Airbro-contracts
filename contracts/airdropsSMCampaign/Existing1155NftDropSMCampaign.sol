@@ -23,13 +23,14 @@ contract Existing1155NftDropSMCampaign is AirdropInfoSMCampaign, AirdropMerklePr
 
     uint256 public airdropFundBlockTimestamp;
     bool public airdropFunded;
+    
     address internal airdropFundingHolder;
 
     mapping(address => bool) public hasClaimed;
 
     /// @notice The root hash of the Merle Tree previously generated offchain when the airdrop concludes.
     bytes32 public merkleRoot;
-    
+
     event Claimed(address indexed claimer);
     event AirdropFunded(address contractAddress);
     event MerkleRootChanged(bytes32 merkleRoot);
@@ -38,7 +39,6 @@ contract Existing1155NftDropSMCampaign is AirdropInfoSMCampaign, AirdropMerklePr
     error AirdropStillInProgress();
     error AlreadyRedeemed();
     error AlreadyFunded();
-    error InsufficientAmount();
     error InsufficientLiquidity();
     error AirdropExpired();
     error NotEligible();
