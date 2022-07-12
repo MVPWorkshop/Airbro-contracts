@@ -11,7 +11,7 @@ export const Existing1155NftDropShouldSetMerkleRoot = (): void => {
     });
     it("should revert merkleRoot change from non admin account", async function () {
       const nonOwnerAccount = this.signers.alice;
-      await expect(this.existing1155NFTDrop.connect(nonOwnerAccount).setMerkleRoot(bytes32MerkleRootHash)).to.be.revertedWith("NotAdmin");
+      await expect(this.existing1155NFTDrop.connect(nonOwnerAccount).setMerkleRoot(bytes32MerkleRootHash)).to.be.revertedWith("Unauthorized");
     });
   });
 };

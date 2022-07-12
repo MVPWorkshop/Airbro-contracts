@@ -16,37 +16,38 @@ contract Existing1155NftDrop is AirdropInfo, AirdropMerkleProof, IERC1155Receive
     uint256 public immutable rewardTokenId;
     uint256 public immutable tokensPerClaim;
     uint256 public immutable totalAirdropAmount;
-
-    bool public airdropFunded = false;
-    uint256 public airdropFundBlockTimestamp;
-    address internal airdropFundingHolder;
     address public immutable airBroFactoryAddress;
+    uint256 public immutable airdropDuration;
+    uint256 public immutable airdropStartTime;
+    uint256 public immutable airdropFinishTime;
 
-    event Claimed(uint256 indexed tokenId, address indexed claimer);
-    event AirdropFunded(address contractAddress);
-    event MerkleRootChanged(bytes32 merkleRoot);
+    uint256 public airdropFundBlockTimestamp;
+    bool public airdropFunded;
 
-    error NotOwner();
-    error AirdropStillInProgress();
-    error AlreadyRedeemed();
-    error AlreadyFunded();
-    error InsufficientAmount();
-    error InsufficientLiquidity();
-    error AirdropExpired();
-    error NotAdmin();
+    address internal airdropFundingHolder;
 
     mapping(uint256 => bool) public hasClaimed;
 
     // The root hash of the Merle Tree we previously generated in our JavaScript code. Remember
     // to provide this as a bytes32 type and not string. Ox should be prepended.
     bytes32 public merkleRoot;
+    
+    event Claimed(uint256 indexed tokenId, address indexed claimer);
+    event AirdropFunded(address contractAddress);
+    event MerkleRootChanged(bytes32 merkleRoot);
 
-    uint256 public immutable airdropDuration;
-    uint256 public immutable airdropStartTime;
-    uint256 public immutable airdropFinishTime;
+    error Unauthorized();
+    error AirdropStillInProgress();
+    error AlreadyRedeemed();
+    error AlreadyFunded();
+    error InsufficientAmount();
+    error InsufficientLiquidity();
+    error AirdropExpired();
+
+
 
     modifier onlyAdmin() {
-        if (msg.sender != IAirBroFactory(airBroFactoryAddress).admin()) revert NotAdmin();
+        if (msg.sender != IAirBroFactory(airBroFactoryAddress).admin()) revert Unauthorized();
         _;
     }
 
@@ -90,7 +91,7 @@ contract Existing1155NftDrop is AirdropInfo, AirdropMerkleProof, IERC1155Receive
 
     /// @notice Allows the airdrop creator to withdraw back his funds after the airdrop has finished
     function withdrawAirdropFunds() external {
-        if (airdropFundingHolder != msg.sender) revert NotOwner();
+        if (airdropFundingHolder != msg.sender) revert Unauthorized();
         if (block.timestamp < airdropFinishTime) revert AirdropStillInProgress();
         rewardToken.safeTransferFrom(address(this), msg.sender, rewardTokenId, rewardToken.balanceOf(address(this), rewardTokenId), "");
     }
@@ -99,7 +100,7 @@ contract Existing1155NftDrop is AirdropInfo, AirdropMerkleProof, IERC1155Receive
     function claim(uint256 tokenId, bytes32[] calldata _merkleProof) external {
         if (hasClaimed[tokenId]) revert AlreadyRedeemed();
         if (rewardToken.balanceOf(address(this), rewardTokenId) < tokensPerClaim) revert InsufficientLiquidity();
-        if (rewardedNft.ownerOf(tokenId) != msg.sender) revert NotOwner();
+        if (rewardedNft.ownerOf(tokenId) != msg.sender) revert Unauthorized();
         if (block.timestamp > airdropFinishTime) revert AirdropExpired();
 
         checkProof(_merkleProof, merkleRoot);
@@ -121,7 +122,7 @@ contract Existing1155NftDrop is AirdropInfo, AirdropMerkleProof, IERC1155Receive
             uint256 tokenId = tokenIds[index];
 
             if (hasClaimed[tokenId]) revert AlreadyRedeemed();
-            if (rewardedNft.ownerOf(tokenId) != msg.sender) revert NotOwner();
+            if (rewardedNft.ownerOf(tokenId) != msg.sender) revert Unauthorized();
 
             hasClaimed[tokenId] = true;
             emit Claimed(tokenId, msg.sender);

@@ -10,7 +10,7 @@ import "./airdrops/Existing1155NftDrop.sol";
 contract AirbroFactory {
     // index of deployed airdrop contracts
     address[] public airdrops;
-    uint256 public totalAirdropsCount = 0;
+    uint256 public totalAirdropsCount;
     address public admin = 0xF4b5bFB92dD4E6D529476bCab28A65bb6B32EFb3;
 
     event NewAirdrop(address indexed rewardedNftCollection, address indexed airdropContract, address indexed airdropCreator);
@@ -44,7 +44,7 @@ contract AirbroFactory {
         );
 
         airdrops.push(address(tokenDropContract));
-        totalAirdropsCount++;
+        unchecked { totalAirdropsCount++; }
         emit NewAirdrop(rewardedNftCollection, address(tokenDropContract), msg.sender);
     }
 
@@ -69,7 +69,7 @@ contract AirbroFactory {
             address(this) // airBroFactory contract address -> used for getting back admin contract address in airdrop contracts
         );
         airdrops.push(address(tokenDropContract));
-        totalAirdropsCount++;
+        unchecked { totalAirdropsCount++; }
         emit NewAirdrop(rewardedNftCollection, address(tokenDropContract), msg.sender);
     }
 
@@ -125,7 +125,7 @@ contract AirbroFactory {
             address(this) // airBroFactory contract address -> used for getting back admin contract address in airdrop contracts
         );
         airdrops.push(address(tokenDropContract));
-        totalAirdropsCount++;
+        unchecked { totalAirdropsCount++; }
         emit NewAirdrop(rewardedNftCollection, address(tokenDropContract), msg.sender);
     }
 

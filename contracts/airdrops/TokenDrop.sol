@@ -23,15 +23,16 @@ contract TokenDrop is ERC20, AirdropInfo, AirdropMerkleProof, Ownable {
     error AirdropExpired();
     error NotAdmin();
 
+    uint256 public immutable airdropDuration;
+    uint256 public immutable airdropStartTime;
+    uint256 public immutable airdropFinishTime;
+    
     mapping(uint256 => bool) public hasClaimed;
 
     // The root hash of the Merle Tree we previously generated in our JavaScript code. Remember
     // to provide this as a bytes32 type and not string. Ox should be prepended.
     bytes32 public merkleRoot;
 
-    uint256 public immutable airdropDuration;
-    uint256 public immutable airdropStartTime;
-    uint256 public immutable airdropFinishTime;
 
     modifier onlyAdmin() {
         if (msg.sender != IAirBroFactory(airBroFactoryAddress).admin()) revert NotAdmin();

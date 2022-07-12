@@ -75,7 +75,7 @@ export function shouldAirdropExisting1155NftDrop() {
 
     let leftoverNftAmount: number = amounOft1155;
 
-    await expect(dropContract.connect(this.signers.alice).claim(_bob_nft_id, [])).to.be.revertedWith("NotOwner"); // Alice trying to claim based on Bob's NFT id which she does not own
+    await expect(dropContract.connect(this.signers.alice).claim(_bob_nft_id, [])).to.be.revertedWith("Unauthorized"); // Alice trying to claim based on Bob's NFT id which she does not own
 
     await expect(dropContract.connect(this.signers.alice).claim(_alice_nft_id, [])).to.emit(dropContract, "Claimed");
     leftoverNftAmount = leftoverNftAmount - tokensPerClaim;
@@ -83,7 +83,7 @@ export function shouldAirdropExisting1155NftDrop() {
     await expect(dropContract.connect(this.signers.alice).claim(_alice_nft_id, [])).to.be.revertedWith("AlreadyRedeemed"); // error - 'ERC721: owner query for nonexistent token'
 
     // alice withdrawing 1155 on basis of owning nft with id of 1
-    await expect(dropContract.connect(this.signers.bob).claim(_admin_nft_id, [])).to.be.revertedWith("NotOwner"); // Bob trying to claim based on Admins's NFT id he does not own
+    await expect(dropContract.connect(this.signers.bob).claim(_admin_nft_id, [])).to.be.revertedWith("Unauthorized"); // Bob trying to claim based on Admins's NFT id he does not own
 
     await expect(dropContract.connect(this.signers.bob).claim(_bob_nft_id, [])).to.emit(dropContract, "Claimed");
     leftoverNftAmount = leftoverNftAmount - tokensPerClaim;
@@ -95,7 +95,7 @@ export function shouldAirdropExisting1155NftDrop() {
 
     await ethers.provider.send("evm_increaseTime", [oneWeekInSeconds]); // add one week worth of seconds
 
-    await expect(dropContract.connect(this.signers.bob).withdrawAirdropFunds()).to.be.revertedWith("NotOwner");
+    await expect(dropContract.connect(this.signers.bob).withdrawAirdropFunds()).to.be.revertedWith("Unauthorized");
 
     const balanceBeforeWithdraw = await this.test1155NftCollection.balanceOf(this.signers.deployer.address, tokenId);
     await dropContract.connect(this.signers.deployer).withdrawAirdropFunds();
