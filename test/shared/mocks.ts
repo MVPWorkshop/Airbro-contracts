@@ -9,7 +9,7 @@ import { contractAdminAddress } from "./constants";
 export async function deployMockAirBroFactory(deployer: Signer): Promise<MockContract> {
   const airBroFactory: MockContract = await waffle.deployMockContract(deployer, AirBroFactory.abi);
 
-  await airBroFactory.mock.admin.returns(contractAdminAddress);
+  // await airBroFactory.mock.admin.returns(contractAdminAddress);
 
   return airBroFactory;
 }

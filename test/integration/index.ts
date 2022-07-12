@@ -57,7 +57,7 @@ describe("Integration tests", function () {
     });
 
     shouldBehaveLikeFactory();
-    shouldChangeAdminInAllAirDrops();
+    // shouldChangeAdminInAllAirDrops(); // file should be deleted since this feature has been removed
     shouldAirDropExistingToken();
     shouldAirDropNewToken();
     shouldAirdropExisting1155NftDrop();

@@ -96,7 +96,7 @@ export const unitExisting1155NFTDropFixture: Fixture<UnitExisting1155NFTDropFixt
 
   const existing1155NftDrop: Existing1155NftDrop = (await existing1155NftDropFactory
     .connect(deployer)
-    .deploy(randomAddress, randomAddress, 2, 2, 2, 2, mockAirBroFactory.address)) as Existing1155NftDrop;
+    .deploy(randomAddress, randomAddress, 2, 2, 2, 2)) as Existing1155NftDrop;
 
   await existing1155NftDrop.deployed();
 

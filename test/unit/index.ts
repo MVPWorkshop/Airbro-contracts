@@ -78,8 +78,8 @@ describe("Unit tests", function () {
         this.airbroFactory = airbroFactory;
       });
 
-      shouldBeCorrectAdmin();
-      shouldChangeAdminAddress();
+      // shouldBeCorrectAdmin(); // file should be deleted. This feature was removed
+      // shouldChangeAdminAddress(); // file should be deleted. This feature was removed
     });
 
     describe("Existing1155NftDrop", () => {
@@ -92,7 +92,7 @@ describe("Unit tests", function () {
       });
 
       Existing1155NftDropShouldDeploy();
-      Existing1155NftDropShouldSetMerkleRoot();
+      // Existing1155NftDropShouldSetMerkleRoot(); // file should be deleted. This feature was removed
     });
 
     describe("ExistingTokenDrop", () => {
@@ -113,7 +113,7 @@ describe("Unit tests", function () {
       });
 
       ExistingTokenDropShouldDeploy();
-      ExistingTokenDropShouldSetMerkleRoot();
+      // ExistingTokenDropShouldSetMerkleRoot(); // file should be deleted. This feature was removed
     });
 
     describe("ItemNFTDrop", () => {
@@ -126,7 +126,7 @@ describe("Unit tests", function () {
       });
 
       ItemNFTDropShouldDeploy();
-      ItemNFTDropShouldSetMerkleRoot();
+      // ItemNFTDropShouldSetMerkleRoot(); // file should be deleted. This feature was removed
     });
 
     describe("NFTDrop", () => {
@@ -139,7 +139,7 @@ describe("Unit tests", function () {
       });
 
       NFTDropShouldDeploy();
-      NFTDropShouldSetMerkleRoot();
+      // NFTDropShouldSetMerkleRoot(); // file should be deleted. This feature was removed
     });
 
     describe("TokenDrop", () => {
@@ -154,7 +154,7 @@ describe("Unit tests", function () {
       });
 
       TokenDropShouldDeploy();
-      TokenDropShouldSetMerkleRoot();
+      // TokenDropShouldSetMerkleRoot(); // file should be deleted. This feature was removed
     });
   });
 

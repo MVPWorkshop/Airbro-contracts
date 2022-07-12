@@ -16,55 +16,55 @@ contract TokenDrop is ERC20, AirdropInfo, AirdropMerkleProof, Ownable {
     uint256 public immutable airdropDuration;
     uint256 public immutable airdropStartTime;
     uint256 public immutable airdropFinishTime;
-    address public immutable airBroFactoryAddress;
+    // address public immutable airBroFactoryAddress;
 
     mapping(uint256 => bool) public hasClaimed;
 
-    /// @notice The root hash of the Merle Tree previously generated offchain when the airdrop concludes.
-    bytes32 public merkleRoot;
+    // /// @notice The root hash of the Merle Tree previously generated offchain when the airdrop concludes.
+    // bytes32 public merkleRoot;
 
     event Claimed(uint256 indexed tokenId, address indexed claimer);
-    event MerkleRootChanged(bytes32 merkleRoot);
+    // event MerkleRootChanged(bytes32 merkleRoot);
 
     error NotOwner();
     error AlreadyRedeemed();
     error AirdropExpired();
-    error NotAdmin();
+    // error NotAdmin();
 
-    modifier onlyAdmin() {
-        if (msg.sender != IAirBroFactory(airBroFactoryAddress).admin()) revert NotAdmin();
-        _;
-    }
+    // modifier onlyAdmin() {
+    //     if (msg.sender != IAirBroFactory(airBroFactoryAddress).admin()) revert NotAdmin();
+    //     _;
+    // }
 
     constructor(
         address _rewardedNft,
         uint256 _tokensPerClaim,
         string memory name,
         string memory symbol,
-        uint256 _airdropDuration,
-        address _airBroFactoryAddress
+        uint256 _airdropDuration
+        // address _airBroFactoryAddress
     ) ERC20(name, symbol, 18) {
         rewardedNft = IERC721(_rewardedNft);
         tokensPerClaim = _tokensPerClaim;
         airdropDuration = _airdropDuration * 1 days;
         airdropStartTime = block.timestamp;
         airdropFinishTime = block.timestamp + airdropDuration;
-        airBroFactoryAddress = _airBroFactoryAddress;
+        // airBroFactoryAddress = _airBroFactoryAddress;
     }
 
-    /// @notice Sets the merkleRoot - can only be done if admin (different from the contract owner)
-    /// @param _merkleRoot - The root hash of the Merle Tree
-    function setMerkleRoot(bytes32 _merkleRoot) external onlyAdmin {
-        merkleRoot = _merkleRoot;
-        emit MerkleRootChanged(_merkleRoot);
-    }
+    // /// @notice Sets the merkleRoot - can only be done if admin (different from the contract owner)
+    // /// @param _merkleRoot - The root hash of the Merle Tree
+    // function setMerkleRoot(bytes32 _merkleRoot) external onlyAdmin {
+    //     merkleRoot = _merkleRoot;
+    //     emit MerkleRootChanged(_merkleRoot);
+    // }
 
-    function claim(uint256 tokenId, bytes32[] calldata _merkleProof) external {
+    function claim(uint256 tokenId) external {
         if (hasClaimed[tokenId]) revert AlreadyRedeemed();
         if (rewardedNft.ownerOf(tokenId) != msg.sender) revert NotOwner();
         if (block.timestamp > airdropFinishTime) revert AirdropExpired();
 
-        checkProof(_merkleProof, merkleRoot);
+        // checkProof(_merkleProof, merkleRoot);
 
         hasClaimed[tokenId] = true;
         emit Claimed(tokenId, msg.sender);
@@ -72,9 +72,9 @@ contract TokenDrop is ERC20, AirdropInfo, AirdropMerkleProof, Ownable {
         _mint(msg.sender, tokensPerClaim);
     }
 
-    function batchClaim(uint256[] memory tokenIds, bytes32[] calldata _merkleProof) external {
+    function batchClaim(uint256[] memory tokenIds) external {
         if (block.timestamp > airdropFinishTime) revert AirdropExpired();
-        checkProof(_merkleProof, merkleRoot);
+        // checkProof(_merkleProof, merkleRoot);
 
         for (uint256 index = 0; index < tokenIds.length; index++) {
             uint256 tokenId = tokenIds[index];
@@ -98,6 +98,7 @@ contract TokenDrop is ERC20, AirdropInfo, AirdropMerkleProof, Ownable {
     function isEligibleForReward(uint256 tokenId) external view returns (bool) {
         if (hasClaimed[tokenId]) revert AlreadyRedeemed();
         if (rewardedNft.ownerOf(tokenId) != msg.sender) revert NotOwner();
+        if (block.timestamp > airdropFinishTime) revert AirdropExpired();
         return true;
     }
 
