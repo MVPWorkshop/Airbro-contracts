@@ -4,7 +4,6 @@ import { contractAdminAddress } from "../shared/constants";
 import { Signers } from "../shared/types";
 
 import { shouldBehaveLikeFactory } from "./AirBro/AirBroDropCreationShouldBehaveLikeFactory.spec";
-import { shouldChangeAdminInAllAirDrops } from "./AirBro/AirBroFactoryShouldChangeAdmin.spec";
 import { shouldAirDropExistingToken } from "./AirBro/AirBroExistingTokenDrop.spec";
 import { shouldAirDropNewToken } from "./AirBro/AirBroTokenDrop.spec";
 import { shouldAirdropExisting1155NftDrop } from "./AirBro/AirBroExisting1155NftDrop.spec";
@@ -57,7 +56,6 @@ describe("Integration tests", function () {
     });
 
     shouldBehaveLikeFactory();
-    // shouldChangeAdminInAllAirDrops(); // file should be deleted since this feature has been removed
     shouldAirDropExistingToken();
     shouldAirDropNewToken();
     shouldAirdropExisting1155NftDrop();

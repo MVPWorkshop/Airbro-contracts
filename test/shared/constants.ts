@@ -14,7 +14,6 @@ export async function unitTokenDropFixtureArguments(airBroFactoryAddress: String
     name: "TokenDropName",
     symbol: "TokenDropSymbol",
     airdropDuration: 1
-    // airBroFactoryAddress: airBroFactoryAddress,
   };
 }
 
@@ -37,7 +36,6 @@ export async function unitExistingTokenDropFixtureArguments(mockTokenAddress: St
     rewardToken: mockTokenAddress,
     totalAirdropAmount: 2,
     airdropDuration: 1
-    // airBroFactoryAddress: mockAirBroFactory,
   };
 }
 
