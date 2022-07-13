@@ -311,6 +311,9 @@ export function AirbroFactorySMCampaignShouldAirdropExisting1155NftDropSMCampaig
 
     await ethers.provider.send("evm_increaseTime", [oneWeekInSeconds]); // add one week worth of seconds
 
+    // non/airdropFunds provider withdrawing leftover funds after the airdrop has finished should be reverted
+    await expect(dropContract.connect(this.signers.jerry).withdrawAirdropFunds()).to.be.revertedWith("Unauthorized");
+
     const balanceBeforeWithdraw = await this.test1155NftCollection.balanceOf(this.signers.deployer.address, tokenId);
     await dropContract.connect(this.signers.deployer).withdrawAirdropFunds();
     const balanceAfterWithdraw = await this.test1155NftCollection.balanceOf(this.signers.deployer.address, tokenId);
