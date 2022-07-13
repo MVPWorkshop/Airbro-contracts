@@ -4,7 +4,6 @@ pragma solidity ^0.8.14;
 import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
-// import "@openzeppelin/contracts/access/Ownable.sol";
 import "../interfaces/AirdropInfoSMCampaign.sol";
 import "../interfaces/AirdropMerkleProof.sol";
 import "../interfaces/IAirBroFactory.sol";
@@ -24,6 +23,7 @@ contract ExistingTokenDropSMCampaign is AirdropInfoSMCampaign, AirdropMerkleProo
 
     mapping(address => bool) public hasClaimed;
 
+    string public airdropType = "ERC20";
     address internal airdropFundingHolder;
     uint256 public airdropFundBlockTimestamp;
     bool public airdropFunded;
@@ -109,11 +109,6 @@ contract ExistingTokenDropSMCampaign is AirdropInfoSMCampaign, AirdropMerkleProo
         }
     }
 
-    /// @notice Get the type of airdrop, it's either ERC20, ERC721, ERC1155
-    function getAirdropType() external pure override returns (string memory) {
-        return "ERC20";
-    }
-
     /// @notice Checks if the user is eligible for this airdrop
     /// @param _merkleProof The proof a user can claim a reward
     function isEligibleForReward(bytes32[] calldata _merkleProof) public view returns (bool) {
@@ -127,20 +122,5 @@ contract ExistingTokenDropSMCampaign is AirdropInfoSMCampaign, AirdropMerkleProo
     /// @param _merkleProof The proof a user can claim a reward
     function getAirdropAmount(bytes32[] calldata _merkleProof) external view returns (uint256) {
         return isEligibleForReward(_merkleProof) ? tokensPerClaim : 0;
-    }
-
-    /// @notice Returns the airdrop ending timestamp in seconds
-    function getAirdropFinishTime() external view override returns (uint256) {
-        return airdropFinishTime;
-    }
-
-    /// @notice Returns the airdrop duration in seconds
-    function getAirdropDuration() external view override returns (uint256) {
-        return airdropDuration;
-    }
-
-    /// @notice Returns the airdrop starting timestamp in seconds
-    function getAirdropStartTime() external view override returns (uint256) {
-        return airdropStartTime;
     }
 }

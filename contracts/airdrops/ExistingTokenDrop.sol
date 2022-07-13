@@ -19,7 +19,7 @@ contract ExistingTokenDrop is AirdropInfo, AirdropMerkleProof {
     uint256 public immutable airdropFinishTime;
 
     mapping(uint256 => bool) public hasClaimed;
-
+    string public airdropType = "ERC20";
     uint256 public airdropFundBlockTimestamp;
     bool public airdropFunded;
 
@@ -105,11 +105,6 @@ contract ExistingTokenDrop is AirdropInfo, AirdropMerkleProof {
         rewardToken.transfer(msg.sender, tokensPerClaim * tokenIds.length);
     }
 
-    /// @notice Get the type of airdrop, it's either ERC20, ERC721, ERC1155
-    function getAirdropType() external pure override returns (string memory) {
-        return "ERC20";
-    }
-
     /// @notice Checks if the user is eligible for this airdrop
     /// @param tokenId is the rewarded NFT token ID
     function isEligibleForReward(uint256 tokenId) public view returns (bool) {
@@ -123,20 +118,5 @@ contract ExistingTokenDrop is AirdropInfo, AirdropMerkleProof {
     /// @notice Returns the amount of airdrop tokens a user can claim
     function getAirdropAmount() external view returns (uint256) {
         return rewardedNft.balanceOf(msg.sender) * tokensPerClaim;
-    }
-
-    /// @notice Returns the airdrop ending timestamp in seconds
-    function getAirdropFinishTime() external view override returns (uint256) {
-        return airdropFinishTime;
-    }
-
-    /// @notice Returns the airdrop duration in seconds
-    function getAirdropDuration() external view override returns (uint256) {
-        return airdropDuration;
-    }
-
-    /// @notice Returns the airdrop starting timestamp in seconds
-    function getAirdropStartTime() external view override returns (uint256) {
-        return airdropStartTime;
     }
 }

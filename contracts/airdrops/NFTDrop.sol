@@ -15,6 +15,7 @@ contract NFTDrop is ERC721, AirdropInfo, AirdropMerkleProof, Ownable {
     address public immutable airBroFactoryAddress;
 
     string public baseURI;
+    string airdropType = "ERC721";
 
     IERC721 public immutable rewardedNft;
 
@@ -99,11 +100,6 @@ contract NFTDrop is ERC721, AirdropInfo, AirdropMerkleProof, Ownable {
         // ERC165 Interface ID for ERC721Metadata
     }
 
-    //@notice Get the type of airdrop, it's either ERC20, ERC721, ERC1155
-    function getAirdropType() external pure returns (string memory) {
-        return "ERC721";
-    }
-
     //@notice Checks if the user is eligible for this airdrop
     function isEligibleForReward(uint256 tokenId) external view returns (bool) {
         if (hasClaimed[tokenId]) revert AlreadyRedeemed();
@@ -115,17 +111,5 @@ contract NFTDrop is ERC721, AirdropInfo, AirdropMerkleProof, Ownable {
     //@param tokenId is the rewarded NFT collections token ID
     function getAirdropAmount() external view returns (uint256) {
         return rewardedNft.balanceOf(msg.sender);
-    }
-
-    function getAirdropFinishTime() external view override returns (uint256) {
-        return airdropFinishTime;
-    }
-
-    function getAirdropDuration() external view override returns (uint256) {
-        return airdropDuration;
-    }
-
-    function getAirdropStartTime() external view override returns (uint256) {
-        return airdropStartTime;
     }
 }

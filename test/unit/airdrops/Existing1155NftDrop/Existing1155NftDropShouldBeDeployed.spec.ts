@@ -37,13 +37,11 @@ export const Existing1155NftDropShouldDeploy = (): void => {
       const blockNumBefore = await ethers.provider.getBlockNumber();
       const blockBefore = await ethers.provider.getBlock(blockNumBefore);
 
-      expect(await this.existing1155NFTDrop.airdropFinishTime()).to.be.equal(
-        blockBefore.timestamp + airdropDuration * dayInSeconds,
-      );
+      expect(await this.existing1155NFTDrop.airdropFinishTime()).to.be.equal(blockBefore.timestamp + airdropDuration * dayInSeconds);
     });
 
     it("should return correct airdrop type", async function () {
-      expect(await this.existing1155NFTDrop.getAirdropType()).to.be.equal("ERC1155");
+      expect(await this.existing1155NFTDrop.airdropType()).to.be.equal("ERC1155");
     });
   });
 };

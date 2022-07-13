@@ -15,6 +15,7 @@ contract ItemNFTDrop is ERC1155, AirdropInfo, AirdropMerkleProof, Ownable {
     address public immutable airBroFactoryAddress;
 
     string public baseURI;
+    string airdropType = "ERC1155";
     bytes data;
 
     IERC721 public immutable rewardedNft;
@@ -88,11 +89,6 @@ contract ItemNFTDrop is ERC1155, AirdropInfo, AirdropMerkleProof, Ownable {
         return string(abi.encodePacked(baseURI, id));
     }
 
-    //@notice Get the type of airdrop, it's either ERC20, ERC721, ERC1155
-    function getAirdropType() external pure returns (string memory) {
-        return "ERC1155";
-    }
-
     //@notice Checks if the user is eligible for this airdrop
     function isEligibleForReward(uint256 tokenId) external view returns (bool) {
         if (hasClaimed[tokenId]) revert AlreadyRedeemed();
@@ -104,17 +100,5 @@ contract ItemNFTDrop is ERC1155, AirdropInfo, AirdropMerkleProof, Ownable {
     //@param tokenId is the rewarded NFT collections token ID
     function getAirdropAmount() external view returns (uint256) {
         return rewardedNft.balanceOf(msg.sender);
-    }
-
-    function getAirdropFinishTime() external view override returns (uint256) {
-        return airdropFinishTime;
-    }
-
-    function getAirdropDuration() external view override returns (uint256) {
-        return airdropDuration;
-    }
-
-    function getAirdropStartTime() external view override returns (uint256) {
-        return airdropStartTime;
     }
 }

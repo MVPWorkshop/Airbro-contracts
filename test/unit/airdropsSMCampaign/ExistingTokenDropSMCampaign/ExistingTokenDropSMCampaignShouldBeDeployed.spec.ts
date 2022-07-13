@@ -18,15 +18,11 @@ export const ExistingTokenDropSMCampaignShouldDeploy = (): void => {
     });
 
     it("should have totalAirdropAmount set to correct value", async function () {
-      expect(await this.existingTokenDropSMCampaign.totalAirdropAmount()).to.be.equal(
-        this.constructorArgs.totalAirdropAmount,
-      );
+      expect(await this.existingTokenDropSMCampaign.totalAirdropAmount()).to.be.equal(this.constructorArgs.totalAirdropAmount);
     });
 
     it("should have airdropDuration set to 1 day (specifically, 86400 seconds)", async function () {
-      expect(await this.existingTokenDropSMCampaign.airdropDuration()).to.be.equal(
-        this.constructorArgs.airdropDuration * dayInSeconds,
-      );
+      expect(await this.existingTokenDropSMCampaign.airdropDuration()).to.be.equal(this.constructorArgs.airdropDuration * dayInSeconds);
     });
 
     it("expect airdropStartTime to be the block timestamp", async function () {
@@ -46,7 +42,7 @@ export const ExistingTokenDropSMCampaignShouldDeploy = (): void => {
     });
 
     it("should return correct airdrop type", async function () {
-      expect(await this.existingTokenDropSMCampaign.getAirdropType()).to.be.equal("ERC20");
+      expect(await this.existingTokenDropSMCampaign.airdropType()).to.be.equal("ERC20");
     });
 
     it("should have merkleRoot set to 0x00", async function () {

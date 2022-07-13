@@ -4,7 +4,6 @@ pragma solidity ^0.8.14;
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "@openzeppelin/contracts/token/ERC1155/IERC1155.sol";
 import "@openzeppelin/contracts/token/ERC1155/IERC1155Receiver.sol";
-// import "@openzeppelin/contracts/access/Ownable.sol";
 import "../interfaces/AirdropMerkleProof.sol";
 import "../interfaces/AirdropInfoSMCampaign.sol";
 import "../interfaces/IAirBroFactory.sol";
@@ -21,6 +20,7 @@ contract Existing1155NftDropSMCampaign is AirdropInfoSMCampaign, AirdropMerklePr
     uint256 public immutable airdropStartTime;
     uint256 public immutable airdropFinishTime;
 
+    string public airdropType = "ERC1155";
     uint256 public airdropFundBlockTimestamp;
     bool public airdropFunded;
 
@@ -96,13 +96,7 @@ contract Existing1155NftDropSMCampaign is AirdropInfoSMCampaign, AirdropMerklePr
     function withdrawAirdropFunds() external {
         if (airdropFundingHolder != msg.sender) revert Unauthorized();
         if (block.timestamp < airdropFinishTime) revert AirdropStillInProgress();
-        rewardToken.safeTransferFrom(
-            address(this),
-            msg.sender,
-            rewardTokenId,
-            rewardToken.balanceOf(address(this), rewardTokenId),
-            ""
-        );
+        rewardToken.safeTransferFrom(address(this), msg.sender, rewardTokenId, rewardToken.balanceOf(address(this), rewardTokenId), "");
     }
 
     /// @notice Allows the NFT holder to claim their ERC1155 airdrop
@@ -115,11 +109,6 @@ contract Existing1155NftDropSMCampaign is AirdropInfoSMCampaign, AirdropMerklePr
         } else {
             revert NotEligible();
         }
-    }
-
-    /// @notice Get the type of airdrop, it's either ERC20, ERC721, ERC1155
-    function getAirdropType() external pure override returns (string memory) {
-        return "ERC1155";
     }
 
     /// @notice Checks if the user is eligible for this airdrop
@@ -140,18 +129,6 @@ contract Existing1155NftDropSMCampaign is AirdropInfoSMCampaign, AirdropMerklePr
 
     function supportsInterface(bytes4 interfaceId) external pure override returns (bool) {
         return interfaceId == 0xf23a6e61;
-    }
-
-    function getAirdropFinishTime() external view override returns (uint256) {
-        return airdropFinishTime;
-    }
-
-    function getAirdropDuration() external view override returns (uint256) {
-        return airdropDuration;
-    }
-
-    function getAirdropStartTime() external view override returns (uint256) {
-        return airdropStartTime;
     }
 
     function onERC1155Received(

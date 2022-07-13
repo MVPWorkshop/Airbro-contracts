@@ -26,9 +26,7 @@ export const TokenDropSMCampaignShouldDeploy = (): void => {
     });
 
     it("should have airdropDuration set to 1 day (specifically, 86400 seconds)", async function () {
-      expect(await this.tokenDropSMCampaign.airdropDuration()).to.be.equal(
-        this.constructorArgs.airdropDuration * dayInSeconds,
-      );
+      expect(await this.tokenDropSMCampaign.airdropDuration()).to.be.equal(this.constructorArgs.airdropDuration * dayInSeconds);
     });
 
     it("expect airdropStartTime to be the block timestamp", async function () {
@@ -48,19 +46,15 @@ export const TokenDropSMCampaignShouldDeploy = (): void => {
     });
 
     it("should return correct airdrop type", async function () {
-      expect(await this.tokenDropSMCampaign.getAirdropType()).to.be.equal("ERC20");
+      expect(await this.tokenDropSMCampaign.airdropType()).to.be.equal("ERC20");
     });
 
     it("should have merkleRoot set to 0x00", async function () {
-      expect(await this.tokenDropSMCampaign.merkleRoot()).to.be.equal(
-        "0x0000000000000000000000000000000000000000000000000000000000000000",
-      );
+      expect(await this.tokenDropSMCampaign.merkleRoot()).to.be.equal("0x0000000000000000000000000000000000000000000000000000000000000000");
     });
 
     it("should set airBroFactoryAddress to a the airbroFactory address", async function () {
-      expect(await this.tokenDropSMCampaign.airBroFactoryAddress()).to.be.equal(
-        this.mocks.mockAirBroFactorySMCampaign.address,
-      );
+      expect(await this.tokenDropSMCampaign.airBroFactoryAddress()).to.be.equal(this.mocks.mockAirBroFactorySMCampaign.address);
     });
   });
 };

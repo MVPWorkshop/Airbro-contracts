@@ -42,7 +42,7 @@ export const ExistingTokenDropShouldDeploy = (): void => {
     });
 
     it("should return correct airdrp type", async function () {
-      expect(await this.existingTokenDrop.getAirdropType()).to.be.equal("ERC20");
+      expect(await this.existingTokenDrop.airdropType()).to.be.equal("ERC20");
     });
   });
 };
