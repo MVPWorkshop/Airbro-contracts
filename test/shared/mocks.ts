@@ -27,6 +27,7 @@ export async function deployMockDAItoken(deployer: Signer): Promise<MockContract
 
   await mockDAItoken.mock.name.returns("DAI token");
   await mockDAItoken.mock.symbol.returns("DAI");
+  await mockDAItoken.mock.balanceOf.returns(2);
 
   return mockDAItoken;
 }

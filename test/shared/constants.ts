@@ -29,20 +29,17 @@ export async function unitTokenDropSMCampaignFixtureArguments(airBroFactory1155A
 }
 
 /*  Arguments for ExistingTokenDrop and ExistingTokenDropSMCampaign fixture deployment */
-export async function unitExistingTokenDropFixtureArguments(mockTokenAddress: String, mockAirBroFactory: String) {
+export async function unitExistingTokenDropFixtureArguments(mockTokenAddress: String, testNftCollection: String) {
   return {
-    rewardedNft: randomAddress,
+    rewardedNft: testNftCollection,
     tokensPerClaim: 2,
     rewardToken: mockTokenAddress,
-    totalAirdropAmount: 2,
+    totalAirdropAmount: 10,
     airdropDuration: 1,
   };
 }
 
-export async function unitExistingTokenDropSMCampaignFixtureArguments(
-  mockTokenAddress: String,
-  mockAirBroFactorySMCampaign: String,
-) {
+export async function unitExistingTokenDropSMCampaignFixtureArguments(mockTokenAddress: String, mockAirBroFactorySMCampaign: String) {
   return {
     rewardedNft: randomAddress,
     tokensPerClaim: 2,
