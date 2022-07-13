@@ -169,7 +169,7 @@ describe("Unit tests", function () {
         );
 
         this.existing1155NFTDropSMCampaign = existing1155NftDropSMCampaign;
-
+        
         this.mocks = {} as Mocks;
         this.mocks.mockAirBroFactorySMCampaign = mockAirBroFactorySMCampaign;
       });

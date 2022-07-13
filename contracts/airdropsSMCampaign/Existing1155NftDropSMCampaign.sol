@@ -39,6 +39,7 @@ contract Existing1155NftDropSMCampaign is AirdropInfoSMCampaign, AirdropMerklePr
     error AirdropStillInProgress();
     error AlreadyRedeemed();
     error AlreadyFunded();
+    error InsufficientAmount();
     error InsufficientLiquidity();
     error AirdropExpired();
     error NotEligible();
@@ -78,6 +79,7 @@ contract Existing1155NftDropSMCampaign is AirdropInfoSMCampaign, AirdropMerklePr
     /// @notice Allows the airdrop creator to provide funds for airdrop reward
     function fundAirdrop() external {
         if (airdropFunded) revert AlreadyFunded();
+        if (rewardToken.balanceOf(msg.sender, rewardTokenId) < totalAirdropAmount) revert InsufficientAmount();
         airdropFunded = true;
         airdropFundBlockTimestamp = block.timestamp;
         airdropFundingHolder = msg.sender;

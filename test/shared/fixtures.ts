@@ -35,6 +35,7 @@ type UnitExisting1155NFTDropFixtureType = {
 type UnitExisting1155NFTDropSMCampaignFixtureType = {
   existing1155NftDropSMCampaign: Existing1155NftDropSMCampaign;
   mockAirBroFactorySMCampaign: MockContract;
+  // airBro1155NftMint: AirBro1155NftMint;
 };
 
 type UnitExistingTokenDropFixtureType = {
