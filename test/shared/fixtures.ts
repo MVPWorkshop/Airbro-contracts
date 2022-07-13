@@ -113,7 +113,7 @@ export const unitExisting1155NFTDropFixture: Fixture<UnitExisting1155NFTDropFixt
   await mock1155Nft.deployed();
 
   const existing1155NftDropFactory: ContractFactory = await ethers.getContractFactory(`Existing1155NftDrop`);
-  // const existing1155NFTDropConstructorArgs = [mockBaycNft.address, mock1155Nft.address, 2, 2, 2, 2];
+
   const existing1155NFTDropConstructorArgs = await unitExisting1155NFTDropArguments(mockBaycNft.address, mock1155Nft.address);
 
   const existing1155NftDrop: Existing1155NftDrop = (await existing1155NftDropFactory

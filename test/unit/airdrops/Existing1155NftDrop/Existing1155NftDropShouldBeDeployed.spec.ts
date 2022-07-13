@@ -40,5 +40,18 @@ export const Existing1155NftDropShouldDeploy = (): void => {
     it("should return correct airdrop type", async function () {
       expect(await this.existing1155NFTDrop.airdropType()).to.be.equal("ERC1155");
     });
+
+    it("should return valid value from airdrop amount", async function () {
+      // mocking the mock BAYC state for Alice and Bob
+      await this.mocks.mockBaycNft.mock.ownerOf.withArgs(0).returns(this.signers.alice.address);
+      await this.mocks.mockBaycNft.mock.balanceOf.withArgs(this.signers.alice.address).returns(1);
+      await this.mocks.mockBaycNft.mock.balanceOf.withArgs(this.signers.bob.address).returns(0);
+
+      expect(await this.existing1155NFTDrop.connect(this.signers.alice).getAirdropAmount()).to.be.equal(
+        this.constructorArgs.tokensPerClaim, // since alice only has one BAYC, she can claim that many tokensPerClaim as a reward
+      );
+
+      expect(await this.existing1155NFTDrop.connect(this.signers.bob).getAirdropAmount()).to.be.equal(0); //bob has no BAYC, so has 0 as the airdrop amount
+    });
   });
 };
