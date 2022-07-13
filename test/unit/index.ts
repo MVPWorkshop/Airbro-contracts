@@ -135,11 +135,14 @@ describe("Unit tests", function () {
 
     describe("TokenDrop", () => {
       beforeEach(async function () {
-        const { tokenDrop, mockAirBroFactory, tokenDropConstructorArgs } = await this.loadFixture(unitTokenDropFixture);
+        const { tokenDrop, mockAirBroFactory, tokenDropConstructorArgs, mockBaycNft } = await this.loadFixture(
+          unitTokenDropFixture,
+        );
         this.tokenDrop = tokenDrop;
 
         this.mocks = {} as Mocks;
         this.mocks.mockAirBroFactory = mockAirBroFactory;
+        this.mocks.mockBaycNft = mockBaycNft;
 
         this.constructorArgs = tokenDropConstructorArgs;
       });

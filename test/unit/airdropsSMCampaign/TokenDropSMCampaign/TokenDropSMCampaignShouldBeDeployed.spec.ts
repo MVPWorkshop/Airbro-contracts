@@ -1,5 +1,7 @@
 import { expect } from "chai";
 import { ethers } from "hardhat";
+import { MerkleTree } from "merkletreejs";
+const { keccak256 } = ethers.utils;
 
 const dayInSeconds: number = 86400;
 
@@ -26,7 +28,9 @@ export const TokenDropSMCampaignShouldDeploy = (): void => {
     });
 
     it("should have airdropDuration set to 1 day (specifically, 86400 seconds)", async function () {
-      expect(await this.tokenDropSMCampaign.airdropDuration()).to.be.equal(this.constructorArgs.airdropDuration * dayInSeconds);
+      expect(await this.tokenDropSMCampaign.airdropDuration()).to.be.equal(
+        this.constructorArgs.airdropDuration * dayInSeconds,
+      );
     });
 
     it("expect airdropStartTime to be the block timestamp", async function () {
@@ -50,11 +54,31 @@ export const TokenDropSMCampaignShouldDeploy = (): void => {
     });
 
     it("should have merkleRoot set to 0x00", async function () {
-      expect(await this.tokenDropSMCampaign.merkleRoot()).to.be.equal("0x0000000000000000000000000000000000000000000000000000000000000000");
+      expect(await this.tokenDropSMCampaign.merkleRoot()).to.be.equal(
+        "0x0000000000000000000000000000000000000000000000000000000000000000",
+      );
     });
 
     it("should set airBroFactoryAddress to a the airbroFactory address", async function () {
-      expect(await this.tokenDropSMCampaign.airBroFactoryAddress()).to.be.equal(this.mocks.mockAirBroFactorySMCampaign.address);
+      expect(await this.tokenDropSMCampaign.airBroFactoryAddress()).to.be.equal(
+        this.mocks.mockAirBroFactorySMCampaign.address,
+      );
+    });
+
+    it("should return vaid from airdrop amount when using valid and invalid merkle proof", async function () {
+      const leaves = [this.signers.alice.address].map(addr => keccak256(addr));
+      const merkleTree = new MerkleTree(leaves, keccak256, { sort: true });
+      const roothash = merkleTree.getHexRoot();
+
+      await this.tokenDropSMCampaign.connect(this.signers.backendWallet).setMerkleRoot(roothash);
+
+      const hexProof = merkleTree.getHexProof(leaves[0]);
+      expect(await this.tokenDropSMCampaign.connect(this.signers.alice).getAirdropAmount(hexProof)).to.be.equal(
+        this.constructorArgs.tokensPerClaim,
+      );
+
+      // bob trying to claim with Alice's proof
+      expect(await this.tokenDropSMCampaign.connect(this.signers.bob).getAirdropAmount(hexProof)).to.be.equal(0);
     });
   });
 };

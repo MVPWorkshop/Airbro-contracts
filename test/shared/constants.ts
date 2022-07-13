@@ -7,9 +7,9 @@ export const randomAddress: string = "0x6B175474E89094C44Da98b954EedeAC495271d0F
 export const oneWeekInSeconds: number = 604800;
 
 /*  Arguments for TokenDrop fixture deployment */
-export async function unitTokenDropFixtureArguments(airBroFactoryAddress: String) {
+export async function unitTokenDropFixtureArguments(mockBaycNftAddress: String) {
   return {
-    rewardedNft: randomAddress,
+    rewardedNft: mockBaycNftAddress,
     tokensPerClaim: 2,
     name: "TokenDropName",
     symbol: "TokenDropSymbol",
@@ -39,7 +39,10 @@ export async function unitExistingTokenDropFixtureArguments(mockTokenAddress: St
   };
 }
 
-export async function unitExistingTokenDropSMCampaignFixtureArguments(mockTokenAddress: String, mockAirBroFactorySMCampaign: String) {
+export async function unitExistingTokenDropSMCampaignFixtureArguments(
+  mockTokenAddress: String,
+  mockAirBroFactorySMCampaign: String,
+) {
   return {
     rewardedNft: randomAddress,
     tokensPerClaim: 2,
