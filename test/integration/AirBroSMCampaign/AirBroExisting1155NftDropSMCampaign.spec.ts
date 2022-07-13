@@ -218,7 +218,9 @@ export function AirbroFactorySMCampaignShouldAirdropExisting1155NftDropSMCampaig
 
     // getting the deployed Airbro1155 contract found at the 0th index in the nft1155Contracts array of AirbroFactorySMCampaign.sol
     const new1155NftCollectionFactory = await ethers.getContractFactory("Airbro1155Contract");
-    const collection1155 = new1155NftCollectionFactory.attach(await this.airbroFactorySMCampaign.nft1155Contracts(constants.Zero));
+    const collection1155 = new1155NftCollectionFactory.attach(
+      await this.airbroFactorySMCampaign.nft1155Contracts(constants.Zero),
+    );
 
     // creating campaign (airdrop) for Nft holders of collection1155, with reward being Nfts from other 1155 collection
 
@@ -273,13 +275,27 @@ export function AirbroFactorySMCampaignShouldAirdropExisting1155NftDropSMCampaig
     expect(jerryBalance).to.be.equal(1);
 
     //funding our airdrop contract with existing 1155 nfts
-    await expect(this.test1155NftCollection.connect(this.signers.deployer).setApprovalForAll(dropContract.address, true)).to.emit(
-        this.test1155NftCollection,
-        "ApprovalForAll",
-        );
-        
-    await expect(dropContract.fundAirdrop()).to.emit(dropContract, "AirdropFunded").withArgs(dropContract.address);
-    
+
+    // setting approval for token spend
+    await expect(
+      this.test1155NftCollection.connect(this.signers.deployer).setApprovalForAll(dropContract.address, true),
+    ).to.emit(this.test1155NftCollection, "ApprovalForAll");
+
+    // await expect(dropContract.connect(this.signers.bob).fundAirdrop()).to.be.revertedWith("InsufficientAmount");
+    await expect(dropContract.connect(this.signers.bob).fundAirdrop()).to.be.revertedWith("InsufficientAmount");
+
+    // deployer who is approved trying to fund airdrop
+    await expect(dropContract.connect(this.signers.deployer).fundAirdrop()).to.emit(dropContract, "AirdropFunded").withArgs(dropContract.address);
+
+    const blockNumBefore = await ethers.provider.getBlockNumber();
+    const blockBefore = await ethers.provider.getBlock(blockNumBefore);
+    expect(await dropContract.airdropFundBlockTimestamp()).to.be.equal(blockBefore.timestamp);
+
+    await expect(dropContract.fundAirdrop()).to.be.revertedWith("AlreadyFunded");
+
+    expect(await this.test1155NftCollection.balanceOf(dropContract.address, tokenId)).to.be.equal(amountOf1155); //our airdrop contract now has 1000 x nft1155 of id 1
+    expect(await this.test1155NftCollection.balanceOf(this.signers.deployer.address, tokenId)).to.be.equal(fullAmountOf1155 - amountOf1155);
+
     //create merkleRootHash
     const whitelisted = [this.signers.alice.address, this.signers.bob.address, this.signers.jerry.address];
     const leaves = whitelisted.map(addr => keccak256(addr));
@@ -307,7 +323,9 @@ export function AirbroFactorySMCampaignShouldAirdropExisting1155NftDropSMCampaig
     await expect(dropContract.connect(this.signers.lisa).claim(hexProof)).to.be.revertedWith("NotEligible");
 
     // airdropFunds provider withdrawing their leftover funds after the airdrop has finished
-    await expect(dropContract.connect(this.signers.deployer).withdrawAirdropFunds()).to.be.revertedWith("AirdropStillInProgress");
+    await expect(dropContract.connect(this.signers.deployer).withdrawAirdropFunds()).to.be.revertedWith(
+      "AirdropStillInProgress",
+    );
 
     await ethers.provider.send("evm_increaseTime", [oneWeekInSeconds]); // add one week worth of seconds
 

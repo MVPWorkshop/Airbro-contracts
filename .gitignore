@@ -15,6 +15,7 @@
 **/dist
 **/node_modules
 .idea/*
+.vscode
 
 # files
 *.env

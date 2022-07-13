@@ -78,6 +78,9 @@ contract ExistingTokenDropSMCampaign is AirdropInfoSMCampaign, AirdropMerkleProo
     function fundAirdrop() external {
         if (airdropFunded) revert AlreadyFunded();
         
+        if (rewardToken.balanceOf(msg.sender) < totalAirdropAmount) revert InsufficientAmount();
+        if (rewardToken.allowance(msg.sender, address(this)) < totalAirdropAmount) revert InsufficientAmount();
+        
         airdropFunded = true;
         airdropFundBlockTimestamp = block.timestamp;
         airdropFundingHolder = msg.sender;

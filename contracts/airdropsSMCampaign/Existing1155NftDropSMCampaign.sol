@@ -79,10 +79,15 @@ contract Existing1155NftDropSMCampaign is AirdropInfoSMCampaign, AirdropMerklePr
     /// @notice Allows the airdrop creator to provide funds for airdrop reward
     function fundAirdrop() external {
         if (airdropFunded) revert AlreadyFunded();
+
+        // making sure funds can be used before changing state
         if (rewardToken.balanceOf(msg.sender, rewardTokenId) < totalAirdropAmount) revert InsufficientAmount();
+        if (rewardToken.isApprovedForAll(msg.sender, address(this)) == false) revert InsufficientAmount();
+
         airdropFunded = true;
         airdropFundBlockTimestamp = block.timestamp;
         airdropFundingHolder = msg.sender;
+
         rewardToken.safeTransferFrom(msg.sender, address(this), rewardTokenId, totalAirdropAmount, "");
         emit AirdropFunded(address(this));
     }
@@ -91,7 +96,13 @@ contract Existing1155NftDropSMCampaign is AirdropInfoSMCampaign, AirdropMerklePr
     function withdrawAirdropFunds() external {
         if (airdropFundingHolder != msg.sender) revert Unauthorized();
         if (block.timestamp < airdropFinishTime) revert AirdropStillInProgress();
-        rewardToken.safeTransferFrom(address(this), msg.sender, rewardTokenId, rewardToken.balanceOf(address(this), rewardTokenId), "");
+        rewardToken.safeTransferFrom(
+            address(this),
+            msg.sender,
+            rewardTokenId,
+            rewardToken.balanceOf(address(this), rewardTokenId),
+            ""
+        );
     }
 
     /// @notice Allows the NFT holder to claim their ERC1155 airdrop
