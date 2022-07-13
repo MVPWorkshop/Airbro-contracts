@@ -4,13 +4,13 @@ pragma solidity ^0.8.14;
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "@openzeppelin/contracts/token/ERC1155/IERC1155.sol";
 import "@openzeppelin/contracts/token/ERC1155/IERC1155Receiver.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
+// import "@openzeppelin/contracts/access/Ownable.sol";
 import "../interfaces/AirdropMerkleProof.sol";
 import "../interfaces/AirdropInfoSMCampaign.sol";
 import "../interfaces/IAirBroFactory.sol";
 
 /// @title Airdrops existing ERC1155 tokens for airdrop recipients
-contract Existing1155NftDropSMCampaign is AirdropInfoSMCampaign, AirdropMerkleProof, IERC1155Receiver, Ownable {
+contract Existing1155NftDropSMCampaign is AirdropInfoSMCampaign, AirdropMerkleProof, IERC1155Receiver {
     IERC1155 public immutable rewardedNft;
     IERC1155 public immutable rewardToken;
     address public immutable airBroFactoryAddress;
@@ -23,7 +23,7 @@ contract Existing1155NftDropSMCampaign is AirdropInfoSMCampaign, AirdropMerklePr
 
     uint256 public airdropFundBlockTimestamp;
     bool public airdropFunded;
-    
+
     address internal airdropFundingHolder;
 
     mapping(address => bool) public hasClaimed;
@@ -42,8 +42,6 @@ contract Existing1155NftDropSMCampaign is AirdropInfoSMCampaign, AirdropMerklePr
     error InsufficientLiquidity();
     error AirdropExpired();
     error NotEligible();
-
-
 
     modifier onlyAdmin() {
         if (msg.sender != IAirBroFactory(airBroFactoryAddress).admin()) revert Unauthorized();

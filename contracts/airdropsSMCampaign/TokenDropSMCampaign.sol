@@ -3,13 +3,13 @@ pragma solidity ^0.8.14;
 
 import "@rari-capital/solmate/src/tokens/ERC20.sol";
 import "@openzeppelin/contracts/token/ERC1155/IERC1155.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
+// import "@openzeppelin/contracts/access/Ownable.sol";
 import "../interfaces/AirdropInfoSMCampaign.sol";
 import "../interfaces/AirdropMerkleProof.sol";
 import "../interfaces/IAirBroFactory.sol";
 
 /// @title Airdrops new ERC20 tokens for airdrop recipients
-contract TokenDropSMCampaign is ERC20, AirdropInfoSMCampaign, AirdropMerkleProof, Ownable {
+contract TokenDropSMCampaign is ERC20, AirdropInfoSMCampaign, AirdropMerkleProof {
     IERC1155 public immutable rewardedNft;
     uint256 public immutable tokensPerClaim;
     uint256 public immutable airdropDuration;

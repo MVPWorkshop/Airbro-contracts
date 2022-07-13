@@ -18,8 +18,6 @@ import {
 import { shouldDeploy } from "./AirbroFactory/AirbroFactoryShouldDeploy.spec";
 
 import { TokenDropShouldDeploy } from "./airdrops/TokenDrop/TokenDropShouldBeDeployed.spec";
-import { NFTDropShouldDeploy } from "./airdrops/NFTDrop/NFTDropShouldBeDeployed.spec";
-import { ItemNFTDropShouldDeploy } from "./airdrops/ItemNFTDrop/ItemNFTDropShouldBeDeployed.spec";
 import { ExistingTokenDropShouldDeploy } from "./airdrops/ExistingTokenDrop/ExistingTokenDropShouldBeDeployed.spec";
 import { Existing1155NftDropShouldDeploy } from "./airdrops/Existing1155NftDrop/Existing1155NftDropShouldBeDeployed.spec";
 
@@ -118,8 +116,8 @@ describe("Unit tests", function () {
         this.mocks.mockAirBroFactory = mockAirBroFactory;
       });
 
-      ItemNFTDropShouldDeploy();
-      
+      //
+
     });
 
     describe("NFTDrop", () => {
@@ -131,8 +129,8 @@ describe("Unit tests", function () {
         this.mocks.mockAirBroFactory = mockAirBroFactory;
       });
 
-      NFTDropShouldDeploy();
-      
+      //
+
     });
 
     describe("TokenDrop", () => {

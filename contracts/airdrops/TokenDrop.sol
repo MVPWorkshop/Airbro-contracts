@@ -4,13 +4,13 @@ pragma solidity ^0.8.14;
 import "@rari-capital/solmate/src/tokens/ERC20.sol";
 import "@rari-capital/solmate/src/tokens/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
+// import "@openzeppelin/contracts/access/Ownable.sol";
 import "../interfaces/AirdropInfo.sol";
 import "../interfaces/AirdropMerkleProof.sol";
 import "../interfaces/IAirBroFactory.sol";
 
 /// @title Airdrops new ERC20 tokens for airdrop recipients
-contract TokenDrop is ERC20, AirdropInfo, AirdropMerkleProof, Ownable {
+contract TokenDrop is ERC20, AirdropInfo, AirdropMerkleProof {
     IERC721 public immutable rewardedNft;
     uint256 public immutable tokensPerClaim;
     uint256 public immutable airdropDuration;
@@ -24,6 +24,7 @@ contract TokenDrop is ERC20, AirdropInfo, AirdropMerkleProof, Ownable {
     error AlreadyRedeemed();
     error AirdropExpired();
     error Unauthorized();
+    error NotEligible();
   
     constructor(
         address _rewardedNft,
@@ -42,14 +43,13 @@ contract TokenDrop is ERC20, AirdropInfo, AirdropMerkleProof, Ownable {
     /// @notice Allows the NFT holder to claim their ERC20 airdrop
     /// @param tokenId is the rewarded NFT collections token ID
     function claim(uint256 tokenId) external {
-        if (hasClaimed[tokenId]) revert AlreadyRedeemed();
-        if (rewardedNft.ownerOf(tokenId) != msg.sender) revert Unauthorized();
-        if (block.timestamp > airdropFinishTime) revert AirdropExpired();
-
-        hasClaimed[tokenId] = true;
-        emit Claimed(tokenId, msg.sender);
-
-        _mint(msg.sender, tokensPerClaim);
+        if(isEligibleForReward(tokenId)) {
+            hasClaimed[tokenId] = true;
+            _mint(msg.sender, tokensPerClaim);
+            emit Claimed(tokenId, msg.sender);
+        } else {
+            revert NotEligible();
+        }
     }
 
     /// @notice Claim multiple ERC20 airdrops at once
@@ -77,7 +77,7 @@ contract TokenDrop is ERC20, AirdropInfo, AirdropMerkleProof, Ownable {
 
     /// @notice Checks if the user is eligible for this airdrop
     /// @param tokenId is the rewarded NFT token ID
-    function isEligibleForReward(uint256 tokenId) external view returns (bool) {
+    function isEligibleForReward(uint256 tokenId) public view returns (bool) {
         if (block.timestamp > airdropFinishTime) revert AirdropExpired();
         if (hasClaimed[tokenId]) revert AlreadyRedeemed();
         if (rewardedNft.ownerOf(tokenId) != msg.sender) revert Unauthorized();

@@ -5,9 +5,6 @@ const dayInSeconds: number = 86400;
 
 export const ExistingTokenDropSMCampaignShouldDeploy = (): void => {
   describe("should deploy", async function () {
-    it("should have contract owner to address of deployer upon deployment", async function () {
-      expect(await this.existingTokenDropSMCampaign.owner()).to.be.equal(this.signers.deployer.address);
-    });
 
     it("should have rewardedNft set to correct hardcoded address", async function () {
       expect(await this.existingTokenDropSMCampaign.rewardedNft()).to.be.equal(this.constructorArgs.rewardedNft);
