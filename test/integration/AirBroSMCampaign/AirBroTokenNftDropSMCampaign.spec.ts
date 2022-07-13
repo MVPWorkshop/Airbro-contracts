@@ -20,12 +20,7 @@ export function AirbroFactorySMCampaignShouldAirDropNewToken() {
     const tokenDropContract = TokenDropSMCampaignFactory.attach(await this.airbroFactorySMCampaign.airdrops(0)); // Address of newly created airdrop. How will this be sent to the frontend ?
 
     // whitelisting Alice and other account to have this new token minted to them
-    const whitelisted = [
-      this.signers.alice.address,
-      this.signers.bob.address,
-      this.signers.jerry.address,
-      this.signers.lisa.address,
-    ];
+    const whitelisted = [this.signers.alice.address, this.signers.bob.address, this.signers.jerry.address, this.signers.lisa.address];
     const leaves = whitelisted.map(addr => keccak256(addr));
     const merkleTree = new MerkleTree(leaves, keccak256, { sort: true });
     const roothash = merkleTree.getHexRoot();
@@ -40,9 +35,7 @@ export function AirbroFactorySMCampaignShouldAirDropNewToken() {
     await expect(tokenDropContract.connect(this.signers.alice).claim(aliceHexProof))
       .to.emit(tokenDropContract, "Claimed")
       .withArgs(this.signers.alice.address);
-    await expect(tokenDropContract.connect(this.signers.alice).claim(aliceHexProof)).to.be.revertedWith(
-      "AlreadyRedeemed",
-    );
+    await expect(tokenDropContract.connect(this.signers.alice).claim(aliceHexProof)).to.be.revertedWith("AlreadyRedeemed");
 
     await expect(tokenDropContract.connect(this.signers.bob).claim(aliceHexProof)).to.be.revertedWith("NotEligible"); // reverting bob's attempt at redeeming with invalid proof
 

@@ -32,9 +32,7 @@ export function AirbroFactorySMCampaignShouldAirDropExistingToken() {
     expect(await tokenDropContract.airdropFunded()).to.be.equal(false);
 
     await this.testToken.connect(this.signers.deployer).approve(tokenDropContract.address, totalAirdropAmount); //deployer approving tokens
-    await expect(tokenDropContract.fundAirdrop())
-      .to.emit(tokenDropContract, "AirdropFunded")
-      .withArgs(tokenDropContract.address); // funding airdrop contract
+    await expect(tokenDropContract.fundAirdrop()).to.emit(tokenDropContract, "AirdropFunded").withArgs(tokenDropContract.address); // funding airdrop contract
     expect(await tokenDropContract.airdropFunded()).to.be.equal(true); // should be funded
 
     /**
@@ -43,12 +41,7 @@ export function AirbroFactorySMCampaignShouldAirDropExistingToken() {
      * The backendWallet will update the merkleRoot on the airdrop smart contract.
      *  */
 
-    const whitelisted = [
-      this.signers.alice.address,
-      this.signers.bob.address,
-      this.signers.jerry.address,
-      this.signers.lisa.address,
-    ];
+    const whitelisted = [this.signers.alice.address, this.signers.bob.address, this.signers.jerry.address, this.signers.lisa.address];
     const leaves = whitelisted.map(addr => keccak256(addr));
     const merkleTree = new MerkleTree(leaves, keccak256, { sort: true });
     const roothash = merkleTree.getHexRoot();

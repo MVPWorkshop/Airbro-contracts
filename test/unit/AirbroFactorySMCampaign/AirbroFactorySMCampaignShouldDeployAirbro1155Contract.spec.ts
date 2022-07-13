@@ -21,15 +21,13 @@ export const AirbroFactorySMCampaignShouldDelpoyAirbro1155Contract = (): void =>
       );
 
       const new1155NftCollectionFactory = await ethers.getContractFactory("Airbro1155Contract");
-      const collection1155 = new1155NftCollectionFactory.attach(
-        await this.airbroFactorySMCampaign.nft1155Contracts(constants.Zero),
-      );
+      const collection1155 = new1155NftCollectionFactory.attach(await this.airbroFactorySMCampaign.nft1155Contracts(constants.Zero));
 
       await collection1155.connect(this.signers.alice).mint();
 
-      expect(
-        await collection1155.connect(this.signers.alice).balanceOf(this.signers.alice.address, constants.Zero),
-      ).to.be.equal(constants.One);
+      expect(await collection1155.connect(this.signers.alice).balanceOf(this.signers.alice.address, constants.Zero)).to.be.equal(
+        constants.One,
+      );
     });
 
     it("should increment totalNft1155ContractsCount for each 1155 NFT Collection created", async function () {

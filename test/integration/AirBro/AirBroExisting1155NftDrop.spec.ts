@@ -52,12 +52,11 @@ export function shouldAirdropExisting1155NftDrop() {
     const dropContract = existingDropFactory.attach(await this.airbroFactory.airdrops(0));
 
     //funding our airdrop contract with existing 1155 nfts
-    await expect(
-      this.test1155NftCollection.connect(this.signers.deployer).setApprovalForAll(dropContract.address, true),
-    ).to.emit(this.test1155NftCollection, "ApprovalForAll");
-    await expect(dropContract.connect(this.signers.bob).fundAirdrop()).to.be.revertedWith(
-      "ERC1155: caller is not owner nor approved",
+    await expect(this.test1155NftCollection.connect(this.signers.deployer).setApprovalForAll(dropContract.address, true)).to.emit(
+      this.test1155NftCollection,
+      "ApprovalForAll",
     );
+    await expect(dropContract.connect(this.signers.bob).fundAirdrop()).to.be.revertedWith("ERC1155: caller is not owner nor approved");
     await expect(dropContract.fundAirdrop()).to.emit(dropContract, "AirdropFunded").withArgs(dropContract.address);
 
     const blockNumBefore = await ethers.provider.getBlockNumber();
@@ -67,9 +66,7 @@ export function shouldAirdropExisting1155NftDrop() {
     await expect(dropContract.fundAirdrop()).to.be.revertedWith("AlreadyFunded");
 
     expect(await this.test1155NftCollection.balanceOf(dropContract.address, tokenId)).to.be.equal(amountOf1155); //our airdrop contract now has 1000 x nft1155 of id 1
-    expect(await this.test1155NftCollection.balanceOf(this.signers.deployer.address, tokenId)).to.be.equal(
-      fullAmountOf1155 - amountOf1155,
-    );
+    expect(await this.test1155NftCollection.balanceOf(this.signers.deployer.address, tokenId)).to.be.equal(fullAmountOf1155 - amountOf1155);
 
     // alice withdrawing 1155 on basis of owning nft with id of 1
     const _alice_nft_id = 0;
@@ -83,9 +80,7 @@ export function shouldAirdropExisting1155NftDrop() {
     await expect(dropContract.connect(this.signers.alice).claim(_alice_nft_id, [])).to.emit(dropContract, "Claimed");
     leftoverNftAmount = leftoverNftAmount - tokensPerClaim;
     expect(await this.test1155NftCollection.balanceOf(this.signers.alice.address, 1)).to.be.equal(1);
-    await expect(dropContract.connect(this.signers.alice).claim(_alice_nft_id, [])).to.be.revertedWith(
-      "AlreadyRedeemed",
-    ); // error - 'ERC721: owner query for nonexistent token'
+    await expect(dropContract.connect(this.signers.alice).claim(_alice_nft_id, [])).to.be.revertedWith("AlreadyRedeemed"); // error - 'ERC721: owner query for nonexistent token'
 
     // alice withdrawing 1155 on basis of owning nft with id of 1
     await expect(dropContract.connect(this.signers.bob).claim(_admin_nft_id, [])).to.be.revertedWith("Unauthorized"); // Bob trying to claim based on Admins's NFT id he does not own
@@ -96,9 +91,7 @@ export function shouldAirdropExisting1155NftDrop() {
     await expect(dropContract.connect(this.signers.bob).claim(_bob_nft_id, [])).to.be.revertedWith("AlreadyRedeemed"); // error - 'ERC721: owner query for nonexistent token'
 
     // airdropFunds provider withdrawing their leftover funds after the airdrop has finished
-    await expect(dropContract.connect(this.signers.deployer).withdrawAirdropFunds()).to.be.revertedWith(
-      "AirdropStillInProgress",
-    );
+    await expect(dropContract.connect(this.signers.deployer).withdrawAirdropFunds()).to.be.revertedWith("AirdropStillInProgress");
 
     await ethers.provider.send("evm_increaseTime", [oneWeekInSeconds]); // add one week worth of seconds
 

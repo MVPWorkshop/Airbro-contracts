@@ -16,11 +16,7 @@ contract AirbroFactorySMCampaign {
     uint256 public totalAirdropsCount;
     uint256 public totalNft1155ContractsCount;
 
-    event NewAirdrop(
-        address indexed rewardedNftCollection,
-        address indexed airdropContract,
-        address indexed airdropCreator
-    );
+    event NewAirdrop(address indexed rewardedNftCollection, address indexed airdropContract, address indexed airdropCreator);
     event NewNft1155Contract(address indexed nft1155Contract, address indexed contractCreator);
     event AdminChanged(address indexed adminAddress);
 

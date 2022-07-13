@@ -101,9 +101,7 @@ export function AirbroFactorySMCampaignShouldChangeAdminInAllAirDrops(): void {
 
     // attaching deployed airdrop contract to this test
     const existing1155NftDropFactory = await ethers.getContractFactory("Existing1155NftDropSMCampaign");
-    const existing1155NftDropContract = existing1155NftDropFactory.attach(
-      await this.airbroFactorySMCampaign.airdrops(0),
-    );
+    const existing1155NftDropContract = existing1155NftDropFactory.attach(await this.airbroFactorySMCampaign.airdrops(0));
 
     // checking if initial admin address is able to set MerkleRootHash
     expect(await existing1155NftDropContract.connect(this.signers.backendWallet).setMerkleRoot(bytes32MerkleRootHash))

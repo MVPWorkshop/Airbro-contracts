@@ -20,15 +20,11 @@ export const ExistingTokenDropSMCampaignShouldDeploy = (): void => {
     });
 
     it("should have totalAirdropAmount set to correct value", async function () {
-      expect(await this.existingTokenDropSMCampaign.totalAirdropAmount()).to.be.equal(
-        this.constructorArgs.totalAirdropAmount,
-      );
+      expect(await this.existingTokenDropSMCampaign.totalAirdropAmount()).to.be.equal(this.constructorArgs.totalAirdropAmount);
     });
 
     it("should have airdropDuration set to 1 day (specifically, 86400 seconds)", async function () {
-      expect(await this.existingTokenDropSMCampaign.airdropDuration()).to.be.equal(
-        this.constructorArgs.airdropDuration * dayInSeconds,
-      );
+      expect(await this.existingTokenDropSMCampaign.airdropDuration()).to.be.equal(this.constructorArgs.airdropDuration * dayInSeconds);
     });
 
     it("expect airdropStartTime to be the block timestamp", async function () {
@@ -77,9 +73,7 @@ export const ExistingTokenDropSMCampaignShouldDeploy = (): void => {
         this.constructorArgs.tokensPerClaim,
       );
 
-      expect(await this.existingTokenDropSMCampaign.connect(this.signers.bob).getAirdropAmount(hexProof)).to.be.equal(
-        0,
-      );
+      expect(await this.existingTokenDropSMCampaign.connect(this.signers.bob).getAirdropAmount(hexProof)).to.be.equal(0);
     });
   });
 };

@@ -11,9 +11,7 @@ task("deploy:AirbroFactory").setAction(async function (taskArguments: TaskArgume
   const accounts: Signer[] = await ethers.getSigners();
   console.log("Deployer address: " + (await accounts[0].getAddress()));
 
-  const AirbroFactory: AirbroFactory__factory = <AirbroFactory__factory>(
-    await ethers.getContractFactory("AirbroFactory")
-  );
+  const AirbroFactory: AirbroFactory__factory = <AirbroFactory__factory>await ethers.getContractFactory("AirbroFactory");
   const Airbro: AirbroFactory = <AirbroFactory>await AirbroFactory.deploy();
   await Airbro.deployed();
 
