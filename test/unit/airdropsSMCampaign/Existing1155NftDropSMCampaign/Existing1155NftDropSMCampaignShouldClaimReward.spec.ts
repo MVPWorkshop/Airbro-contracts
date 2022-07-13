@@ -8,7 +8,12 @@ import { oneWeekInSeconds } from "../../../shared/constants";
 export const Existing1155NftDropSMCampaignShouldClaimReward = (): void => {
   describe("user should be able to claim reward", async function () {
     it("should be able to claim if part of merkleRoot", async function () {
-      const whitelisted = [this.signers.alice.address, this.signers.bob.address, this.signers.jerry.address, this.signers.lisa.address];
+      const whitelisted = [
+        this.signers.alice.address,
+        this.signers.bob.address,
+        this.signers.jerry.address,
+        this.signers.lisa.address,
+      ];
       const leaves = whitelisted.map(addr => keccak256(addr));
       const merkleTree = new MerkleTree(leaves, keccak256, { sort: true });
       const roothash = merkleTree.getHexRoot();
@@ -27,7 +32,12 @@ export const Existing1155NftDropSMCampaignShouldClaimReward = (): void => {
     it("should revert claim if airdrop has expired", async function () {
       await ethers.provider.send("evm_increaseTime", [oneWeekInSeconds]); // add one week worth of seconds
 
-      const whitelisted = [this.signers.alice.address, this.signers.bob.address, this.signers.jerry.address, this.signers.lisa.address];
+      const whitelisted = [
+        this.signers.alice.address,
+        this.signers.bob.address,
+        this.signers.jerry.address,
+        this.signers.lisa.address,
+      ];
       const leaves = whitelisted.map(addr => keccak256(addr));
       const merkleTree = new MerkleTree(leaves, keccak256, { sort: true });
       const roothash = merkleTree.getHexRoot();
@@ -38,11 +48,18 @@ export const Existing1155NftDropSMCampaignShouldClaimReward = (): void => {
 
       const hexProof = merkleTree.getHexProof(leaves[0]);
 
-      await expect(this.existing1155NFTDropSMCampaign.connect(this.signers.alice).claim(hexProof)).to.be.revertedWith(`AirdropExpired`);
+      await expect(this.existing1155NFTDropSMCampaign.connect(this.signers.alice).claim(hexProof)).to.be.revertedWith(
+        `AirdropExpired`,
+      );
     });
 
     it("should revert claim if not part of merkleRoot", async function () {
-      const whitelisted = [this.signers.alice.address, this.signers.bob.address, this.signers.jerry.address, this.signers.lisa.address];
+      const whitelisted = [
+        this.signers.alice.address,
+        this.signers.bob.address,
+        this.signers.jerry.address,
+        this.signers.lisa.address,
+      ];
       const leaves = whitelisted.map(addr => keccak256(addr));
       const merkleTree = new MerkleTree(leaves, keccak256, { sort: true });
       const roothash = merkleTree.getHexRoot();
@@ -53,11 +70,18 @@ export const Existing1155NftDropSMCampaignShouldClaimReward = (): void => {
 
       const hexProof = merkleTree.getHexProof(leaves[0]);
 
-      await expect(this.existing1155NFTDropSMCampaign.connect(this.signers.peter).claim(hexProof)).to.be.revertedWith(`NotEligible`);
+      await expect(this.existing1155NFTDropSMCampaign.connect(this.signers.peter).claim(hexProof)).to.be.revertedWith(
+        `NotEligible`,
+      );
     });
 
     it("should return true if eligible for reward", async function () {
-      const whitelisted = [this.signers.alice.address, this.signers.bob.address, this.signers.jerry.address, this.signers.lisa.address];
+      const whitelisted = [
+        this.signers.alice.address,
+        this.signers.bob.address,
+        this.signers.jerry.address,
+        this.signers.lisa.address,
+      ];
       const leaves = whitelisted.map(addr => keccak256(addr));
       const merkleTree = new MerkleTree(leaves, keccak256, { sort: true });
       const roothash = merkleTree.getHexRoot();
@@ -68,13 +92,20 @@ export const Existing1155NftDropSMCampaignShouldClaimReward = (): void => {
 
       const hexProof = merkleTree.getHexProof(leaves[0]);
 
-      const isEligibleForReward = await this.existing1155NFTDropSMCampaign.connect(this.signers.alice).isEligibleForReward(hexProof);
+      const isEligibleForReward = await this.existing1155NFTDropSMCampaign
+        .connect(this.signers.alice)
+        .isEligibleForReward(hexProof);
 
       expect(isEligibleForReward).to.equal(true);
     });
 
     it("should return airdropAmount if eligible for reward", async function () {
-      const whitelisted = [this.signers.alice.address, this.signers.bob.address, this.signers.jerry.address, this.signers.lisa.address];
+      const whitelisted = [
+        this.signers.alice.address,
+        this.signers.bob.address,
+        this.signers.jerry.address,
+        this.signers.lisa.address,
+      ];
       const leaves = whitelisted.map(addr => keccak256(addr));
       const merkleTree = new MerkleTree(leaves, keccak256, { sort: true });
       const roothash = merkleTree.getHexRoot();
@@ -85,13 +116,20 @@ export const Existing1155NftDropSMCampaignShouldClaimReward = (): void => {
 
       const hexProof = merkleTree.getHexProof(leaves[0]);
 
-      const airdropAmount = await this.existing1155NFTDropSMCampaign.connect(this.signers.alice).getAirdropAmount(hexProof);
+      const airdropAmount = await this.existing1155NFTDropSMCampaign
+        .connect(this.signers.alice)
+        .getAirdropAmount(hexProof);
 
       expect(airdropAmount).to.not.equal(constants.Zero);
     });
 
     it("should return 0 for airdropAmount if not eligible for reward", async function () {
-      const whitelisted = [this.signers.alice.address, this.signers.bob.address, this.signers.jerry.address, this.signers.lisa.address];
+      const whitelisted = [
+        this.signers.alice.address,
+        this.signers.bob.address,
+        this.signers.jerry.address,
+        this.signers.lisa.address,
+      ];
       const leaves = whitelisted.map(addr => keccak256(addr));
       const merkleTree = new MerkleTree(leaves, keccak256, { sort: true });
       const roothash = merkleTree.getHexRoot();
@@ -102,7 +140,9 @@ export const Existing1155NftDropSMCampaignShouldClaimReward = (): void => {
 
       const hexProof = merkleTree.getHexProof(leaves[0]);
 
-      const airdropAmount = await this.existing1155NFTDropSMCampaign.connect(this.signers.peter).getAirdropAmount(hexProof);
+      const airdropAmount = await this.existing1155NFTDropSMCampaign
+        .connect(this.signers.peter)
+        .getAirdropAmount(hexProof);
 
       expect(airdropAmount).to.equal(constants.Zero);
     });

@@ -5,7 +5,6 @@ const dayInSeconds: number = 86400;
 
 export const ExistingTokenDropSMCampaignShouldDeploy = (): void => {
   describe("should deploy", async function () {
-
     it("should have rewardedNft set to correct hardcoded address", async function () {
       expect(await this.existingTokenDropSMCampaign.rewardedNft()).to.be.equal(this.constructorArgs.rewardedNft);
     });
@@ -19,11 +18,15 @@ export const ExistingTokenDropSMCampaignShouldDeploy = (): void => {
     });
 
     it("should have totalAirdropAmount set to correct value", async function () {
-      expect(await this.existingTokenDropSMCampaign.totalAirdropAmount()).to.be.equal(this.constructorArgs.totalAirdropAmount);
+      expect(await this.existingTokenDropSMCampaign.totalAirdropAmount()).to.be.equal(
+        this.constructorArgs.totalAirdropAmount,
+      );
     });
 
     it("should have airdropDuration set to 1 day (specifically, 86400 seconds)", async function () {
-      expect(await this.existingTokenDropSMCampaign.airdropDuration()).to.be.equal(this.constructorArgs.airdropDuration * dayInSeconds);
+      expect(await this.existingTokenDropSMCampaign.airdropDuration()).to.be.equal(
+        this.constructorArgs.airdropDuration * dayInSeconds,
+      );
     });
 
     it("expect airdropStartTime to be the block timestamp", async function () {

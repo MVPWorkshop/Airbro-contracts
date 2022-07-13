@@ -71,22 +71,29 @@ contract Existing1155NftDrop is AirdropInfo, AirdropMerkleProof, IERC1155Receive
     function withdrawAirdropFunds() external {
         if (airdropFundingHolder != msg.sender) revert Unauthorized();
         if (block.timestamp < airdropFinishTime) revert AirdropStillInProgress();
-        rewardToken.safeTransferFrom(address(this), msg.sender, rewardTokenId, rewardToken.balanceOf(address(this), rewardTokenId), "");
+        rewardToken.safeTransferFrom(
+            address(this),
+            msg.sender,
+            rewardTokenId,
+            rewardToken.balanceOf(address(this), rewardTokenId),
+            ""
+        );
     }
 
     /// @notice Allows the NFT holder to claim his ERC20 airdrop
     function claim(uint256 tokenId) external {
-        if(isEligibleForReward(tokenId)) {
-        hasClaimed[tokenId] = true;
-        rewardToken.safeTransferFrom(address(this), msg.sender, rewardTokenId, tokensPerClaim, "");
-        emit Claimed(tokenId, msg.sender);
+        if (isEligibleForReward(tokenId)) {
+            hasClaimed[tokenId] = true;
+            rewardToken.safeTransferFrom(address(this), msg.sender, rewardTokenId, tokensPerClaim, "");
+            emit Claimed(tokenId, msg.sender);
         } else {
             revert NotEligible();
         }
     }
 
     function batchClaim(uint256[] memory tokenIds) external {
-        if (rewardToken.balanceOf(address(this), rewardTokenId) < tokensPerClaim * tokenIds.length) revert InsufficientLiquidity();
+        if (rewardToken.balanceOf(address(this), rewardTokenId) < tokensPerClaim * tokenIds.length)
+            revert InsufficientLiquidity();
 
         if (block.timestamp > airdropFinishTime) revert AirdropExpired();
 

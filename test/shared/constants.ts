@@ -13,7 +13,7 @@ export async function unitTokenDropFixtureArguments(airBroFactoryAddress: String
     tokensPerClaim: 2,
     name: "TokenDropName",
     symbol: "TokenDropSymbol",
-    airdropDuration: 1
+    airdropDuration: 1,
   };
 }
 
@@ -35,11 +35,14 @@ export async function unitExistingTokenDropFixtureArguments(mockTokenAddress: St
     tokensPerClaim: 2,
     rewardToken: mockTokenAddress,
     totalAirdropAmount: 2,
-    airdropDuration: 1
+    airdropDuration: 1,
   };
 }
 
-export async function unitExistingTokenDropSMCampaignFixtureArguments(mockTokenAddress: String, mockAirBroFactorySMCampaign: String) {
+export async function unitExistingTokenDropSMCampaignFixtureArguments(
+  mockTokenAddress: String,
+  mockAirBroFactorySMCampaign: String,
+) {
   return {
     rewardedNft: randomAddress,
     tokensPerClaim: 2,

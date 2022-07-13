@@ -88,7 +88,9 @@ type IntegrationSMCampaignFixtureType = {
   airBro1155NftMint: AirBro1155NftMint;
 };
 
-export const unitExisting1155NFTDropFixture: Fixture<UnitExisting1155NFTDropFixtureType> = async (signers: Wallet[]) => {
+export const unitExisting1155NFTDropFixture: Fixture<UnitExisting1155NFTDropFixtureType> = async (
+  signers: Wallet[],
+) => {
   const deployer: Wallet = signers[0];
 
   const mockAirBroFactory = await deployMockAirBroFactory(deployer);
@@ -111,17 +113,29 @@ export const unitExisting1155NFTDropSMCampaignFixture: Fixture<UnitExisting1155N
 
   const airBro1155NftMintFactory: ContractFactory = await ethers.getContractFactory(`AirBro1155NftMint`);
 
-  const airBro1155NftMint: AirBro1155NftMint = (await airBro1155NftMintFactory.connect(deployer).deploy()) as AirBro1155NftMint;
+  const airBro1155NftMint: AirBro1155NftMint = (await airBro1155NftMintFactory
+    .connect(deployer)
+    .deploy()) as AirBro1155NftMint;
 
   await airBro1155NftMint.deployed();
 
   const mockAirBroFactorySMCampaign = await deployMockAirBroFactorySMCampaign(deployer);
 
-  const existing1155NftDropSMCampaignFactory: ContractFactory = await ethers.getContractFactory(`Existing1155NftDropSMCampaign`);
+  const existing1155NftDropSMCampaignFactory: ContractFactory = await ethers.getContractFactory(
+    `Existing1155NftDropSMCampaign`,
+  );
 
   const existing1155NftDropSMCampaign: Existing1155NftDropSMCampaign = (await existing1155NftDropSMCampaignFactory
     .connect(deployer)
-    .deploy(randomAddress, airBro1155NftMint.address, 2, 1, 1000, 2, mockAirBroFactorySMCampaign.address)) as Existing1155NftDropSMCampaign;
+    .deploy(
+      randomAddress,
+      airBro1155NftMint.address,
+      2,
+      1,
+      1000,
+      2,
+      mockAirBroFactorySMCampaign.address,
+    )) as Existing1155NftDropSMCampaign;
 
   await existing1155NftDropSMCampaign.deployed();
 
@@ -144,7 +158,10 @@ export const unitExistingTokenDropFixture: Fixture<UnitExistingTokenDropFixtureT
 
   const existingTokenDropFactory: ContractFactory = await ethers.getContractFactory(`ExistingTokenDrop`);
 
-  const existingTokenDropConstructorArgs = await unitExistingTokenDropFixtureArguments(mockDAItoken.address, mockAirBroFactory.address);
+  const existingTokenDropConstructorArgs = await unitExistingTokenDropFixtureArguments(
+    mockDAItoken.address,
+    mockAirBroFactory.address,
+  );
   const existingTokenDrop: ExistingTokenDrop = (await existingTokenDropFactory
     .connect(deployer)
     .deploy(...Object.values(existingTokenDropConstructorArgs))) as ExistingTokenDrop;
@@ -194,14 +211,18 @@ export const unitTokenDropFixture: Fixture<UnitTokenDropFixtureType> = async (si
   const tokenDropFactory: ContractFactory = await ethers.getContractFactory(`TokenDrop`);
 
   const tokenDropConstructorArgs = await unitTokenDropFixtureArguments(mockAirBroFactory.address);
-  const tokenDrop: TokenDrop = (await tokenDropFactory.connect(deployer).deploy(...Object.values(tokenDropConstructorArgs))) as TokenDrop;
+  const tokenDrop: TokenDrop = (await tokenDropFactory
+    .connect(deployer)
+    .deploy(...Object.values(tokenDropConstructorArgs))) as TokenDrop;
 
   await tokenDrop.deployed();
 
   return { tokenDrop, mockAirBroFactory, tokenDropConstructorArgs };
 };
 
-export const unitExistingTokenDropSMCampaignFixture: Fixture<UnitExistingTokenDropSMCampaignFixtureType> = async (signers: Wallet[]) => {
+export const unitExistingTokenDropSMCampaignFixture: Fixture<UnitExistingTokenDropSMCampaignFixtureType> = async (
+  signers: Wallet[],
+) => {
   const deployer: Wallet = signers[0];
 
   const mockAirBroFactorySMCampaign = await deployMockAirBroFactorySMCampaign(deployer);
@@ -213,23 +234,32 @@ export const unitExistingTokenDropSMCampaignFixture: Fixture<UnitExistingTokenDr
     mockDAItoken.address,
     mockAirBroFactorySMCampaign.address,
   );
-  const existingTokenDropSMCampaign: ExistingTokenDropSMCampaign = (await ExistingTokenDropSMCampaignFactory.connect(deployer).deploy(
-    ...Object.values(existingTokenDropSMCampaignConstructorArgs),
-  )) as ExistingTokenDropSMCampaign;
+  const existingTokenDropSMCampaign: ExistingTokenDropSMCampaign = (await ExistingTokenDropSMCampaignFactory.connect(
+    deployer,
+  ).deploy(...Object.values(existingTokenDropSMCampaignConstructorArgs))) as ExistingTokenDropSMCampaign;
 
   await existingTokenDropSMCampaign.deployed();
 
-  return { existingTokenDropSMCampaign, existingTokenDropSMCampaignConstructorArgs, mockAirBroFactorySMCampaign, mockDAItoken };
+  return {
+    existingTokenDropSMCampaign,
+    existingTokenDropSMCampaignConstructorArgs,
+    mockAirBroFactorySMCampaign,
+    mockDAItoken,
+  };
 };
 
-export const unitTokenDropSMCampaignFixture: Fixture<UnitTokenDropSMCampaignFixtureType> = async (signers: Wallet[]) => {
+export const unitTokenDropSMCampaignFixture: Fixture<UnitTokenDropSMCampaignFixtureType> = async (
+  signers: Wallet[],
+) => {
   const deployer: Wallet = signers[0];
 
   const mockAirBroFactorySMCampaign = await deployMockAirBroFactorySMCampaign(deployer);
 
   const tokenDropSMCampaignFactory = await ethers.getContractFactory("TokenDropSMCampaign");
 
-  const tokenDropSMCampaignConstructorArgs = await unitTokenDropSMCampaignFixtureArguments(mockAirBroFactorySMCampaign.address);
+  const tokenDropSMCampaignConstructorArgs = await unitTokenDropSMCampaignFixtureArguments(
+    mockAirBroFactorySMCampaign.address,
+  );
   const tokenDropSMCampaign: TokenDropSMCampaign = (await tokenDropSMCampaignFactory
     .connect(deployer)
     .deploy(...Object.values(tokenDropSMCampaignConstructorArgs))) as TokenDropSMCampaign;
@@ -250,7 +280,9 @@ export const integrationsFixture: Fixture<IntegrationFixtureType> = async (signe
 
   const testNftCollectionFactory: ContractFactory = await ethers.getContractFactory(`TestNftCollection`);
 
-  const testNftCollection: TestNftCollection = (await testNftCollectionFactory.connect(deployer).deploy()) as TestNftCollection;
+  const testNftCollection: TestNftCollection = (await testNftCollectionFactory
+    .connect(deployer)
+    .deploy()) as TestNftCollection;
 
   await testNftCollection.deployed();
 
@@ -262,7 +294,9 @@ export const integrationsFixture: Fixture<IntegrationFixtureType> = async (signe
 
   const airBro1155NftMintFactory: ContractFactory = await ethers.getContractFactory(`AirBro1155NftMint`);
 
-  const airBro1155NftMint: AirBro1155NftMint = (await airBro1155NftMintFactory.connect(deployer).deploy()) as AirBro1155NftMint;
+  const airBro1155NftMint: AirBro1155NftMint = (await airBro1155NftMintFactory
+    .connect(deployer)
+    .deploy()) as AirBro1155NftMint;
 
   await airBro1155NftMint.deployed();
 
@@ -282,7 +316,9 @@ export const integrationsSMCampaignFixture: Fixture<IntegrationSMCampaignFixture
 
   const testNftCollectionFactory: ContractFactory = await ethers.getContractFactory(`TestNftCollection`);
 
-  const testNftCollection: TestNftCollection = (await testNftCollectionFactory.connect(deployer).deploy()) as TestNftCollection;
+  const testNftCollection: TestNftCollection = (await testNftCollectionFactory
+    .connect(deployer)
+    .deploy()) as TestNftCollection;
 
   await testNftCollection.deployed();
 
@@ -294,7 +330,9 @@ export const integrationsSMCampaignFixture: Fixture<IntegrationSMCampaignFixture
 
   const airBro1155NftMintFactory: ContractFactory = await ethers.getContractFactory(`AirBro1155NftMint`);
 
-  const airBro1155NftMint: AirBro1155NftMint = (await airBro1155NftMintFactory.connect(deployer).deploy()) as AirBro1155NftMint;
+  const airBro1155NftMint: AirBro1155NftMint = (await airBro1155NftMintFactory
+    .connect(deployer)
+    .deploy()) as AirBro1155NftMint;
 
   await airBro1155NftMint.deployed();
 

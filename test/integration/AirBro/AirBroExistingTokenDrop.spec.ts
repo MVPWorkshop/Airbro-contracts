@@ -24,7 +24,9 @@ export function shouldAirDropExistingToken(): void {
     await this.testToken.connect(this.signers.deployer).approve(tokenDropContract.address, totalAirdropAmount);
 
     expect(await this.airbroFactory.connect(this.signers.deployer).totalAirdropsCount()).to.equal(1);
-    await expect(tokenDropContract.fundAirdrop()).to.emit(tokenDropContract, "AirdropFunded").withArgs(tokenDropContract.address);
+    await expect(tokenDropContract.fundAirdrop())
+      .to.emit(tokenDropContract, "AirdropFunded")
+      .withArgs(tokenDropContract.address);
     await this.testNftCollection.connect(this.signers.deployer).safeMint(this.signers.deployer.address);
 
     await expect(tokenDropContract.claim(0, [])).to.emit(tokenDropContract, "Claimed");

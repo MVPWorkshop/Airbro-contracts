@@ -10,7 +10,7 @@ import "../interfaces/AirdropMerkleProof.sol";
 import "../interfaces/IAirBroFactory.sol";
 
 /// @title Airdrops existing ERC20 tokens for airdrop recipients
-contract ExistingTokenDropSMCampaign is AirdropInfoSMCampaign, AirdropMerkleProof  {
+contract ExistingTokenDropSMCampaign is AirdropInfoSMCampaign, AirdropMerkleProof {
     using SafeERC20 for IERC20;
 
     ERC1155 public immutable rewardedNft;
@@ -43,7 +43,7 @@ contract ExistingTokenDropSMCampaign is AirdropInfoSMCampaign, AirdropMerkleProo
     error AirdropExpired();
     error NotEligible();
     error Unauthorized();
-    
+
     modifier onlyAdmin() {
         if (msg.sender != IAirBroFactory(airBroFactorySMCampaignAddress).admin()) revert Unauthorized();
         _;
@@ -77,10 +77,10 @@ contract ExistingTokenDropSMCampaign is AirdropInfoSMCampaign, AirdropMerkleProo
     /// @notice Allows the airdrop creator to provide funds for the airdrop reward
     function fundAirdrop() external {
         if (airdropFunded) revert AlreadyFunded();
-        
+
         if (rewardToken.balanceOf(msg.sender) < totalAirdropAmount) revert InsufficientAmount();
         if (rewardToken.allowance(msg.sender, address(this)) < totalAirdropAmount) revert InsufficientAmount();
-        
+
         airdropFunded = true;
         airdropFundBlockTimestamp = block.timestamp;
         airdropFundingHolder = msg.sender;

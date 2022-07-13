@@ -12,6 +12,8 @@ export function AirbroFactorySMCampaignShouldChangeAdminAddress(): void {
   });
 
   it("should revert admin change from not admin address", async function () {
-    await expect(this.airbroFactorySMCampaign.connect(this.signers.alice).changeAdmin(randomAddress)).to.be.revertedWith("NotAdmin");
+    await expect(
+      this.airbroFactorySMCampaign.connect(this.signers.alice).changeAdmin(randomAddress),
+    ).to.be.revertedWith("NotAdmin");
   });
 }

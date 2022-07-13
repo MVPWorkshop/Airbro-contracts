@@ -25,7 +25,7 @@ contract TokenDrop is ERC20, AirdropInfo, AirdropMerkleProof {
     error AirdropExpired();
     error Unauthorized();
     error NotEligible();
-  
+
     constructor(
         address _rewardedNft,
         uint256 _tokensPerClaim,
@@ -43,7 +43,7 @@ contract TokenDrop is ERC20, AirdropInfo, AirdropMerkleProof {
     /// @notice Allows the NFT holder to claim their ERC20 airdrop
     /// @param tokenId is the rewarded NFT collections token ID
     function claim(uint256 tokenId) external {
-        if(isEligibleForReward(tokenId)) {
+        if (isEligibleForReward(tokenId)) {
             hasClaimed[tokenId] = true;
             _mint(msg.sender, tokensPerClaim);
             emit Claimed(tokenId, msg.sender);

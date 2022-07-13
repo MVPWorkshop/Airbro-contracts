@@ -5,7 +5,6 @@ const dayInSeconds: number = 86400;
 
 export const TokenDropShouldDeploy = (): void => {
   describe("should deploy", async function () {
-    
     it("should have rewardedNft set to correct hardcoded address", async function () {
       expect(await this.tokenDrop.rewardedNft()).to.be.equal(this.constructorArgs.rewardedNft);
     });
@@ -49,6 +48,5 @@ export const TokenDropShouldDeploy = (): void => {
     it("should return correct airdrp type", async function () {
       expect(await this.tokenDrop.getAirdropType()).to.be.equal("ERC20");
     });
-
   });
 };

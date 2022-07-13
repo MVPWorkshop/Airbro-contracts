@@ -83,14 +83,12 @@ describe("Unit tests", function () {
       });
 
       Existing1155NftDropShouldDeploy();
-      
     });
 
     describe("ExistingTokenDrop", () => {
       beforeEach(async function () {
-        const { existingTokenDrop, mockAirBroFactory, existingTokenDropConstructorArgs, mockDAItoken } = await this.loadFixture(
-          unitExistingTokenDropFixture,
-        );
+        const { existingTokenDrop, mockAirBroFactory, existingTokenDropConstructorArgs, mockDAItoken } =
+          await this.loadFixture(unitExistingTokenDropFixture);
         this.existingTokenDrop = existingTokenDrop;
 
         this.mocks = {} as Mocks;
@@ -104,7 +102,6 @@ describe("Unit tests", function () {
       });
 
       ExistingTokenDropShouldDeploy();
-      
     });
 
     describe("ItemNFTDrop", () => {
@@ -117,7 +114,6 @@ describe("Unit tests", function () {
       });
 
       //
-
     });
 
     describe("NFTDrop", () => {
@@ -130,7 +126,6 @@ describe("Unit tests", function () {
       });
 
       //
-
     });
 
     describe("TokenDrop", () => {
@@ -145,7 +140,6 @@ describe("Unit tests", function () {
       });
 
       TokenDropShouldDeploy();
-      
     });
   });
 
@@ -169,7 +163,7 @@ describe("Unit tests", function () {
         );
 
         this.existing1155NFTDropSMCampaign = existing1155NftDropSMCampaign;
-        
+
         this.mocks = {} as Mocks;
         this.mocks.mockAirBroFactorySMCampaign = mockAirBroFactorySMCampaign;
       });
@@ -181,8 +175,12 @@ describe("Unit tests", function () {
 
     describe("ExistingTokenDropSMCampaign", () => {
       beforeEach(async function () {
-        const { existingTokenDropSMCampaign, existingTokenDropSMCampaignConstructorArgs, mockAirBroFactorySMCampaign, mockDAItoken } =
-          await this.loadFixture(unitExistingTokenDropSMCampaignFixture);
+        const {
+          existingTokenDropSMCampaign,
+          existingTokenDropSMCampaignConstructorArgs,
+          mockAirBroFactorySMCampaign,
+          mockDAItoken,
+        } = await this.loadFixture(unitExistingTokenDropSMCampaignFixture);
 
         this.existingTokenDropSMCampaign = existingTokenDropSMCampaign;
         this.mocks = {} as Mocks;
@@ -202,9 +200,8 @@ describe("Unit tests", function () {
 
     describe("TokenDropSMCampaign", () => {
       beforeEach(async function () {
-        const { tokenDropSMCampaign, mockAirBroFactorySMCampaign, tokenDropSMCampaignConstructorArgs } = await this.loadFixture(
-          unitTokenDropSMCampaignFixture,
-        );
+        const { tokenDropSMCampaign, mockAirBroFactorySMCampaign, tokenDropSMCampaignConstructorArgs } =
+          await this.loadFixture(unitTokenDropSMCampaignFixture);
 
         this.tokenDropSMCampaign = tokenDropSMCampaign;
 

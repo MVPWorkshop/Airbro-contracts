@@ -10,7 +10,6 @@ const tokensPerClaim: number = 2;
 
 export const Existing1155NftDropShouldDeploy = (): void => {
   describe("should deploy", async function () {
-
     it("should have rewardedNft set to correct hardcoded address", async function () {
       expect(await this.existing1155NFTDrop.rewardedNft()).to.be.equal(rewardedNft);
     });
@@ -20,8 +19,7 @@ export const Existing1155NftDropShouldDeploy = (): void => {
     });
 
     it("should have totalAirdropAmount set to correct value", async function () {
-      expect(await this.existing1155NFTDrop.totalAirdropAmount()).to.be.equal(totalAirdropAmount);  // this.constructorArgs.totalAirdropAmount
-
+      expect(await this.existing1155NFTDrop.totalAirdropAmount()).to.be.equal(totalAirdropAmount); // this.constructorArgs.totalAirdropAmount
     });
 
     it("should have airdropDuration set to 1 day (specifically, 86400 seconds)", async function () {
@@ -39,7 +37,9 @@ export const Existing1155NftDropShouldDeploy = (): void => {
       const blockNumBefore = await ethers.provider.getBlockNumber();
       const blockBefore = await ethers.provider.getBlock(blockNumBefore);
 
-      expect(await this.existing1155NFTDrop.airdropFinishTime()).to.be.equal(blockBefore.timestamp + airdropDuration * dayInSeconds);
+      expect(await this.existing1155NFTDrop.airdropFinishTime()).to.be.equal(
+        blockBefore.timestamp + airdropDuration * dayInSeconds,
+      );
     });
 
     it("should return correct airdrop type", async function () {

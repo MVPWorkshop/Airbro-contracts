@@ -6,7 +6,6 @@ const airdropDuration: number = 2;
 
 export const Existing1155NftDropSMCampaignShouldDeploy = (): void => {
   describe("should deploy", async function () {
-    
     it("should return correct airdrop type", async function () {
       expect(await this.existing1155NFTDropSMCampaign.getAirdropType()).to.be.equal("ERC1155");
     });
@@ -18,7 +17,9 @@ export const Existing1155NftDropSMCampaignShouldDeploy = (): void => {
     });
 
     it("should set airBroFactoryAddress to the airbroFactory address", async function () {
-      expect(await this.existing1155NFTDropSMCampaign.airBroFactoryAddress()).to.be.equal(this.mocks.mockAirBroFactorySMCampaign.address);
+      expect(await this.existing1155NFTDropSMCampaign.airBroFactoryAddress()).to.be.equal(
+        this.mocks.mockAirBroFactorySMCampaign.address,
+      );
     });
   });
 };
