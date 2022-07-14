@@ -115,11 +115,6 @@ export function shouldAirDropExistingToken(): void {
     await network.provider.send("evm_increaseTime", [oneWeekInSeconds]); // add one week worth of seconds
     await network.provider.send("evm_mine"); // mine, so now the time increased by oneWeekInSeconds seconds
 
-    console.log(await tokenDropContract.airdropFinishTime());
-    const blockNumBefore = await ethers.provider.getBlockNumber();
-    const blockBefore = await ethers.provider.getBlock(blockNumBefore);
-    console.log(blockBefore.timestamp);
-
     await expect(tokenDropContract.isEligibleForReward(constants.Zero)).to.be.revertedWith(`AirdropExpired`);
   });
 
@@ -308,6 +303,74 @@ export function shouldAirDropExistingToken(): void {
     await this.testNftCollection.connect(this.signers.deployer).safeMint(this.signers.alice.address);
 
     await expect(tokenDropContract.batchClaim(tokenIdArray)).to.be.revertedWith(`Unauthorized`);
+  });
+
+  it("fundAirdrop function should revert if existing token airdrop is already funded", async function () {
+    const totalAirdropAmount: BigNumber = ethers.utils.parseEther("1000");
+    const doubleOfTotalAirdropAmount: BigNumber = totalAirdropAmount.mul(2);
+    const tokensPerClaim: BigNumber = ethers.utils.parseEther("100");
+    const airdropDuration: number = 1;
+
+    await this.testToken.connect(this.signers.deployer).mint(this.signers.deployer.address, doubleOfTotalAirdropAmount);
+    // console.log("Test token balance of: " + (await this.testToken.balanceOf(this.signers.deployer.address)));
+
+    // minting NFT to deployer address
+    await this.testNftCollection.connect(this.signers.deployer).safeMint(this.signers.deployer.address);
+
+    // deploying airdrop with existing ERC20 token as reward
+    await expect(
+      await this.airbroFactory.connect(this.signers.deployer).dropExistingTokensToNftHolders(
+        this.testNftCollection.address, // rewardedNftCollection,
+        tokensPerClaim, // tokensPerClaim
+        this.testToken.address, //existing token address
+        totalAirdropAmount, // total tokens to be rewarded
+        airdropDuration, // airdrop Duration, in days
+      ),
+    ).to.emit(this.airbroFactory, "NewAirdrop");
+
+    const existingDropFactory = await ethers.getContractFactory("ExistingTokenDrop");
+    const tokenDropContract = existingDropFactory.attach(await this.airbroFactory.airdrops(0));
+
+    // approving totalAirdropAmount of ERC20 tokens to airdrop contract
+    await this.testToken.connect(this.signers.deployer).approve(tokenDropContract.address, totalAirdropAmount);
+
+    // funding airdrop
+    await expect(tokenDropContract.fundAirdrop()).to.emit(tokenDropContract, "AirdropFunded");
+
+    await expect(tokenDropContract.fundAirdrop()).to.be.revertedWith("AlreadyFunded");
+  });
+
+  it("fundAirdrop function should revert if user has insufficient funds for existing token airdrop", async function () {
+    const totalAirdropAmount: BigNumber = ethers.utils.parseEther("1000");
+    const halfOfTotalAirdropAmount: BigNumber = totalAirdropAmount.div(2);
+    const tokensPerClaim: BigNumber = ethers.utils.parseEther("100");
+    const airdropDuration: number = 1;
+
+    await this.testToken.connect(this.signers.deployer).mint(this.signers.deployer.address, halfOfTotalAirdropAmount);
+    // console.log("Test token balance of: " + (await this.testToken.balanceOf(this.signers.deployer.address)));
+
+    // minting NFT to deployer address
+    await this.testNftCollection.connect(this.signers.deployer).safeMint(this.signers.deployer.address);
+
+    // deploying airdrop with existing ERC20 token as reward
+    await expect(
+      await this.airbroFactory.connect(this.signers.deployer).dropExistingTokensToNftHolders(
+        this.testNftCollection.address, // rewardedNftCollection,
+        tokensPerClaim, // tokensPerClaim
+        this.testToken.address, //existing token address
+        totalAirdropAmount, // total tokens to be rewarded
+        airdropDuration, // airdrop Duration, in days
+      ),
+    ).to.emit(this.airbroFactory, "NewAirdrop");
+
+    const existingDropFactory = await ethers.getContractFactory("ExistingTokenDrop");
+    const tokenDropContract = existingDropFactory.attach(await this.airbroFactory.airdrops(0));
+
+    // approving totalAirdropAmount of ERC20 tokens to airdrop contract
+    await this.testToken.connect(this.signers.deployer).approve(tokenDropContract.address, totalAirdropAmount);
+
+    // funding airdrop
+    await expect(tokenDropContract.fundAirdrop()).to.be.revertedWith("InsufficientAmount");
   });
 
   it("should fund and claim existing token airdrop", async function () {
