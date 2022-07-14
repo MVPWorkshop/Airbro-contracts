@@ -70,6 +70,7 @@ contract ExistingTokenDropSMCampaign is AirdropInfoSMCampaign, AirdropMerkleProo
     /// @notice Sets the merkleRoot - can only be done if admin (different from the contract owner)
     /// @param _merkleRoot The root hash of the Merle Tree
     function setMerkleRoot(bytes32 _merkleRoot) external onlyAdmin {
+        // kao dodatni parametar da posalje sumuiran broj dobitnika
         merkleRoot = _merkleRoot;
         emit MerkleRootChanged(_merkleRoot);
     }

@@ -116,7 +116,7 @@ contract Existing1155NftDropSMCampaign is AirdropInfoSMCampaign, AirdropMerklePr
     function isEligibleForReward(bytes32[] calldata _merkleProof) public view returns (bool) {
         if (hasClaimed[msg.sender]) revert AlreadyRedeemed();
         if (rewardToken.balanceOf(address(this), rewardTokenId) < tokensPerClaim) revert InsufficientLiquidity();
-        if (block.timestamp > airdropFinishTime) revert AirdropExpired();
+        if (block.timestamp > airdropFinishTime) revert AirdropExpired(); // remove this, merkle root will be main proof for eligibility
         bool isEligible = checkProof(_merkleProof, merkleRoot);
         return isEligible;
     }

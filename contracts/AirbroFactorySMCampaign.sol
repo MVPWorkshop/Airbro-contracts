@@ -106,12 +106,12 @@ contract AirbroFactorySMCampaign {
     /// @param totalAirdropAmount - total amount of ERC20 tokens to be supplied for the rewards
     /// @param airdropDuration - duration of campaign in days
     function dropExisting1155NftsToNftHolders(
-        address rewardedNftCollection,
-        address reward1155Nft,
-        uint256 tokensPerClaim,
-        uint256 tokenId,
-        uint256 totalAirdropAmount,
-        uint256 airdropDuration
+        address rewardedNftCollection, // ukloniti ovo
+        address reward1155Nft, // ukloniti ovo
+        uint256 tokensPerClaim, // ukloniti i ovo
+        uint256 tokenId, // ukloniti i ovo
+        uint256 totalAirdropAmount, // nft reward supply
+        uint256 airdropDuration //ukloniti // ---> dodati token uri
     ) external {
         Existing1155NftDropSMCampaign tokenDropContract = new Existing1155NftDropSMCampaign(
             rewardedNftCollection,
