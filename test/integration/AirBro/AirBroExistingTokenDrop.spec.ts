@@ -1,6 +1,6 @@
 import { expect } from "chai";
 import { BigNumber, constants } from "ethers";
-import { ethers } from "hardhat";
+import { ethers, network } from "hardhat";
 import { oneWeekInSeconds } from "../../shared/constants";
 
 export function shouldAirDropExistingToken(): void {
@@ -111,15 +111,16 @@ export function shouldAirDropExistingToken(): void {
     // funding airdrop
     await expect(tokenDropContract.fundAirdrop()).to.emit(tokenDropContract, "AirdropFunded");
 
-    // for some reason evm_increaseTime is not increasing the time here and the test is failing
-    await ethers.provider.send("evm_increaseTime", [oneWeekInSeconds]); // add one week worth of seconds
+    // increasing time
+    await network.provider.send("evm_increaseTime", [oneWeekInSeconds]); // add one week worth of seconds
+    await network.provider.send("evm_mine"); // mine, so now the time increased by oneWeekInSeconds seconds
 
     console.log(await tokenDropContract.airdropFinishTime());
     const blockNumBefore = await ethers.provider.getBlockNumber();
     const blockBefore = await ethers.provider.getBlock(blockNumBefore);
     console.log(blockBefore.timestamp);
 
-    // await expect(tokenDropContract.isEligibleForReward(constants.Zero)).to.be.revertedWith(`AirdropExpired`);
+    await expect(tokenDropContract.isEligibleForReward(constants.Zero)).to.be.revertedWith(`AirdropExpired`);
   });
 
   it("isEligible function should revert if existing token airdrop has insufficient funds", async function () {
