@@ -115,10 +115,8 @@ export function shouldAirDropExistingToken(): void {
     await network.provider.send("evm_increaseTime", [oneWeekInSeconds]); // add one week worth of seconds
     await network.provider.send("evm_mine"); // mine, so now the time increased by oneWeekInSeconds seconds
 
-    console.log(await tokenDropContract.airdropFinishTime());
     const blockNumBefore = await ethers.provider.getBlockNumber();
     const blockBefore = await ethers.provider.getBlock(blockNumBefore);
-    console.log(blockBefore.timestamp);
 
     await expect(tokenDropContract.isEligibleForReward(constants.Zero)).to.be.revertedWith(`AirdropExpired`);
   });

@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import { ethers } from "hardhat";
+import { ethers, network } from "hardhat";
 import { MerkleTree } from "merkletreejs";
 const { keccak256 } = ethers.utils;
 import { constants } from "ethers";
@@ -105,6 +105,24 @@ export const Existing1155NftDropSMCampaignShouldClaimReward = (): void => {
       const airdropAmount = await this.existing1155NFTDropSMCampaign.connect(this.signers.peter).getAirdropAmount(hexProof);
 
       expect(airdropAmount).to.equal(constants.Zero);
+    });
+
+    it("should revert if insuficcient liquidity to payout reward", async function () {
+      const whitelisted = [this.signers.alice.address, this.signers.bob.address, this.signers.jerry.address, this.signers.lisa.address];
+      const leaves = whitelisted.map(addr => keccak256(addr));
+      const merkleTree = new MerkleTree(leaves, keccak256, { sort: true });
+      const roothash = merkleTree.getHexRoot();
+
+      expect(await this.existing1155NFTDropSMCampaign.connect(this.signers.backendWallet).setMerkleRoot(roothash))
+        .to.emit(this.existing1155NFTDropSMCampaign, "MerkleRootChanged")
+        .withArgs(roothash);
+
+      const hexProof = merkleTree.getHexProof(leaves[0]);
+
+      await network.provider.send("evm_increaseTime", [oneWeekInSeconds]);
+      await network.provider.send("evm_mine");
+
+      await expect(this.existing1155NFTDropSMCampaign.connect(this.signers.alice).claim(hexProof)).to.be.revertedWith(`AirdropExpired`);
     });
   });
 };
