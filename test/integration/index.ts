@@ -12,10 +12,9 @@ import { integrationsFixture } from "../shared/fixtures";
 import { AirbroCampaignFactoryShouldBehaveLikeFactory } from "./AirbroFactoryCampaign/AirbroCampaignFactoryShouldBehaveLikeFactory.spec";
 import { AirbroCampaignFactoryShouldChangeAdminInAllAirDrops } from "./AirbroFactoryCampaign/AirbroCampaignFactoryShouldChangeAdmin.spec";
 import { integrationCampaignFixture } from "../shared/fixtures";
-import { AirbroFactorySMCampaignShouldAirDropExistingToken } from "./AirBroSMCampaign-old/AirBroExistingTokenNftDropSMCampaign.spec";
-import { AirbroFactorySMCampaignShouldAirDropNewToken } from "./AirBroSMCampaign-old/AirBroTokenNftDropSMCampaign.spec";
+// import { AirbroFactorySMCampaignShouldAirDropExistingToken } from "./AirBroSMCampaign-old/AirBroExistingTokenNftDropSMCampaign.spec";
+// import { AirbroFactorySMCampaignShouldAirDropNewToken } from "./AirBroSMCampaign-old/AirBroTokenNftDropSMCampaign.spec";
 
-const randomAddress = "0x6b175474e89094c44da98b954eedeac495271d0f";
 describe("Integration tests", function () {
   before(async function () {
     this.signers = {} as Signers;

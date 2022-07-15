@@ -1,15 +1,17 @@
 import { Fixture, MockContract } from "ethereum-waffle";
 import { ContractFactory } from "ethers";
 import { ethers } from "hardhat";
+import { Wallet } from "@ethersproject/wallet";
 
-import { AirbroFactory } from "../../src/types/contracts/AirbroFactory";
 import { TestNftCollection } from "../../src/types/contracts/mocks/TestNftCollection";
 import { TestToken } from "../../src/types/contracts/mocks/TestToken";
-import { Wallet } from "@ethersproject/wallet";
+import { AirBro1155NftMint } from "../../src/types/contracts/mocks/Airbro1155NftMint.sol/AirBro1155NftMint";
+
+import { AirbroFactory } from "../../src/types/contracts/AirbroFactory";
 import { Existing1155NftDrop } from "../../src/types/contracts/airdrops/Existing1155NftDrop";
 import { ExistingTokenDrop } from "../../src/types/contracts/airdrops/ExistingTokenDrop";
 import { TokenDrop } from "../../src/types/contracts/airdrops/TokenDrop";
-import { AirBro1155NftMint } from "../../src/types/contracts/mocks/Airbro1155NftMint.sol/AirBro1155NftMint";
+
 import { NewERC1155DropCampaign } from "../../src/types/contracts/campaignAirdrops/NewERC1155DropCampaign";
 
 import { AirbroCampaignFactory } from "../../src/types/contracts/AirbroCampaignFactory";

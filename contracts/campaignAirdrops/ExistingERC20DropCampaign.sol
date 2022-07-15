@@ -18,13 +18,14 @@ contract ExistingERC20DropCampaign is AirdropInfoSMCampaign, AirdropMerkleProof 
 
     string public airdropType = "ERC20";
     bool public airdropFunded;
-    address internal airdropFundingHolder;
-    uint256 public airdropFundBlockTimestamp;
-    uint256 public numberOfClaimers;
-
+    bool public fundsLocked = true;
+    uint256 public tokensPerClaim;
     bytes32 public merkleRoot;
 
     mapping(address => bool) public hasClaimed;
+
+    address internal airdropFunder;
+    uint256 internal numberOfClaimers;
 
     event MerkleRootChanged(bytes32 merkleRoot);
     event Claimed(address indexed claimer);
@@ -36,6 +37,7 @@ contract ExistingERC20DropCampaign is AirdropInfoSMCampaign, AirdropMerkleProof 
     error NotEligible();
     error InsufficientAmount();
     error InsufficientLiquidity();
+    error FundsLocked();
 
     modifier onlyAdmin() {
         if (msg.sender != IAirBroFactory(airBroFactorySMCampaignAddress).admin()) revert Unauthorized();
@@ -52,6 +54,17 @@ contract ExistingERC20DropCampaign is AirdropInfoSMCampaign, AirdropMerkleProof 
         airBroFactorySMCampaignAddress = _airBroFactorySMCampaignAddress;
     }
 
+    /// @notice Sets the merkleRoot and the number of claimers (also setting the amount each claimer receivers)
+    /// @notice can only be done by admin
+    /// @param _merkleRoot The root hash of the Merle Tree
+    /// @param _numberOfClaimers The number of people eligible to claim
+    function setMerkleRoot(bytes32 _merkleRoot, uint256 _numberOfClaimers) external onlyAdmin {
+        merkleRoot = _merkleRoot;
+        numberOfClaimers = _numberOfClaimers;
+        tokensPerClaim = tokenSupply / numberOfClaimers;
+        emit MerkleRootChanged(_merkleRoot);
+    }
+
     /// @notice Allows the airdrop creator to provide funds for the airdrop reward
     function fundAirdrop() external {
         if (airdropFunded) revert AlreadyFunded();
@@ -60,20 +73,28 @@ contract ExistingERC20DropCampaign is AirdropInfoSMCampaign, AirdropMerkleProof 
         if (rewardToken.allowance(msg.sender, address(this)) < tokenSupply) revert InsufficientAmount();
 
         airdropFunded = true;
-        airdropFundBlockTimestamp = block.timestamp;
-        airdropFundingHolder = msg.sender;
+        airdropFunder = msg.sender;
 
         rewardToken.safeTransferFrom(msg.sender, address(this), tokenSupply);
         emit AirdropFunded(address(this));
     }
 
-    /// @notice Sets the merkleRoot - can only be done if admin (different from the contract owner)
-    /// @param _merkleRoot The root hash of the Merle Tree
-    /// @param _numberOfClaimers The number of people eligible to claim
-    function setMerkleRoot(bytes32 _merkleRoot, uint256 _numberOfClaimers) external onlyAdmin {
-        merkleRoot = _merkleRoot;
-        numberOfClaimers = _numberOfClaimers;
-        emit MerkleRootChanged(_merkleRoot);
+    /// @notice Unlocks withdrawal of funds deposited to this contract
+    function unlockFunds() external onlyAdmin {
+        fundsLocked = false;
+    }
+
+    /// @notice Locks withdrawal of funds deposited to this contract
+    function lockFunds() external onlyAdmin {
+        fundsLocked = true;
+    }
+
+    /// @notice Allows the airdrop creator to withdraw back the funds after the airdrop has finished
+    function withdrawAirdropFunds() external {
+        if (airdropFunder != msg.sender) revert Unauthorized();
+        if (fundsLocked == true) revert FundsLocked();
+
+        rewardToken.safeTransfer(msg.sender, rewardToken.balanceOf(address(this)));
     }
 
     /// @notice Allows eligible users to claim their ERC20 airdrop
@@ -81,7 +102,7 @@ contract ExistingERC20DropCampaign is AirdropInfoSMCampaign, AirdropMerkleProof 
     function claim(bytes32[] calldata _merkleProof) external {
         if (isEligibleForReward(_merkleProof)) {
             hasClaimed[msg.sender] = true;
-            // rewardToken.safeTransfer(msg.sender, tokensPerClaim);
+            rewardToken.safeTransfer(msg.sender, tokensPerClaim);
             emit Claimed(msg.sender);
         } else {
             revert NotEligible();
@@ -92,13 +113,13 @@ contract ExistingERC20DropCampaign is AirdropInfoSMCampaign, AirdropMerkleProof 
     /// @param _merkleProof The proof a user can claim a reward
     function isEligibleForReward(bytes32[] calldata _merkleProof) public view returns (bool) {
         if (hasClaimed[msg.sender]) revert AlreadyRedeemed();
-        if (rewardToken.balanceOf(address(this)) < tokenSupply / numberOfClaimers) revert InsufficientLiquidity(); // do we actually need this ?
+        if (rewardToken.balanceOf(address(this)) < tokensPerClaim) revert InsufficientLiquidity();
         return checkProof(_merkleProof, merkleRoot);
     }
 
     /// @notice Returns the amount of airdrop tokens a user can claim
     /// @param _merkleProof The proof a user can claim a reward
     function getAirdropAmount(bytes32[] calldata _merkleProof) external view returns (uint256) {
-        return isEligibleForReward(_merkleProof) ? (tokenSupply / numberOfClaimers) : 0;
+        return isEligibleForReward(_merkleProof) ? tokensPerClaim : 0;
     }
 }
