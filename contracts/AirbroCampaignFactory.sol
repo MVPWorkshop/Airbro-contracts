@@ -12,7 +12,7 @@ contract AirbroCampaignFactory {
 
     uint256 public totalAirdropsCount;
 
-    event NewAirdrop(address indexed rewardedNftCollection, address indexed airdropContract, address indexed airdropCreator);
+    event NewAirdrop(address indexed airdropContract, address indexed airdropCreator);
     event AdminChanged(address indexed adminAddress);
 
     error NotAdmin();
@@ -28,7 +28,11 @@ contract AirbroCampaignFactory {
     /// @param rewardToken - ERC20 token's address that will be distributed as a reward
     /// @param tokenSupply - total amount of ERC20 tokens to be supplied for the rewards
     function createExistingERC20DropCampaign(address rewardToken, uint256 tokenSupply) external {
-        ExistingERC20DropCampaign airdropContract = new ExistingERC20DropCampaign(rewardToken, tokenSupply);
+        ExistingERC20DropCampaign airdropContract = new ExistingERC20DropCampaign(
+            rewardToken,
+            tokenSupply,
+            address(this) // airBroFactory contract address -> used for getting back admin contract address in airdrop contracts
+        );
         airdrops.push(address(airdropContract));
         unchecked {
             totalAirdropsCount++;
@@ -38,8 +42,11 @@ contract AirbroCampaignFactory {
 
     /// @notice Creates a new airdrop claim contract for specific NFT collection holders that will reward participants with newly created ERC1155 NFTs
     /// @param uri - ipfs link of the image uploaded by user
-    function createNewERC1155DropCampaign(string uri) external {
-        NewERC1155DropCampaign airdropContract = new NewERC1155DropCampaign(uri);
+    function createNewERC1155DropCampaign(string memory uri) external {
+        NewERC1155DropCampaign airdropContract = new NewERC1155DropCampaign(
+            uri,
+            address(this) // airBroFactory contract address -> used for getting back admin contract address in airdrop contracts
+        );
         airdrops.push(address(airdropContract));
         unchecked {
             totalAirdropsCount++;

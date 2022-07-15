@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.14;
 
-import "./airdropsSMCampaign/TokenDropSMCampaign.sol";
-import "./airdropsSMCampaign/ExistingTokenDropSMCampaign.sol";
-import "./airdropsSMCampaign/Existing1155NftDropSMCampaign.sol";
+import "./airdropsSMCampaign-old/TokenDropSMCampaign.sol";
+import "./airdropsSMCampaign-old/ExistingTokenDropSMCampaign.sol";
+import "./airdropsSMCampaign-old/Existing1155NftDropSMCampaign.sol";
 import "./Airbro1155Contract.sol";
 
 /// @title Airbro - NFT airdrop tool factory contract - for owners of 1155 Nfts
