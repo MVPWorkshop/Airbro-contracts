@@ -77,11 +77,11 @@ contract AirbroFactorySMCampaign {
     /// @param totalAirdropAmount - total amount of ERC20 tokens to be supplied for the rewards
     /// @param airdropDuration - duration of campaign in days
     function dropExistingTokensToNftHolders(
-        address rewardedNftCollection,
-        uint256 tokensPerClaim,
-        address rewardToken,
-        uint256 totalAirdropAmount,
-        uint256 airdropDuration
+        address rewardedNftCollection, // skloni
+        uint256 tokensPerClaim, // skloni -> izracunaj naknadno supply divided by number of people to be awarded - posle backendovog slanja merkleRoota
+        address rewardToken, // adresa tokena - treba
+        uint256 totalAirdropAmount, // tokenSupply - treba
+        uint256 airdropDuration // skloni
     ) external {
         ExistingTokenDropSMCampaign tokenDropContract = new ExistingTokenDropSMCampaign(
             rewardedNftCollection,
@@ -98,6 +98,8 @@ contract AirbroFactorySMCampaign {
         emit NewAirdrop(rewardedNftCollection, address(tokenDropContract), msg.sender);
     }
 
+    // newERC1155Drop, ExistingERC20Drop
+
     /// @notice Creates a new airdrop claim contract for specific NFT collection holders
     /// @param rewardedNftCollection - Rewarded NFT collection address
     /// @param reward1155Nft - ERC1155 token's address that will be distributed as a reward
@@ -106,12 +108,12 @@ contract AirbroFactorySMCampaign {
     /// @param totalAirdropAmount - total amount of ERC20 tokens to be supplied for the rewards
     /// @param airdropDuration - duration of campaign in days
     function dropExisting1155NftsToNftHolders(
-        address rewardedNftCollection, // ukloniti ovo
-        address reward1155Nft, // ukloniti ovo
-        uint256 tokensPerClaim, // ukloniti i ovo
-        uint256 tokenId, // ukloniti i ovo
-        uint256 totalAirdropAmount, // nft reward supply
-        uint256 airdropDuration //ukloniti // ---> dodati token uri
+        address rewardedNftCollection,
+        address reward1155Nft,
+        uint256 tokensPerClaim,
+        uint256 tokenId,
+        uint256 totalAirdropAmount,
+        uint256 airdropDuration
     ) external {
         Existing1155NftDropSMCampaign tokenDropContract = new Existing1155NftDropSMCampaign(
             rewardedNftCollection,
