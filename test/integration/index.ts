@@ -9,14 +9,13 @@ import { shouldAirDropNewToken } from "./AirBro/AirBroTokenDrop.spec";
 import { shouldAirdropExisting1155NftDrop } from "./AirBro/AirBroExisting1155NftDrop.spec";
 import { integrationsFixture } from "../shared/fixtures";
 
-import { AirbroFactorySMCampaignShouldBehaveLikeFactory } from "./AirBroSMCampaign/AirBroDropCreationSMCampaignShouldBehaveLikeFactory.spec";
+/* import { AirbroFactorySMCampaignShouldBehaveLikeFactory } from "./AirBroSMCampaign/AirBroDropCreationSMCampaignShouldBehaveLikeFactory.spec";
 import { AirbroFactorySMCampaignShouldChangeAdminInAllAirDrops } from "./AirBroSMCampaign/AirBroFactorySMCampaignShouldChangeAdmin.spec";
 import { AirbroFactorySMCampaignShouldAirdropExisting1155NftDropSMCampaign } from "./AirBroSMCampaign/AirBroExisting1155NftDropSMCampaign.spec";
 import { integrationsSMCampaignFixture } from "../shared/fixtures";
 import { AirbroFactorySMCampaignShouldAirDropExistingToken } from "./AirBroSMCampaign/AirBroExistingTokenNftDropSMCampaign.spec";
-import { AirbroFactorySMCampaignShouldAirDropNewToken } from "./AirBroSMCampaign/AirBroTokenNftDropSMCampaign.spec";
+import { AirbroFactorySMCampaignShouldAirDropNewToken } from "./AirBroSMCampaign/AirBroTokenNftDropSMCampaign.spec"; */
 
-const randomAddress = "0x6b175474e89094c44da98b954eedeac495271d0f";
 describe("Integration tests", function () {
   before(async function () {
     this.signers = {} as Signers;
@@ -61,7 +60,7 @@ describe("Integration tests", function () {
     shouldAirdropExisting1155NftDrop();
   });
 
-  describe("AirbroFactorySMCampaign", () => {
+  /* describe("AirbroFactorySMCampaign", () => {
     beforeEach(async function () {
       const { airbroFactorySMCampaign, testNftCollection, testToken, airBro1155NftMint } = await this.loadFixture(
         integrationsSMCampaignFixture,
@@ -77,5 +76,5 @@ describe("Integration tests", function () {
     AirbroFactorySMCampaignShouldAirDropExistingToken();
     AirbroFactorySMCampaignShouldAirDropNewToken();
     AirbroFactorySMCampaignShouldAirdropExisting1155NftDropSMCampaign();
-  });
+  }); */
 });
