@@ -5,6 +5,15 @@ import { MockContract } from "ethereum-waffle";
 export const contractAdminAddress: string = "0xF4b5bFB92dD4E6D529476bCab28A65bb6B32EFb3";
 export const randomAddress: string = "0x6B175474E89094C44Da98b954EedeAC495271d0F";
 export const oneWeekInSeconds: number = 604800;
+export const uri: string = "ipfs://bafybeict2kq6gt4ikgulypt7h7nwj4hmfi2kevrqvnx2osibfulyy5x3hu/no-time-to-explain.jpeg";
+
+/*  Arguments for newERC1155DropCampaign fixture deployment */
+export async function unitNewERC1155DropCampaignArguments(_airbroCampaignFactoryAddress: String) {
+  return {
+    uri: uri,
+    airbroCampaignFactoryAddress: _airbroCampaignFactoryAddress,
+  };
+}
 
 /*  Arguments for TokenDrop fixture deployment */
 export async function unitTokenDropFixtureArguments(mockBaycNftAddress: String) {

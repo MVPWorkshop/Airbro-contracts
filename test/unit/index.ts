@@ -7,12 +7,8 @@ import {
   unitTokenDropFixture,
   unitExisting1155NFTDropFixture,
   unitExistingTokenDropFixture,
-  //   unitItemNFTDropFixture,
-  // unitNFTDropFixture,
-  unitExistingTokenDropSMCampaignFixture,
-  integrationsSMCampaignFixture,
-  unitExisting1155NFTDropSMCampaignFixture,
-  unitTokenDropSMCampaignFixture,
+  unitNewERC1155DropCampaignFixture,
+  integrationCampaignFixture,
 } from "../shared/fixtures";
 
 import { shouldDeploy } from "./AirbroFactory/AirbroFactoryShouldDeploy.spec";
@@ -21,19 +17,16 @@ import { TokenDropShouldDeploy } from "./airdrops/TokenDrop/TokenDropShouldBeDep
 import { ExistingTokenDropShouldDeploy } from "./airdrops/ExistingTokenDrop/ExistingTokenDropShouldBeDeployed.spec";
 import { Existing1155NftDropShouldDeploy } from "./airdrops/Existing1155NftDrop/Existing1155NftDropShouldBeDeployed.spec";
 
-import { AirbroFactorySMCampaignShouldBeCorrectAdmin } from "./AirbroFactorySMCampaign/AirbroFactorySMCampaignShouldBeCorrectAdmin.spec";
-import { AirbroFactorySMCampaignShouldChangeAdminAddress } from "./AirbroFactorySMCampaign/AirbroFactorySMCampaignShouldChangeAdmin.spec";
-import { AirbroFactorySMCampaignShouldDelpoyAirbro1155Contract } from "./AirbroFactorySMCampaign/AirbroFactorySMCampaignShouldDeployAirbro1155Contract.spec";
+import { AirbroFactorySMCampaignShouldBeCorrectAdmin } from "./AirbroFactorySMCampaign-old/AirbroFactorySMCampaignShouldBeCorrectAdmin.spec";
+import { AirbroFactorySMCampaignShouldChangeAdminAddress } from "./AirbroFactorySMCampaign-old/AirbroFactorySMCampaignShouldChangeAdmin.spec";
 
-import { Existing1155NftDropSMCampaignShouldSetMerkleRoot } from "./airdropsSMCampaign/Existing1155NftDropSMCampaign/Existing1155NftDropSMCampaignShouldSetMerkleRoot.spec";
-import { Existing1155NftDropSMCampaignShouldDeploy } from "./airdropsSMCampaign/Existing1155NftDropSMCampaign/Existing1155NftDropSMCampaignShouldBeDeployed.spec";
-import { Existing1155NftDropSMCampaignShouldClaimReward } from "./airdropsSMCampaign/Existing1155NftDropSMCampaign/Existing1155NftDropSMCampaignShouldClaimReward.spec";
-import { ExistingTokenDropSMCampaignShouldDeploy } from "./airdropsSMCampaign/ExistingTokenDropSMCampaign/ExistingTokenDropSMCampaignShouldBeDeployed.spec";
-import { ExistingTokenDropSMCampaignShouldSetMerkleRoot } from "./airdropsSMCampaign/ExistingTokenDropSMCampaign/ExistingTokenDropSMCampaignShouldSetMerkleRoot.spec";
-import { TokenDropSMCampaignShouldDeploy } from "./airdropsSMCampaign/TokenDropSMCampaign/TokenDropSMCampaignShouldBeDeployed.spec";
-import { TokenDropSMCampaignShouldSetMerkleRoot } from "./airdropsSMCampaign/TokenDropSMCampaign/TokenDropSMCampaignShouldSetMerkleRoot.spec";
-import { TokenDropSMCampaignShouldClaimReward } from "./airdropsSMCampaign/TokenDropSMCampaign/TokenDropSMCampaignShouldClaimReward.spec";
-import { ExistingTokenDropSMCampaignShouldClaimReward } from "./airdropsSMCampaign/ExistingTokenDropSMCampaign/ExistingTokenDropSMCampaignShouldClaimReward.spec";
+import { TokenDropSMCampaignShouldDeploy } from "./airdropsSMCampaign-old/TokenDropSMCampaign/TokenDropSMCampaignShouldBeDeployed.spec";
+import { TokenDropSMCampaignShouldSetMerkleRoot } from "./airdropsSMCampaign-old/TokenDropSMCampaign/TokenDropSMCampaignShouldSetMerkleRoot.spec";
+import { TokenDropSMCampaignShouldClaimReward } from "./airdropsSMCampaign-old/TokenDropSMCampaign/TokenDropSMCampaignShouldClaimReward.spec";
+
+import { NewERC1155DropCampaignShouldDeploy } from "./campaignAirdrops/NewERC1155DropCampaign/NewERC1155DropCampaignShouldDeploy.spec";
+import { NewERC1155DropCampaignShouldSetMerkleRoot } from "./campaignAirdrops/NewERC1155DropCampaign/NewERC1155DropCampaignShouldSetMerkleRoot.spec";
+import { NewERC1155DropCampaignShouldClaimReward } from "./campaignAirdrops/NewERC1155DropCampaign/NewERC1155DropCampaignShouldClaimReward.spec";
 
 describe("Unit tests", function () {
   before(async function () {
@@ -63,7 +56,7 @@ describe("Unit tests", function () {
     this.loadFixture = waffle.createFixtureLoader(signers);
   });
 
-  describe("Airbro - ERC721 Holder", function () {
+  describe("Airbro - Classic", function () {
     describe("AirbroFactory", () => {
       beforeEach(async function () {
         const { airbroFactory } = await this.loadFixture(integrationsFixture);
@@ -111,30 +104,6 @@ describe("Unit tests", function () {
       ExistingTokenDropShouldDeploy();
     });
 
-    /* describe("ItemNFTDrop", () => {
-      beforeEach(async function () {
-        const { itemNFTDrop, mockAirBroFactory } = await this.loadFixture(unitItemNFTDropFixture);
-        this.itemNFTDrop = itemNFTDrop;
-
-        this.mocks = {} as Mocks;
-        this.mocks.mockAirBroFactory = mockAirBroFactory;
-      });
-
-      //
-    }); */
-
-    /* describe("NFTDrop", () => {
-      beforeEach(async function () {
-        const { nftDrop, mockAirBroFactory } = await this.loadFixture(unitNFTDropFixture);
-        this.nftDrop = nftDrop;
-
-        this.mocks = {} as Mocks;
-        this.mocks.mockAirBroFactory = mockAirBroFactory;
-      });
-
-      //
-    }); */
-
     describe("TokenDrop", () => {
       beforeEach(async function () {
         const { tokenDrop, mockAirBroFactory, tokenDropConstructorArgs, mockBaycNft } = await this.loadFixture(unitTokenDropFixture);
@@ -151,74 +120,54 @@ describe("Unit tests", function () {
     });
   });
 
-  describe("Airbro - ERC1155 Holder", function () {
-    describe("AirbroFactorySMCampaign", () => {
+  describe("Airbro Campaigns", function () {
+    describe("AirbroCampaignFactory", () => {
       beforeEach(async function () {
-        const { airbroFactorySMCampaign } = await this.loadFixture(integrationsSMCampaignFixture);
+        const { airbroCampaignFactory } = await this.loadFixture(integrationCampaignFixture);
 
-        this.airbroFactorySMCampaign = airbroFactorySMCampaign;
+        this.airbroCampaignFactory = airbroCampaignFactory;
       });
 
-      AirbroFactorySMCampaignShouldBeCorrectAdmin();
-      AirbroFactorySMCampaignShouldChangeAdminAddress();
-      AirbroFactorySMCampaignShouldDelpoyAirbro1155Contract();
+      // AirbroFactorySMCampaignShouldBeCorrectAdmin(); // refactor
+      // AirbroFactorySMCampaignShouldChangeAdminAddress(); // refactor
     });
 
-    describe("ExistingNft1155DropSMCampaign", () => {
+    describe("NewERC1155DropCampaign", () => {
       beforeEach(async function () {
-        const { existing1155NftDropSMCampaign, mockAirBroFactorySMCampaign } = await this.loadFixture(
-          unitExisting1155NFTDropSMCampaignFixture,
+        const { mockAirbroCampaignFactory, newERC1155DropCampaign, newERC1155DropCampaignArgs } = await this.loadFixture(
+          unitNewERC1155DropCampaignFixture,
         );
 
-        this.existing1155NFTDropSMCampaign = existing1155NftDropSMCampaign;
+        this.newERC1155DropCampaign = newERC1155DropCampaign;
 
         this.mocks = {} as Mocks;
-        this.mocks.mockAirBroFactorySMCampaign = mockAirBroFactorySMCampaign;
+        this.mocks.mockAirbroCampaignFactory = mockAirbroCampaignFactory;
+
+        this.constructorArgs = newERC1155DropCampaignArgs;
       });
 
-      Existing1155NftDropSMCampaignShouldDeploy();
-      Existing1155NftDropSMCampaignShouldSetMerkleRoot();
-      Existing1155NftDropSMCampaignShouldClaimReward();
+      NewERC1155DropCampaignShouldDeploy();
+      NewERC1155DropCampaignShouldSetMerkleRoot();
+      NewERC1155DropCampaignShouldClaimReward();
     });
 
     describe("ExistingTokenDropSMCampaign", () => {
       beforeEach(async function () {
-        const { existingTokenDropSMCampaign, existingTokenDropSMCampaignConstructorArgs, mockAirBroFactorySMCampaign, mockDAItoken } =
-          await this.loadFixture(unitExistingTokenDropSMCampaignFixture);
-
-        this.existingTokenDropSMCampaign = existingTokenDropSMCampaign;
-        this.mocks = {} as Mocks;
-        this.mocks.mockAirBroFactorySMCampaign = mockAirBroFactorySMCampaign;
-        this.mocks.mockDAItoken = mockDAItoken;
-
+        // const { existingTokenDropSMCampaign, existingTokenDropSMCampaignConstructorArgs, mockAirBroFactorySMCampaign, mockDAItoken } =
+        //   await this.loadFixture(unitExistingTokenDropSMCampaignFixture);
+        // this.existingTokenDropSMCampaign = existingTokenDropSMCampaign;
+        // this.mocks = {} as Mocks;
+        // this.mocks.mockAirBroFactorySMCampaign = mockAirBroFactorySMCampaign;
+        // this.mocks.mockDAItoken = mockDAItoken;
         // Here are the arguments used to deploy the existingTokenDropSMCampaign contract.
         // They are dependant on two mock contracts deployed in fixutres,
         // so this is why they are exported from the fixture as the 2nd module.
-        this.constructorArgs = existingTokenDropSMCampaignConstructorArgs;
+        // this.constructorArgs = existingTokenDropSMCampaignConstructorArgs;
       });
 
-      ExistingTokenDropSMCampaignShouldDeploy();
-      ExistingTokenDropSMCampaignShouldSetMerkleRoot();
-      ExistingTokenDropSMCampaignShouldClaimReward();
-    });
-
-    describe("TokenDropSMCampaign", () => {
-      beforeEach(async function () {
-        const { tokenDropSMCampaign, mockAirBroFactorySMCampaign, tokenDropSMCampaignConstructorArgs } = await this.loadFixture(
-          unitTokenDropSMCampaignFixture,
-        );
-
-        this.tokenDropSMCampaign = tokenDropSMCampaign;
-
-        this.mocks = {} as Mocks;
-        this.mocks.mockAirBroFactorySMCampaign = mockAirBroFactorySMCampaign;
-
-        this.constructorArgs = tokenDropSMCampaignConstructorArgs;
-      });
-
-      TokenDropSMCampaignShouldDeploy();
-      TokenDropSMCampaignShouldSetMerkleRoot();
-      TokenDropSMCampaignShouldClaimReward();
+      // ExistingTokenDropSMCampaignShouldDeploy();
+      // ExistingTokenDropSMCampaignShouldSetMerkleRoot();
+      // ExistingTokenDropSMCampaignShouldClaimReward();
     });
   });
 });

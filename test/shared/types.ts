@@ -30,5 +30,6 @@ export interface Signers {
 
 export interface Mocks {
   mockAirBroFactory: MockContract;
-  mockAirBroFactorySMCampaign: MockContract;
+  mockAirBroFactorySMCampaign: MockContract; // delete later
+  mockAirbroCampaignFactory: MockContract;
 }
