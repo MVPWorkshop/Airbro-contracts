@@ -39,8 +39,6 @@ describe("Integration tests", function () {
       params: [contractAdminAddress],
     });
 
-    this.signers.backendWallet = await ethers.getSigner(contractAdminAddress);
-
     this.loadFixture = waffle.createFixtureLoader(signers);
   });
 
