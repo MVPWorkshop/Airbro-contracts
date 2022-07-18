@@ -15,7 +15,7 @@ export function NewERC1155DropCampaignShouldDeploy(): void {
     });
 
     // this should be an integration test
-    it("should set airBroFactoryAddress to the airbroFactory address", async function () {
+    it("should set airbroCampaignFactoryAddress to the airbroFactory address", async function () {
       expect(await this.newERC1155DropCampaign.airbroCampaignFactoryAddress()).to.be.equal(this.mocks.mockAirbroCampaignFactory.address);
     });
 

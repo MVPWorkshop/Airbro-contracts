@@ -9,6 +9,7 @@ import {
   unitExistingTokenDropFixture,
   unitNewERC1155DropCampaignFixture,
   integrationCampaignFixture,
+  unitExistingERC20DropCampaignFixture,
 } from "../shared/fixtures";
 
 import { shouldDeploy } from "./AirbroFactory/AirbroFactoryShouldDeploy.spec";
@@ -17,16 +18,13 @@ import { TokenDropShouldDeploy } from "./airdrops/TokenDrop/TokenDropShouldBeDep
 import { ExistingTokenDropShouldDeploy } from "./airdrops/ExistingTokenDrop/ExistingTokenDropShouldBeDeployed.spec";
 import { Existing1155NftDropShouldDeploy } from "./airdrops/Existing1155NftDrop/Existing1155NftDropShouldBeDeployed.spec";
 
-import { AirbroFactorySMCampaignShouldBeCorrectAdmin } from "./AirbroFactorySMCampaign-old/AirbroFactorySMCampaignShouldBeCorrectAdmin.spec";
-import { AirbroFactorySMCampaignShouldChangeAdminAddress } from "./AirbroFactorySMCampaign-old/AirbroFactorySMCampaignShouldChangeAdmin.spec";
-
-import { TokenDropSMCampaignShouldDeploy } from "./airdropsSMCampaign-old/TokenDropSMCampaign/TokenDropSMCampaignShouldBeDeployed.spec";
-import { TokenDropSMCampaignShouldSetMerkleRoot } from "./airdropsSMCampaign-old/TokenDropSMCampaign/TokenDropSMCampaignShouldSetMerkleRoot.spec";
-import { TokenDropSMCampaignShouldClaimReward } from "./airdropsSMCampaign-old/TokenDropSMCampaign/TokenDropSMCampaignShouldClaimReward.spec";
-
 import { NewERC1155DropCampaignShouldDeploy } from "./campaignAirdrops/NewERC1155DropCampaign/NewERC1155DropCampaignShouldDeploy.spec";
 import { NewERC1155DropCampaignShouldSetMerkleRoot } from "./campaignAirdrops/NewERC1155DropCampaign/NewERC1155DropCampaignShouldSetMerkleRoot.spec";
 import { NewERC1155DropCampaignShouldClaimReward } from "./campaignAirdrops/NewERC1155DropCampaign/NewERC1155DropCampaignShouldClaimReward.spec";
+
+import { ExistingERC20DropCampaignShouldDeploy } from "./campaignAirdrops/ExistingERC20DropCampaign/ExistingERC20DropCampaignShouldDeploy.spec";
+import { ExistingERC20DropCampaignShouldSetMerkleRoot } from "./campaignAirdrops/ExistingERC20DropCampaign/ExistingERC20DropCampaignShouldSetMerkleRoot.spec";
+import { ExistingERC20DropCampaignShouldClaimReward } from "./campaignAirdrops/ExistingERC20DropCampaign/ExistingERC20DropCampaignShouldClaimReward.spec";
 
 describe("Unit tests", function () {
   before(async function () {
@@ -151,23 +149,26 @@ describe("Unit tests", function () {
       NewERC1155DropCampaignShouldClaimReward();
     });
 
-    describe("ExistingTokenDropSMCampaign", () => {
+    describe("ExistingERC20DropCampaign", () => {
       beforeEach(async function () {
-        // const { existingTokenDropSMCampaign, existingTokenDropSMCampaignConstructorArgs, mockAirBroFactorySMCampaign, mockDAItoken } =
-        //   await this.loadFixture(unitExistingTokenDropSMCampaignFixture);
-        // this.existingTokenDropSMCampaign = existingTokenDropSMCampaign;
-        // this.mocks = {} as Mocks;
-        // this.mocks.mockAirBroFactorySMCampaign = mockAirBroFactorySMCampaign;
-        // this.mocks.mockDAItoken = mockDAItoken;
+        const { mockAirbroCampaignFactory, mockDAItoken, ExistingERC20DropCampaign, existingERC20DropCampaignArgs } =
+          await this.loadFixture(unitExistingERC20DropCampaignFixture);
+
+        this.existingERC20DropCampaign = ExistingERC20DropCampaign;
+
+        this.mocks = {} as Mocks;
+        this.mocks.mockAirbroCampaignFactory = mockAirbroCampaignFactory;
+        this.mocks.mockDAItoken = mockDAItoken;
+
         // Here are the arguments used to deploy the existingTokenDropSMCampaign contract.
         // They are dependant on two mock contracts deployed in fixutres,
         // so this is why they are exported from the fixture as the 2nd module.
-        // this.constructorArgs = existingTokenDropSMCampaignConstructorArgs;
+        this.existingERC20DropCampaignArgs = existingERC20DropCampaignArgs;
       });
 
-      // ExistingTokenDropSMCampaignShouldDeploy();
-      // ExistingTokenDropSMCampaignShouldSetMerkleRoot();
-      // ExistingTokenDropSMCampaignShouldClaimReward();
+      ExistingERC20DropCampaignShouldDeploy();
+      ExistingERC20DropCampaignShouldSetMerkleRoot();
+      ExistingERC20DropCampaignShouldClaimReward();
     });
   });
 });

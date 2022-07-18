@@ -13,6 +13,7 @@ import { ExistingTokenDrop } from "../../src/types/contracts/airdrops/ExistingTo
 import { TokenDrop } from "../../src/types/contracts/airdrops/TokenDrop";
 
 import { NewERC1155DropCampaign } from "../../src/types/contracts/campaignAirdrops/NewERC1155DropCampaign";
+import { ExistingERC20DropCampaign } from "../../src/types/contracts/campaignAirdrops/ExistingERC20DropCampaign";
 
 import { AirbroCampaignFactory } from "../../src/types/contracts/AirbroCampaignFactory";
 
@@ -21,6 +22,7 @@ import {
   unitTokenDropFixtureArguments,
   unitExisting1155NFTDropArguments,
   unitNewERC1155DropCampaignArguments,
+  UnitExistingERC20DropCampaignArgs,
 } from "./constants";
 import {
   deployMockAirBroFactory,
@@ -36,6 +38,13 @@ type UnitNewERC1155DropCampaignFixtureType = {
   newERC1155DropCampaign: NewERC1155DropCampaign;
   mockAirbroCampaignFactory: MockContract;
   newERC1155DropCampaignArgs: any;
+};
+
+type UnitExistingERC20DropCampaignFixtureType = {
+  mockAirbroCampaignFactory: MockContract;
+  mockDAItoken: MockContract;
+  ExistingERC20DropCampaign: ExistingERC20DropCampaign;
+  existingERC20DropCampaignArgs: any;
 };
 
 type IntegrationCampaignFixtureType = {
@@ -90,6 +99,28 @@ export const unitNewERC1155DropCampaignFixture: Fixture<UnitNewERC1155DropCampai
     .deploy(...Object.values(newERC1155DropCampaignArgs))) as NewERC1155DropCampaign;
 
   return { mockAirbroCampaignFactory, newERC1155DropCampaign, newERC1155DropCampaignArgs };
+};
+
+export const unitExistingERC20DropCampaignFixture: Fixture<UnitExistingERC20DropCampaignFixtureType> = async (signers: Wallet[]) => {
+  const deployer: Wallet = signers[0];
+
+  const mockAirbroCampaignFactory = await deployMockAirbroCampaignFactory(deployer);
+  await mockAirbroCampaignFactory.deployed();
+
+  const mockDAItoken = await deployMockDAItoken(deployer);
+  await mockDAItoken.deployed();
+
+  const existingERC20DropCampaignArgs = await UnitExistingERC20DropCampaignArgs(mockDAItoken.address, mockAirbroCampaignFactory.address);
+
+  const ExistingERC20DropCampaignFactory: ContractFactory = await ethers.getContractFactory("ExistingERC20DropCampaign");
+
+  const ExistingERC20DropCampaign: ExistingERC20DropCampaign = (await ExistingERC20DropCampaignFactory.connect(deployer).deploy(
+    ...Object.values(existingERC20DropCampaignArgs),
+  )) as ExistingERC20DropCampaign;
+
+  await ExistingERC20DropCampaign.deployed();
+
+  return { mockAirbroCampaignFactory, mockDAItoken, ExistingERC20DropCampaign, existingERC20DropCampaignArgs };
 };
 
 export const integrationCampaignFixture: Fixture<IntegrationCampaignFixtureType> = async (signers: Wallet[]) => {

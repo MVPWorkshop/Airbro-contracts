@@ -1,5 +1,6 @@
-import { Address } from "cluster";
-import { MockContract } from "ethereum-waffle";
+// import { Address } from "cluster";
+// import { MockContract } from "ethereum-waffle";
+import { ethers } from "hardhat";
 
 // change this to the backend wallet address which is hardcoded in the /airdrop SC’s
 export const contractAdminAddress: string = "0xF4b5bFB92dD4E6D529476bCab28A65bb6B32EFb3";
@@ -12,6 +13,15 @@ export async function unitNewERC1155DropCampaignArguments(_airbroCampaignFactory
   return {
     uri: uri,
     airbroCampaignFactoryAddress: _airbroCampaignFactoryAddress,
+  };
+}
+
+/*  Arguments for ExistingERC20DropCampaign fixture deployment */
+export async function UnitExistingERC20DropCampaignArgs(mockDAItokenAddress: String, airbroCampaignFactoryAddress: String) {
+  return {
+    rewardToken: mockDAItokenAddress,
+    tokenSupply: 100,
+    airbroCampaignFactoryAddress: airbroCampaignFactoryAddress,
   };
 }
 
