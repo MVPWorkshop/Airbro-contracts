@@ -1,13 +1,12 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.14;
+pragma solidity ^0.8.15;
 
 import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
 import "../interfaces/AirdropMerkleProof.sol";
-import "../interfaces/AirdropInfoSMCampaign.sol";
 import "../interfaces/IAirBroFactory.sol";
 
 /// @title Airdrops existing ERC1155 tokens for airdrop recipients
-contract NewERC1155DropCampaign is ERC1155, AirdropInfoSMCampaign, AirdropMerkleProof {
+contract NewERC1155DropCampaign is ERC1155, AirdropMerkleProof {
     address public immutable airbroCampaignFactoryAddress;
     uint8 private immutable _tokenId = 0; // yes, for immutable/constant I had to set the variable to = 0;
     uint8 private immutable _tokenAmount = 1;
@@ -30,9 +29,6 @@ contract NewERC1155DropCampaign is ERC1155, AirdropInfoSMCampaign, AirdropMerkle
     error Unauthorized();
     error AirdropStillInProgress();
     error AlreadyRedeemed();
-    error AlreadyFunded();
-    error InsufficientAmount();
-    error InsufficientLiquidity();
     error AirdropExpired();
     error NotEligible();
 
@@ -70,11 +66,5 @@ contract NewERC1155DropCampaign is ERC1155, AirdropInfoSMCampaign, AirdropMerkle
         if (hasClaimed[msg.sender]) revert AlreadyRedeemed();
         bool isEligible = checkProof(_merkleProof, merkleRoot);
         return isEligible;
-    }
-
-    /// @notice Returns the amount(number) of airdrop NFTs to claim
-    /// @param _merkleProof is the merkleRoot proof that this user is eligible for claiming reward
-    function getAirdropAmount(bytes32[] calldata _merkleProof) external view returns (uint256) {
-        return isEligibleForReward(_merkleProof) ? _tokenAmount : 0;
     }
 }
