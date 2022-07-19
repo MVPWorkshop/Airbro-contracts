@@ -26,6 +26,9 @@ import { ExistingERC20DropCampaignShouldDeploy } from "./campaignAirdrops/Existi
 import { ExistingERC20DropCampaignShouldSetMerkleRoot } from "./campaignAirdrops/ExistingERC20DropCampaign/ExistingERC20DropCampaignShouldSetMerkleRoot.spec";
 import { ExistingERC20DropCampaignShouldClaimReward } from "./campaignAirdrops/ExistingERC20DropCampaign/ExistingERC20DropCampaignShouldClaimReward.spec";
 
+import { ExistingERC20DropCampaignShouldFundCampaign as asd } from "./campaignAirdrops/ExistingERC20DropCampaign/ExistingERC20DropCampaignShouldFundCampaign.spec";
+
+
 describe("Unit tests", function () {
   before(async function () {
     this.signers = {} as Signers;
@@ -149,7 +152,7 @@ describe("Unit tests", function () {
       NewERC1155DropCampaignShouldClaimReward();
     });
 
-    describe("ExistingERC20DropCampaign", () => {
+    describe.only("ExistingERC20DropCampaign", () => {
       beforeEach(async function () {
         const { mockAirbroCampaignFactory, mockDAItoken, ExistingERC20DropCampaign, existingERC20DropCampaignArgs } =
           await this.loadFixture(unitExistingERC20DropCampaignFixture);
@@ -169,6 +172,7 @@ describe("Unit tests", function () {
       ExistingERC20DropCampaignShouldDeploy();
       ExistingERC20DropCampaignShouldSetMerkleRoot();
       ExistingERC20DropCampaignShouldClaimReward();
+      asd()
     });
   });
 });
