@@ -112,8 +112,18 @@ export const unitExistingERC20DropCampaignFixture: Fixture<UnitExistingERC20Drop
   const mockAirbroCampaignFactory = await deployMockAirbroCampaignFactory(deployer);
   await mockAirbroCampaignFactory.deployed();
 
-  const mockDAItoken = await deployMockDAItoken(deployer);
-  await mockDAItoken.deployed();
+  // const mockDAItoken = await deployMockDAItoken(deployer);
+  // await mockDAItoken.deployed();
+
+  // real contract > mock :D 
+  const nonMockDai = await ethers.getContractFactory('MockDai')
+  const asd = await nonMockDai.deploy()
+  const a: any = asd
+  a.mock = {}
+  a.call = () => {}
+  a.stub = () => {}
+  
+  const mockDAItoken: MockContract = a
 
   const existingERC20DropCampaignArgs = await UnitExistingERC20DropCampaignArgs(mockDAItoken.address, mockAirbroCampaignFactory.address);
 
