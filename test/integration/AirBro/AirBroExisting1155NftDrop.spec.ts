@@ -11,13 +11,18 @@ export function shouldAirdropExisting1155NftDrop() {
     await this.testNftCollection.connect(this.signers.deployer).safeMint(this.signers.bob.address);
     await this.testNftCollection.connect(this.signers.deployer).safeMint(this.signers.deployer.address);
 
+    // minting 2 for jerry
+    await this.testNftCollection.connect(this.signers.deployer).safeMint(this.signers.jerry.address);
+    await this.testNftCollection.connect(this.signers.deployer).safeMint(this.signers.jerry.address);
+
     const aliceBalance = await this.testNftCollection.balanceOf(this.signers.alice.address);
-    // console.log(`Test NFT balance of Alice: ${parseInt(aliceBalance)}`);
     expect(aliceBalance).to.be.equal(1);
 
     const bobBalance = await this.testNftCollection.balanceOf(this.signers.bob.address);
-    // console.log(`Test NFT balance of Bob: ${parseInt(bobBalance)}`);
     expect(bobBalance).to.be.equal(1);
+
+    const jerryBalance = await this.testNftCollection.balanceOf(this.signers.jerry.address);
+    expect(jerryBalance).to.be.equal(2);
 
     // minting the admin an amount of 2000 1155 nft's
     const idOf1155: string = "nftAirdrop";
@@ -72,6 +77,7 @@ export function shouldAirdropExisting1155NftDrop() {
     const _alice_nft_id = 0;
     const _bob_nft_id = 1;
     const _admin_nft_id = 2;
+    const _jerry_nft_ids = [3, 4];
 
     let leftoverNftAmount: number = amountOf1155;
 
@@ -89,6 +95,11 @@ export function shouldAirdropExisting1155NftDrop() {
     leftoverNftAmount = leftoverNftAmount - tokensPerClaim;
     expect(await this.test1155NftCollection.balanceOf(this.signers.bob.address, 1)).to.be.equal(1);
     await expect(dropContract.connect(this.signers.bob).claim(_bob_nft_id, [])).to.be.revertedWith("AlreadyRedeemed"); // error - 'ERC721: owner query for nonexistent token'
+
+    // jerry batch claim
+    expect(await this.test1155NftCollection.balanceOf(this.signers.jerry.address, 1)).to.be.equal(0);
+    await dropContract.connect(this.signers.jerry).batchClaim(_jerry_nft_ids);
+    expect(await this.test1155NftCollection.balanceOf(this.signers.jerry.address, 1)).to.be.equal(2);
 
     // airdropFunds provider withdrawing their leftover funds after the airdrop has finished
     await expect(dropContract.connect(this.signers.deployer).withdrawAirdropFunds()).to.be.revertedWith("AirdropStillInProgress");
