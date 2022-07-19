@@ -40,7 +40,6 @@ contract ExistingERC20DropCampaign is AirdropMerkleProof {
     error InsufficientAmount();
     error InsufficientLiquidity();
     error MerkleRootAlreadySet();
-    error NotFunded();
 
     modifier onlyAdmin() {
         if (msg.sender != IAirBroFactory(airbroCampaignFactoryAddress).admin()) revert Unauthorized();
@@ -90,7 +89,6 @@ contract ExistingERC20DropCampaign is AirdropMerkleProof {
     /// @notice Allows the airdrop creator to withdraw back the funds after the airdrop has finished
     function withdrawAirdropFunds() external {
         if (airdropFunder != msg.sender) revert Unauthorized();
-        if (airdropFunded == false) revert NotFunded();
         if (block.timestamp <= airdropExpirationTimestamp) revert AirdropStillActive();
 
         rewardToken.safeTransfer(msg.sender, rewardToken.balanceOf(address(this)));

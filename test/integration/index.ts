@@ -19,7 +19,8 @@ import { NewERC1155DropCampaignShouldGoThroughUserFlow } from "./AirbroFactoryCa
 // import { AirbroFactorySMCampaignShouldAirDropNewToken } from "./AirBroSMCampaign-old/AirBroTokenNftDropSMCampaign.spec";
 
 import { ExistingERC20DropCampaignShouldFundCampaign } from "./AirbroFactoryCampaign/ExistingERC20DropCampaign/ExistingERC20DropCampaignShouldFundCampaign.spec";
-import { ExistingERC20DropCampaignShouldShowEligibiility } from "./AirbroFactoryCampaign/ExistingERC20DropCampaign/ExistingERC20DropCampaignShouldShowEligibiility.spec";
+import { ExistingERC20DropCampaignShouldBeEligible } from "./AirbroFactoryCampaign/ExistingERC20DropCampaign/ExistingERC20DropCampaignShouldBeEligible.spec";
+import { ExistingERC20DropCampaignShouldGoThroughUserFlow } from "./AirbroFactoryCampaign/ExistingERC20DropCampaign/ExistingERC20DropCampaignShouldGoThroughUserFlow.spec";
 
 describe("Integration tests", function () {
   before(async function () {
@@ -94,7 +95,8 @@ describe("Integration tests", function () {
 
     describe("ExistingERC20DropCampaign", () => {
       ExistingERC20DropCampaignShouldFundCampaign();
-      ExistingERC20DropCampaignShouldShowEligibiility();
+      ExistingERC20DropCampaignShouldBeEligible();
+      ExistingERC20DropCampaignShouldGoThroughUserFlow();
     });
 
     describe("NewERC1155DropCampaign", () => {

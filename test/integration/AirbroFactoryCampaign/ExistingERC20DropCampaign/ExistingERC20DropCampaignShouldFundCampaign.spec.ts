@@ -10,15 +10,13 @@ export function ExistingERC20DropCampaignShouldFundCampaign(): void {
 
       //   minting tokens to alice, should still revert because these tokens have not been approved to the campaign contract
       await this.testToken.mint(this.signers.alice.address, tokenSupply);
-
       await expect(this.existingERC20DropCampaign.connect(this.signers.alice).fundAirdrop()).to.be.revertedWith("InsufficientAmount");
     });
 
-    it("should fund airdrop campaign", async function () {
+    it("should fund airdrop campaign only once", async function () {
       const tokenSupply: number = this.existingERC20DropCampaignArgs.tokenSupply; // 100
 
       expect(await this.existingERC20DropCampaign.airdropFunded()).to.be.equal(false);
-      //   expect(await this.existingERC20DropCampaign.airdropFunder()).to.be.equal(ethers.constants.AddressZero); //internal variable
 
       //   minting and  approving the tokens for spend
       await this.testToken.mint(this.signers.alice.address, tokenSupply);
@@ -30,7 +28,9 @@ export function ExistingERC20DropCampaignShouldFundCampaign(): void {
       );
 
       expect(await this.existingERC20DropCampaign.airdropFunded()).to.be.equal(true);
-      //   expect(await this.existingERC20DropCampaign.airdropFunder()).to.be.equal(this.signers.alice.address); //internal variable
+
+      //   trying to fund 2nd time, should revert
+      await expect(this.existingERC20DropCampaign.fundAirdrop()).to.be.revertedWith("AlreadyFunded");
     });
   });
 }
