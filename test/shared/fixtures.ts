@@ -51,6 +51,9 @@ type IntegrationCampaignFixtureType = {
   airbroCampaignFactory: AirbroCampaignFactory;
   newERC1155DropCampaign: NewERC1155DropCampaign;
   newERC1155DropCampaignArgs: any;
+  existingERC20DropCampaign: ExistingERC20DropCampaign;
+  existingERC20DropCampaignArgs: any;
+  testToken: TestToken;
 };
 
 // airbro classic fixture types
@@ -144,7 +147,30 @@ export const integrationCampaignFixture: Fixture<IntegrationCampaignFixtureType>
     .connect(deployer)
     .deploy(...Object.values(newERC1155DropCampaignArgs))) as NewERC1155DropCampaign;
 
-  return { airbroCampaignFactory, newERC1155DropCampaign, newERC1155DropCampaignArgs };
+  const testTokenFactory: ContractFactory = await ethers.getContractFactory(`TestToken`);
+
+  const testToken: TestToken = (await testTokenFactory.connect(deployer).deploy()) as TestToken;
+
+  await testToken.deployed();
+
+  const existingERC20DropCampaignArgs = await UnitExistingERC20DropCampaignArgs(testToken.address, airbroCampaignFactory.address);
+
+  const existingERC20DropCampaignFactory: ContractFactory = await ethers.getContractFactory("ExistingERC20DropCampaign");
+
+  const existingERC20DropCampaign: ExistingERC20DropCampaign = (await existingERC20DropCampaignFactory
+    .connect(deployer)
+    .deploy(...Object.values(existingERC20DropCampaignArgs))) as ExistingERC20DropCampaign;
+
+  await existingERC20DropCampaign.deployed();
+
+  return {
+    airbroCampaignFactory,
+    newERC1155DropCampaign,
+    newERC1155DropCampaignArgs,
+    existingERC20DropCampaign,
+    existingERC20DropCampaignArgs,
+    testToken,
+  };
 };
 
 // airbro classic

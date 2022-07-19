@@ -12,9 +12,14 @@ import { integrationsFixture } from "../shared/fixtures";
 import { AirbroCampaignFactoryShouldBehaveLikeFactory } from "./AirbroFactoryCampaign/AirbroCampaignFactoryShouldBehaveLikeFactory.spec";
 import { AirbroCampaignFactoryShouldChangeAdminInAllAirDrops } from "./AirbroFactoryCampaign/AirbroCampaignFactoryShouldChangeAdmin.spec";
 import { integrationCampaignFixture } from "../shared/fixtures";
+
 import { NewERC1155DropCampaignShouldGoThroughUserFlow } from "./AirbroFactoryCampaign/NewERC1155DropCampaign/NewERC1155DropCampaignShouldGoThroughUserFlow.spec";
+
 // import { AirbroFactorySMCampaignShouldAirDropExistingToken } from "./AirBroSMCampaign-old/AirBroExistingTokenNftDropSMCampaign.spec";
 // import { AirbroFactorySMCampaignShouldAirDropNewToken } from "./AirBroSMCampaign-old/AirBroTokenNftDropSMCampaign.spec";
+
+import { ExistingERC20DropCampaignShouldFundCampaign } from "./AirbroFactoryCampaign/ExistingERC20DropCampaign/ExistingERC20DropCampaignShouldFundCampaign.spec";
+import { ExistingERC20DropCampaignShouldShowEligibiility } from "./AirbroFactoryCampaign/ExistingERC20DropCampaign/ExistingERC20DropCampaignShouldShowEligibiility.spec";
 
 describe("Integration tests", function () {
   before(async function () {
@@ -60,16 +65,25 @@ describe("Integration tests", function () {
 
   describe("Airbro Campaigns", () => {
     beforeEach(async function () {
-      const { airbroCampaignFactory, newERC1155DropCampaign, newERC1155DropCampaignArgs } = await this.loadFixture(
-        integrationCampaignFixture,
-      );
+      const {
+        airbroCampaignFactory,
+        newERC1155DropCampaign,
+        newERC1155DropCampaignArgs,
+        existingERC20DropCampaign,
+        existingERC20DropCampaignArgs,
+        testToken,
+      } = await this.loadFixture(integrationCampaignFixture);
+
       this.airbroCampaignFactory = airbroCampaignFactory;
 
       this.newERC1155DropCampaign = newERC1155DropCampaign;
       this.newERC1155DropCampaignArgs = newERC1155DropCampaignArgs;
 
+      this.existingERC20DropCampaign = existingERC20DropCampaign;
+      this.existingERC20DropCampaignArgs = existingERC20DropCampaignArgs;
+
       // this.testNftCollection = testNftCollection;
-      // this.testToken = testToken;
+      this.testToken = testToken;
       // this.test1155NftCollection = airBro1155NftMint;
     });
 
@@ -78,7 +92,10 @@ describe("Integration tests", function () {
       AirbroCampaignFactoryShouldChangeAdminInAllAirDrops();
     });
 
-    describe("ExistingERC20DropCampaign", () => {});
+    describe("ExistingERC20DropCampaign", () => {
+      ExistingERC20DropCampaignShouldFundCampaign();
+      ExistingERC20DropCampaignShouldShowEligibiility();
+    });
 
     describe("NewERC1155DropCampaign", () => {
       NewERC1155DropCampaignShouldGoThroughUserFlow();

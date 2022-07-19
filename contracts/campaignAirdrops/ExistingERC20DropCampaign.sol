@@ -100,8 +100,11 @@ contract ExistingERC20DropCampaign is AirdropMerkleProof {
     /// @param _merkleProof is the merkle proof that this user is eligible for claiming the ERC20 airdrop
     function claim(bytes32[] calldata _merkleProof) external {
         if (isEligibleForReward(_merkleProof)) {
+            if (rewardToken.balanceOf(address(this)) < tokensPerClaim) revert InsufficientLiquidity();
+
             hasClaimed[msg.sender] = true;
             rewardToken.safeTransfer(msg.sender, tokensPerClaim);
+
             emit Claimed(msg.sender);
         } else {
             revert NotEligible();
@@ -113,7 +116,6 @@ contract ExistingERC20DropCampaign is AirdropMerkleProof {
     function isEligibleForReward(bytes32[] calldata _merkleProof) public view returns (bool) {
         if (hasClaimed[msg.sender]) revert AlreadyRedeemed();
         if (block.timestamp > airdropExpirationTimestamp) revert AirdropExpired();
-        if (rewardToken.balanceOf(address(this)) < tokensPerClaim) revert InsufficientLiquidity();
 
         return checkProof(_merkleProof, merkleRoot);
     }
