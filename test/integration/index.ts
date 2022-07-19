@@ -12,6 +12,7 @@ import { integrationsFixture } from "../shared/fixtures";
 import { AirbroCampaignFactoryShouldBehaveLikeFactory } from "./AirbroFactoryCampaign/AirbroCampaignFactoryShouldBehaveLikeFactory.spec";
 import { AirbroCampaignFactoryShouldChangeAdminInAllAirDrops } from "./AirbroFactoryCampaign/AirbroCampaignFactoryShouldChangeAdmin.spec";
 import { integrationCampaignFixture } from "../shared/fixtures";
+import { NewERC1155DropCampaignShouldGoThroughUserFlow } from "./AirbroFactoryCampaign/NewERC1155DropCampaign/NewERC1155DropCampaignShouldGoThroughUserFlow.spec";
 // import { AirbroFactorySMCampaignShouldAirDropExistingToken } from "./AirBroSMCampaign-old/AirBroExistingTokenNftDropSMCampaign.spec";
 // import { AirbroFactorySMCampaignShouldAirDropNewToken } from "./AirBroSMCampaign-old/AirBroTokenNftDropSMCampaign.spec";
 
@@ -57,17 +58,30 @@ describe("Integration tests", function () {
     shouldAirdropExisting1155NftDrop();
   });
 
-  describe("AirbroFactorySMCampaign", () => {
+  describe("Airbro Campaigns", () => {
     beforeEach(async function () {
-      const { airbroCampaignFactory } = await this.loadFixture(integrationCampaignFixture);
+      const { airbroCampaignFactory, newERC1155DropCampaign, newERC1155DropCampaignArgs } = await this.loadFixture(
+        integrationCampaignFixture,
+      );
       this.airbroCampaignFactory = airbroCampaignFactory;
+
+      this.newERC1155DropCampaign = newERC1155DropCampaign;
+      this.newERC1155DropCampaignArgs = newERC1155DropCampaignArgs;
+
       // this.testNftCollection = testNftCollection;
       // this.testToken = testToken;
       // this.test1155NftCollection = airBro1155NftMint;
     });
 
-    AirbroCampaignFactoryShouldBehaveLikeFactory();
-    AirbroCampaignFactoryShouldChangeAdminInAllAirDrops();
-    // AirbroFactorySMCampaignShouldAirDropExistingToken();
+    describe("AirbroCampaignFactory", () => {
+      AirbroCampaignFactoryShouldBehaveLikeFactory();
+      AirbroCampaignFactoryShouldChangeAdminInAllAirDrops();
+    });
+
+    describe("ExistingERC20DropCampaign", () => {});
+
+    describe("NewERC1155DropCampaign", () => {
+      NewERC1155DropCampaignShouldGoThroughUserFlow();
+    });
   });
 });

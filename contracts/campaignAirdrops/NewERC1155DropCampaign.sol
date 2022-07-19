@@ -27,9 +27,7 @@ contract NewERC1155DropCampaign is ERC1155, AirdropMerkleProof {
     event MerkleRootChanged(bytes32 merkleRoot);
 
     error Unauthorized();
-    error AirdropStillInProgress();
     error AlreadyRedeemed();
-    error AirdropExpired();
     error NotEligible();
 
     modifier onlyAdmin() {

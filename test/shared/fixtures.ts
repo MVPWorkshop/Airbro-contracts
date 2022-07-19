@@ -49,6 +49,8 @@ type UnitExistingERC20DropCampaignFixtureType = {
 
 type IntegrationCampaignFixtureType = {
   airbroCampaignFactory: AirbroCampaignFactory;
+  newERC1155DropCampaign: NewERC1155DropCampaign;
+  newERC1155DropCampaignArgs: any;
 };
 
 // airbro classic fixture types
@@ -134,7 +136,15 @@ export const integrationCampaignFixture: Fixture<IntegrationCampaignFixtureType>
 
   await airbroCampaignFactory.deployed();
 
-  return { airbroCampaignFactory };
+  const newERC1155DropCampaignFactory: ContractFactory = await ethers.getContractFactory(`NewERC1155DropCampaign`);
+
+  const newERC1155DropCampaignArgs = await unitNewERC1155DropCampaignArguments(airbroCampaignFactory.address);
+
+  const newERC1155DropCampaign: NewERC1155DropCampaign = (await newERC1155DropCampaignFactory
+    .connect(deployer)
+    .deploy(...Object.values(newERC1155DropCampaignArgs))) as NewERC1155DropCampaign;
+
+  return { airbroCampaignFactory, newERC1155DropCampaign, newERC1155DropCampaignArgs };
 };
 
 // airbro classic
