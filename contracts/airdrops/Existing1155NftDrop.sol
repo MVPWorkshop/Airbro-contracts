@@ -5,11 +5,10 @@ import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "@openzeppelin/contracts/token/ERC1155/IERC1155.sol";
 import "@openzeppelin/contracts/token/ERC1155/IERC1155Receiver.sol";
 import "../interfaces/AirdropMerkleProof.sol";
-import "../interfaces/AirdropInfo.sol";
 import "../interfaces/IAirBroFactory.sol";
 
 /// @title Airdrops existing ERC1155 tokens for airdrop recipients
-contract Existing1155NftDrop is AirdropInfo, AirdropMerkleProof, IERC1155Receiver {
+contract Existing1155NftDrop is AirdropMerkleProof, IERC1155Receiver {
     IERC721 public immutable rewardedNft;
     IERC1155 public immutable rewardToken;
     uint256 public immutable rewardTokenId;
@@ -116,7 +115,7 @@ contract Existing1155NftDrop is AirdropInfo, AirdropMerkleProof, IERC1155Receive
         return rewardedNft.balanceOf(msg.sender) * tokensPerClaim;
     }
 
-    function supportsInterface(bytes4 interfaceId) external view override returns (bool) {
+    function supportsInterface(bytes4 interfaceId) external pure override returns (bool) {
         return interfaceId == 0xf23a6e61;
     }
 

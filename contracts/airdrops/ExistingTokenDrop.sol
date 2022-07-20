@@ -3,12 +3,11 @@ pragma solidity ^0.8.14;
 
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "../interfaces/AirdropInfo.sol";
 import "../interfaces/AirdropMerkleProof.sol";
 import "../interfaces/IAirBroFactory.sol";
 
 /// @title Airdrops existing ERC20 tokens for airdrop recipients
-contract ExistingTokenDrop is AirdropInfo, AirdropMerkleProof {
+contract ExistingTokenDrop is AirdropMerkleProof {
     IERC721 public immutable rewardedNft;
     IERC20 public immutable rewardToken;
     uint256 public immutable tokensPerClaim;

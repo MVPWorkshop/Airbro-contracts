@@ -3,12 +3,11 @@ pragma solidity ^0.8.14;
 
 import "@rari-capital/solmate/src/tokens/ERC1155.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
-import "../interfaces/AirdropInfo.sol";
 import "../interfaces/AirdropMerkleProof.sol";
 import "../interfaces/IAirBroFactory.sol";
 
 /// @title Airdrops new ERC1155 tokens for airdrop recipients
-contract ItemNFTDrop is ERC1155, AirdropInfo, AirdropMerkleProof {
+contract ItemNFTDrop is ERC1155, AirdropMerkleProof {
     uint256 public immutable maxSupply;
     uint256 public totalSupply;
     address public immutable airBroFactoryAddress;
