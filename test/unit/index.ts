@@ -10,6 +10,7 @@ import {
   unitNewERC1155DropCampaignFixture,
   integrationCampaignFixture,
   unitExistingERC20DropCampaignFixture,
+  airdropCampaignDataFixture,
 } from "../shared/fixtures";
 
 import { shouldDeploy } from "./AirbroFactory/AirbroFactoryShouldDeploy.spec";
@@ -52,6 +53,15 @@ describe("Unit tests", function () {
     this.signers.backendWallet = await ethers.getSigner(contractAdminAddress);
 
     this.loadFixture = waffle.createFixtureLoader(signers);
+  });
+
+  describe("AirdropsCampaignData", async function () {
+    beforeEach(async function () {
+      const { airdropCampaignData } = await this.loadFixture(airdropCampaignDataFixture);
+      this.airdropCampaignData = airdropCampaignData;
+    });
+
+    // tests go here
   });
 
   describe("Airbro - Classic", function () {

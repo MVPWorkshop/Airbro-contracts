@@ -16,6 +16,7 @@ import { NewERC1155DropCampaign } from "../../src/types/contracts/campaignAirdro
 import { ExistingERC20DropCampaign } from "../../src/types/contracts/campaignAirdrops/ExistingERC20DropCampaign";
 
 import { AirbroCampaignFactory } from "../../src/types/contracts/AirbroCampaignFactory";
+import { AirdropCampaignData } from "../../src/types/contracts/AirdropCampaignData";
 
 import {
   unitExistingTokenDropFixtureArguments,
@@ -85,6 +86,10 @@ type IntegrationFixtureType = {
   testNftCollection: TestNftCollection;
   testToken: TestToken;
   airBro1155NftMint: AirBro1155NftMint;
+};
+
+type AirdropCampaignDataFixtureType = {
+  airdropCampaignData: AirdropCampaignData;
 };
 
 // airbroCampaign
@@ -268,4 +273,16 @@ export const integrationsFixture: Fixture<IntegrationFixtureType> = async (signe
   await airBro1155NftMint.deployed();
 
   return { airbroFactory, testNftCollection, testToken, airBro1155NftMint };
+};
+
+export const airdropCampaignDataFixture: Fixture<AirdropCampaignDataFixtureType> = async (signers: Wallet[]) => {
+  const deployer: Wallet = signers[0];
+
+  const airdropCampaignDataFactory = await ethers.getContractFactory("AirdropCampaignData");
+
+  const airdropCampaignData = (await airdropCampaignDataFactory.connect(deployer).deploy()) as AirdropCampaignData;
+
+  await airdropCampaignData.deployed();
+
+  return { airdropCampaignData };
 };
