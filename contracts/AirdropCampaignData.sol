@@ -8,7 +8,7 @@ contract AirdropCampaignData {
     enum Chains {
         Zero,
         Eth,
-        Pol
+        Pols
     }
 
     struct AirdropData {

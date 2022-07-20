@@ -27,6 +27,10 @@ import { ExistingERC20DropCampaignShouldDeploy } from "./campaignAirdrops/Existi
 import { ExistingERC20DropCampaignShouldSetMerkleRoot } from "./campaignAirdrops/ExistingERC20DropCampaign/ExistingERC20DropCampaignShouldSetMerkleRoot.spec";
 import { ExistingERC20DropCampaignShouldClaimReward } from "./campaignAirdrops/ExistingERC20DropCampaign/ExistingERC20DropCampaignShouldClaimReward.spec";
 
+import { AirdropCampaignDataShouldBeDeployed } from "./AirdropCampaignData/AirdropCampaignDataShouldBeDeployed.spec";
+import { AirdropCampaignDataShouldChangeAdmin } from "./AirdropCampaignData/AirdropCampaignDataShouldChangeAdmin.spec";
+import { AirdropCampaignDataShouldAddDailyMerkleRootHash } from "./AirdropCampaignData/AirdropCampaignDataShouldAddDailyMerkleRootHash.spec";
+
 describe("Unit tests", function () {
   before(async function () {
     this.signers = {} as Signers;
@@ -61,6 +65,11 @@ describe("Unit tests", function () {
       this.airdropCampaignData = airdropCampaignData;
     });
 
+    AirdropCampaignDataShouldBeDeployed();
+    AirdropCampaignDataShouldChangeAdmin();
+    AirdropCampaignDataShouldAddDailyMerkleRootHash();
+    // tests go here
+    // tests go here
     // tests go here
   });
 
