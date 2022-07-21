@@ -30,6 +30,9 @@ import { ExistingERC20DropCampaignShouldClaimReward } from "./campaignAirdrops/E
 import { AirdropCampaignDataShouldBeDeployed } from "./AirdropCampaignData/AirdropCampaignDataShouldBeDeployed.spec";
 import { AirdropCampaignDataShouldChangeAdmin } from "./AirdropCampaignData/AirdropCampaignDataShouldChangeAdmin.spec";
 import { AirdropCampaignDataShouldAddDailyMerkleRootHash } from "./AirdropCampaignData/AirdropCampaignDataShouldAddDailyMerkleRootHash.spec";
+import { AirdropCampaignDataShouldBatchAddDailyMerkleRootHash } from "./AirdropCampaignData/AirdropCampaignDataShouldBatchAddDailyMerkleRootHash.spec";
+import { AirdropCampaignDataShouldAddAirdropCampaignChain } from "./AirdropCampaignData/AirdropCampaignDataShouldAddAirdropCampaignChain.spec";
+import { AirdropCampaignDataShouldBatchAddAirdropCampaignChain } from "./AirdropCampaignData/AirdropCampaignDataShouldBatchAddAirdropCampaignChain.spec";
 
 describe("Unit tests", function () {
   before(async function () {
@@ -68,9 +71,9 @@ describe("Unit tests", function () {
     AirdropCampaignDataShouldBeDeployed();
     AirdropCampaignDataShouldChangeAdmin();
     AirdropCampaignDataShouldAddDailyMerkleRootHash();
-    // tests go here
-    // tests go here
-    // tests go here
+    AirdropCampaignDataShouldBatchAddDailyMerkleRootHash();
+    AirdropCampaignDataShouldAddAirdropCampaignChain();
+    AirdropCampaignDataShouldBatchAddAirdropCampaignChain();
   });
 
   describe("Airbro - Classic", function () {
