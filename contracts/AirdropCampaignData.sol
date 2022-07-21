@@ -4,6 +4,8 @@ pragma solidity ^0.8.15;
 /// @title AirdropCampaignData - Data contract for storing of daily merkleRootHashes of airbro Campaigns
 contract AirdropCampaignData {
     address public admin = 0xF4b5bFB92dD4E6D529476bCab28A65bb6B32EFb3;
+    uint16 public batchHashArrayLimit = 600;
+    uint16 public batchChainArrayLimit = 600;
 
     enum Chains {
         Zero,
@@ -20,6 +22,9 @@ contract AirdropCampaignData {
 
     error NotAdmin();
     error UnequalArrays();
+    error ArrayTooLong();
+    error ChainDataNotSet();
+    error ChainAlreadySet();
 
     event AdminChanged(address adminAddress);
     event MerkleRootHashAdded(address indexed airdropCampaignAddress, bytes32 indexed merkleRootHash);
@@ -54,11 +59,11 @@ contract AirdropCampaignData {
         external
         onlyAdmin
     {
-        if (_airdropCampaignAddressArray.length != _merkleRootHashArray.length) revert UnequalArrays();
+        uint256 airdropHashArrayLength = _merkleRootHashArray.length;
+        if (airdropHashArrayLength > batchHashArrayLimit) revert ArrayTooLong();
+        if (airdropHashArrayLength != _airdropCampaignAddressArray.length) revert UnequalArrays();
 
-        uint256 arrayLength = _airdropCampaignAddressArray.length;
-
-        for (uint256 i; i < arrayLength; i++) {
+        for (uint256 i; i < airdropHashArrayLength; i++) {
             airdrops[_airdropCampaignAddressArray[i]].hashArray.push(_merkleRootHashArray[i]);
             emit MerkleRootHashAdded(_airdropCampaignAddressArray[i], _merkleRootHashArray[i]);
         }
@@ -68,6 +73,9 @@ contract AirdropCampaignData {
     /// @param _airdropCampaignAddress - address of airdropCampaign contract
     /// @param _airdropChain - string representing blockchain Chain
     function addAirdropCampaignChain(address _airdropCampaignAddress, Chains _airdropChain) external onlyAdmin {
+        if (_airdropChain == Chains.Zero) revert ChainDataNotSet();
+        if (airdrops[_airdropCampaignAddress].chain != Chains.Zero) revert ChainAlreadySet();
+
         airdrops[_airdropCampaignAddress].chain = _airdropChain;
         emit ChainAdded(_airdropCampaignAddress, _airdropChain);
     }
@@ -79,11 +87,14 @@ contract AirdropCampaignData {
         external
         onlyAdmin
     {
-        if (_airdropCampaignAddressArray.length != _airdropChainArray.length) revert UnequalArrays();
+        uint256 airdropChainArrayLength = _airdropChainArray.length;
+        if (airdropChainArrayLength > batchChainArrayLimit) revert ArrayTooLong();
+        if (airdropChainArrayLength != _airdropCampaignAddressArray.length) revert UnequalArrays();
 
-        uint256 arrayLength = _airdropCampaignAddressArray.length;
+        for (uint256 i; i < airdropChainArrayLength; i++) {
+            if (_airdropChainArray[i] == Chains.Zero) revert ChainDataNotSet();
+            if (airdrops[_airdropCampaignAddressArray[i]].chain != Chains.Zero) revert ChainAlreadySet();
 
-        for (uint256 i; i < arrayLength; i++) {
             airdrops[_airdropCampaignAddressArray[i]].chain = _airdropChainArray[i];
             emit ChainAdded(_airdropCampaignAddressArray[i], _airdropChainArray[i]);
         }

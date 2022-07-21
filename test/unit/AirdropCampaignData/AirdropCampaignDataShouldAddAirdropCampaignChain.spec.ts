@@ -5,29 +5,21 @@ import { randomAddress as campaignAddress } from "../../shared/constants";
 const chains = {
   Zero: 0,
   Eth: 1,
-  Pols: 2,
+  Pol: 2,
 };
 
 // not defined in struct of contract
-const noxExistantChains = {
-  positiveInt: 3,
-  negativeInt: -1,
+const nonValidChainData = {
+  PositiveInt: chains.Pol + 1,
+  NegativeInt: chains.Zero - 1,
 };
 
 export function AirdropCampaignDataShouldAddAirdropCampaignChain(): void {
   describe("should set airdrop campaign chain", async function () {
     it("should allow admin to set airdrop campaign chain", async function () {
-      await expect(this.airdropCampaignData.connect(this.signers.backendWallet).addAirdropCampaignChain(campaignAddress, chains.Zero))
-        .to.emit(this.airdropCampaignData, "ChainAdded")
-        .withArgs(campaignAddress, chains.Zero);
-
       await expect(this.airdropCampaignData.connect(this.signers.backendWallet).addAirdropCampaignChain(campaignAddress, chains.Eth))
         .to.emit(this.airdropCampaignData, "ChainAdded")
         .withArgs(campaignAddress, chains.Eth);
-
-      await expect(this.airdropCampaignData.connect(this.signers.backendWallet).addAirdropCampaignChain(campaignAddress, chains.Pols))
-        .to.emit(this.airdropCampaignData, "ChainAdded")
-        .withArgs(campaignAddress, chains.Pols);
     });
 
     it("should revert non admin wallet", async function () {
@@ -36,14 +28,34 @@ export function AirdropCampaignDataShouldAddAirdropCampaignChain(): void {
       ).to.be.revertedWith("NotAdmin");
     });
 
-    it("should revert chain which is not 0, 1, or 2", async function () {
+    it("should revert chain data if it is 0 (chains.zero)", async function () {
       await expect(
-        this.airdropCampaignData.connect(this.signers.alice).addAirdropCampaignChain(campaignAddress, noxExistantChains.positiveInt),
+        this.airdropCampaignData.connect(this.signers.backendWallet).addAirdropCampaignChain(campaignAddress, chains.Zero),
+      ).to.be.revertedWith(`ChainDataNotSet`);
+    });
+
+    it("should revert chain data if it is invalid enum integers (bellow 0 or above 2)", async function () {
+      await expect(
+        this.airdropCampaignData
+          .connect(this.signers.backendWallet)
+          .addAirdropCampaignChain(campaignAddress, nonValidChainData.PositiveInt),
       ).to.be.reverted;
 
       await expect(
-        this.airdropCampaignData.connect(this.signers.alice).addAirdropCampaignChain(campaignAddress, noxExistantChains.negativeInt),
+        this.airdropCampaignData
+          .connect(this.signers.backendWallet)
+          .addAirdropCampaignChain(campaignAddress, nonValidChainData.NegativeInt),
       ).to.be.reverted;
+    });
+
+    it("should revert chain data if chain data is already set (chains.eth or chains.pol)", async function () {
+      await expect(this.airdropCampaignData.connect(this.signers.backendWallet).addAirdropCampaignChain(campaignAddress, chains.Eth))
+        .to.emit(this.airdropCampaignData, "ChainAdded")
+        .withArgs(campaignAddress, chains.Eth);
+
+      await expect(
+        this.airdropCampaignData.connect(this.signers.backendWallet).addAirdropCampaignChain(campaignAddress, chains.Pol),
+      ).to.be.revertedWith(`ChainAlreadySet`);
     });
   });
 }

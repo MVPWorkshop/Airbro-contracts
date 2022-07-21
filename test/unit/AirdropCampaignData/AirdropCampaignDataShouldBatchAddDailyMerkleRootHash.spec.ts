@@ -49,5 +49,26 @@ export function AirdropCampaignDataShouldBatchAddDailyMerkleRootHash(): void {
         this.airdropCampaignData.connect(this.signers.backendWallet).batchAddDailyMerkleRootHash(oneRandomAddressArray, twoHashesArray),
       ).to.be.revertedWith("UnequalArrays");
     });
+
+    it("should revert if length of array exceeds batchHashArrayLimit", async function () {
+      // over 630 exceeds the max gas limit
+      let startIndex = 0;
+      const endIndex = (await this.airdropCampaignData.batchHashArrayLimit()) + 1;
+      const randomAddressesArray = [];
+      const bytes32MerkleRootHashArray = [];
+      for (startIndex; startIndex < endIndex; startIndex++) {
+        randomAddressesArray.push(this.signers.bob.address);
+        bytes32MerkleRootHashArray.push("0x0000000000000000000000000000000000000000000000000000000000000000");
+      }
+      // console.log(
+      //   "Max Gas Limit -> addressArrayLength: " + randomAddressesArray.length + " chainArrayLength: " + bytes32MerkleRootHashArray.length,
+      // ); // 601
+
+      await expect(
+        this.airdropCampaignData
+          .connect(this.signers.backendWallet)
+          .batchAddDailyMerkleRootHash(randomAddressesArray, bytes32MerkleRootHashArray),
+      ).to.be.revertedWith("ArrayTooLong");
+    });
   });
 }
