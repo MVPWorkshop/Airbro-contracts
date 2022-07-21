@@ -5,12 +5,12 @@ import { randomAddress as campaignAddress } from "../../shared/constants";
 const chains = {
   Zero: 0,
   Eth: 1,
-  Pol: 2,
+  pols: 2,
 };
 
 // not defined in struct of contract
 const nonValidChainData = {
-  PositiveInt: chains.Pol + 1,
+  PositiveInt: chains.pols + 1,
   NegativeInt: chains.Zero - 1,
 };
 
@@ -48,13 +48,13 @@ export function AirdropCampaignDataShouldAddAirdropCampaignChain(): void {
       ).to.be.reverted;
     });
 
-    it("should revert chain data if chain data is already set (chains.eth or chains.pol)", async function () {
+    it("should revert chain data if chain data is already set (chains.eth or chains.pols)", async function () {
       await expect(this.airdropCampaignData.connect(this.signers.backendWallet).addAirdropCampaignChain(campaignAddress, chains.Eth))
         .to.emit(this.airdropCampaignData, "ChainAdded")
         .withArgs(campaignAddress, chains.Eth);
 
       await expect(
-        this.airdropCampaignData.connect(this.signers.backendWallet).addAirdropCampaignChain(campaignAddress, chains.Pol),
+        this.airdropCampaignData.connect(this.signers.backendWallet).addAirdropCampaignChain(campaignAddress, chains.pols),
       ).to.be.revertedWith(`ChainAlreadySet`);
     });
   });

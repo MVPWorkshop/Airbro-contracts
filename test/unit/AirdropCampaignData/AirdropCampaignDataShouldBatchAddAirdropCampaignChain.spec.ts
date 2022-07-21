@@ -5,7 +5,7 @@ import { airdropCampaignDataFixture } from "../../shared/fixtures";
 const chains = {
   Zero: 0,
   Eth: 1,
-  Pol: 2,
+  Pols: 2,
 };
 
 const noxExistantChains = {
@@ -21,12 +21,12 @@ export function AirdropCampaignDataShouldBatchAddAirdropCampaignChain(): void {
       await expect(
         this.airdropCampaignData
           .connect(this.signers.backendWallet)
-          .batchAddAirdropCampaignChain(randomAddressesArray, [chains.Eth, chains.Pol]),
+          .batchAddAirdropCampaignChain(randomAddressesArray, [chains.Eth, chains.Pols]),
       )
         .to.emit(this.airdropCampaignData, "ChainAdded")
         .withArgs(randomAddressesArray[0], chains.Eth)
         .and.to.emit(this.airdropCampaignData, "ChainAdded")
-        .withArgs(randomAddressesArray[1], chains.Pol);
+        .withArgs(randomAddressesArray[1], chains.Pols);
 
       const chainData = await this.airdropCampaignData.airdrops(this.signers.alice.address);
       await expect(chainData.chain).to.be.equal(chains.Eth);
@@ -36,14 +36,14 @@ export function AirdropCampaignDataShouldBatchAddAirdropCampaignChain(): void {
       const randomAddressesArray = [this.signers.alice.address, this.signers.bob.address];
 
       await expect(
-        this.airdropCampaignData.connect(this.signers.alice).batchAddAirdropCampaignChain(randomAddressesArray, [chains.Eth, chains.Pol]),
+        this.airdropCampaignData.connect(this.signers.alice).batchAddAirdropCampaignChain(randomAddressesArray, [chains.Eth, chains.Pols]),
       ).to.be.revertedWith("NotAdmin");
     });
 
     it("should revert if length of array arguments do not match", async function () {
       /* 1. Two addresses, one chain */
       const twoRandomAddressesArray = [this.signers.alice.address, this.signers.bob.address]; // 2 addresses
-      const oneCampaignChainArray = [chains.Pol]; // 1 chain
+      const oneCampaignChainArray = [chains.Pols]; // 1 chain
 
       await expect(
         this.airdropCampaignData
@@ -53,7 +53,7 @@ export function AirdropCampaignDataShouldBatchAddAirdropCampaignChain(): void {
 
       /* 2. One address, two chains */
       const oneRandomAddressArray = [this.signers.alice.address]; // 1 address
-      const twoCampaignChainsArray = [chains.Eth, chains.Pol]; // 2 chains
+      const twoCampaignChainsArray = [chains.Eth, chains.Pols]; // 2 chains
 
       await expect(
         this.airdropCampaignData
@@ -89,12 +89,14 @@ export function AirdropCampaignDataShouldBatchAddAirdropCampaignChain(): void {
 
       // to check if all was reverted, even valid chain data
       const chainData = await this.airdropCampaignData.airdrops(this.signers.alice.address);
-      await expect(chainData.chain).to.be.equal(chains.Zero);
+      expect(chainData.chain).to.be.equal(chains.Zero);
     });
 
-    it("should revert if sent chain data is already set for one of those campaigns", async function () {
+    it("should revert if chain data is already set for one of those campaigns", async function () {
       const randomAddressesArray = [this.signers.alice.address, this.signers.bob.address];
-      const randomChainsArray = [chains.Eth, chains.Pol];
+      const randomChainsArray = [chains.Eth, chains.Pols];
+
+      // setting chain data
       await expect(
         this.airdropCampaignData.connect(this.signers.backendWallet).batchAddAirdropCampaignChain(randomAddressesArray, randomChainsArray),
       )
@@ -103,6 +105,7 @@ export function AirdropCampaignDataShouldBatchAddAirdropCampaignChain(): void {
         .and.to.emit(this.airdropCampaignData, "ChainAdded")
         .withArgs(randomAddressesArray[1], randomChainsArray[1]);
 
+      // trying to reset a previously set chain for a campaign
       await expect(
         this.airdropCampaignData.connect(this.signers.backendWallet).batchAddAirdropCampaignChain(randomAddressesArray, randomChainsArray),
       ).to.be.revertedWith(`ChainAlreadySet`);

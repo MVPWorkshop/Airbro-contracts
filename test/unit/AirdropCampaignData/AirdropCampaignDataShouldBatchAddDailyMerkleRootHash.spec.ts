@@ -5,10 +5,22 @@ const bytes32MerkleRootHashes = [
   "0x0000000000000000000000000000000000000000000000000000000000000001",
 ];
 
+// struct used in contract
+const chains = {
+  Zero: 0,
+  Eth: 1,
+  Pols: 2,
+};
+
 export function AirdropCampaignDataShouldBatchAddDailyMerkleRootHash(): void {
   describe("should batch set daily merkle root hash", async function () {
     it("should allow admin to set daily merkle root hash", async function () {
       const randomAddressesArray = [this.signers.alice.address, this.signers.bob.address]; // two random addresses
+
+      // adding chain (mandatory before editing anything for a campaign on this contract)
+      await this.airdropCampaignData
+        .connect(this.signers.backendWallet)
+        .batchAddAirdropCampaignChain(randomAddressesArray, [chains.Eth, chains.Pols]);
 
       await expect(
         this.airdropCampaignData
@@ -70,5 +82,7 @@ export function AirdropCampaignDataShouldBatchAddDailyMerkleRootHash(): void {
           .batchAddDailyMerkleRootHash(randomAddressesArray, bytes32MerkleRootHashArray),
       ).to.be.revertedWith("ArrayTooLong");
     });
+
+    it("should revert if one of the campaigns does not have the chain data set", async function () {});
   });
 }

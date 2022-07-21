@@ -27,6 +27,7 @@ contract AirdropCampaignData {
     error ChainDataNotSet();
     error ChainAlreadySet();
     error AirdropHasFinished();
+    error AlreadyFinalized();
 
     event AdminChanged(address adminAddress);
     event MerkleRootHashAdded(address indexed airdropCampaignAddress, bytes32 indexed merkleRootHash);
@@ -51,7 +52,8 @@ contract AirdropCampaignData {
     /// @param _airdropCampaignAddress - address of the airdropCampaign contract whose current participants are in the daily merkleRootHash
     /// @param _merkleRootHash - merkle root hash of daily participants of an airdropCampaign
     function addDailyMerkleRootHash(address _airdropCampaignAddress, bytes32 _merkleRootHash) external onlyAdmin {
-        if (isAirdropFinished(_airdropCampaignAddress) == true) revert AirdropHasFinished();
+        if (airdrops[_airdropCampaignAddress].airdropFinished == true) revert AirdropHasFinished();
+        if (airdrops[_airdropCampaignAddress].chain == Chains.Zero) revert ChainDataNotSet();
 
         airdrops[_airdropCampaignAddress].hashArray.push(_merkleRootHash);
         emit MerkleRootHashAdded(_airdropCampaignAddress, _merkleRootHash);
@@ -69,12 +71,14 @@ contract AirdropCampaignData {
         if (airdropHashArrayLength != _airdropCampaignAddressArray.length) revert UnequalArrays();
 
         for (uint256 i; i < airdropHashArrayLength; i++) {
-            address _airdropCampaignAddress = _airdropCampaignAddressArray[i];
+            address currentCampaignAddress = _airdropCampaignAddressArray[i];
+            bytes32 currentMerkleRootHash = _merkleRootHashArray[i];
 
-            if (isAirdropFinished(_airdropCampaignAddress) == true) revert AirdropHasFinished();
+            if (airdrops[currentCampaignAddress].chain == Chains.Zero) revert ChainDataNotSet();
+            if (airdrops[currentCampaignAddress].airdropFinished == true) revert AirdropHasFinished();
 
-            airdrops[_airdropCampaignAddress].hashArray.push(_merkleRootHashArray[i]);
-            emit MerkleRootHashAdded(_airdropCampaignAddress, _merkleRootHashArray[i]);
+            airdrops[currentCampaignAddress].hashArray.push(currentMerkleRootHash);
+            emit MerkleRootHashAdded(currentCampaignAddress, currentMerkleRootHash);
         }
     }
 
@@ -84,7 +88,7 @@ contract AirdropCampaignData {
     function addAirdropCampaignChain(address _airdropCampaignAddress, Chains _airdropChain) external onlyAdmin {
         if (_airdropChain == Chains.Zero) revert ChainDataNotSet();
         if (airdrops[_airdropCampaignAddress].chain != Chains.Zero) revert ChainAlreadySet();
-        if (isAirdropFinished(_airdropCampaignAddress) == true) revert AirdropHasFinished();
+        if (airdrops[_airdropCampaignAddress].airdropFinished == true) revert AirdropHasFinished();
 
         airdrops[_airdropCampaignAddress].chain = _airdropChain;
         emit ChainAdded(_airdropCampaignAddress, _airdropChain);
@@ -102,28 +106,25 @@ contract AirdropCampaignData {
         if (airdropChainArrayLength != _airdropCampaignAddressArray.length) revert UnequalArrays();
 
         for (uint256 i; i < airdropChainArrayLength; i++) {
-            address _airdropCampaignAddress = _airdropCampaignAddressArray[i];
+            address currentCampaignAddress = _airdropCampaignAddressArray[i];
+            Chains currentCampaignChain = _airdropChainArray[i];
 
-            if (_airdropChainArray[i] == Chains.Zero) revert ChainDataNotSet();
+            if (currentCampaignChain == Chains.Zero) revert ChainDataNotSet();
             if (airdrops[_airdropCampaignAddressArray[i]].chain != Chains.Zero) revert ChainAlreadySet();
+            if (airdrops[currentCampaignAddress].airdropFinished == true) revert AirdropHasFinished();
 
-            if (isAirdropFinished(_airdropCampaignAddress) == true) revert AirdropHasFinished();
-
-            airdrops[_airdropCampaignAddress].chain = _airdropChainArray[i];
-            emit ChainAdded(_airdropCampaignAddress, _airdropChainArray[i]);
+            airdrops[currentCampaignAddress].chain = currentCampaignChain;
+            emit ChainAdded(currentCampaignAddress, currentCampaignChain);
         }
     }
 
     /// @notice Disabiling the ability to push hashes to the hashArray of a specific campaign
     /// @param _airdropCampaignAddress - address of airdropCampaign contract
     function finalizeAirdrop(address _airdropCampaignAddress) public onlyAdmin {
+        if (airdrops[_airdropCampaignAddress].airdropFinished == true) revert AlreadyFinalized();
+        if (airdrops[_airdropCampaignAddress].chain == Chains.Zero) revert ChainDataNotSet();
+
         airdrops[_airdropCampaignAddress].airdropFinished = true;
         emit FinalizedAirdrop(_airdropCampaignAddress);
-    }
-
-    /// @notice Returns a bool showing if an airdrop is completed or not
-    /// @param _airdropCampaignAddress - address of airdropCampaign contract
-    function isAirdropFinished(address _airdropCampaignAddress) public view returns (bool) {
-        return airdrops[_airdropCampaignAddress].airdropFinished == true;
     }
 }
