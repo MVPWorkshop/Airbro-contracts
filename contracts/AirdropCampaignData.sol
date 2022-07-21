@@ -14,16 +14,19 @@ contract AirdropCampaignData {
     struct AirdropData {
         Chains chain;
         bytes32[] hashArray;
+        bool airdropFinished;
     }
 
     mapping(address => AirdropData) public airdrops;
 
     error NotAdmin();
     error UnequalArrays();
+    error AirdropHasFinished();
 
     event AdminChanged(address adminAddress);
     event MerkleRootHashAdded(address indexed airdropCampaignAddress, bytes32 indexed merkleRootHash);
     event ChainAdded(address indexed airdropCampaignAddress, Chains indexed airdropChain);
+    event FinalizedAirdrop(address indexed airdropCampaignAddress);
 
     modifier onlyAdmin() {
         if (msg.sender != admin) revert NotAdmin();
@@ -43,6 +46,8 @@ contract AirdropCampaignData {
     /// @param _airdropCampaignAddress - address of the airdropCampaign contract whose current participants are in the daily merkleRootHash
     /// @param _merkleRootHash - merkle root hash of daily participants of an airdropCampaign
     function addDailyMerkleRootHash(address _airdropCampaignAddress, bytes32 _merkleRootHash) external onlyAdmin {
+        if (isAirdropFinished(_airdropCampaignAddress) == true) revert AirdropHasFinished();
+
         airdrops[_airdropCampaignAddress].hashArray.push(_merkleRootHash);
         emit MerkleRootHashAdded(_airdropCampaignAddress, _merkleRootHash);
     }
@@ -59,8 +64,12 @@ contract AirdropCampaignData {
         uint256 arrayLength = _airdropCampaignAddressArray.length;
 
         for (uint256 i; i < arrayLength; i++) {
-            airdrops[_airdropCampaignAddressArray[i]].hashArray.push(_merkleRootHashArray[i]);
-            emit MerkleRootHashAdded(_airdropCampaignAddressArray[i], _merkleRootHashArray[i]);
+            address _airdropCampaignAddress = _airdropCampaignAddressArray[i];
+
+            if (isAirdropFinished(_airdropCampaignAddress) == true) revert AirdropHasFinished();
+
+            airdrops[_airdropCampaignAddress].hashArray.push(_merkleRootHashArray[i]);
+            emit MerkleRootHashAdded(_airdropCampaignAddress, _merkleRootHashArray[i]);
         }
     }
 
@@ -68,6 +77,8 @@ contract AirdropCampaignData {
     /// @param _airdropCampaignAddress - address of airdropCampaign contract
     /// @param _airdropChain - string representing blockchain Chain
     function addAirdropCampaignChain(address _airdropCampaignAddress, Chains _airdropChain) external onlyAdmin {
+        if (isAirdropFinished(_airdropCampaignAddress) == true) revert AirdropHasFinished();
+
         airdrops[_airdropCampaignAddress].chain = _airdropChain;
         emit ChainAdded(_airdropCampaignAddress, _airdropChain);
     }
@@ -84,8 +95,25 @@ contract AirdropCampaignData {
         uint256 arrayLength = _airdropCampaignAddressArray.length;
 
         for (uint256 i; i < arrayLength; i++) {
+            address _airdropCampaignAddress = _airdropCampaignAddressArray[i];
+
+            if (isAirdropFinished(_airdropCampaignAddress) == true) revert AirdropHasFinished();
+
             airdrops[_airdropCampaignAddressArray[i]].chain = _airdropChainArray[i];
             emit ChainAdded(_airdropCampaignAddressArray[i], _airdropChainArray[i]);
         }
+    }
+
+    /// @notice Disabiling the ability to push hashes to the hashArray of a specific campaign
+    /// @param _airdropCampaignAddress - address of airdropCampaign contract
+    function finalizeAirdrop(address _airdropCampaignAddress) public onlyAdmin {
+        airdrops[_airdropCampaignAddress].airdropFinished = true;
+        emit FinalizedAirdrop(_airdropCampaignAddress);
+    }
+
+    /// @notice Returns a bool showing if an airdrop is completed or not
+    /// @param _airdropCampaignAddress - address of airdropCampaign contract
+    function isAirdropFinished(address _airdropCampaignAddress) public view returns (bool) {
+        return airdrops[_airdropCampaignAddress].airdropFinished == true;
     }
 }

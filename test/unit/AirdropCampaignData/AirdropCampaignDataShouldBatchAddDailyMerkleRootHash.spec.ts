@@ -49,5 +49,7 @@ export function AirdropCampaignDataShouldBatchAddDailyMerkleRootHash(): void {
         this.airdropCampaignData.connect(this.signers.backendWallet).batchAddDailyMerkleRootHash(oneRandomAddressArray, twoHashesArray),
       ).to.be.revertedWith("UnequalArrays");
     });
+
+    // it('should revert if chain is not set',async function(){ }) //empty test
   });
 }

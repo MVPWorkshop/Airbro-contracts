@@ -33,6 +33,8 @@ import { AirdropCampaignDataShouldAddDailyMerkleRootHash } from "./AirdropCampai
 import { AirdropCampaignDataShouldBatchAddDailyMerkleRootHash } from "./AirdropCampaignData/AirdropCampaignDataShouldBatchAddDailyMerkleRootHash.spec";
 import { AirdropCampaignDataShouldAddAirdropCampaignChain } from "./AirdropCampaignData/AirdropCampaignDataShouldAddAirdropCampaignChain.spec";
 import { AirdropCampaignDataShouldBatchAddAirdropCampaignChain } from "./AirdropCampaignData/AirdropCampaignDataShouldBatchAddAirdropCampaignChain.spec";
+import { AirdropCampaignDataShouldFinalizeAirdrop } from "./AirdropCampaignData/AirdropCampaignDataShouldFinalizeAirdrop.spec";
+import { AirdropCampaignDataShouldShowIsAirdropFinished } from "./AirdropCampaignData/AirdropCampaignDataShouldShowIsAirdropFinished.spec";
 
 describe("Unit tests", function () {
   before(async function () {
@@ -74,6 +76,8 @@ describe("Unit tests", function () {
     AirdropCampaignDataShouldBatchAddDailyMerkleRootHash();
     AirdropCampaignDataShouldAddAirdropCampaignChain();
     AirdropCampaignDataShouldBatchAddAirdropCampaignChain();
+    AirdropCampaignDataShouldFinalizeAirdrop();
+    AirdropCampaignDataShouldShowIsAirdropFinished();
   });
 
   describe("Airbro - Classic", function () {

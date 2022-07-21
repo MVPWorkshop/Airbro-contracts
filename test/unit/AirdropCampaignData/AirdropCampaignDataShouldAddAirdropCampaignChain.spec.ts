@@ -45,5 +45,7 @@ export function AirdropCampaignDataShouldAddAirdropCampaignChain(): void {
         this.airdropCampaignData.connect(this.signers.alice).addAirdropCampaignChain(campaignAddress, noxExistantChains.negativeInt),
       ).to.be.reverted;
     });
+
+    // it("should revert if trying to set more than once", async function () {}); //empty test
   });
 }
