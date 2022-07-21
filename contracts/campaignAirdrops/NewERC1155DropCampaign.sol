@@ -14,6 +14,7 @@ contract NewERC1155DropCampaign is ERC1155, AirdropMerkleProof {
     string public airdropType = "ERC1155";
     uint256 public airdropFundBlockTimestamp;
     bool public airdropFunded;
+    bool public merkleRootSet;
 
     address internal airdropFundingHolder;
 
@@ -29,6 +30,7 @@ contract NewERC1155DropCampaign is ERC1155, AirdropMerkleProof {
     error Unauthorized();
     error AlreadyRedeemed();
     error NotEligible();
+    error MerkleRootAlreadySet();
 
     modifier onlyAdmin() {
         if (msg.sender != IAirBroFactory(airbroCampaignFactoryAddress).admin()) revert Unauthorized();
@@ -42,6 +44,9 @@ contract NewERC1155DropCampaign is ERC1155, AirdropMerkleProof {
     /// @notice Sets the merkleRoot - can only be done if admin (different from the contract owner)
     /// @param _merkleRoot - The root hash of the Merle Tree
     function setMerkleRoot(bytes32 _merkleRoot) external onlyAdmin {
+        if (merkleRootSet) revert MerkleRootAlreadySet();
+
+        merkleRootSet = true;
         merkleRoot = _merkleRoot;
         emit MerkleRootChanged(_merkleRoot);
     }

@@ -19,5 +19,7 @@ export function AirdropCampaignDataShouldAddDailyMerkleRootHash(): void {
         this.airdropCampaignData.connect(this.signers.alice).addDailyMerkleRootHash(randomAddress, bytes32MerkleRootHash),
       ).to.be.revertedWith("NotAdmin");
     });
+
+    // it("should revert if chain is not set", async function () {}); //empty test
   });
 }

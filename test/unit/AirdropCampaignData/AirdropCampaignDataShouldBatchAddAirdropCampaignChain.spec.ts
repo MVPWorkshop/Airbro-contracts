@@ -29,7 +29,7 @@ export function AirdropCampaignDataShouldBatchAddAirdropCampaignChain(): void {
         .withArgs(randomAddressesArray[1], chains.Pol);
 
       const chainData = await this.airdropCampaignData.airdrops(this.signers.alice.address);
-      await expect(chainData).to.be.equal(chains.Eth);
+      await expect(chainData.chain).to.be.equal(chains.Eth);
     });
 
     it("should revert non admin wallet", async function () {
@@ -89,7 +89,7 @@ export function AirdropCampaignDataShouldBatchAddAirdropCampaignChain(): void {
 
       // to check if all was reverted, even valid chain data
       const chainData = await this.airdropCampaignData.airdrops(this.signers.alice.address);
-      await expect(chainData).to.be.equal(chains.Zero);
+      await expect(chainData.chain).to.be.equal(chains.Zero);
     });
 
     it("should revert if sent chain data is already set for one of those campaigns", async function () {
