@@ -4,7 +4,6 @@ pragma solidity ^0.8.14;
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "../interfaces/AirdropMerkleProof.sol";
-import "../interfaces/IAirBroFactory.sol";
 
 /// @title Airdrops existing ERC20 tokens for airdrop recipients
 contract ExistingTokenDrop is AirdropMerkleProof {
@@ -105,6 +104,7 @@ contract ExistingTokenDrop is AirdropMerkleProof {
 
     /// @notice Checks if the user is eligible for this airdrop
     /// @param tokenId is the rewarded NFT token ID
+    /// @return bool if user is eligible for reward
     function isEligibleForReward(uint256 tokenId) public view returns (bool) {
         if (block.timestamp > airdropFinishTime) revert AirdropExpired();
         if (hasClaimed[tokenId]) revert AlreadyRedeemed();

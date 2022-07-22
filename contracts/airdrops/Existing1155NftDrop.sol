@@ -72,7 +72,8 @@ contract Existing1155NftDrop is AirdropMerkleProof, IERC1155Receiver {
         rewardToken.safeTransferFrom(address(this), msg.sender, rewardTokenId, rewardToken.balanceOf(address(this), rewardTokenId), "");
     }
 
-    /// @notice Allows the NFT holder to claim his ERC20 airdrop
+    /// @notice Allows the NFT holder to claim his ERC1155 airdrop
+    /// @param tokenId the token id based on which the user wishes to claim the reward
     function claim(uint256 tokenId) external {
         if (isEligibleForReward(tokenId)) {
             hasClaimed[tokenId] = true;
@@ -83,6 +84,8 @@ contract Existing1155NftDrop is AirdropMerkleProof, IERC1155Receiver {
         }
     }
 
+    /// @notice Allows the NFT holder to claim all his ERC1155 airdrops
+    /// @param tokenIds the token id based on which the user wishes to claim the reward
     function batchClaim(uint256[] memory tokenIds) external {
         if (rewardToken.balanceOf(address(this), rewardTokenId) < tokensPerClaim * tokenIds.length) revert InsufficientLiquidity();
 
@@ -102,6 +105,7 @@ contract Existing1155NftDrop is AirdropMerkleProof, IERC1155Receiver {
     }
 
     /// @notice Checks if the user is eligible for this airdrop
+    /// @return bool (true or false)
     function isEligibleForReward(uint256 tokenId) public view returns (bool) {
         if (hasClaimed[tokenId]) revert AlreadyRedeemed();
         if (rewardedNft.ownerOf(tokenId) != msg.sender) revert Unauthorized();

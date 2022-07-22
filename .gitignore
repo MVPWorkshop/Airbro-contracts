@@ -16,6 +16,7 @@
 **/node_modules
 .idea/*
 .vscode
+.DS_Store
 
 # files
 *.env
