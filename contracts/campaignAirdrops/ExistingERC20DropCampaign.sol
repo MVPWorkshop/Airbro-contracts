@@ -27,7 +27,7 @@ contract ExistingERC20DropCampaign is AirdropMerkleProof {
 
     address internal airdropFunder;
 
-    event MerkleRootChanged(bytes32 merkleRoot, uint256 _numberOfClaimers);
+    event MerkleRootSet(bytes32 merkleRoot, uint256 _numberOfClaimers);
     event Claimed(address indexed claimer);
     event AirdropFunded(address contractAddress);
 
@@ -69,7 +69,7 @@ contract ExistingERC20DropCampaign is AirdropMerkleProof {
         numberOfClaimers = _numberOfClaimers;
         tokensPerClaim = tokenSupply / numberOfClaimers;
 
-        emit MerkleRootChanged(_merkleRoot, _numberOfClaimers);
+        emit MerkleRootSet(_merkleRoot, _numberOfClaimers);
     }
 
     /// @notice Allows the airdrop creator to provide funds for the airdrop reward

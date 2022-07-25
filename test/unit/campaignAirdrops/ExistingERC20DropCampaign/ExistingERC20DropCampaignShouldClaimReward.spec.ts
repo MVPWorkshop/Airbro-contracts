@@ -18,7 +18,7 @@ export function ExistingERC20DropCampaignShouldClaimReward(): void {
 
       // setting merkleRootHash
       expect(await this.existingERC20DropCampaign.connect(this.signers.backendWallet).setMerkleRoot(roothash, numOfClaimers))
-        .to.emit(this.existingERC20DropCampaign, "MerkleRootChanged")
+        .to.emit(this.existingERC20DropCampaign, "MerkleRootSet")
         .withArgs(roothash);
 
       // making merkleProof for alice's address

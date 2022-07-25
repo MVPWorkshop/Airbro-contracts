@@ -5,7 +5,6 @@ import "@rari-capital/solmate/src/tokens/ERC20.sol";
 import "@rari-capital/solmate/src/tokens/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "../interfaces/AirdropMerkleProof.sol";
-import "../interfaces/IAirBroFactory.sol";
 
 /// @title Airdrops new ERC20 tokens for airdrop recipients
 contract TokenDrop is ERC20, AirdropMerkleProof {

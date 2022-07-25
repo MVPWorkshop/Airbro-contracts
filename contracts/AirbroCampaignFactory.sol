@@ -8,11 +8,11 @@ import "./campaignAirdrops/ExistingERC20DropCampaign.sol";
 contract AirbroCampaignFactory {
     // index of deployed airdrop contracts
     address[] public airdrops;
-    address public admin = 0xF4b5bFB92dD4E6D529476bCab28A65bb6B32EFb3;
+    address public admin;
 
     uint256 public totalAirdropsCount;
 
-    event NewAirdrop(address indexed airdropContract, address indexed airdropCreator);
+    event NewAirdrop(address indexed airdropContract, address indexed airdropCreator, string airdropType);
     event AdminChanged(address indexed adminAddress);
 
     error NotAdmin();
@@ -22,7 +22,9 @@ contract AirbroCampaignFactory {
         _;
     }
 
-    constructor() {}
+    constructor(address _admin) {
+        admin = _admin;
+    }
 
     /// @notice Creates a new airdrop claim contract for specific NFT collection holders that will reward with existing ERC20 tokens
     /// @param rewardToken - ERC20 token's address that will be distributed as a reward
@@ -37,7 +39,7 @@ contract AirbroCampaignFactory {
         unchecked {
             totalAirdropsCount++;
         }
-        emit NewAirdrop(address(airdropContract), msg.sender);
+        emit NewAirdrop(address(airdropContract), msg.sender, "ERC20");
     }
 
     /// @notice Creates a new airdrop claim contract for specific NFT collection holders that will reward participants with newly created ERC1155 NFTs
@@ -51,7 +53,7 @@ contract AirbroCampaignFactory {
         unchecked {
             totalAirdropsCount++;
         }
-        emit NewAirdrop(address(airdropContract), msg.sender);
+        emit NewAirdrop(address(airdropContract), msg.sender, "ERC1155");
     }
 
     /// @notice Updates the address of the admin variable

@@ -22,8 +22,8 @@ export function AirbroCampaignFactoryShouldChangeAdminInAllAirDrops(): void {
     );
 
     // checking if admin address is able to set MerkleRootHash
-    expect(await this.newERC1155DropCampaign.connect(this.signers.backendWallet).setMerkleRoot(roothash))
-      .to.emit(this.newERC1155DropCampaign, "MerkleRootChanged")
+    await expect(this.newERC1155DropCampaign.connect(this.signers.backendWallet).setMerkleRoot(roothash))
+      .to.emit(this.newERC1155DropCampaign, "MerkleRootSet")
       .withArgs(roothash);
   });
 
@@ -35,7 +35,7 @@ export function AirbroCampaignFactoryShouldChangeAdminInAllAirDrops(): void {
     const roothash = merkleTree.getHexRoot();
 
     // changing admin address in the airbroCampaignFactory Contract
-    expect(await this.airbroCampaignFactory.connect(this.signers.backendWallet).changeAdmin(this.signers.lisa.address))
+    await expect(this.airbroCampaignFactory.connect(this.signers.backendWallet).changeAdmin(this.signers.lisa.address))
       .to.emit(this.airbroCampaignFactory, `AdminChanged`)
       .withArgs(this.signers.lisa.address);
 
@@ -47,8 +47,8 @@ export function AirbroCampaignFactoryShouldChangeAdminInAllAirDrops(): void {
     );
 
     // checking if new admin address is able to set MerkleRootHash
-    expect(await this.newERC1155DropCampaign.connect(this.signers.lisa).setMerkleRoot(roothash))
-      .to.emit(this.newERC1155DropCampaign, "MerkleRootChanged")
+    await expect(this.newERC1155DropCampaign.connect(this.signers.lisa).setMerkleRoot(roothash))
+      .to.emit(this.newERC1155DropCampaign, "MerkleRootSet")
       .withArgs(roothash);
   });
 }

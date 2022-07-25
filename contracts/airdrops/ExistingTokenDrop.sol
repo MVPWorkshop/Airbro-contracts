@@ -16,7 +16,7 @@ contract ExistingTokenDrop is AirdropMerkleProof {
     uint256 public immutable airdropFinishTime;
 
     mapping(uint256 => bool) public hasClaimed;
-    string public airdropType = "ERC20";
+    string public constant airdropType = "ERC20";
     uint256 public airdropFundBlockTimestamp;
     bool public airdropFunded;
 

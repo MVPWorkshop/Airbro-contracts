@@ -14,7 +14,7 @@ export function NewERC1155DropCampaignShouldGoThroughUserFlow() {
 
   it("should allow factory admin to set merkleRoot", async function () {
     await expect(this.newERC1155DropCampaign.connect(this.signers.backendWallet).setMerkleRoot(bytes32MerkleRootHash))
-      .to.emit(this.newERC1155DropCampaign, "MerkleRootChanged")
+      .to.emit(this.newERC1155DropCampaign, "MerkleRootSet")
       .withArgs(bytes32MerkleRootHash);
   });
 
@@ -33,7 +33,7 @@ export function NewERC1155DropCampaignShouldGoThroughUserFlow() {
 
     //backendWallet sets new merkleRootHash upon completion of the campaign (deadline has passed)
     expect(await this.newERC1155DropCampaign.connect(this.signers.backendWallet).setMerkleRoot(roothash))
-      .to.emit(this.newERC1155DropCampaign, "MerkleRootChanged")
+      .to.emit(this.newERC1155DropCampaign, "MerkleRootSet")
       .withArgs(roothash);
 
     //create Merkle Proof for alice

@@ -19,7 +19,7 @@ contract Existing1155NftDrop is AirdropMerkleProof, IERC1155Receiver {
     uint256 public immutable airdropFinishTime;
 
     mapping(uint256 => bool) public hasClaimed;
-    string public airdropType = "ERC1155";
+    string public constant airdropType = "ERC1155";
     uint256 public airdropFundBlockTimestamp;
     bool public airdropFunded;
 

@@ -1,16 +1,13 @@
 import { expect } from "chai";
+import { Wallet } from "ethers";
+import { chains } from "../../shared/constants";
 
 const bytes32MerkleRootHashes = [
   "0x0000000000000000000000000000000000000000000000000000000000000000",
   "0x0000000000000000000000000000000000000000000000000000000000000001",
 ];
 
-// struct used in contract
-const chains = {
-  Zero: 0,
-  Eth: 1,
-  Pols: 2,
-};
+const batchArrayLimit: number = 1200; // an amount for the length of array submitted in the batchAdd methods that will fail
 
 export function AirdropCampaignDataShouldBatchAddDailyMerkleRootHash(): void {
   describe("should batch set daily merkle root hash", async function () {
@@ -62,25 +59,12 @@ export function AirdropCampaignDataShouldBatchAddDailyMerkleRootHash(): void {
       ).to.be.revertedWith("UnequalArrays");
     });
 
-    it("should revert if length of array exceeds batchHashArrayLimit", async function () {
-      // over 630 exceeds the max gas limit
-      let startIndex = 0;
-      const endIndex = (await this.airdropCampaignData.batchHashArrayLimit()) + 1;
-      const randomAddressesArray = [];
-      const bytes32MerkleRootHashArray = [];
-      for (startIndex; startIndex < endIndex; startIndex++) {
-        randomAddressesArray.push(this.signers.bob.address);
-        bytes32MerkleRootHashArray.push("0x0000000000000000000000000000000000000000000000000000000000000000");
-      }
-      // console.log(
-      //   "Max Gas Limit -> addressArrayLength: " + randomAddressesArray.length + " chainArrayLength: " + bytes32MerkleRootHashArray.length,
-      // ); // 601
-
+    it("should revert if length of array exceeds batchArrayLimit", async function () {
       await expect(
         this.airdropCampaignData
           .connect(this.signers.backendWallet)
-          .batchAddDailyMerkleRootHash(randomAddressesArray, bytes32MerkleRootHashArray),
-      ).to.be.revertedWith("ArrayTooLong");
+          .batchAddDailyMerkleRootHash(this.randomAddressesArray, this.bytes32MerkleRootHashArray),
+      ).to.be.reverted;
     });
 
     it("should revert if one of the campaigns does not have the chain data set", async function () {});

@@ -11,7 +11,7 @@ contract AirbroFactorySMCampaign {
     // index of deployed airdrop contracts
     address[] public airdrops;
     address[] public nft1155Contracts;
-    address public admin = 0xF4b5bFB92dD4E6D529476bCab28A65bb6B32EFb3;
+    address public admin;
 
     uint256 public totalAirdropsCount;
     uint256 public totalNft1155ContractsCount;
@@ -27,7 +27,9 @@ contract AirbroFactorySMCampaign {
         _;
     }
 
-    constructor() {}
+    constructor(address _admin) {
+        admin = _admin;
+    }
 
     /// @notice Creates a new ERC1155 collection
     /// @param uri - IPFS link to the NFT image
@@ -97,8 +99,6 @@ contract AirbroFactorySMCampaign {
         }
         emit NewAirdrop(rewardedNftCollection, address(tokenDropContract), msg.sender);
     }
-
-    // newERC1155Drop, ExistingERC20Drop
 
     /// @notice Creates a new airdrop claim contract for specific NFT collection holders
     /// @param rewardedNftCollection - Rewarded NFT collection address

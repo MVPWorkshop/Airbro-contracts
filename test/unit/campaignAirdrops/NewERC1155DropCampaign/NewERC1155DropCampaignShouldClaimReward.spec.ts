@@ -16,7 +16,7 @@ export function NewERC1155DropCampaignShouldClaimReward(): void {
 
       // setting merkleRootHash
       expect(await this.newERC1155DropCampaign.connect(this.signers.backendWallet).setMerkleRoot(roothash))
-        .to.emit(this.newERC1155DropCampaign, "MerkleRootChanged")
+        .to.emit(this.newERC1155DropCampaign, "MerkleRootSet")
         .withArgs(roothash);
 
       // making merkleProof for alice's address
@@ -43,7 +43,7 @@ export function NewERC1155DropCampaignShouldClaimReward(): void {
       const roothash = merkleTree.getHexRoot();
 
       expect(await this.newERC1155DropCampaign.connect(this.signers.backendWallet).setMerkleRoot(roothash))
-        .to.emit(this.newERC1155DropCampaign, "MerkleRootChanged")
+        .to.emit(this.newERC1155DropCampaign, "MerkleRootSet")
         .withArgs(roothash);
 
       const hexProof = merkleTree.getHexProof(leaves[0]);
@@ -60,7 +60,7 @@ export function NewERC1155DropCampaignShouldClaimReward(): void {
 
       // setting merkleRootHash
       expect(await this.newERC1155DropCampaign.connect(this.signers.backendWallet).setMerkleRoot(roothash))
-        .to.emit(this.newERC1155DropCampaign, "MerkleRootChanged")
+        .to.emit(this.newERC1155DropCampaign, "MerkleRootSet")
         .withArgs(roothash);
 
       // making merkleProof for alice's address
@@ -81,7 +81,7 @@ export function NewERC1155DropCampaignShouldClaimReward(): void {
       const roothash = merkleTree.getHexRoot();
 
       expect(await this.newERC1155DropCampaign.connect(this.signers.backendWallet).setMerkleRoot(roothash))
-        .to.emit(this.newERC1155DropCampaign, "MerkleRootChanged")
+        .to.emit(this.newERC1155DropCampaign, "MerkleRootSet")
         .withArgs(roothash);
 
       const hexProof = merkleTree.getHexProof(leaves[0]);
@@ -98,7 +98,7 @@ export function NewERC1155DropCampaignShouldClaimReward(): void {
       const roothash = merkleTree.getHexRoot();
 
       expect(await this.newERC1155DropCampaign.connect(this.signers.backendWallet).setMerkleRoot(roothash))
-        .to.emit(this.newERC1155DropCampaign, "MerkleRootChanged")
+        .to.emit(this.newERC1155DropCampaign, "MerkleRootSet")
         .withArgs(roothash);
 
       const hexProof = merkleTree.getHexProof(leaves[0]);

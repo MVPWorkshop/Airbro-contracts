@@ -1,17 +1,8 @@
 import { expect } from "chai";
-import { airdropCampaignDataFixture } from "../../shared/fixtures";
+import { Wallet } from "ethers";
+import { chains } from "../../shared/constants";
 
-// struct used in contract
-const chains = {
-  Zero: 0,
-  Eth: 1,
-  Pols: 2,
-};
-
-const noxExistantChains = {
-  positiveInt: 3,
-  negativeInt: -1,
-};
+const batchArrayLimit: number = 1200; // an amount for the length of array submitted in the batchAdd methods that will fail
 
 export function AirdropCampaignDataShouldBatchAddAirdropCampaignChain(): void {
   describe("should batch add airdrop campaign chain", async function () {
@@ -29,7 +20,7 @@ export function AirdropCampaignDataShouldBatchAddAirdropCampaignChain(): void {
         .withArgs(randomAddressesArray[1], chains.Pols);
 
       const chainData = await this.airdropCampaignData.airdrops(this.signers.alice.address);
-      await expect(chainData.chain).to.be.equal(chains.Eth);
+      expect(chainData.chain).to.be.equal(chains.Eth);
     });
 
     it("should revert non admin wallet", async function () {
@@ -62,19 +53,12 @@ export function AirdropCampaignDataShouldBatchAddAirdropCampaignChain(): void {
       ).to.be.revertedWith("UnequalArrays");
     });
 
-    it("should revert if length of array exceeds batchChainArrayLimit", async function () {
-      let startIndex = 0;
-      const endIndex = (await this.airdropCampaignData.batchChainArrayLimit()) + 1;
-      const randomAddressesArray = [];
-      const randomChainsArray = [];
-      for (startIndex; startIndex < endIndex; startIndex++) {
-        randomAddressesArray.push(this.signers.bob.address);
-        randomChainsArray.push(chains.Eth);
-      }
-      // console.log("Max Gas Limit -> addressArrayLength: " + randomAddressesArray.length + " chainArrayLength: " + randomChainsArray.length); // 601
+    it("should revert if length of array exceeds batchArrayLimit", async function () {
       await expect(
-        this.airdropCampaignData.connect(this.signers.backendWallet).batchAddAirdropCampaignChain(randomAddressesArray, randomChainsArray),
-      ).to.be.revertedWith("ArrayTooLong");
+        this.airdropCampaignData
+          .connect(this.signers.backendWallet)
+          .batchAddAirdropCampaignChain(this.randomAddressesArray, this.randomChainsArray),
+      ).to.be.reverted;
     });
 
     it("should revert if sent chain data is 0 (status.zero)", async function () {

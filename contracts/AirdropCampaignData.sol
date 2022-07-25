@@ -3,9 +3,7 @@ pragma solidity ^0.8.15;
 
 /// @title AirdropCampaignData - Data contract for storing of daily merkleRootHashes of airbro Campaigns
 contract AirdropCampaignData {
-    address public admin = 0xF4b5bFB92dD4E6D529476bCab28A65bb6B32EFb3;
-    uint16 public batchHashArrayLimit = 600;
-    uint16 public batchChainArrayLimit = 600;
+    address public admin;
 
     enum Chains {
         Zero,
@@ -23,7 +21,7 @@ contract AirdropCampaignData {
 
     error NotAdmin();
     error UnequalArrays();
-    error ArrayTooLong();
+    // error ArrayTooLong();
     error ChainDataNotSet();
     error ChainAlreadySet();
     error AirdropHasFinished();
@@ -39,7 +37,9 @@ contract AirdropCampaignData {
         _;
     }
 
-    constructor() {}
+    constructor(address _admin) {
+        admin = _admin;
+    }
 
     /// @notice Updates the address of the admin variable
     /// @param _newAdmin - New address for the admin of this contract, and the address for all newly created airdrop contracts
@@ -52,7 +52,7 @@ contract AirdropCampaignData {
     /// @param _airdropCampaignAddress - address of the airdropCampaign contract whose current participants are in the daily merkleRootHash
     /// @param _merkleRootHash - merkle root hash of daily participants of an airdropCampaign
     function addDailyMerkleRootHash(address _airdropCampaignAddress, bytes32 _merkleRootHash) external onlyAdmin {
-        if (airdrops[_airdropCampaignAddress].airdropFinished == true) revert AirdropHasFinished();
+        if (airdrops[_airdropCampaignAddress].airdropFinished) revert AirdropHasFinished();
         if (airdrops[_airdropCampaignAddress].chain == Chains.Zero) revert ChainDataNotSet();
 
         airdrops[_airdropCampaignAddress].hashArray.push(_merkleRootHash);
@@ -62,12 +62,11 @@ contract AirdropCampaignData {
     /// @notice Adds array of daily merkle root hashes for multiple airdropCampaign contracts
     /// @param _airdropCampaignAddressArray - array of addresses of multiple airdropCampaign contracts whose current participants are in the daily merkleRootHash
     /// @param _merkleRootHashArray - array of merkle root hashes of daily participants of multiple airdropCampaigns
-    function batchAddDailyMerkleRootHash(address[] memory _airdropCampaignAddressArray, bytes32[] memory _merkleRootHashArray)
+    function batchAddDailyMerkleRootHash(address[] calldata _airdropCampaignAddressArray, bytes32[] calldata _merkleRootHashArray)
         external
         onlyAdmin
     {
         uint256 airdropHashArrayLength = _merkleRootHashArray.length;
-        if (airdropHashArrayLength > batchHashArrayLimit) revert ArrayTooLong();
         if (airdropHashArrayLength != _airdropCampaignAddressArray.length) revert UnequalArrays();
 
         for (uint256 i; i < airdropHashArrayLength; i++) {
@@ -75,7 +74,7 @@ contract AirdropCampaignData {
             bytes32 currentMerkleRootHash = _merkleRootHashArray[i];
 
             if (airdrops[currentCampaignAddress].chain == Chains.Zero) revert ChainDataNotSet();
-            if (airdrops[currentCampaignAddress].airdropFinished == true) revert AirdropHasFinished();
+            if (airdrops[currentCampaignAddress].airdropFinished) revert AirdropHasFinished();
 
             airdrops[currentCampaignAddress].hashArray.push(currentMerkleRootHash);
             emit MerkleRootHashAdded(currentCampaignAddress, currentMerkleRootHash);
@@ -88,7 +87,7 @@ contract AirdropCampaignData {
     function addAirdropCampaignChain(address _airdropCampaignAddress, Chains _airdropChain) external onlyAdmin {
         if (_airdropChain == Chains.Zero) revert ChainDataNotSet();
         if (airdrops[_airdropCampaignAddress].chain != Chains.Zero) revert ChainAlreadySet();
-        if (airdrops[_airdropCampaignAddress].airdropFinished == true) revert AirdropHasFinished();
+        if (airdrops[_airdropCampaignAddress].airdropFinished) revert AirdropHasFinished();
 
         airdrops[_airdropCampaignAddress].chain = _airdropChain;
         emit ChainAdded(_airdropCampaignAddress, _airdropChain);
@@ -97,12 +96,11 @@ contract AirdropCampaignData {
     /// @notice Adds array of Chain info: "Eth" or "Pol" to mapping depending on which Chain the airdropCampaign contracts are on
     /// @param _airdropCampaignAddressArray - address of airdropCampaign contract
     /// @param _airdropChainArray - array of uints representing blockchain chain
-    function batchAddAirdropCampaignChain(address[] memory _airdropCampaignAddressArray, Chains[] memory _airdropChainArray)
+    function batchAddAirdropCampaignChain(address[] calldata _airdropCampaignAddressArray, Chains[] calldata _airdropChainArray)
         external
         onlyAdmin
     {
         uint256 airdropChainArrayLength = _airdropChainArray.length;
-        if (airdropChainArrayLength > batchChainArrayLimit) revert ArrayTooLong();
         if (airdropChainArrayLength != _airdropCampaignAddressArray.length) revert UnequalArrays();
 
         for (uint256 i; i < airdropChainArrayLength; i++) {
@@ -111,7 +109,7 @@ contract AirdropCampaignData {
 
             if (currentCampaignChain == Chains.Zero) revert ChainDataNotSet();
             if (airdrops[_airdropCampaignAddressArray[i]].chain != Chains.Zero) revert ChainAlreadySet();
-            if (airdrops[currentCampaignAddress].airdropFinished == true) revert AirdropHasFinished();
+            if (airdrops[currentCampaignAddress].airdropFinished) revert AirdropHasFinished();
 
             airdrops[currentCampaignAddress].chain = currentCampaignChain;
             emit ChainAdded(currentCampaignAddress, currentCampaignChain);
@@ -121,7 +119,7 @@ contract AirdropCampaignData {
     /// @notice Disabiling the ability to push hashes to the hashArray of a specific campaign
     /// @param _airdropCampaignAddress - address of airdropCampaign contract
     function finalizeAirdrop(address _airdropCampaignAddress) public onlyAdmin {
-        if (airdrops[_airdropCampaignAddress].airdropFinished == true) revert AlreadyFinalized();
+        if (airdrops[_airdropCampaignAddress].airdropFinished) revert AlreadyFinalized();
         if (airdrops[_airdropCampaignAddress].chain == Chains.Zero) revert ChainDataNotSet();
 
         airdrops[_airdropCampaignAddress].airdropFinished = true;

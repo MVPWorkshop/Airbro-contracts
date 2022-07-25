@@ -140,7 +140,7 @@ export const integrationCampaignFixture: Fixture<IntegrationCampaignFixtureType>
 
   const airbroCampaignFactory: AirbroCampaignFactory = (await airbroCampaignFactoryFactory
     .connect(deployer)
-    .deploy()) as AirbroCampaignFactory;
+    .deploy(process.env.BACKEND_WALLET_ADDRESS)) as AirbroCampaignFactory;
 
   await airbroCampaignFactory.deployed();
 
@@ -280,7 +280,9 @@ export const airdropCampaignDataFixture: Fixture<AirdropCampaignDataFixtureType>
 
   const airdropCampaignDataFactory = await ethers.getContractFactory("AirdropCampaignData");
 
-  const airdropCampaignData = (await airdropCampaignDataFactory.connect(deployer).deploy()) as AirdropCampaignData;
+  const airdropCampaignData = (await airdropCampaignDataFactory
+    .connect(deployer)
+    .deploy(process.env.BACKEND_WALLET_ADDRESS)) as AirdropCampaignData;
 
   await airdropCampaignData.deployed();
 

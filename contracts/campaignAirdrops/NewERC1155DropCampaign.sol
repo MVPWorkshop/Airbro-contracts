@@ -8,10 +8,11 @@ import "../interfaces/IAirBroFactory.sol";
 /// @title Airdrops existing ERC1155 tokens for airdrop recipients
 contract NewERC1155DropCampaign is ERC1155, AirdropMerkleProof {
     address public immutable airbroCampaignFactoryAddress;
-    uint8 private immutable _tokenId = 0; // yes, for immutable/constant I had to set the variable to = 0;
-    uint8 private immutable _tokenAmount = 1;
 
-    string public airdropType = "ERC1155";
+    uint256 private constant _tokenId = 0;
+    uint256 private constant _tokenAmount = 1;
+    string public constant airdropType = "ERC1155";
+
     uint256 public airdropFundBlockTimestamp;
     bool public airdropFunded;
     bool public merkleRootSet;
@@ -25,7 +26,7 @@ contract NewERC1155DropCampaign is ERC1155, AirdropMerkleProof {
 
     event Claimed(address indexed claimer);
     event AirdropFunded(address contractAddress);
-    event MerkleRootChanged(bytes32 merkleRoot);
+    event MerkleRootSet(bytes32 merkleRoot);
 
     error Unauthorized();
     error AlreadyRedeemed();
@@ -48,7 +49,7 @@ contract NewERC1155DropCampaign is ERC1155, AirdropMerkleProof {
 
         merkleRootSet = true;
         merkleRoot = _merkleRoot;
-        emit MerkleRootChanged(_merkleRoot);
+        emit MerkleRootSet(_merkleRoot);
     }
 
     /// @notice Allows the NFT holder to claim their ERC1155 airdrop
