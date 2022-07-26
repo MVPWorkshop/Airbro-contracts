@@ -1,5 +1,4 @@
 import { expect } from "chai";
-import { Wallet } from "ethers";
 import { chains } from "../../shared/constants";
 
 const bytes32MerkleRootHashes = [
@@ -59,14 +58,13 @@ export function AirdropCampaignDataShouldBatchAddDailyMerkleRootHash(): void {
       ).to.be.revertedWith("UnequalArrays");
     });
 
-    it("should revert if length of array exceeds batchArrayLimit", async function () {
+    /* Not necessary, revert will happen on its own */
+    /* it("should revert if length of array exceeds batchArrayLimit", async function () {
       await expect(
         this.airdropCampaignData
           .connect(this.signers.backendWallet)
           .batchAddDailyMerkleRootHash(this.randomAddressesArray, this.bytes32MerkleRootHashArray),
       ).to.be.reverted;
-    });
-
-    it("should revert if one of the campaigns does not have the chain data set", async function () {});
+    }); */
   });
 }

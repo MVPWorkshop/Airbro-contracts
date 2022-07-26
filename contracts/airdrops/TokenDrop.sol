@@ -15,7 +15,7 @@ contract TokenDrop is ERC20, AirdropMerkleProof {
     uint256 public immutable airdropFinishTime;
 
     mapping(uint256 => bool) public hasClaimed;
-    string public airdropType = "ERC20";
+    string public constant airdropType = "ERC20";
 
     event Claimed(uint256 indexed tokenId, address indexed claimer);
 
@@ -41,13 +41,12 @@ contract TokenDrop is ERC20, AirdropMerkleProof {
     /// @notice Allows the NFT holder to claim their ERC20 airdrop
     /// @param tokenId is the rewarded NFT collections token ID
     function claim(uint256 tokenId) external {
-        if (isEligibleForReward(tokenId)) {
-            hasClaimed[tokenId] = true;
-            _mint(msg.sender, tokensPerClaim);
-            emit Claimed(tokenId, msg.sender);
-        } else {
-            revert NotEligible();
-        }
+        validateClaim(tokenId);
+
+        hasClaimed[tokenId] = true;
+
+        _mint(msg.sender, tokensPerClaim);
+        emit Claimed(tokenId, msg.sender);
     }
 
     /// @notice Claim multiple ERC20 airdrops at once
@@ -58,8 +57,7 @@ contract TokenDrop is ERC20, AirdropMerkleProof {
         for (uint256 index = 0; index < tokenIds.length; index++) {
             uint256 tokenId = tokenIds[index];
 
-            if (hasClaimed[tokenId]) revert AlreadyRedeemed();
-            if (rewardedNft.ownerOf(tokenId) != msg.sender) revert Unauthorized();
+            validateClaim(tokenId);
 
             hasClaimed[tokenId] = true;
             emit Claimed(tokenId, msg.sender);
@@ -71,10 +69,18 @@ contract TokenDrop is ERC20, AirdropMerkleProof {
     /// @notice Checks if the user is eligible for this airdrop
     /// @param tokenId is the rewarded NFT token ID
     function isEligibleForReward(uint256 tokenId) public view returns (bool) {
-        if (block.timestamp > airdropFinishTime) revert AirdropExpired();
+        if ((block.timestamp > airdropFinishTime) || (hasClaimed[tokenId]) || (rewardedNft.ownerOf(tokenId) != msg.sender)) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    /// @notice Validation for claiming a reward (without the block.timestamp check)
+    /// @param tokenId is the rewarded NFT token ID
+    function validateClaim(uint256 tokenId) internal view {
         if (hasClaimed[tokenId]) revert AlreadyRedeemed();
         if (rewardedNft.ownerOf(tokenId) != msg.sender) revert Unauthorized();
-        return true;
     }
 
     /// @notice Returns the amount of airdrop tokens a user can claim

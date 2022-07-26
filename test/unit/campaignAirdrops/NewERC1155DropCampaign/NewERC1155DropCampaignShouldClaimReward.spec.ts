@@ -91,7 +91,7 @@ export function NewERC1155DropCampaignShouldClaimReward(): void {
       expect(isEligibleForReward).to.equal(true);
     });
 
-    it("function isEligibleForReward() should revert if user already redeemed reward", async function () {
+    it("function isEligibleForReward() should return false if user already redeemed reward", async function () {
       const whitelisted = [this.signers.alice.address, this.signers.bob.address, this.signers.jerry.address, this.signers.lisa.address];
       const leaves = whitelisted.map(addr => keccak256(addr));
       const merkleTree = new MerkleTree(leaves, keccak256, { sort: true });
@@ -108,9 +108,7 @@ export function NewERC1155DropCampaignShouldClaimReward(): void {
         .to.emit(this.newERC1155DropCampaign, "Claimed")
         .withArgs(this.signers.alice.address);
 
-      await expect(this.newERC1155DropCampaign.connect(this.signers.alice).isEligibleForReward(hexProof)).to.be.revertedWith(
-        `AlreadyRedeemed`,
-      );
+      expect(await this.newERC1155DropCampaign.connect(this.signers.alice).isEligibleForReward(hexProof)).to.be.equal(false);
     });
   });
 }

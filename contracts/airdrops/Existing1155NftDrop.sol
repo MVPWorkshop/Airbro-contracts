@@ -32,10 +32,7 @@ contract Existing1155NftDrop is AirdropMerkleProof, IERC1155Receiver {
     error AirdropStillInProgress();
     error AlreadyRedeemed();
     error AlreadyFunded();
-    error InsufficientAmount();
-    error InsufficientLiquidity();
     error AirdropExpired();
-    error NotEligible();
 
     constructor(
         address _rewardedNft,
@@ -58,10 +55,12 @@ contract Existing1155NftDrop is AirdropMerkleProof, IERC1155Receiver {
     /// @notice Allows the airdrop creator to provide funds for airdrop reward
     function fundAirdrop() external {
         if (airdropFunded) revert AlreadyFunded();
-        rewardToken.safeTransferFrom(msg.sender, address(this), rewardTokenId, totalAirdropAmount, "");
+
         airdropFunded = true;
         airdropFundBlockTimestamp = block.timestamp;
         airdropFundingHolder = msg.sender;
+
+        rewardToken.safeTransferFrom(msg.sender, address(this), rewardTokenId, totalAirdropAmount, "");
         emit AirdropFunded(address(this));
     }
 
@@ -69,33 +68,31 @@ contract Existing1155NftDrop is AirdropMerkleProof, IERC1155Receiver {
     function withdrawAirdropFunds() external {
         if (airdropFundingHolder != msg.sender) revert Unauthorized();
         if (block.timestamp < airdropFinishTime) revert AirdropStillInProgress();
+
         rewardToken.safeTransferFrom(address(this), msg.sender, rewardTokenId, rewardToken.balanceOf(address(this), rewardTokenId), "");
     }
 
     /// @notice Allows the NFT holder to claim his ERC1155 airdrop
     /// @param tokenId the token id based on which the user wishes to claim the reward
     function claim(uint256 tokenId) external {
-        if (isEligibleForReward(tokenId)) {
-            hasClaimed[tokenId] = true;
-            rewardToken.safeTransferFrom(address(this), msg.sender, rewardTokenId, tokensPerClaim, "");
-            emit Claimed(tokenId, msg.sender);
-        } else {
-            revert NotEligible();
-        }
+        validateClaim(tokenId);
+        if (block.timestamp > airdropFinishTime) revert AirdropExpired();
+
+        hasClaimed[tokenId] = true;
+
+        rewardToken.safeTransferFrom(address(this), msg.sender, rewardTokenId, tokensPerClaim, "");
+        emit Claimed(tokenId, msg.sender);
     }
 
     /// @notice Allows the NFT holder to claim all his ERC1155 airdrops
     /// @param tokenIds the token id based on which the user wishes to claim the reward
     function batchClaim(uint256[] memory tokenIds) external {
-        if (rewardToken.balanceOf(address(this), rewardTokenId) < tokensPerClaim * tokenIds.length) revert InsufficientLiquidity();
-
         if (block.timestamp > airdropFinishTime) revert AirdropExpired();
 
         for (uint256 index = 0; index < tokenIds.length; index++) {
             uint256 tokenId = tokenIds[index];
 
-            if (hasClaimed[tokenId]) revert AlreadyRedeemed();
-            if (rewardedNft.ownerOf(tokenId) != msg.sender) revert Unauthorized();
+            validateClaim(tokenId);
 
             hasClaimed[tokenId] = true;
             emit Claimed(tokenId, msg.sender);
@@ -105,13 +102,21 @@ contract Existing1155NftDrop is AirdropMerkleProof, IERC1155Receiver {
     }
 
     /// @notice Checks if the user is eligible for this airdrop
-    /// @return bool (true or false)
+    /// @param tokenId the token id based on which the user wishes to claim the reward
+    /// @return bool if user is eligible for reward
     function isEligibleForReward(uint256 tokenId) public view returns (bool) {
+        if ((block.timestamp > airdropFinishTime) || (hasClaimed[tokenId]) || (rewardedNft.ownerOf(tokenId) != msg.sender)) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    /// @notice Validation for claiming a reward (excluding the block.timestamp check)
+    /// @param tokenId the token id based on which the user wishes to claim the reward
+    function validateClaim(uint256 tokenId) internal view {
         if (hasClaimed[tokenId]) revert AlreadyRedeemed();
         if (rewardedNft.ownerOf(tokenId) != msg.sender) revert Unauthorized();
-        if (rewardToken.balanceOf(address(this), rewardTokenId) < tokensPerClaim) revert InsufficientLiquidity();
-        if (block.timestamp > airdropFinishTime) revert AirdropExpired();
-        return true;
     }
 
     /// @notice Returns the amount(number) of airdrop tokens to claim

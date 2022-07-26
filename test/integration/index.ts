@@ -15,9 +15,6 @@ import { integrationCampaignFixture } from "../shared/fixtures";
 
 import { NewERC1155DropCampaignShouldGoThroughUserFlow } from "./AirbroFactoryCampaign/NewERC1155DropCampaign/NewERC1155DropCampaignShouldGoThroughUserFlow.spec";
 
-// import { AirbroFactorySMCampaignShouldAirDropExistingToken } from "./AirBroSMCampaign-old/AirBroExistingTokenNftDropSMCampaign.spec";
-// import { AirbroFactorySMCampaignShouldAirDropNewToken } from "./AirBroSMCampaign-old/AirBroTokenNftDropSMCampaign.spec";
-
 import { ExistingERC20DropCampaignShouldFundCampaign } from "./AirbroFactoryCampaign/ExistingERC20DropCampaign/ExistingERC20DropCampaignShouldFundCampaign.spec";
 import { ExistingERC20DropCampaignShouldBeEligible } from "./AirbroFactoryCampaign/ExistingERC20DropCampaign/ExistingERC20DropCampaignShouldBeEligible.spec";
 import { ExistingERC20DropCampaignShouldGoThroughUserFlow } from "./AirbroFactoryCampaign/ExistingERC20DropCampaign/ExistingERC20DropCampaignShouldGoThroughUserFlow.spec";

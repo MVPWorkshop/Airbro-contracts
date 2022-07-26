@@ -6,11 +6,15 @@ export function ExistingERC20DropCampaignShouldFundCampaign(): void {
     it("should revert if funder does not have enough funds and/or has not approved them to the campaign", async function () {
       const tokenSupply: number = this.existingERC20DropCampaignArgs.tokenSupply; // 100
 
-      await expect(this.existingERC20DropCampaign.connect(this.signers.alice).fundAirdrop()).to.be.revertedWith("InsufficientAmount");
+      await expect(this.existingERC20DropCampaign.connect(this.signers.alice).fundAirdrop()).to.be.revertedWith(
+        "ERC20: insufficient allowance",
+      );
 
       //   minting tokens to alice, should still revert because these tokens have not been approved to the campaign contract
       await this.testToken.mint(this.signers.alice.address, tokenSupply);
-      await expect(this.existingERC20DropCampaign.connect(this.signers.alice).fundAirdrop()).to.be.revertedWith("InsufficientAmount");
+      await expect(this.existingERC20DropCampaign.connect(this.signers.alice).fundAirdrop()).to.be.revertedWith(
+        "ERC20: insufficient allowance",
+      );
     });
 
     it("should fund airdrop campaign only once", async function () {

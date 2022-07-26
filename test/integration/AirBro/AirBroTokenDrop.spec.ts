@@ -99,7 +99,7 @@ export function shouldAirDropNewToken(): void {
     await expect(tokenDropContract.batchClaim(tokenIdArray)).to.be.revertedWith(`Unauthorized`);
   });
 
-  it("should fund and claim new token airdrop", async function () {
+  it("should create and claim new token airdrop", async function () {
     // naming of ERC20 to be created
     const newTokenName: string = "Wakanda Coin";
     const newTokenSymbol: string = "WKND";

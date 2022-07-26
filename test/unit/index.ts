@@ -69,9 +69,14 @@ describe("Unit tests", function () {
      * creating an array used for testing two batch add methods:
      * - AirdropCampaignDataShouldBatchAddDailyMerkleRootHash
      * - AirdropCampaignDataShouldBatchAddAirdropCampaignChain
+     *
+     *
+     * Currently not being used since we don't really have to test the block gas limit, the backend can do that.
+     * If it fails, backend simply lower the lengths of the array.
      */
     before(async function () {
-      const batchArrayLimit = 1200;
+      /* /* Not necessary whne not running batchAdd tests */
+      /* const batchArrayLimit = 1200;
       console.log(`Constructing arrays with length of ${batchArrayLimit} necessary for testing blocksize limit. Please wait...`);
 
       const randomAddressesArray = [];
@@ -86,7 +91,7 @@ describe("Unit tests", function () {
 
       this.randomAddressesArray = randomAddressesArray;
       this.randomChainsArray = randomChainsArray;
-      this.bytes32MerkleRootHashArray = bytes32MerkleRootHashArray;
+      this.bytes32MerkleRootHashArray = bytes32MerkleRootHashArray; */
     });
 
     beforeEach(async function () {

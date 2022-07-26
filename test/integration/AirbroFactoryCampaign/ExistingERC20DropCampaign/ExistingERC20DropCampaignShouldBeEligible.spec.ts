@@ -34,7 +34,7 @@ export function ExistingERC20DropCampaignShouldBeEligible(): void {
       expect(await this.existingERC20DropCampaign.connect(this.signers.bob).isEligibleForReward(aliceHexProof)).to.be.equal(false); // bob is trying with Alice's proof, should be false;
     });
 
-    it("should revert if user has already claimed reward", async function () {
+    it("should return false if user has already claimed reward", async function () {
       const tokenSupply: number = this.existingERC20DropCampaignArgs.tokenSupply;
 
       // deployer funding airdrop
@@ -55,13 +55,11 @@ export function ExistingERC20DropCampaignShouldBeEligible(): void {
       // alice claiming reward
       await this.existingERC20DropCampaign.connect(this.signers.alice).claim(aliceHexProof);
 
-      // should revert since user is no longer eligible for reward
-      await expect(this.existingERC20DropCampaign.connect(this.signers.alice).isEligibleForReward(aliceHexProof)).to.be.revertedWith(
-        "AlreadyRedeemed",
-      );
+      // should be false since user is no longer eligible for reward
+      expect(await this.existingERC20DropCampaign.connect(this.signers.alice).isEligibleForReward(aliceHexProof)).to.be.equal(false);
     });
 
-    it("should revert if user checks eligibility after airdrop expires", async function () {
+    it("should return false if user checks eligibility after airdrop expires", async function () {
       const tokenSupply: number = this.existingERC20DropCampaignArgs.tokenSupply;
 
       // deployer funding airdrop
@@ -82,10 +80,8 @@ export function ExistingERC20DropCampaignShouldBeEligible(): void {
       await network.provider.send("evm_increaseTime", [60 * dayInSeconds + 1]); // 1 seconds after expirationTimestamp
       await network.provider.send("evm_mine");
 
-      // should revert since user is no longer eligible for reward
-      await expect(this.existingERC20DropCampaign.connect(this.signers.alice).isEligibleForReward(aliceHexProof)).to.be.revertedWith(
-        "AirdropExpired",
-      );
+      // should return false since user is no longer eligible for reward
+      expect(await this.existingERC20DropCampaign.connect(this.signers.alice).isEligibleForReward(aliceHexProof)).to.be.equal(false);
     });
   });
 }

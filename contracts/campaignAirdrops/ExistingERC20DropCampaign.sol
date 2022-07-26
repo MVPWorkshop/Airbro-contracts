@@ -15,7 +15,7 @@ contract ExistingERC20DropCampaign is AirdropMerkleProof {
     address public immutable airbroCampaignFactoryAddress;
     uint256 public immutable tokenSupply;
 
-    string public airdropType = "ERC20";
+    string public constant airdropType = "ERC20";
     bool public airdropFunded;
     bool public merkleRootSet;
     uint256 internal numberOfClaimers;
@@ -37,8 +37,6 @@ contract ExistingERC20DropCampaign is AirdropMerkleProof {
     error AirdropStillActive();
     error AirdropExpired();
     error NotEligible();
-    error InsufficientAmount();
-    error InsufficientLiquidity();
     error MerkleRootAlreadySet();
 
     modifier onlyAdmin() {
@@ -76,9 +74,6 @@ contract ExistingERC20DropCampaign is AirdropMerkleProof {
     function fundAirdrop() external {
         if (airdropFunded) revert AlreadyFunded();
 
-        if (rewardToken.balanceOf(msg.sender) < tokenSupply) revert InsufficientAmount();
-        if (rewardToken.allowance(msg.sender, address(this)) < tokenSupply) revert InsufficientAmount();
-
         airdropFunded = true;
         airdropFunder = msg.sender;
 
@@ -97,25 +92,31 @@ contract ExistingERC20DropCampaign is AirdropMerkleProof {
     /// @notice Allows eligible users to claim their ERC20 airdrop
     /// @param _merkleProof is the merkle proof that this user is eligible for claiming the ERC20 airdrop
     function claim(bytes32[] calldata _merkleProof) external {
-        if (isEligibleForReward(_merkleProof)) {
-            if (rewardToken.balanceOf(address(this)) < tokensPerClaim) revert InsufficientLiquidity();
+        validateClaim(_merkleProof);
 
-            hasClaimed[msg.sender] = true;
-            rewardToken.safeTransfer(msg.sender, tokensPerClaim);
+        hasClaimed[msg.sender] = true;
 
-            emit Claimed(msg.sender);
-        } else {
-            revert NotEligible();
-        }
+        rewardToken.safeTransfer(msg.sender, tokensPerClaim);
+        emit Claimed(msg.sender);
     }
 
     /// @notice Checks if the user is eligible for this airdrop
     /// @param _merkleProof The proof a user can claim a reward
+    /// @return bool if user is eligible for reward
     function isEligibleForReward(bytes32[] calldata _merkleProof) public view returns (bool) {
+        if ((hasClaimed[msg.sender]) || (block.timestamp > airdropExpirationTimestamp)) {
+            return false;
+        } else {
+            return checkProof(_merkleProof, merkleRoot);
+        }
+    }
+
+    /// @notice Validation for claiming a reward
+    /// @param _merkleProof The proof a user can claim a reward
+    function validateClaim(bytes32[] calldata _merkleProof) internal view {
         if (hasClaimed[msg.sender]) revert AlreadyRedeemed();
         if (block.timestamp > airdropExpirationTimestamp) revert AirdropExpired();
-
-        return checkProof(_merkleProof, merkleRoot);
+        if (checkProof(_merkleProof, merkleRoot) == false) revert NotEligible();
     }
 
     /// @notice Returns the amount of airdrop tokens a user can claim

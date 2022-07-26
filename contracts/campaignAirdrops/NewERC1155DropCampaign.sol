@@ -55,20 +55,29 @@ contract NewERC1155DropCampaign is ERC1155, AirdropMerkleProof {
     /// @notice Allows the NFT holder to claim their ERC1155 airdrop
     /// @param _merkleProof is the merkleRoot proof that this user is eligible for claiming reward
     function claim(bytes32[] calldata _merkleProof) external {
-        if (isEligibleForReward(_merkleProof)) {
-            hasClaimed[msg.sender] = true;
-            _mint(msg.sender, _tokenId, _tokenAmount, "0x0");
-            emit Claimed(msg.sender);
-        } else {
-            revert NotEligible();
-        }
+        validateClaim(_merkleProof);
+
+        hasClaimed[msg.sender] = true;
+
+        _mint(msg.sender, _tokenId, _tokenAmount, "0x0");
+        emit Claimed(msg.sender);
     }
 
     /// @notice Checks if the user is eligible for this airdrop
     /// @param _merkleProof is the merkleRoot proof that this user is eligible for claiming reward
+    /// @return bool true or false
     function isEligibleForReward(bytes32[] calldata _merkleProof) public view returns (bool) {
+        if (hasClaimed[msg.sender]) {
+            return false;
+        } else {
+            return checkProof(_merkleProof, merkleRoot);
+        }
+    }
+
+    /// @notice Validation for claiming a reward
+    /// @param _merkleProof The proof a user can claim a reward
+    function validateClaim(bytes32[] calldata _merkleProof) internal view {
         if (hasClaimed[msg.sender]) revert AlreadyRedeemed();
-        bool isEligible = checkProof(_merkleProof, merkleRoot);
-        return isEligible;
+        if (checkProof(_merkleProof, merkleRoot) == false) revert NotEligible();
     }
 }

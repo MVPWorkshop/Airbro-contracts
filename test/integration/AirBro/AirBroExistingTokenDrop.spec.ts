@@ -4,7 +4,7 @@ import { ethers, network } from "hardhat";
 import { oneWeekInSeconds } from "../../shared/constants";
 
 export function shouldAirDropExistingToken(): void {
-  it("isEligible function should revert if already redeemed existing token airdrop reward", async function () {
+  it("isEligible function should return false if already redeemed existing token airdrop reward", async function () {
     const totalAirdropAmount: BigNumber = ethers.utils.parseEther("1000");
     const tokensPerClaim: BigNumber = ethers.utils.parseEther("100");
     const airdropDuration: number = 3;
@@ -40,10 +40,10 @@ export function shouldAirDropExistingToken(): void {
     // deployer wallet claiming their reward
     await expect(tokenDropContract.claim(constants.Zero)).to.emit(tokenDropContract, "Claimed");
 
-    await expect(tokenDropContract.isEligibleForReward(constants.Zero)).to.be.revertedWith(`AlreadyRedeemed`);
+    expect(await tokenDropContract.isEligibleForReward(constants.Zero)).to.be.equal(false);
   });
 
-  it("isEligible function in existing token airdrop should revert if msg.sender is not owner of NFT with sent tokenId", async function () {
+  it("isEligible function in existing token airdrop should return false if msg.sender is not owner of NFT with sent tokenId", async function () {
     const totalAirdropAmount: BigNumber = ethers.utils.parseEther("1000");
     const tokensPerClaim: BigNumber = ethers.utils.parseEther("100");
     const airdropDuration: number = 3;
@@ -77,10 +77,10 @@ export function shouldAirDropExistingToken(): void {
     expect(await tokenDropContract.isEligibleForReward(constants.Zero)).to.equal(true);
 
     // deployer wallet claiming their reward
-    await expect(tokenDropContract.connect(this.signers.alice).isEligibleForReward(constants.Zero)).to.be.revertedWith(`Unauthorized`);
+    expect(await tokenDropContract.connect(this.signers.alice).isEligibleForReward(constants.Zero)).to.be.equal(false);
   });
 
-  it("isEligible function should revert if existing token airdrop expired", async function () {
+  it("isEligible function should retrun false if existing token airdrop expired", async function () {
     const totalAirdropAmount: BigNumber = ethers.utils.parseEther("1000");
     const tokensPerClaim: BigNumber = ethers.utils.parseEther("100");
     const airdropDuration: number = 1;
@@ -115,40 +115,7 @@ export function shouldAirDropExistingToken(): void {
     await network.provider.send("evm_increaseTime", [oneWeekInSeconds]); // add one week worth of seconds
     await network.provider.send("evm_mine"); // mine, so now the time increased by oneWeekInSeconds seconds
 
-    await expect(tokenDropContract.isEligibleForReward(constants.Zero)).to.be.revertedWith(`AirdropExpired`);
-  });
-
-  it("isEligible function should revert if existing token airdrop has insufficient funds", async function () {
-    const totalAirdropAmount: BigNumber = ethers.utils.parseEther("1000");
-    const tokensPerClaim: BigNumber = ethers.utils.parseEther("100");
-    const airdropDuration: number = 3;
-
-    await this.testToken.connect(this.signers.deployer).mint(this.signers.deployer.address, totalAirdropAmount);
-    // console.log("Test token balance of: " + (await this.testToken.balanceOf(this.signers.deployer.address)));
-
-    // minting NFT to deployer address
-    await this.testNftCollection.connect(this.signers.deployer).safeMint(this.signers.deployer.address);
-
-    // deploying airdrop with existing ERC20 token as reward
-    await expect(
-      await this.airbroFactory.connect(this.signers.deployer).dropExistingTokensToNftHolders(
-        this.testNftCollection.address, // rewardedNftCollection,
-        tokensPerClaim, // tokensPerClaim
-        this.testToken.address, //existing token address
-        totalAirdropAmount, // total tokens to be rewarded
-        airdropDuration, // airdrop Duration, in days
-      ),
-    ).to.emit(this.airbroFactory, "NewAirdrop");
-
-    const existingDropFactory = await ethers.getContractFactory("ExistingTokenDrop");
-    const tokenDropContract = existingDropFactory.attach(await this.airbroFactory.airdrops(0));
-
-    // approving totalAirdropAmount of ERC20 tokens to airdrop contract
-    await this.testToken.connect(this.signers.deployer).approve(tokenDropContract.address, totalAirdropAmount);
-
-    // skip funding airdrop
-
-    await expect(tokenDropContract.isEligibleForReward(constants.Zero)).to.be.revertedWith(`InsufficientLiquidity`);
+    expect(await tokenDropContract.isEligibleForReward(constants.Zero)).to.be.equal(false);
   });
 
   it("batchClaim function should revert if existing token airdrop has insufficient funds", async function () {
@@ -186,7 +153,7 @@ export function shouldAirDropExistingToken(): void {
     await this.testNftCollection.connect(this.signers.deployer).safeMint(this.signers.deployer.address);
     await this.testNftCollection.connect(this.signers.deployer).safeMint(this.signers.deployer.address);
 
-    await expect(tokenDropContract.batchClaim(tokenIdArray)).to.be.revertedWith(`InsufficientLiquidity`);
+    await expect(tokenDropContract.batchClaim(tokenIdArray)).to.be.revertedWith(`ERC20: transfer amount exceeds balance`);
   });
 
   it("batchClaim function should revert if existing token airdrop has expired", async function () {
@@ -370,7 +337,7 @@ export function shouldAirDropExistingToken(): void {
     await this.testToken.connect(this.signers.deployer).approve(tokenDropContract.address, totalAirdropAmount);
 
     // funding airdrop
-    await expect(tokenDropContract.fundAirdrop()).to.be.revertedWith("InsufficientAmount");
+    await expect(tokenDropContract.fundAirdrop()).to.be.revertedWith("ERC20: transfer amount exceeds balance");
   });
 
   it("should fund and claim existing token airdrop", async function () {
