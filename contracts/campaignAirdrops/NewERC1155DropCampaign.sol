@@ -69,9 +69,8 @@ contract NewERC1155DropCampaign is ERC1155, AirdropMerkleProof {
     function isEligibleForReward(bytes32[] calldata _merkleProof) public view returns (bool) {
         if (hasClaimed[msg.sender]) {
             return false;
-        } else {
-            return checkProof(_merkleProof, merkleRoot);
         }
+        return checkProof(_merkleProof, merkleRoot);
     }
 
     /// @notice Validation for claiming a reward

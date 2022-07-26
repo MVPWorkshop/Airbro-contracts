@@ -1,13 +1,12 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.14;
+pragma solidity ^0.8.15;
 
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
-import "../interfaces/AirdropMerkleProof.sol";
 
 /// @title Airdrops existing ERC20 tokens for airdrop recipients
-contract ExistingTokenDrop is AirdropMerkleProof {
+contract ExistingTokenDrop {
     using SafeERC20 for IERC20;
 
     IERC721 public immutable rewardedNft;
@@ -104,9 +103,8 @@ contract ExistingTokenDrop is AirdropMerkleProof {
     function isEligibleForReward(uint256 tokenId) public view returns (bool) {
         if ((block.timestamp > airdropFinishTime) || (hasClaimed[tokenId]) || (rewardedNft.ownerOf(tokenId) != msg.sender)) {
             return false;
-        } else {
-            return true;
         }
+        return true;
     }
 
     /// @notice Validation for claiming a reward (excluding the block.timestamp check)

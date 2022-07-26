@@ -1,7 +1,7 @@
 // DEPRECATED CONTRACT
 
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.14;
+pragma solidity ^0.8.15;
 
 import "@rari-capital/solmate/src/tokens/ERC1155.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
