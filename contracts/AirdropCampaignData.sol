@@ -21,7 +21,6 @@ contract AirdropCampaignData {
 
     error NotAdmin();
     error UnequalArrays();
-    // error ArrayTooLong();
     error ChainDataNotSet();
     error ChainAlreadySet();
     error AirdropHasFinished();

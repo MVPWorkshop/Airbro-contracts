@@ -85,7 +85,7 @@ contract Existing1155NftDrop is IERC1155Receiver {
 
     /// @notice Allows the NFT holder to claim all his ERC1155 airdrops
     /// @param tokenIds the token id based on which the user wishes to claim the reward
-    function batchClaim(uint256[] memory tokenIds) external {
+    function batchClaim(uint256[] calldata tokenIds) external {
         if (block.timestamp > airdropFinishTime) revert AirdropExpired();
 
         for (uint256 index = 0; index < tokenIds.length; index++) {

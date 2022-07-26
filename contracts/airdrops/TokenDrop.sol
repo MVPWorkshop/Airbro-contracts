@@ -50,7 +50,7 @@ contract TokenDrop is ERC20 {
 
     /// @notice Claim multiple ERC20 airdrops at once
     /// @param tokenIds are the rewarded NFT collections token ID's
-    function batchClaim(uint256[] memory tokenIds) external {
+    function batchClaim(uint256[] calldata tokenIds) external {
         if (block.timestamp > airdropFinishTime) revert AirdropExpired();
 
         for (uint256 index = 0; index < tokenIds.length; index++) {
