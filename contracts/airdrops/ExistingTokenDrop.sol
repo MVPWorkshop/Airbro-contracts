@@ -5,17 +5,14 @@ import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 
+import "../interfaces/airdrops/AirdropTokenData.sol";
+import "../interfaces/airdrops/AirdropTimeData.sol";
+
 /// @title Airdrops existing ERC20 tokens for airdrop recipients
-contract ExistingTokenDrop {
+contract ExistingTokenDrop is AirdropTokenData, AirdropTimeData {
     using SafeERC20 for IERC20;
 
-    IERC721 public immutable rewardedNft;
     IERC20 public immutable rewardToken;
-    uint256 public immutable tokensPerClaim;
-    uint256 public immutable totalAirdropAmount;
-    uint256 public immutable airdropDuration;
-    uint256 public immutable airdropStartTime;
-    uint256 public immutable airdropFinishTime;
 
     mapping(uint256 => bool) public hasClaimed;
     string public constant airdropType = "ERC20";
@@ -39,14 +36,8 @@ contract ExistingTokenDrop {
         address _rewardToken,
         uint256 _totalAirdropAmount,
         uint256 _airdropDuration
-    ) {
-        rewardedNft = IERC721(_rewardedNft);
-        tokensPerClaim = _tokensPerClaim;
-        totalAirdropAmount = _totalAirdropAmount;
+    ) AirdropTokenData(_rewardedNft, _tokensPerClaim, _totalAirdropAmount) AirdropTimeData(_airdropDuration) {
         rewardToken = IERC20(_rewardToken);
-        airdropDuration = _airdropDuration * 1 days;
-        airdropStartTime = block.timestamp;
-        airdropFinishTime = block.timestamp + airdropDuration;
     }
 
     /// @notice Allows the airdrop creator to provide funds for airdrop reward

@@ -4,18 +4,15 @@ pragma solidity ^0.8.15;
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "@openzeppelin/contracts/token/ERC1155/IERC1155.sol";
 import "@openzeppelin/contracts/token/ERC1155/IERC1155Receiver.sol";
+
 import "../interfaces/IAirBroFactory.sol";
+import "../interfaces/airdrops/AirdropTokenData.sol";
+import "../interfaces/airdrops/AirdropTimeData.sol";
 
 /// @title Airdrops existing ERC1155 tokens for airdrop recipients
-contract Existing1155NftDrop is IERC1155Receiver {
-    IERC721 public immutable rewardedNft;
+contract Existing1155NftDrop is IERC1155Receiver, AirdropTokenData, AirdropTimeData {
     IERC1155 public immutable rewardToken;
     uint256 public immutable rewardTokenId;
-    uint256 public immutable tokensPerClaim;
-    uint256 public immutable totalAirdropAmount;
-    uint256 public immutable airdropDuration;
-    uint256 public immutable airdropStartTime;
-    uint256 public immutable airdropFinishTime;
 
     mapping(uint256 => bool) public hasClaimed;
     string public constant airdropType = "ERC1155";
@@ -40,15 +37,9 @@ contract Existing1155NftDrop is IERC1155Receiver {
         uint256 _tokenId,
         uint256 _totalAirdropAmount,
         uint256 _airdropDuration
-    ) {
-        rewardedNft = IERC721(_rewardedNft);
-        tokensPerClaim = _tokensPerClaim;
-        totalAirdropAmount = _totalAirdropAmount;
+    ) AirdropTokenData(_rewardedNft, _tokensPerClaim, _totalAirdropAmount) AirdropTimeData(_airdropDuration) {
         rewardToken = IERC1155(_reward1155Nft);
         rewardTokenId = _tokenId;
-        airdropDuration = _airdropDuration * 1 days;
-        airdropStartTime = block.timestamp;
-        airdropFinishTime = block.timestamp + airdropDuration;
     }
 
     /// @notice Allows the airdrop creator to provide funds for airdrop reward

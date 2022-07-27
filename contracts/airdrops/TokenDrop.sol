@@ -2,16 +2,14 @@
 pragma solidity ^0.8.15;
 
 import "@rari-capital/solmate/src/tokens/ERC20.sol";
-import "@rari-capital/solmate/src/tokens/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 
+import "../interfaces/airdrops/AirdropTimeData.sol";
+
 /// @title Airdrops new ERC20 tokens for airdrop recipients
-contract TokenDrop is ERC20 {
+contract TokenDrop is ERC20, AirdropTimeData {
     IERC721 public immutable rewardedNft;
     uint256 public immutable tokensPerClaim;
-    uint256 public immutable airdropDuration;
-    uint256 public immutable airdropStartTime;
-    uint256 public immutable airdropFinishTime;
 
     mapping(uint256 => bool) public hasClaimed;
     string public constant airdropType = "ERC20";
@@ -29,12 +27,9 @@ contract TokenDrop is ERC20 {
         string memory name,
         string memory symbol,
         uint256 _airdropDuration
-    ) ERC20(name, symbol, 18) {
+    ) ERC20(name, symbol, 18) AirdropTimeData(_airdropDuration) {
         rewardedNft = IERC721(_rewardedNft);
         tokensPerClaim = _tokensPerClaim;
-        airdropDuration = _airdropDuration * 1 days;
-        airdropStartTime = block.timestamp;
-        airdropFinishTime = block.timestamp + airdropDuration;
     }
 
     /// @notice Allows the NFT holder to claim their ERC20 airdrop
