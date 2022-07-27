@@ -5,8 +5,8 @@ pragma solidity ^0.8.15;
 
 import "@rari-capital/solmate/src/tokens/ERC1155.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
-import "../interfaces/AirdropMerkleProof.sol";
-import "../interfaces/IAirBroFactory.sol";
+import "../../interfaces/AirdropMerkleProof.sol";
+import "../../interfaces/IAirBroFactory.sol";
 
 /// @title Airdrops new ERC1155 tokens for airdrop recipients
 contract ItemNFTDrop is ERC1155, AirdropMerkleProof {
