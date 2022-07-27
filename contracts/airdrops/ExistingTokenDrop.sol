@@ -1,35 +1,19 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.15;
 
-import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 
-import "../interfaces/airdrops/AirdropTokenData.sol";
+import "../interfaces/airdrops/AirdropExistingToken.sol";
 import "../interfaces/airdrops/AirdropTimeData.sol";
 
 /// @title Airdrops existing ERC20 tokens for airdrop recipients
-contract ExistingTokenDrop is AirdropTokenData, AirdropTimeData {
+contract ExistingTokenDrop is AirdropExistingToken, AirdropTimeData {
     using SafeERC20 for IERC20;
 
     IERC20 public immutable rewardToken;
 
-    mapping(uint256 => bool) public hasClaimed;
-
     string public constant airdropType = "ERC20";
-    uint256 public airdropFundBlockTimestamp;
-    bool public airdropFunded;
-
-    address internal airdropFundingHolder;
-
-    event Claimed(uint256 indexed tokenId, address indexed claimer);
-    event AirdropFunded(address contractAddress);
-
-    error AirdropStillInProgress();
-    error AlreadyRedeemed();
-    error AlreadyFunded();
-    error AirdropExpired();
-    error Unauthorized();
 
     constructor(
         address _rewardedNft,
@@ -37,7 +21,7 @@ contract ExistingTokenDrop is AirdropTokenData, AirdropTimeData {
         address _rewardToken,
         uint256 _totalAirdropAmount,
         uint256 _airdropDuration
-    ) AirdropTokenData(_rewardedNft, _tokensPerClaim, _totalAirdropAmount) AirdropTimeData(_airdropDuration) {
+    ) AirdropExistingToken(_rewardedNft, _tokensPerClaim, _totalAirdropAmount) AirdropTimeData(_airdropDuration) {
         rewardToken = IERC20(_rewardToken);
     }
 
@@ -90,25 +74,12 @@ contract ExistingTokenDrop is AirdropTokenData, AirdropTimeData {
     }
 
     /// @notice Checks if the user is eligible for this airdrop
-    /// @param tokenId is the rewarded NFT token ID
+    /// @param tokenId the token id based on which the user wishes to claim the reward
     /// @return true if user is eligible to receive a reward
     function isEligibleForReward(uint256 tokenId) public view returns (bool) {
         if ((block.timestamp > airdropFinishTime) || (hasClaimed[tokenId]) || (rewardedNft.ownerOf(tokenId) != msg.sender)) {
             return false;
         }
         return true;
-    }
-
-    /// @notice Validation for claiming a reward (excluding the block.timestamp check)
-    /// @param tokenId is the rewarded NFT collections token ID
-    function validateClaim(uint256 tokenId) internal view {
-        if (hasClaimed[tokenId]) revert AlreadyRedeemed();
-        if (rewardedNft.ownerOf(tokenId) != msg.sender) revert Unauthorized();
-    }
-
-    /// @notice Returns the amount of airdrop tokens a user can claim
-    /// @return amount of reward tokens a user can claim
-    function getAirdropAmount() external view returns (uint256) {
-        return rewardedNft.balanceOf(msg.sender) * tokensPerClaim;
     }
 }
