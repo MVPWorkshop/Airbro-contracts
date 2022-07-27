@@ -15,6 +15,7 @@ contract ExistingTokenDrop is AirdropTokenData, AirdropTimeData {
     IERC20 public immutable rewardToken;
 
     mapping(uint256 => bool) public hasClaimed;
+
     string public constant airdropType = "ERC20";
     uint256 public airdropFundBlockTimestamp;
     bool public airdropFunded;
@@ -40,7 +41,7 @@ contract ExistingTokenDrop is AirdropTokenData, AirdropTimeData {
         rewardToken = IERC20(_rewardToken);
     }
 
-    /// @notice Allows the airdrop creator to provide funds for airdrop reward
+    /// @notice Allows one wallet to provide funds for the airdrop reward once
     function fundAirdrop() external {
         if (airdropFunded) revert AlreadyFunded();
 
@@ -52,7 +53,7 @@ contract ExistingTokenDrop is AirdropTokenData, AirdropTimeData {
         emit AirdropFunded(address(this));
     }
 
-    /// @notice Allows the airdrop creator to withdraw back the funds after the airdrop has finished
+    /// @notice Allows the airdrop funder to withdraw back their funds after the airdrop has finished
     function withdrawAirdropFunds() external {
         if (airdropFundingHolder != msg.sender) revert Unauthorized();
         if (block.timestamp < airdropFinishTime) revert AirdropStillInProgress();
@@ -90,7 +91,7 @@ contract ExistingTokenDrop is AirdropTokenData, AirdropTimeData {
 
     /// @notice Checks if the user is eligible for this airdrop
     /// @param tokenId is the rewarded NFT token ID
-    /// @return bool if user is eligible for reward
+    /// @return true if user is eligible to receive a reward
     function isEligibleForReward(uint256 tokenId) public view returns (bool) {
         if ((block.timestamp > airdropFinishTime) || (hasClaimed[tokenId]) || (rewardedNft.ownerOf(tokenId) != msg.sender)) {
             return false;
@@ -106,6 +107,7 @@ contract ExistingTokenDrop is AirdropTokenData, AirdropTimeData {
     }
 
     /// @notice Returns the amount of airdrop tokens a user can claim
+    /// @return amount of reward tokens a user can claim
     function getAirdropAmount() external view returns (uint256) {
         return rewardedNft.balanceOf(msg.sender) * tokensPerClaim;
     }

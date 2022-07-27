@@ -4,40 +4,30 @@ pragma solidity ^0.8.15;
 import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
+
 import "../interfaces/AirdropMerkleProof.sol";
 import "../interfaces/IAirBroFactory.sol";
+import "../interfaces/campaignAirdrops/CampaignAirdropsShared.sol";
 
 /// @title Airdrops existing ERC20 tokens for airdrop recipients
-contract ExistingERC20DropCampaign is AirdropMerkleProof {
+contract ExistingERC20DropCampaign is AirdropMerkleProof, CampaignAidropsShared {
     using SafeERC20 for IERC20;
 
     IERC20 public immutable rewardToken;
-    address public immutable airbroCampaignFactoryAddress;
     uint256 public immutable tokenSupply;
 
     string public constant airdropType = "ERC20";
-    bool public airdropFunded;
-    bool public merkleRootSet;
     uint256 internal numberOfClaimers;
     uint256 public tokensPerClaim;
     uint256 public airdropExpirationTimestamp;
-    bytes32 public merkleRoot;
-
-    mapping(address => bool) public hasClaimed;
 
     address internal airdropFunder;
 
     event MerkleRootSet(bytes32 merkleRoot, uint256 _numberOfClaimers);
-    event Claimed(address indexed claimer);
-    event AirdropFunded(address contractAddress);
 
     error AlreadyFunded();
-    error Unauthorized();
-    error AlreadyRedeemed();
     error AirdropStillActive();
     error AirdropExpired();
-    error NotEligible();
-    error MerkleRootAlreadySet();
 
     modifier onlyAdmin() {
         if (msg.sender != IAirBroFactory(airbroCampaignFactoryAddress).admin()) revert Unauthorized();
@@ -48,16 +38,15 @@ contract ExistingERC20DropCampaign is AirdropMerkleProof {
         address _rewardToken,
         uint256 _tokenSupply,
         address _airbroCampaignFactoryAddress
-    ) {
+    ) CampaignAidropsShared(_airbroCampaignFactoryAddress) {
         rewardToken = IERC20(_rewardToken);
         tokenSupply = _tokenSupply;
-        airbroCampaignFactoryAddress = _airbroCampaignFactoryAddress;
     }
 
-    /// @notice Sets the merkleRoot and the number of claimers (also setting the amount each claimer receivers)
-    /// @notice can only be done by admin
+    /// @notice Sets the merkleRoot and the number of claimers (also setting the amount each claimer receivers).
+    /// Can only be done by admin.
     /// @param _merkleRoot The root hash of the Merle Tree
-    /// @param _numberOfClaimers The number of people eligible to claim
+    /// @param _numberOfClaimers The number of users eligible to claim
     function setMerkleRoot(bytes32 _merkleRoot, uint256 _numberOfClaimers) external onlyAdmin {
         if (merkleRootSet) revert MerkleRootAlreadySet();
 
@@ -70,7 +59,7 @@ contract ExistingERC20DropCampaign is AirdropMerkleProof {
         emit MerkleRootSet(_merkleRoot, _numberOfClaimers);
     }
 
-    /// @notice Allows the airdrop creator to provide funds for the airdrop reward
+    /// @notice Allows a wallet to provide funds for the airdrop reward
     function fundAirdrop() external {
         if (airdropFunded) revert AlreadyFunded();
 
@@ -81,7 +70,7 @@ contract ExistingERC20DropCampaign is AirdropMerkleProof {
         emit AirdropFunded(address(this));
     }
 
-    /// @notice Allows the airdrop creator to withdraw back the funds after the airdrop has finished
+    /// @notice Allows airdrop funder to withdraw back the funds after the airdrop has finished
     function withdrawAirdropFunds() external {
         if (airdropFunder != msg.sender) revert Unauthorized();
         if (block.timestamp <= airdropExpirationTimestamp) revert AirdropStillActive();

@@ -24,11 +24,11 @@ contract Existing1155NftDrop is IERC1155Receiver, AirdropTokenData, AirdropTimeD
     event Claimed(uint256 indexed tokenId, address indexed claimer);
     event AirdropFunded(address contractAddress);
 
-    error Unauthorized();
     error AirdropStillInProgress();
     error AlreadyRedeemed();
     error AlreadyFunded();
     error AirdropExpired();
+    error Unauthorized();
 
     constructor(
         address _rewardedNft,
@@ -42,7 +42,7 @@ contract Existing1155NftDrop is IERC1155Receiver, AirdropTokenData, AirdropTimeD
         rewardTokenId = _tokenId;
     }
 
-    /// @notice Allows the airdrop creator to provide funds for airdrop reward
+    /// @notice Allows one wallet to provide funds for the airdrop reward once
     function fundAirdrop() external {
         if (airdropFunded) revert AlreadyFunded();
 
@@ -54,7 +54,7 @@ contract Existing1155NftDrop is IERC1155Receiver, AirdropTokenData, AirdropTimeD
         emit AirdropFunded(address(this));
     }
 
-    /// @notice Allows the airdrop creator to withdraw back his funds after the airdrop has finished
+    /// @notice Allows the airdrop funder to withdraw back their funds after the airdrop has finished
     function withdrawAirdropFunds() external {
         if (airdropFundingHolder != msg.sender) revert Unauthorized();
         if (block.timestamp < airdropFinishTime) revert AirdropStillInProgress();
@@ -74,8 +74,8 @@ contract Existing1155NftDrop is IERC1155Receiver, AirdropTokenData, AirdropTimeD
         emit Claimed(tokenId, msg.sender);
     }
 
-    /// @notice Allows the NFT holder to claim all his ERC1155 airdrops
-    /// @param tokenIds the token id based on which the user wishes to claim the reward
+    /// @notice Allows the NFT holder to claim all their ERC1155 airdrops
+    /// @param tokenIds are the rewarded NFT collections token ID's
     function batchClaim(uint256[] calldata tokenIds) external {
         if (block.timestamp > airdropFinishTime) revert AirdropExpired();
 
@@ -93,7 +93,7 @@ contract Existing1155NftDrop is IERC1155Receiver, AirdropTokenData, AirdropTimeD
 
     /// @notice Checks if the user is eligible for this airdrop
     /// @param tokenId the token id based on which the user wishes to claim the reward
-    /// @return bool if user is eligible for reward
+    /// @return true if user is eligible to receive a reward
     function isEligibleForReward(uint256 tokenId) public view returns (bool) {
         if ((block.timestamp > airdropFinishTime) || (hasClaimed[tokenId]) || (rewardedNft.ownerOf(tokenId) != msg.sender)) {
             return false;
@@ -109,6 +109,7 @@ contract Existing1155NftDrop is IERC1155Receiver, AirdropTokenData, AirdropTimeD
     }
 
     /// @notice Returns the amount(number) of airdrop tokens to claim
+    /// @return amount of reward tokens a user can claim
     function getAirdropAmount() external view returns (uint256) {
         return rewardedNft.balanceOf(msg.sender) * tokensPerClaim;
     }

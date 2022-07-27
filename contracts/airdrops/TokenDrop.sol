@@ -44,7 +44,7 @@ contract TokenDrop is ERC20, AirdropTimeData {
     }
 
     /// @notice Claim multiple ERC20 airdrops at once
-    /// @param tokenIds are the rewarded NFT collections token ID's
+    /// @param tokenIds is the array of ID's of the rewarded NFT tokens
     function batchClaim(uint256[] calldata tokenIds) external {
         if (block.timestamp > airdropFinishTime) revert AirdropExpired();
 
@@ -62,6 +62,7 @@ contract TokenDrop is ERC20, AirdropTimeData {
 
     /// @notice Checks if the user is eligible for this airdrop
     /// @param tokenId is the rewarded NFT token ID
+    /// @return true if user is eligible to receive a reward
     function isEligibleForReward(uint256 tokenId) public view returns (bool) {
         if ((block.timestamp > airdropFinishTime) || (hasClaimed[tokenId]) || (rewardedNft.ownerOf(tokenId) != msg.sender)) {
             return false;
@@ -77,6 +78,7 @@ contract TokenDrop is ERC20, AirdropTimeData {
     }
 
     /// @notice Returns the amount of airdrop tokens a user can claim
+    /// @return amount of reward tokens a user can claim
     function getAirdropAmount() external view returns (uint256) {
         return rewardedNft.balanceOf(msg.sender) * tokensPerClaim;
     }
