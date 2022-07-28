@@ -54,7 +54,7 @@ contract ExistingERC20DropCampaign is AirdropMerkleProof, CampaignAidropsShared 
         merkleRoot = _merkleRoot;
         airdropExpirationTimestamp = block.timestamp + 60 days;
         numberOfClaimers = _numberOfClaimers;
-        tokensPerClaim = tokenSupply / numberOfClaimers;
+        tokensPerClaim = tokenSupply / _numberOfClaimers;
 
         emit MerkleRootSet(_merkleRoot, _numberOfClaimers);
     }

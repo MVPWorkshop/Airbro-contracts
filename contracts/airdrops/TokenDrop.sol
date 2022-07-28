@@ -3,8 +3,7 @@ pragma solidity ^0.8.15;
 
 import "@rari-capital/solmate/src/tokens/ERC20.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
-
-import "../interfaces/airdrops/AirdropTimeData.sol";
+import "./shared/AirdropTimeData.sol";
 
 /// @title Airdrops new ERC20 tokens for airdrop recipients
 contract TokenDrop is ERC20, AirdropTimeData {
