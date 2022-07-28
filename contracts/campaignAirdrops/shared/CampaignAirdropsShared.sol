@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: UNLICENSED
 
-import "../../interfaces/AirdropMerkleProof.sol";
+import "../../shared/AirdropMerkleProof.sol";
 import "../../interfaces/IAirBroFactory.sol";
 
 pragma solidity ^0.8.15;
