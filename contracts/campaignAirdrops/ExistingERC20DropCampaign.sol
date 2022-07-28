@@ -5,12 +5,10 @@ import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 
-import "../interfaces/AirdropMerkleProof.sol";
-import "../interfaces/IAirBroFactory.sol";
-import "../interfaces/campaignAirdrops/CampaignAirdropsShared.sol";
+import "./shared/CampaignAirdropsShared.sol";
 
 /// @title Airdrops existing ERC20 tokens for airdrop recipients
-contract ExistingERC20DropCampaign is AirdropMerkleProof, CampaignAidropsShared {
+contract ExistingERC20DropCampaign is CampaignAidropsShared {
     using SafeERC20 for IERC20;
 
     IERC20 public immutable rewardToken;
@@ -29,11 +27,6 @@ contract ExistingERC20DropCampaign is AirdropMerkleProof, CampaignAidropsShared 
     error AirdropStillActive();
     error AirdropExpired();
 
-    modifier onlyAdmin() {
-        if (msg.sender != IAirBroFactory(airbroCampaignFactoryAddress).admin()) revert Unauthorized();
-        _;
-    }
-
     constructor(
         address _rewardToken,
         uint256 _tokenSupply,
@@ -48,10 +41,8 @@ contract ExistingERC20DropCampaign is AirdropMerkleProof, CampaignAidropsShared 
     /// @param _merkleRoot The root hash of the Merle Tree
     /// @param _numberOfClaimers The number of users eligible to claim
     function setMerkleRoot(bytes32 _merkleRoot, uint256 _numberOfClaimers) external onlyAdmin {
-        if (merkleRootSet) revert MerkleRootAlreadySet();
+        super.setMerkleRootStateChange(_merkleRoot);
 
-        merkleRootSet = true;
-        merkleRoot = _merkleRoot;
         airdropExpirationTimestamp = block.timestamp + 60 days;
         numberOfClaimers = _numberOfClaimers;
         tokensPerClaim = tokenSupply / _numberOfClaimers;
@@ -80,31 +71,24 @@ contract ExistingERC20DropCampaign is AirdropMerkleProof, CampaignAidropsShared 
 
     /// @notice Allows eligible users to claim their ERC20 airdrop
     /// @param _merkleProof is the merkle proof that this user is eligible for claiming the ERC20 airdrop
-    function claim(bytes32[] calldata _merkleProof) external {
-        validateClaim(_merkleProof);
-
-        hasClaimed[msg.sender] = true;
-
+    function claim(bytes32[] calldata _merkleProof) public virtual override {
+        super.claim(_merkleProof);
         rewardToken.safeTransfer(msg.sender, tokensPerClaim);
-        emit Claimed(msg.sender);
     }
 
     /// @notice Checks if the user is eligible for this airdrop
     /// @param _merkleProof The proof a user can claim a reward
     /// @return bool if user is eligible for reward
-    function isEligibleForReward(bytes32[] calldata _merkleProof) public view returns (bool) {
-        if ((hasClaimed[msg.sender]) || (block.timestamp > airdropExpirationTimestamp)) {
-            return false;
-        }
-        return checkProof(_merkleProof, merkleRoot);
+    function isEligibleForReward(bytes32[] calldata _merkleProof) public view virtual override returns (bool) {
+        if (block.timestamp > airdropExpirationTimestamp) return false;
+        return super.isEligibleForReward(_merkleProof);
     }
 
     /// @notice Validation for claiming a reward
     /// @param _merkleProof The proof a user can claim a reward
-    function validateClaim(bytes32[] calldata _merkleProof) internal view {
-        if (hasClaimed[msg.sender]) revert AlreadyRedeemed();
+    function validateClaim(bytes32[] calldata _merkleProof) public view virtual override {
+        super.validateClaim(_merkleProof);
         if (block.timestamp > airdropExpirationTimestamp) revert AirdropExpired();
-        if (checkProof(_merkleProof, merkleRoot) == false) revert NotEligible();
     }
 
     /// @notice Returns the amount of airdrop tokens a user can claim

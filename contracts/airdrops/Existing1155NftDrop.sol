@@ -3,8 +3,7 @@ pragma solidity ^0.8.15;
 
 import "@openzeppelin/contracts/token/ERC1155/IERC1155.sol";
 import "@openzeppelin/contracts/token/ERC1155/IERC1155Receiver.sol";
-
-import "../interfaces/airdrops/AirdropExistingToken.sol";
+import "./shared/AirdropExistingToken.sol";
 
 /// @title Airdrops existing ERC1155 tokens for airdrop recipients
 contract Existing1155NftDrop is IERC1155Receiver, AirdropExistingToken {

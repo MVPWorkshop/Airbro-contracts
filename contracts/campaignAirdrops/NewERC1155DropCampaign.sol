@@ -3,12 +3,10 @@ pragma solidity ^0.8.15;
 
 import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
 
-import "../interfaces/AirdropMerkleProof.sol";
-import "../interfaces/IAirBroFactory.sol";
-import "../interfaces/campaignAirdrops/CampaignAirdropsShared.sol";
+import "./shared/CampaignAirdropsShared.sol";
 
 /// @title Airdrops existing ERC1155 tokens for airdrop recipients
-contract NewERC1155DropCampaign is ERC1155, AirdropMerkleProof, CampaignAidropsShared {
+contract NewERC1155DropCampaign is ERC1155, CampaignAidropsShared {
     uint256 private constant _tokenId = 0;
     uint256 private constant _tokenAmount = 1;
     uint256 public constant tokensPerClaim = 1; // 1 reward per wallet
@@ -20,11 +18,6 @@ contract NewERC1155DropCampaign is ERC1155, AirdropMerkleProof, CampaignAidropsS
 
     event MerkleRootSet(bytes32 merkleRoot);
 
-    modifier onlyAdmin() {
-        if (msg.sender != IAirBroFactory(airbroCampaignFactoryAddress).admin()) revert Unauthorized();
-        _;
-    }
-
     constructor(string memory uri, address _airbroCampaignFactoryAddress)
         ERC1155(uri)
         CampaignAidropsShared(_airbroCampaignFactoryAddress)
@@ -33,39 +26,30 @@ contract NewERC1155DropCampaign is ERC1155, AirdropMerkleProof, CampaignAidropsS
     /// @notice Sets the merkleRoot - can only be done if admin (different from the contract owner)
     /// @param _merkleRoot - The root hash of the Merle Tree
     function setMerkleRoot(bytes32 _merkleRoot) external onlyAdmin {
-        if (merkleRootSet) revert MerkleRootAlreadySet();
+        super.setMerkleRootStateChange(_merkleRoot);
 
-        merkleRootSet = true;
-        merkleRoot = _merkleRoot;
         emit MerkleRootSet(_merkleRoot);
     }
 
     /// @notice Allows the NFT holder to claim their ERC1155 airdrop
     /// @param _merkleProof is the merkleRoot proof that this user is eligible for claiming reward
-    function claim(bytes32[] calldata _merkleProof) external {
-        validateClaim(_merkleProof);
-
-        hasClaimed[msg.sender] = true;
+    function claim(bytes32[] calldata _merkleProof) public virtual override {
+        super.claim(_merkleProof);
 
         _mint(msg.sender, _tokenId, _tokenAmount, "0x0");
-        emit Claimed(msg.sender);
     }
 
     /// @notice Checks if the user is eligible for this airdrop
     /// @param _merkleProof is the merkleRoot proof that this user is eligible for claiming reward
     /// @return true if user is eligibleto claim a reward
-    function isEligibleForReward(bytes32[] calldata _merkleProof) public view returns (bool) {
-        if (hasClaimed[msg.sender]) {
-            return false;
-        }
-        return checkProof(_merkleProof, merkleRoot);
+    function isEligibleForReward(bytes32[] calldata _merkleProof) public view virtual override returns (bool) {
+        return super.isEligibleForReward(_merkleProof);
     }
 
     /// @notice Validation for claiming a reward
     /// @param _merkleProof The proof a user can claim a reward
-    function validateClaim(bytes32[] calldata _merkleProof) internal view {
-        if (hasClaimed[msg.sender]) revert AlreadyRedeemed();
-        if (checkProof(_merkleProof, merkleRoot) == false) revert NotEligible();
+    function validateClaim(bytes32[] calldata _merkleProof) public view virtual override {
+        super.validateClaim(_merkleProof);
     }
 
     /// @notice Returns the amount of airdrop tokens a user can claim
