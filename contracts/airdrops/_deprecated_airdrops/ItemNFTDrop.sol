@@ -1,4 +1,4 @@
-// DEPRECATED CONTRACT
+/* // DEPRECATED CONTRACT
 
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.15;
@@ -102,3 +102,4 @@ contract ItemNFTDrop is ERC1155, AirdropMerkleProof {
         return rewardedNft.balanceOf(msg.sender);
     }
 }
+ */
