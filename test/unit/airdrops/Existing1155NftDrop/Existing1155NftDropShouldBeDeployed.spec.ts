@@ -53,5 +53,9 @@ export const Existing1155NftDropShouldDeploy = (): void => {
 
       expect(await this.existing1155NFTDrop.connect(this.signers.bob).getAirdropAmount()).to.be.equal(0); //bob has no BAYC, so has 0 as the airdrop amount
     });
+
+    it("should support 0xf23a6e61 interface", async function () {
+      expect(await this.existing1155NFTDrop.supportsInterface("0xf23a6e61")).to.be.equal(true);
+    });
   });
 };

@@ -5,12 +5,5 @@ module.exports = {
   providerOptions: {
     mnemonic: process.env.MNEMONIC,
   },
-  skipFiles: [
-    "test",
-    "Airbro1155Contract.sol",
-    "AirbroFactorySMCampaign.sol",
-    "airdrops/ItemNFTDrop.sol",
-    "airdrops/NFTDrop.sol",
-    "airdropsSMCampaign-old",
-  ],
+  skipFiles: ["test", "Airbro1155Contract.sol", "airdrops/_deprecated_airdrops"],
 };
