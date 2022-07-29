@@ -1,8 +1,7 @@
 import { expect } from "chai";
-import { ethers, network } from "hardhat";
+import { ethers } from "hardhat";
 import { MerkleTree } from "merkletreejs";
 const { keccak256 } = ethers.utils;
-import { constants } from "ethers";
 
 export function ExistingERC20DropCampaignShouldClaimReward(): void {
   describe("user should be able to claim reward", async function () {

@@ -38,7 +38,7 @@ abstract contract CampaignAidropsShared is AirdropMerkleProof {
     /// parameters set within its setMerkleRoot function.
     /// @dev Used in setMerkleRoot method for both campaign airdrops.
     /// @param _merkleRoot The root hash of the Merle Tree
-    function setMerkleRootStateChange(bytes32 _merkleRoot) internal onlyAdmin {
+    function setMerkleRootStateChange(bytes32 _merkleRoot) internal {
         if (merkleRootSet) revert MerkleRootAlreadySet();
 
         merkleRootSet = true;

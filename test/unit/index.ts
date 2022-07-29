@@ -1,7 +1,8 @@
 import { ethers, network, waffle } from "hardhat";
 import { Mocks, Signers } from "../shared/types";
 
-import { chains, contractAdminAddress } from "../shared/constants";
+import { contractAdminAddress } from "../shared/constants";
+
 import {
   integrationsFixture,
   unitTokenDropFixture,
@@ -34,7 +35,6 @@ import { AirdropCampaignDataShouldBatchAddDailyMerkleRootHash } from "./AirdropC
 import { AirdropCampaignDataShouldAddAirdropCampaignChain } from "./AirdropCampaignData/AirdropCampaignDataShouldAddAirdropCampaignChain.spec";
 import { AirdropCampaignDataShouldBatchAddAirdropCampaignChain } from "./AirdropCampaignData/AirdropCampaignDataShouldBatchAddAirdropCampaignChain.spec";
 import { AirdropCampaignDataShouldFinalizeAirdrop } from "./AirdropCampaignData/AirdropCampaignDataShouldFinalizeAirdrop.spec";
-import { Wallet } from "ethers";
 
 describe("Unit tests", function () {
   before(async function () {
@@ -65,35 +65,6 @@ describe("Unit tests", function () {
   });
 
   describe("AirdropsCampaignData", async function () {
-    /**
-     * creating an array used for testing two batch add methods:
-     * - AirdropCampaignDataShouldBatchAddDailyMerkleRootHash
-     * - AirdropCampaignDataShouldBatchAddAirdropCampaignChain
-     *
-     *
-     * Currently not being used since we don't really have to test the block gas limit, the backend can do that.
-     * If it fails, backend simply lower the lengths of the array.
-     */
-    before(async function () {
-      /* /* Not necessary whne not running batchAdd tests */
-      /* const batchArrayLimit = 1200;
-      console.log(`Constructing arrays with length of ${batchArrayLimit} necessary for testing blocksize limit. Please wait...`);
-
-      const randomAddressesArray = [];
-      const randomChainsArray = [];
-      const bytes32MerkleRootHashArray = [];
-
-      for (let i = 0; i < batchArrayLimit; i++) {
-        randomAddressesArray.push(Wallet.createRandom().address);
-        randomChainsArray.push(chains.Eth);
-        bytes32MerkleRootHashArray.push("0x0000000000000000000000000000000000000000000000000000000000000000");
-      }
-
-      this.randomAddressesArray = randomAddressesArray;
-      this.randomChainsArray = randomChainsArray;
-      this.bytes32MerkleRootHashArray = bytes32MerkleRootHashArray; */
-    });
-
     beforeEach(async function () {
       const { airdropCampaignData } = await this.loadFixture(airdropCampaignDataFixture);
       this.airdropCampaignData = airdropCampaignData;

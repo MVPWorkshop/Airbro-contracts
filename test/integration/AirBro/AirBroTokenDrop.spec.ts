@@ -4,6 +4,106 @@ import { ethers, network } from "hardhat";
 import { oneWeekInSeconds } from "../../shared/constants";
 
 export function shouldAirDropNewToken(): void {
+  it("isEligible function should return false if already redeemed existing token airdrop reward", async function () {
+    const newTokenName: string = "Wakanda Coin";
+    const newTokenSymbol: string = "WKND";
+    const totalAirdropAmount: BigNumber = ethers.utils.parseEther("1000");
+    const tokensPerClaim: BigNumber = ethers.utils.parseEther("100");
+    const airdropDuration: number = 3;
+
+    await this.testToken.connect(this.signers.deployer).mint(this.signers.deployer.address, totalAirdropAmount);
+    // console.log("Test token balance of: " + (await this.testToken.balanceOf(this.signers.deployer.address)));
+
+    // minting NFT to deployer address
+    await this.testNftCollection.connect(this.signers.deployer).safeMint(this.signers.deployer.address);
+
+    // create new airdrop, along with new ERC20
+    expect(
+      await this.airbroFactory.connect(this.signers.deployer).dropNewTokensToNftHolders(
+        this.testNftCollection.address, // rewardedNftCollection,
+        newTokenName, // Name of new ERC20 Token
+        newTokenSymbol, // Symbol of new ERC20 Token
+        tokensPerClaim, // tokensPerClaim
+        airdropDuration,
+      ),
+    ).to.emit(this.airbroFactory, "NewAirdrop");
+
+    const tokenDropFactory = await ethers.getContractFactory("TokenDrop");
+    const tokenDropContract = tokenDropFactory.attach(await this.airbroFactory.airdrops(0));
+
+    expect(await tokenDropContract.isEligibleForReward(constants.Zero)).to.equal(true);
+
+    // deployer wallet claiming their reward
+    await expect(tokenDropContract.claim(constants.Zero)).to.emit(tokenDropContract, "Claimed");
+
+    expect(await tokenDropContract.isEligibleForReward(constants.Zero)).to.be.equal(false);
+  });
+
+  it("isEligible function in existing token airdrop should return false if msg.sender is not owner of NFT with sent tokenId", async function () {
+    const newTokenName: string = "Wakanda Coin";
+    const newTokenSymbol: string = "WKND";
+    const totalAirdropAmount: BigNumber = ethers.utils.parseEther("1000");
+    const tokensPerClaim: BigNumber = ethers.utils.parseEther("100");
+    const airdropDuration: number = 3;
+
+    await this.testToken.connect(this.signers.deployer).mint(this.signers.deployer.address, totalAirdropAmount);
+    // console.log("Test token balance of: " + (await this.testToken.balanceOf(this.signers.deployer.address)));
+
+    // minting NFT to deployer address
+    await this.testNftCollection.connect(this.signers.deployer).safeMint(this.signers.deployer.address);
+
+    // create new airdrop, along with new ERC20
+    expect(
+      await this.airbroFactory.connect(this.signers.deployer).dropNewTokensToNftHolders(
+        this.testNftCollection.address, // rewardedNftCollection,
+        newTokenName, // Name of new ERC20 Token
+        newTokenSymbol, // Symbol of new ERC20 Token
+        tokensPerClaim, // tokensPerClaim
+        airdropDuration,
+      ),
+    ).to.emit(this.airbroFactory, "NewAirdrop");
+
+    const existingDropFactory = await ethers.getContractFactory("ExistingTokenDrop");
+    const tokenDropContract = existingDropFactory.attach(await this.airbroFactory.airdrops(0));
+
+    // deployer wallet claiming reward but they do not own an nft
+    expect(await tokenDropContract.connect(this.signers.alice).isEligibleForReward(constants.Zero)).to.be.equal(false);
+  });
+
+  it("isEligible function should retrun false if existing token airdrop expired", async function () {
+    const newTokenName: string = "Wakanda Coin";
+    const newTokenSymbol: string = "WKND";
+    const totalAirdropAmount: BigNumber = ethers.utils.parseEther("1000");
+    const tokensPerClaim: BigNumber = ethers.utils.parseEther("100");
+    const airdropDuration: number = 1;
+
+    await this.testToken.connect(this.signers.deployer).mint(this.signers.deployer.address, totalAirdropAmount);
+    // console.log("Test token balance of: " + (await this.testToken.balanceOf(this.signers.deployer.address)));
+
+    // minting NFT to deployer address
+    await this.testNftCollection.connect(this.signers.deployer).safeMint(this.signers.deployer.address);
+
+    // create new airdrop, along with new ERC20
+    expect(
+      await this.airbroFactory.connect(this.signers.deployer).dropNewTokensToNftHolders(
+        this.testNftCollection.address, // rewardedNftCollection,
+        newTokenName, // Name of new ERC20 Token
+        newTokenSymbol, // Symbol of new ERC20 Token
+        tokensPerClaim, // tokensPerClaim
+        airdropDuration,
+      ),
+    ).to.emit(this.airbroFactory, "NewAirdrop");
+
+    const existingDropFactory = await ethers.getContractFactory("ExistingTokenDrop");
+    const tokenDropContract = existingDropFactory.attach(await this.airbroFactory.airdrops(0));
+
+    // increasing time
+    await network.provider.send("evm_increaseTime", [oneWeekInSeconds]); // add one week worth of seconds
+    await network.provider.send("evm_mine"); // mine, so now the time increased by oneWeekInSeconds seconds
+
+    expect(await tokenDropContract.isEligibleForReward(constants.Zero)).to.be.equal(false);
+  });
+
   it("batchClaim function should revert if existing token airdrop has expired", async function () {
     // naming of ERC20 to be created
     const newTokenName: string = "Wakanda Coin";
