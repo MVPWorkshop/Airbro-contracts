@@ -46,7 +46,7 @@ abstract contract CampaignAidropsShared is AirdropMerkleProof {
     }
 
     /// @notice Allows eligible users to claim their airdrop
-    /// @dev This is a parent method used in campaign airdrop contracts
+    /// @dev This method does deal with the transfer/ minting of tokens - the logic for this is handled in the child contract.
     /// @param _merkleProof is the merkle proof that this user is eligible for claiming the ERC20 airdrop
     function claim(bytes32[] calldata _merkleProof) public virtual {
         if (hasClaimed[msg.sender]) revert AlreadyRedeemed();
