@@ -2,6 +2,7 @@
 pragma solidity ^0.8.15;
 
 import "./campaignAirdrops/NewERC1155DropCampaign.sol";
+import "./campaignAirdrops/NewSB1155DropCampaign.sol";
 import "./campaignAirdrops/ExistingERC20DropCampaign.sol";
 
 /// @title AirbroCampaignFactory - NFT/Token airdrop tool factory contract - for owners of 1155 Nfts
@@ -54,6 +55,20 @@ contract AirbroCampaignFactory {
             totalAirdropsCount++;
         }
         emit NewAirdrop(address(airdropContract), msg.sender, "ERC1155");
+    }
+
+    /// @notice Creates a new airdrop claim contract for specific NFT collection holders that will reward participants with newly created Soulbound ERC1155 NFTs
+    /// @param uri - ipfs link of the image uploaded by user
+    function createNewSB1155DropCampaign(string memory uri) external {
+        NewSB1155DropCampaign airdropContract = new NewSB1155DropCampaign(
+            uri,
+            address(this) // airBroFactory contract address -> used for getting back admin contract address in airdrop contracts
+        );
+        airdrops.push(address(airdropContract));
+        unchecked {
+            totalAirdropsCount++;
+        }
+        emit NewAirdrop(address(airdropContract), msg.sender, "SB1155");
     }
 
     /// @notice Updates the address of the admin variable
