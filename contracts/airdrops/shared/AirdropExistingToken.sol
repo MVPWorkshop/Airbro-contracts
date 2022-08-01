@@ -58,8 +58,8 @@ abstract contract AirdropExistingToken is AirdropTimeData {
     }
 
     /// @notice Allows the NFT holder to claim their ERC20 airdrop
-    /// @param tokenId is the rewarded NFT collections token ID
     /// @dev This method does deal with the transfer/ minting of tokens - the logic for this is handled in the child contract.
+    /// @param tokenId is the rewarded NFT collections token ID
     function claim(uint256 tokenId) public virtual {
         validateClaim(tokenId);
         if (block.timestamp > airdropFinishTime) revert AirdropExpired();
@@ -69,8 +69,8 @@ abstract contract AirdropExistingToken is AirdropTimeData {
     }
 
     /// @notice Claim multiple ERC20 airdrops at once
-    /// @param tokenIds are the rewarded NFT collections token ID's
     /// @dev This method does deal with the transfer/ minting of tokens - the logic for this is handled in the child contract.
+    /// @param tokenIds are the rewarded NFT collections token ID's
     function batchClaim(uint256[] calldata tokenIds) public virtual {
         if (block.timestamp > airdropFinishTime) revert AirdropExpired();
 
