@@ -19,6 +19,14 @@ export async function unitNewERC1155DropCampaignArguments(_airbroCampaignFactory
   };
 }
 
+/*  Arguments for newSB1155DropCampaign fixture deployment */
+export async function unitNewSB1155DropCampaignArguments(_airbroCampaignFactoryAddress: String) {
+  return {
+    uri: uri,
+    airbroCampaignFactoryAddress: _airbroCampaignFactoryAddress,
+  };
+}
+
 /*  Arguments for ExistingERC20DropCampaign fixture deployment */
 export async function UnitExistingERC20DropCampaignArgs(mockDAItokenAddress: String, airbroCampaignFactoryAddress: String) {
   return {

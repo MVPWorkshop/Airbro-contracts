@@ -13,6 +13,7 @@ import { ExistingTokenDrop } from "../../src/types/contracts/airdrops/ExistingTo
 import { TokenDrop } from "../../src/types/contracts/airdrops/TokenDrop";
 
 import { NewERC1155DropCampaign } from "../../src/types/contracts/campaignAirdrops/NewERC1155DropCampaign";
+import { NewSB1155DropCampaign } from "../../src/types/contracts/campaignAirdrops/NewSB1155DropCampaign";
 import { ExistingERC20DropCampaign } from "../../src/types/contracts/campaignAirdrops/ExistingERC20DropCampaign";
 
 import { AirbroCampaignFactory } from "../../src/types/contracts/AirbroCampaignFactory";
@@ -23,6 +24,7 @@ import {
   unitTokenDropFixtureArguments,
   unitExisting1155NFTDropArguments,
   unitNewERC1155DropCampaignArguments,
+  unitNewSB1155DropCampaignArguments,
   UnitExistingERC20DropCampaignArgs,
 } from "./constants";
 import {
@@ -41,6 +43,12 @@ type UnitNewERC1155DropCampaignFixtureType = {
   newERC1155DropCampaignArgs: any;
 };
 
+type UnitNewSB1155DropCampaignFixtureType = {
+  newSB1155DropCampaign: NewSB1155DropCampaign;
+  mockAirbroCampaignFactory: MockContract;
+  newSB1155DropCampaignArgs: any;
+};
+
 type UnitExistingERC20DropCampaignFixtureType = {
   mockAirbroCampaignFactory: MockContract;
   mockDAItoken: MockContract;
@@ -52,6 +60,8 @@ type IntegrationCampaignFixtureType = {
   airbroCampaignFactory: AirbroCampaignFactory;
   newERC1155DropCampaign: NewERC1155DropCampaign;
   newERC1155DropCampaignArgs: any;
+  newSB1155DropCampaign: NewERC1155DropCampaign;
+  newSB1155DropCampaignArgs: any;
   existingERC20DropCampaign: ExistingERC20DropCampaign;
   existingERC20DropCampaignArgs: any;
   testToken: TestToken;
@@ -111,6 +121,23 @@ export const unitNewERC1155DropCampaignFixture: Fixture<UnitNewERC1155DropCampai
   return { mockAirbroCampaignFactory, newERC1155DropCampaign, newERC1155DropCampaignArgs };
 };
 
+export const unitNewSB1155DropCampaignFixture: Fixture<UnitNewSB1155DropCampaignFixtureType> = async (signers: Wallet[]) => {
+  const deployer: Wallet = signers[0];
+
+  const mockAirbroCampaignFactory = await deployMockAirbroCampaignFactory(deployer);
+  await mockAirbroCampaignFactory.deployed();
+
+  const newSB1155DropCampaignFactory: ContractFactory = await ethers.getContractFactory(`NewSB1155DropCampaign`);
+
+  const newSB1155DropCampaignArgs = await unitNewSB1155DropCampaignArguments(mockAirbroCampaignFactory.address);
+
+  const newSB1155DropCampaign: NewSB1155DropCampaign = (await newSB1155DropCampaignFactory
+    .connect(deployer)
+    .deploy(...Object.values(newSB1155DropCampaignArgs))) as NewSB1155DropCampaign;
+
+  return { mockAirbroCampaignFactory, newSB1155DropCampaign, newSB1155DropCampaignArgs };
+};
+
 export const unitExistingERC20DropCampaignFixture: Fixture<UnitExistingERC20DropCampaignFixtureType> = async (signers: Wallet[]) => {
   const deployer: Wallet = signers[0];
 
@@ -152,6 +179,18 @@ export const integrationCampaignFixture: Fixture<IntegrationCampaignFixtureType>
     .connect(deployer)
     .deploy(...Object.values(newERC1155DropCampaignArgs))) as NewERC1155DropCampaign;
 
+  await newERC1155DropCampaign.deployed();
+
+  const newSB1155DropCampaignFactory: ContractFactory = await ethers.getContractFactory(`NewSB1155DropCampaign`);
+
+  const newSB1155DropCampaignArgs = await unitNewSB1155DropCampaignArguments(airbroCampaignFactory.address);
+
+  const newSB1155DropCampaign: NewSB1155DropCampaign = (await newSB1155DropCampaignFactory
+    .connect(deployer)
+    .deploy(...Object.values(newSB1155DropCampaignArgs))) as NewSB1155DropCampaign;
+
+  await newSB1155DropCampaign.deployed();
+
   const testTokenFactory: ContractFactory = await ethers.getContractFactory(`TestToken`);
 
   const testToken: TestToken = (await testTokenFactory.connect(deployer).deploy()) as TestToken;
@@ -172,6 +211,8 @@ export const integrationCampaignFixture: Fixture<IntegrationCampaignFixtureType>
     airbroCampaignFactory,
     newERC1155DropCampaign,
     newERC1155DropCampaignArgs,
+    newSB1155DropCampaign,
+    newSB1155DropCampaignArgs,
     existingERC20DropCampaign,
     existingERC20DropCampaignArgs,
     testToken,

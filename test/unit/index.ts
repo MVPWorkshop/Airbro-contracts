@@ -9,6 +9,7 @@ import {
   unitExisting1155NFTDropFixture,
   unitExistingTokenDropFixture,
   unitNewERC1155DropCampaignFixture,
+  unitNewSB1155DropCampaignFixture,
   integrationCampaignFixture,
   unitExistingERC20DropCampaignFixture,
   airdropCampaignDataFixture,
@@ -23,6 +24,10 @@ import { Existing1155NftDropShouldDeploy } from "./airdrops/Existing1155NftDrop/
 import { NewERC1155DropCampaignShouldDeploy } from "./campaignAirdrops/NewERC1155DropCampaign/NewERC1155DropCampaignShouldDeploy.spec";
 import { NewERC1155DropCampaignShouldSetMerkleRoot } from "./campaignAirdrops/NewERC1155DropCampaign/NewERC1155DropCampaignShouldSetMerkleRoot.spec";
 import { NewERC1155DropCampaignShouldClaimReward } from "./campaignAirdrops/NewERC1155DropCampaign/NewERC1155DropCampaignShouldClaimReward.spec";
+
+import { NewSB1155DropCampaignShouldDeploy } from "./campaignAirdrops/NewSB1155DropCampaign/NewSB1155DropCampaignShouldDeploy.spec";
+import { NewSB1155DropCampaignShouldSetMerkleRoot } from "./campaignAirdrops/NewSB1155DropCampaign/NewSB1155DropCampaignShouldSetMerkleRoot.spec";
+import { NewSB1155DropCampaignShouldClaimReward } from "./campaignAirdrops/NewSB1155DropCampaign/NewSB1155DropCampaignShouldClaimReward.spec";
 
 import { ExistingERC20DropCampaignShouldDeploy } from "./campaignAirdrops/ExistingERC20DropCampaign/ExistingERC20DropCampaignShouldDeploy.spec";
 import { ExistingERC20DropCampaignShouldSetMerkleRoot } from "./campaignAirdrops/ExistingERC20DropCampaign/ExistingERC20DropCampaignShouldSetMerkleRoot.spec";
@@ -172,6 +177,25 @@ describe("Unit tests", function () {
       NewERC1155DropCampaignShouldDeploy();
       NewERC1155DropCampaignShouldSetMerkleRoot();
       NewERC1155DropCampaignShouldClaimReward();
+    });
+
+    describe("NewSB1155DropCampaign", () => {
+      beforeEach(async function () {
+        const { mockAirbroCampaignFactory, newSB1155DropCampaign, newSB1155DropCampaignArgs } = await this.loadFixture(
+          unitNewSB1155DropCampaignFixture,
+        );
+
+        this.newSB1155DropCampaign = newSB1155DropCampaign;
+
+        this.mocks = {} as Mocks;
+        this.mocks.mockAirbroCampaignFactory = mockAirbroCampaignFactory;
+
+        this.constructorArgs = newSB1155DropCampaignArgs;
+      });
+
+      NewSB1155DropCampaignShouldDeploy();
+      NewSB1155DropCampaignShouldSetMerkleRoot();
+      NewSB1155DropCampaignShouldClaimReward();
     });
 
     describe("ExistingERC20DropCampaign", () => {

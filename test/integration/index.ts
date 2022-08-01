@@ -15,6 +15,8 @@ import { integrationCampaignFixture } from "../shared/fixtures";
 
 import { NewERC1155DropCampaignShouldGoThroughUserFlow } from "./AirbroFactoryCampaign/NewERC1155DropCampaign/NewERC1155DropCampaignShouldGoThroughUserFlow.spec";
 
+import { NewSB1155DropCampaignShouldGoThroughUserFlow } from "./AirbroFactoryCampaign/NewSB1155DropCampaign/NewSB1155DropCampaignShouldGoThroughUserFlow.spec";
+
 import { ExistingERC20DropCampaignShouldFundCampaign } from "./AirbroFactoryCampaign/ExistingERC20DropCampaign/ExistingERC20DropCampaignShouldFundCampaign.spec";
 import { ExistingERC20DropCampaignShouldBeEligible } from "./AirbroFactoryCampaign/ExistingERC20DropCampaign/ExistingERC20DropCampaignShouldBeEligible.spec";
 import { ExistingERC20DropCampaignShouldGoThroughUserFlow } from "./AirbroFactoryCampaign/ExistingERC20DropCampaign/ExistingERC20DropCampaignShouldGoThroughUserFlow.spec";
@@ -67,6 +69,8 @@ describe("Integration tests", function () {
         airbroCampaignFactory,
         newERC1155DropCampaign,
         newERC1155DropCampaignArgs,
+        newSB1155DropCampaign,
+        newSB1155DropCampaignArgs,
         existingERC20DropCampaign,
         existingERC20DropCampaignArgs,
         testToken,
@@ -76,6 +80,9 @@ describe("Integration tests", function () {
 
       this.newERC1155DropCampaign = newERC1155DropCampaign;
       this.newERC1155DropCampaignArgs = newERC1155DropCampaignArgs;
+
+      this.newSB1155DropCampaign = newSB1155DropCampaign;
+      this.newSB1155DropCampaignArgs = newSB1155DropCampaignArgs;
 
       this.existingERC20DropCampaign = existingERC20DropCampaign;
       this.existingERC20DropCampaignArgs = existingERC20DropCampaignArgs;
@@ -98,6 +105,10 @@ describe("Integration tests", function () {
 
     describe("NewERC1155DropCampaign", () => {
       NewERC1155DropCampaignShouldGoThroughUserFlow();
+    });
+
+    describe("NewSB1155DropCampaign", () => {
+      NewSB1155DropCampaignShouldGoThroughUserFlow();
     });
   });
 });

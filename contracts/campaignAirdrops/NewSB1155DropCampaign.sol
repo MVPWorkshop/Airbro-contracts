@@ -10,7 +10,7 @@ contract NewSB1155DropCampaign is ERC1155, CampaignAidropsShared {
     uint256 private constant _tokenId = 0;
     uint256 private constant _tokenAmount = 1;
     uint256 public constant tokensPerClaim = 1; // 1 reward per wallet
-    string public constant airdropType = "ERC1155";
+    string public constant airdropType = "SB1155";
 
     uint256 public airdropFundBlockTimestamp;
 
@@ -67,7 +67,7 @@ contract NewSB1155DropCampaign is ERC1155, CampaignAidropsShared {
         uint256[] memory,
         bytes memory
     ) internal virtual override {
-        if (from != address(0) || to != address(0)) revert SoulboundTokenUntransferable();
+        if (from != address(0) && to != address(0)) revert SoulboundTokenUntransferable();
     }
 
     /// @dev Overriding _afterTokenTransfer in order to emit propper events for minting and burning soulbound tokens
