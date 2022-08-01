@@ -36,11 +36,10 @@ abstract contract AirdropExistingToken is AirdropTimeData {
         totalAirdropAmount = _totalAirdropAmount;
     }
 
-    /// @notice Changes state and emits event once contracts have been funded with tokens.
-    /// A revert of the transfer of existing tokens to the contract will revert these changes.
-    /// @dev This method is called as super.fundAirdrop() in Existing1155NftDrop.sol,
-    /// and ExistingTokenDrop.sol in standard airdrops.
-    function fundAirdrop() public virtual {
+    /// @notice Performs checks and changes state associated with funding contracts
+    /// @dev This method does deal with the transfer of tokens
+    /// - the logic for this is handled in the child contract.
+    function fundAirdropHandler() internal {
         if (airdropFunded) revert AlreadyFunded();
 
         airdropFunded = true;
@@ -50,17 +49,19 @@ abstract contract AirdropExistingToken is AirdropTimeData {
         emit AirdropFunded(address(this));
     }
 
-    /// @notice Allows the airdrop funder to withdraw back their funds after the airdrop has finished
-    /// @dev This method does deal with the trantransfer/ minting  of tokens - the logic for this is handled in the child contract.
-    function withdrawAirdropFunds() public virtual {
+    /// @notice Performs checks associated with the funder withdrawing funds from the contract.
+    /// @dev This method does not deal with the transfer of tokens
+    /// - the logic for this is handled in the child contract.
+    function withdrawAirdropFundsHandler() internal view {
         if (airdropFundingHolder != msg.sender) revert Unauthorized();
         if (block.timestamp < airdropFinishTime) revert AirdropStillInProgress();
     }
 
-    /// @notice Allows the NFT holder to claim their ERC20 airdrop
-    /// @dev This method does deal with the transfer/ minting of tokens - the logic for this is handled in the child contract.
+    /// @notice Performs checks and changes state associated with claiming an ERC20 airdrop
+    /// @dev This method does deal with the transfer of tokens
+    /// - the logic for this is handled in the child contract.
     /// @param tokenId is the rewarded NFT collections token ID
-    function claim(uint256 tokenId) public virtual {
+    function claimHandler(uint256 tokenId) internal {
         validateClaim(tokenId);
         if (block.timestamp > airdropFinishTime) revert AirdropExpired();
 
@@ -68,10 +69,11 @@ abstract contract AirdropExistingToken is AirdropTimeData {
         emit Claimed(tokenId, msg.sender);
     }
 
-    /// @notice Claim multiple ERC20 airdrops at once
-    /// @dev This method does deal with the transfer/ minting of tokens - the logic for this is handled in the child contract.
+    /// @notice Performs checks and changes state associated with batch claiming multiple ERC20's through an airdrop
+    /// @dev This method does deal with the transfer of tokens
+    /// - the logic for this is handled in the child contract.
     /// @param tokenIds are the rewarded NFT collections token ID's
-    function batchClaim(uint256[] calldata tokenIds) public virtual {
+    function batchClaimHandler(uint256[] calldata tokenIds) internal {
         if (block.timestamp > airdropFinishTime) revert AirdropExpired();
 
         for (uint256 index = 0; index < tokenIds.length; index++) {
@@ -85,8 +87,10 @@ abstract contract AirdropExistingToken is AirdropTimeData {
     }
 
     /// @notice Validation for claiming a reward (excluding the block.timestamp check)
+    /// @dev method only used in this contract in methods
+    /// 'claimHandler' and 'batchClaimHandler', so visibility is private.
     /// @param tokenId the token id based on which the user wishes to claim the reward
-    function validateClaim(uint256 tokenId) internal view {
+    function validateClaim(uint256 tokenId) private view {
         if (hasClaimed[tokenId]) revert AlreadyRedeemed();
         if (rewardedNft.ownerOf(tokenId) != msg.sender) revert Unauthorized();
     }

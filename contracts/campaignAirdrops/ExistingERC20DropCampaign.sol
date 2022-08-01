@@ -38,10 +38,11 @@ contract ExistingERC20DropCampaign is CampaignAidropsShared {
 
     /// @notice Sets the merkleRoot and the number of claimers (also setting the amount each claimer receivers).
     /// Can only be done by admin.
+    /// @dev Implements a handler method from the parent contract for performing checks and changing state
     /// @param _merkleRoot The root hash of the Merle Tree
     /// @param _numberOfClaimers The number of users eligible to claim
     function setMerkleRoot(bytes32 _merkleRoot, uint256 _numberOfClaimers) external onlyAdmin {
-        super.setMerkleRootStateChange(_merkleRoot);
+        super.setMerkleRootHandler(_merkleRoot);
 
         airdropExpirationTimestamp = block.timestamp + 60 days;
         numberOfClaimers = _numberOfClaimers;
@@ -70,14 +71,17 @@ contract ExistingERC20DropCampaign is CampaignAidropsShared {
     }
 
     /// @notice Allows eligible users to claim their ERC20 airdrop
+    /// @dev Implements a handler method from the parent contract for performing checks and changing state
     /// @param _merkleProof is the merkle proof that this user is eligible for claiming the ERC20 airdrop
-    function claim(bytes32[] calldata _merkleProof) public virtual override {
+    function claim(bytes32[] calldata _merkleProof) external virtual {
         if (block.timestamp > airdropExpirationTimestamp) revert AirdropExpired();
-        super.claim(_merkleProof);
+        super.claimHandler(_merkleProof);
         rewardToken.safeTransfer(msg.sender, tokensPerClaim);
     }
 
     /// @notice Checks if the user is eligible for this airdrop
+    /// @dev Implements a handler method from the parent contract for performing checks,
+    /// but implements an additional expirationd date check beforehand
     /// @param _merkleProof The proof a user can claim a reward
     /// @return bool if user is eligible for reward
     function isEligibleForReward(bytes32[] calldata _merkleProof) public view virtual override returns (bool) {
@@ -86,6 +90,9 @@ contract ExistingERC20DropCampaign is CampaignAidropsShared {
     }
 
     /// @notice Returns the amount of airdrop tokens a user can claim
+    /// @dev Implements a method from the parent contract to check for reward eligibility.
+    /// Uses the 'isEligibleForReward' method from this contract which contains
+    /// an additional necessary check
     /// @param _merkleProof The proof a user can claim a reward
     function getAirdropAmount(bytes32[] calldata _merkleProof) external view returns (uint256) {
         return isEligibleForReward(_merkleProof) ? tokensPerClaim : 0;

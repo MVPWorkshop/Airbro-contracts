@@ -24,29 +24,32 @@ contract ExistingTokenDrop is AirdropExistingToken {
     }
 
     /// @notice Allows one wallet to provide funds for the airdrop reward once
-    /// @dev super.findAidrop() handels stateChange and emit, inherited from AirdropExistingToken.sol
-    function fundAirdrop() public virtual override {
-        super.fundAirdrop();
+    /// @dev Implements a handler method from the parent contract for checks and state change
+    function fundAirdrop() external virtual {
+        super.fundAirdropHandler();
         rewardToken.safeTransferFrom(msg.sender, address(this), totalAirdropAmount);
     }
 
     /// @notice Allows the airdrop funder to withdraw back their funds after the airdrop has finished
-    function withdrawAirdropFunds() public virtual override {
-        super.withdrawAirdropFunds();
+    /// @dev Implements a handler method from the parent contract for checks
+    function withdrawAirdropFunds() external virtual {
+        super.withdrawAirdropFundsHandler();
         rewardToken.safeTransfer(msg.sender, rewardToken.balanceOf(address(this)));
     }
 
     /// @notice Allows the NFT holder to claim their ERC20 airdrop
+    /// @dev Implements a handler method from the parent contract for checks and state change
     /// @param tokenId is the rewarded NFT collections token ID
-    function claim(uint256 tokenId) public virtual override {
-        super.claim(tokenId);
+    function claim(uint256 tokenId) external virtual {
+        super.claimHandler(tokenId);
         rewardToken.safeTransfer(msg.sender, tokensPerClaim);
     }
 
     /// @notice Claim multiple ERC20 airdrops at once
+    /// @dev Implements a handler method from the parent contract for checks and state change
     /// @param tokenIds are the rewarded NFT collections token ID's
-    function batchClaim(uint256[] calldata tokenIds) public virtual override {
-        super.batchClaim(tokenIds);
+    function batchClaim(uint256[] calldata tokenIds) public virtual {
+        super.batchClaimHandler(tokenIds);
         rewardToken.safeTransfer(msg.sender, tokensPerClaim * tokenIds.length);
     }
 }
