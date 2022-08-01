@@ -32,15 +32,15 @@ contract NewSB1155DropCampaign is ERC1155, CampaignAidropsShared {
     /// @notice Sets the merkleRoot - can only be done if admin (different from the contract owner)
     /// @param _merkleRoot - The root hash of the Merle Tree
     function setMerkleRoot(bytes32 _merkleRoot) external onlyAdmin {
-        super.setMerkleRootStateChange(_merkleRoot);
+        super.setMerkleRootHandler(_merkleRoot);
 
         emit MerkleRootSet(_merkleRoot);
     }
 
     /// @notice Allows the NFT holder to claim their ERC1155 airdrop
     /// @param _merkleProof is the merkleRoot proof that this user is eligible for claiming reward
-    function claim(bytes32[] calldata _merkleProof) public virtual override {
-        super.claim(_merkleProof);
+    function claim(bytes32[] calldata _merkleProof) public virtual {
+        super.claimHandler(_merkleProof);
 
         _mint(msg.sender, _tokenId, _tokenAmount, "0x0");
     }
