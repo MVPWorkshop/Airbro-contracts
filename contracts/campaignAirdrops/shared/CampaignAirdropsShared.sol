@@ -49,7 +49,8 @@ abstract contract CampaignAidropsShared is AirdropMerkleProof {
     /// @dev This is a parent method used in campaign airdrop contracts
     /// @param _merkleProof is the merkle proof that this user is eligible for claiming the ERC20 airdrop
     function claim(bytes32[] calldata _merkleProof) public virtual {
-        validateClaim(_merkleProof);
+        if (hasClaimed[msg.sender]) revert AlreadyRedeemed();
+        if (checkProof(_merkleProof, merkleRoot) == false) revert NotEligible();
 
         hasClaimed[msg.sender] = true;
 
@@ -63,13 +64,5 @@ abstract contract CampaignAidropsShared is AirdropMerkleProof {
     function isEligibleForReward(bytes32[] calldata _merkleProof) public view virtual returns (bool) {
         if (hasClaimed[msg.sender]) return false;
         return checkProof(_merkleProof, merkleRoot);
-    }
-
-    /// @notice Validation for claiming a reward
-    /// @dev This is a parent method used in campaign airdrop contracts
-    /// @param _merkleProof The proof a user can claim a reward
-    function validateClaim(bytes32[] calldata _merkleProof) public view virtual {
-        if (hasClaimed[msg.sender]) revert AlreadyRedeemed();
-        if (checkProof(_merkleProof, merkleRoot) == false) revert NotEligible();
     }
 }

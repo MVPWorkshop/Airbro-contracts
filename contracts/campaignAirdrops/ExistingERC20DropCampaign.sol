@@ -72,6 +72,7 @@ contract ExistingERC20DropCampaign is CampaignAidropsShared {
     /// @notice Allows eligible users to claim their ERC20 airdrop
     /// @param _merkleProof is the merkle proof that this user is eligible for claiming the ERC20 airdrop
     function claim(bytes32[] calldata _merkleProof) public virtual override {
+        if (block.timestamp > airdropExpirationTimestamp) revert AirdropExpired();
         super.claim(_merkleProof);
         rewardToken.safeTransfer(msg.sender, tokensPerClaim);
     }
@@ -82,13 +83,6 @@ contract ExistingERC20DropCampaign is CampaignAidropsShared {
     function isEligibleForReward(bytes32[] calldata _merkleProof) public view virtual override returns (bool) {
         if (block.timestamp > airdropExpirationTimestamp) return false;
         return super.isEligibleForReward(_merkleProof);
-    }
-
-    /// @notice Validation for claiming a reward
-    /// @param _merkleProof The proof a user can claim a reward
-    function validateClaim(bytes32[] calldata _merkleProof) public view virtual override {
-        super.validateClaim(_merkleProof);
-        if (block.timestamp > airdropExpirationTimestamp) revert AirdropExpired();
     }
 
     /// @notice Returns the amount of airdrop tokens a user can claim

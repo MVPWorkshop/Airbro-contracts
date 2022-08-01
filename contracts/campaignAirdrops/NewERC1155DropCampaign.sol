@@ -46,12 +46,6 @@ contract NewERC1155DropCampaign is ERC1155, CampaignAidropsShared {
         return super.isEligibleForReward(_merkleProof);
     }
 
-    /// @notice Validation for claiming a reward
-    /// @param _merkleProof The proof a user can claim a reward
-    function validateClaim(bytes32[] calldata _merkleProof) public view virtual override {
-        super.validateClaim(_merkleProof);
-    }
-
     /// @notice Returns the amount of airdrop tokens a user can claim
     /// @param _merkleProof The proof a user can claim a reward
     function getAirdropAmount(bytes32[] calldata _merkleProof) external view returns (uint256) {
