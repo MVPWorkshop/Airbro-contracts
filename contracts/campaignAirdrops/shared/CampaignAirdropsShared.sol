@@ -38,17 +38,18 @@ abstract contract CampaignAidropsShared is AirdropMerkleProof {
     /// parameters set within its setMerkleRoot function.
     /// @dev Used in setMerkleRoot method for both campaign airdrops.
     /// @param _merkleRoot The root hash of the Merle Tree
-    function setMerkleRootStateChange(bytes32 _merkleRoot) internal {
+    function setMerkleRootHandler(bytes32 _merkleRoot) internal {
         if (merkleRootSet) revert MerkleRootAlreadySet();
 
         merkleRootSet = true;
         merkleRoot = _merkleRoot;
     }
 
-    /// @notice Allows eligible users to claim their airdrop
-    /// @dev This method does deal with the transfer/ minting of tokens - the logic for this is handled in the child contract.
+    /// @notice Performs checks and changes state associated with claiming rewards
+    /// @dev This method does not deal with the transfer/ minting of tokens
+    /// - the logic for this is handled in the child contract.
     /// @param _merkleProof is the merkle proof that this user is eligible for claiming the ERC20 airdrop
-    function claim(bytes32[] calldata _merkleProof) public virtual {
+    function claimHandler(bytes32[] calldata _merkleProof) internal {
         if (hasClaimed[msg.sender]) revert AlreadyRedeemed();
         if (checkProof(_merkleProof, merkleRoot) == false) revert NotEligible();
 

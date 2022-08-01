@@ -24,31 +24,25 @@ contract NewERC1155DropCampaign is ERC1155, CampaignAidropsShared {
     {}
 
     /// @notice Sets the merkleRoot - can only be done if admin (different from the contract owner)
+    /// @dev Implements a handler method from the parent contract for performing checks and changing state
     /// @param _merkleRoot - The root hash of the Merle Tree
     function setMerkleRoot(bytes32 _merkleRoot) external onlyAdmin {
-        super.setMerkleRootStateChange(_merkleRoot);
-
+        super.setMerkleRootHandler(_merkleRoot);
         emit MerkleRootSet(_merkleRoot);
     }
 
     /// @notice Allows the NFT holder to claim their ERC1155 airdrop
+    /// @dev Implements a handler method from the parent contract for performing checks and changing state
     /// @param _merkleProof is the merkleRoot proof that this user is eligible for claiming reward
-    function claim(bytes32[] calldata _merkleProof) public virtual override {
-        super.claim(_merkleProof);
-
+    function claim(bytes32[] calldata _merkleProof) external {
+        super.claimHandler(_merkleProof);
         _mint(msg.sender, _tokenId, _tokenAmount, "0x0");
     }
 
-    /// @notice Checks if the user is eligible for this airdrop
-    /// @param _merkleProof is the merkleRoot proof that this user is eligible for claiming reward
-    /// @return true if user is eligibleto claim a reward
-    function isEligibleForReward(bytes32[] calldata _merkleProof) public view virtual override returns (bool) {
-        return super.isEligibleForReward(_merkleProof);
-    }
-
     /// @notice Returns the amount of airdrop tokens a user can claim
+    /// @dev Implements a method from the parent contract to check for reward eligibility
     /// @param _merkleProof The proof a user can claim a reward
     function getAirdropAmount(bytes32[] calldata _merkleProof) external view returns (uint256) {
-        return isEligibleForReward(_merkleProof) ? tokensPerClaim : 0;
+        return super.isEligibleForReward(_merkleProof) ? tokensPerClaim : 0;
     }
 }
