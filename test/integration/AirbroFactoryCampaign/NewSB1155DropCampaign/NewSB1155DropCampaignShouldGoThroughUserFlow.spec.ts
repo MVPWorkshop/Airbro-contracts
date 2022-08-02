@@ -65,6 +65,6 @@ export function NewSB1155DropCampaignShouldGoThroughUserFlow() {
       .withArgs(this.signers.alice.address);
 
     // reverting burn attempt of soulbound nft if function not called by owner
-    await expect(this.newSB1155DropCampaign.connect(this.signers.alice).burn()).to.be.revertedWith(`NotTokenOwner`);
+    await expect(this.newSB1155DropCampaign.connect(this.signers.alice).burn()).to.be.revertedWith(`ERC1155: burn amount exceeds balance`);
   });
 }

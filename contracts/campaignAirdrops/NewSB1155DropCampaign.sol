@@ -43,13 +43,6 @@ contract NewSB1155DropCampaign is ERC1155, CampaignAidropsShared {
         _mint(msg.sender, _tokenId, _tokenAmount, "0x0");
     }
 
-    /// @notice Checks if the user is eligible for this airdrop
-    /// @param _merkleProof is the merkleRoot proof that this user is eligible for claiming reward
-    /// @return true if user is eligibleto claim a reward
-    function isEligibleForReward(bytes32[] calldata _merkleProof) public view virtual override returns (bool) {
-        return super.isEligibleForReward(_merkleProof);
-    }
-
     /// @notice Returns the amount of airdrop tokens a user can claim
     /// @param _merkleProof The proof a user can claim a reward
     function getAirdropAmount(bytes32[] calldata _merkleProof) external view returns (uint256) {
@@ -85,7 +78,6 @@ contract NewSB1155DropCampaign is ERC1155, CampaignAidropsShared {
     }
 
     function burn() external {
-        if (balanceOf(msg.sender, _tokenId) != 1) revert NotTokenOwner();
         _burn(msg.sender, _tokenId, _tokenAmount);
     }
 }
