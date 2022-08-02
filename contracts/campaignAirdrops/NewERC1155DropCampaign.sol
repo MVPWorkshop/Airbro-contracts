@@ -5,7 +5,7 @@ import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
 
 import "./shared/CampaignAirdropsShared.sol";
 
-/// @title Airdrops existing ERC1155 tokens for airdrop recipients
+/// @title Airdrops new ERC1155 tokens for airdrop recipients
 contract NewERC1155DropCampaign is ERC1155, CampaignAidropsShared {
     uint256 private constant _tokenId = 0;
     uint256 private constant _tokenAmount = 1;
