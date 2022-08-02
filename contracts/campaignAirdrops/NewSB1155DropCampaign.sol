@@ -19,8 +19,6 @@ contract NewSB1155DropCampaign is ERC1155, CampaignAidropsShared {
     error SoulboundTokenUntransferable();
     error NotTokenOwner();
 
-    event MerkleRootSet(bytes32 merkleRoot);
-
     event Attest(address indexed to);
     event Revoke(address indexed from);
 

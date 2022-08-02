@@ -16,8 +16,6 @@ contract NewERC1155DropCampaign is ERC1155, CampaignAidropsShared {
 
     address internal airdropFundingHolder;
 
-    event MerkleRootSet(bytes32 merkleRoot);
-
     constructor(string memory uri, address _airbroCampaignFactoryAddress)
         ERC1155(uri)
         CampaignAidropsShared(_airbroCampaignFactoryAddress)

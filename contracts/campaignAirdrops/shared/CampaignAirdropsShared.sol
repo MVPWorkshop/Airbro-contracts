@@ -25,6 +25,7 @@ abstract contract CampaignAidropsShared is AirdropMerkleProof {
         airbroCampaignFactoryAddress = _campaignFactoryAddress;
     }
 
+    event MerkleRootSet(bytes32 merkleRoot);
     event Claimed(address indexed claimer);
     event AirdropFunded(address contractAddress);
 

@@ -7,7 +7,7 @@ export function ExistingERC20DropCampaignShouldSetMerkleRoot(): void {
     it("admin of contract should be able to set the merkle root", async function () {
       await expect(this.existingERC20DropCampaign.connect(this.signers.backendWallet).setMerkleRoot(bytes32MerkleRootHash, 20))
         .to.emit(this.existingERC20DropCampaign, "MerkleRootSet")
-        .withArgs(bytes32MerkleRootHash, 20);
+        .withArgs(bytes32MerkleRootHash);
     });
 
     it("should revert merkleRoot change from non admin account", async function () {

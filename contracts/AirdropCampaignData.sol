@@ -27,9 +27,9 @@ contract AirdropCampaignData {
     error AlreadyFinalized();
 
     event AdminChanged(address adminAddress);
+    event FinalizedAirdrop(address indexed airdropCampaignAddress);
     event MerkleRootHashAdded(address indexed airdropCampaignAddress, bytes32 indexed merkleRootHash);
     event ChainAdded(address indexed airdropCampaignAddress, Chains indexed airdropChain);
-    event FinalizedAirdrop(address indexed airdropCampaignAddress);
 
     modifier onlyAdmin() {
         if (msg.sender != admin) revert NotAdmin();
@@ -117,7 +117,7 @@ contract AirdropCampaignData {
 
     /// @notice Disabiling the ability to push hashes to the hashArray of a specific campaign
     /// @param _airdropCampaignAddress - address of airdropCampaign contract
-    function finalizeAirdrop(address _airdropCampaignAddress) public onlyAdmin {
+    function finalizeAirdrop(address _airdropCampaignAddress) external onlyAdmin {
         if (airdrops[_airdropCampaignAddress].airdropFinished) revert AlreadyFinalized();
         if (airdrops[_airdropCampaignAddress].chain == Chains.Zero) revert ChainDataNotSet();
 

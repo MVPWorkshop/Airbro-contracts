@@ -21,8 +21,6 @@ contract ExistingERC20DropCampaign is CampaignAidropsShared {
 
     address internal airdropFunder;
 
-    event MerkleRootSet(bytes32 merkleRoot, uint256 _numberOfClaimers);
-
     error AlreadyFunded();
     error AirdropStillActive();
     error AirdropExpired();
@@ -48,7 +46,7 @@ contract ExistingERC20DropCampaign is CampaignAidropsShared {
         numberOfClaimers = _numberOfClaimers;
         tokensPerClaim = tokenSupply / _numberOfClaimers;
 
-        emit MerkleRootSet(_merkleRoot, _numberOfClaimers);
+        emit MerkleRootSet(_merkleRoot);
     }
 
     /// @notice Allows a wallet to provide funds for the airdrop reward
