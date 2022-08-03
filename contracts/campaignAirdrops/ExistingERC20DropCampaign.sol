@@ -45,8 +45,6 @@ contract ExistingERC20DropCampaign is CampaignAidropsShared {
         airdropExpirationTimestamp = block.timestamp + 60 days;
         numberOfClaimers = _numberOfClaimers;
         tokensPerClaim = tokenSupply / _numberOfClaimers;
-
-        emit MerkleRootSet(_merkleRoot);
     }
 
     /// @notice Allows a wallet to provide funds for the airdrop reward

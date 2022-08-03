@@ -26,7 +26,6 @@ contract NewERC1155DropCampaign is ERC1155, CampaignAidropsShared {
     /// @param _merkleRoot - The root hash of the Merle Tree
     function setMerkleRoot(bytes32 _merkleRoot) external onlyAdmin {
         super.setMerkleRootHandler(_merkleRoot);
-        emit MerkleRootSet(_merkleRoot);
     }
 
     /// @notice Allows the NFT holder to claim their ERC1155 airdrop

@@ -44,6 +44,8 @@ abstract contract CampaignAidropsShared is AirdropMerkleProof {
 
         merkleRootSet = true;
         merkleRoot = _merkleRoot;
+
+        emit MerkleRootSet(_merkleRoot);
     }
 
     /// @notice Performs checks and changes state associated with claiming rewards
