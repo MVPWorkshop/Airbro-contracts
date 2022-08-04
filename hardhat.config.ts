@@ -35,6 +35,11 @@ if (!infuraApiKey) {
   throw new Error("Please set your INFURA_API_KEY in a .env file");
 }
 
+const admin: string | undefined = process.env.BACKEND_WALLET_ADDRESS;
+if (admin === undefined) {
+  throw new Error("Please set your BACKEND_WALLET_ADDRESS in a .env file");
+}
+
 function getChainConfig(network: keyof typeof chainIds): NetworkUserConfig {
   const url: string = "https://" + network + ".infura.io/v3/" + infuraApiKey;
   return {
