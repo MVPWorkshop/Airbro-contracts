@@ -40,17 +40,21 @@ export function NewSB1155DropCampaignShouldGoThroughUserFlow() {
     const hexProof = merkleTree.getHexProof(leaves[0]);
 
     // alice withdrawing 1155 on basis of her address being included in the merkleRoot
-    expect(await this.newSB1155DropCampaign.connect(this.signers.alice).claim(hexProof))
+    expect(await this.newSB1155DropCampaign.connect(this.signers.alice).claim(hexProof, { value: ethers.utils.parseEther("0.02") }))
       .to.emit(this.newSB1155DropCampaign, "Claimed")
       .withArgs(this.signers.alice.address)
       .and.to.emit(this.newSB1155DropCampaign, "Attest")
       .withArgs(this.signers.alice.address);
 
     // alice trying to withdraw twice
-    await expect(this.newSB1155DropCampaign.connect(this.signers.alice).claim(hexProof)).to.be.revertedWith("AlreadyRedeemed");
+    await expect(
+      this.newSB1155DropCampaign.connect(this.signers.alice).claim(hexProof, { value: ethers.utils.parseEther("0.02") }),
+    ).to.be.revertedWith("AlreadyRedeemed");
 
     // address that is not in merkleRootHash trying to withdraw
-    await expect(this.newSB1155DropCampaign.connect(this.signers.lisa).claim(hexProof)).to.be.revertedWith("NotEligible");
+    await expect(
+      this.newSB1155DropCampaign.connect(this.signers.lisa).claim(hexProof, { value: ethers.utils.parseEther("0.02") }),
+    ).to.be.revertedWith("NotEligible");
 
     // alice attempts to transfer soulbound token to another account -> it should revert
     await expect(

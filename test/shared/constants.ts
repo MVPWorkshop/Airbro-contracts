@@ -1,7 +1,11 @@
+import { BigNumber } from "ethers";
+import { ethers, network } from "hardhat";
+
 export const contractAdminAddress: string = process.env.BACKEND_WALLET_ADDRESS as string;
 export const randomAddress: string = "0x6B175474E89094C44Da98b954EedeAC495271d0F";
 
 export const oneWeekInSeconds: number = 604800;
+export const claimFee = ethers.utils.parseEther("0.02"); // 0.02 ETH
 export const uri: string = "ipfs://bafybeict2kq6gt4ikgulypt7h7nwj4hmfi2kevrqvnx2osibfulyy5x3hu/no-time-to-explain.jpeg";
 
 // struct used in contract
