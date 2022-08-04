@@ -10,11 +10,14 @@ contract AirbroCampaignFactory {
     // index of deployed airdrop contracts
     address[] public airdrops;
     address public admin;
+    // protocol fee for claiming dropCampaign rewards
+    uint256 public claimFee = 20000000000000000; // 0.02 ETH
 
     uint256 public totalAirdropsCount;
 
     event NewAirdrop(address indexed airdropContract, address indexed airdropCreator, string airdropType);
     event AdminChanged(address indexed adminAddress);
+    event ClaimFeeChanged(uint256 indexed claimFee);
 
     error NotAdmin();
 
@@ -76,5 +79,12 @@ contract AirbroCampaignFactory {
     function changeAdmin(address _newAdmin) external onlyAdmin {
         admin = _newAdmin;
         emit AdminChanged(_newAdmin);
+    }
+
+    /// @notice Updates the protocol fee for claiming dropCampaign rewards
+    /// @param _newClaimFee - New claim fee that users will have to pay in order to claim their rewards
+    function changeFee(uint256 _newClaimFee) external onlyAdmin {
+        claimFee = _newClaimFee;
+        emit ClaimFeeChanged(_newClaimFee);
     }
 }

@@ -33,6 +33,7 @@ abstract contract CampaignAidropsShared is AirdropMerkleProof {
     error AlreadyRedeemed();
     error NotEligible();
     error MerkleRootAlreadySet();
+    error InvalidFeeAmount();
 
     /// @notice Sets merkle root and state for contract variables.
     /// Sets only the shared variables, NewERC1155DropCampaign will have additional
@@ -55,6 +56,7 @@ abstract contract CampaignAidropsShared is AirdropMerkleProof {
     function claimHandler(bytes32[] calldata _merkleProof) internal {
         if (hasClaimed[msg.sender]) revert AlreadyRedeemed();
         if (checkProof(_merkleProof, merkleRoot) == false) revert NotEligible();
+        if (msg.value != IAirBroFactory(airbroCampaignFactoryAddress).claimFee()) revert InvalidFeeAmount();
 
         hasClaimed[msg.sender] = true;
 
