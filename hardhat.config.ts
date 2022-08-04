@@ -62,6 +62,7 @@ const config: HardhatUserConfig = {
         mnemonic,
       },
       chainId: chainIds.hardhat,
+      allowUnlimitedContractSize: true, // added this to override imposed contract size limit: https://github.com/NomicFoundation/hardhat/issues/1430#issuecomment-836733339
     },
     goerli: getChainConfig("goerli"),
     kovan: getChainConfig("kovan"),
@@ -73,9 +74,9 @@ const config: HardhatUserConfig = {
         count: 10,
         initialIndex: 0,
         mnemonic,
-        path: "m/44'/60'/0'/0"
+        path: "m/44'/60'/0'/0",
       },
-      gasPrice: 40000000000 // default is 'auto' which breaks chains without the london hardfork
+      gasPrice: 40000000000, // default is 'auto' which breaks chains without the london hardfork
     },
     mumbai: {
       url: "https://polygon-mumbai.g.alchemy.com/v2/" + process.env.POLYGON_RPC_MUMBAI_ALCHEMY_API_KEY,
@@ -83,15 +84,18 @@ const config: HardhatUserConfig = {
         count: 10,
         initialIndex: 0,
         mnemonic,
-        path: "m/44'/60'/0'/0"
+        path: "m/44'/60'/0'/0",
       },
-      gasPrice: 8000000000 // default is 'auto' which breaks chains without the london hardfork
-    }
+      gasPrice: 8000000000, // default is 'auto' which breaks chains without the london hardfork
+    },
   },
   etherscan: {
     // Your API key for Etherscan
     // Obtain one at https://etherscan.io/
-    apiKey: process.env.ETHERSCAN_API_KEY
+    apiKey: {
+      mainnet: process.env.ETHERSCAN_API_KEY,
+      polygonMumbai: process.env.POLYGON_API_KEY,
+    },
   },
   paths: {
     artifacts: "./artifacts",
@@ -100,7 +104,7 @@ const config: HardhatUserConfig = {
     tests: "./test",
   },
   solidity: {
-    version: "0.8.14",
+    version: "0.8.15",
     settings: {
       metadata: {
         // Not including the metadata hash

@@ -11,8 +11,8 @@ declare module "mocha" {
     Airbro: AirbroFactory;
     loadFixture: <T>(fixture: Fixture<T>) => Promise<T>;
     signers: Signers;
-    testNftCollection: TestNftCollection,
-    testToken: TestToken
+    testNftCollection: TestNftCollection;
+    testToken: TestToken;
   }
 }
 
@@ -20,10 +20,13 @@ export interface Signers {
   deployer: Wallet;
   alice: Wallet;
   bob: Wallet;
+  jerry: Wallet;
+  lisa: Wallet;
+  peter: Wallet;
   backendWallet: SignerWithAddress;
 }
 
 export interface Mocks {
   mockAirBroFactory: MockContract;
-
+  mockAirbroCampaignFactory: MockContract;
 }
