@@ -9,7 +9,7 @@ import "./campaignAirdrops/ExistingERC20DropCampaign.sol";
 /// @title AirbroCampaignFactory - NFT/Token airdrop tool factory contract - for owners of 1155 Nfts
 contract AirbroCampaignFactory {
     // address that collects protocol fees
-    address public immutable treasury = payable(0xa120690093Dcd21a987c02eEB5f1E0B851B940a5);
+    address public immutable treasury;
     // index of deployed airdrop contracts
     address[] public airdrops;
     // address of admin address that can set dropContract merkleRootHashes
@@ -30,8 +30,9 @@ contract AirbroCampaignFactory {
         _;
     }
 
-    constructor(address _admin) {
+    constructor(address _admin, address _treasury) {
         admin = _admin;
+        treasury = payable(_treasury);
     }
 
     receive() external payable {
