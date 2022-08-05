@@ -11,7 +11,7 @@ contract AirbroCampaignFactory {
     address[] public airdrops;
     address public admin;
     // protocol fee for claiming dropCampaign rewards
-    uint256 public claimFee = 20000000000000000; // 0.02 ETH
+    uint256 public claimFee = 2 * 10e16; // 0.02 ETH
 
     uint256 public totalAirdropsCount;
 
@@ -29,6 +29,10 @@ contract AirbroCampaignFactory {
     constructor(address _admin) {
         admin = _admin;
     }
+
+    receive() external payable {}
+
+    fallback() external payable {}
 
     /// @notice Creates a new airdrop claim contract for specific NFT collection holders that will reward with existing ERC20 tokens
     /// @param rewardToken - ERC20 token's address that will be distributed as a reward

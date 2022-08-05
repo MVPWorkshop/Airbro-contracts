@@ -35,7 +35,7 @@ export function NewERC1155DropCampaignShouldClaimReward(): void {
 
       // checking if 0.02 ETH has been withdrawn from claimer account
       const balanceAfter = await this.signers.alice.getBalance();
-      // expect(balanceBefore.sub(balanceAfter)).to.be.greaterThan(claimFee);
+      expect(balanceBefore.sub(balanceAfter).gt(claimFee)).to.be.equal(true);
 
       // _tokenId variable is private and constant, but its value is 0 -> that is why constants.Zero is here
       // checking if alice is actual owner of 1 1155 NFT after claiming
