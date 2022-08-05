@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.15;
+pragma solidity ^0.8.14;
 
 /// @title AirdropCampaignData - Data contract for storing of daily merkleRootHashes of airbro Campaigns
 contract AirdropCampaignData {

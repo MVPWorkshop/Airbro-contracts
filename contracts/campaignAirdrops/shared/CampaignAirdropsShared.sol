@@ -1,9 +1,8 @@
 // SPDX-License-Identifier: UNLICENSED
+pragma solidity ^0.8.14;
 
 import "../../shared/AirdropMerkleProof.sol";
 import "../../interfaces/IAirBroFactory.sol";
-
-pragma solidity ^0.8.15;
 
 abstract contract CampaignAidropsShared is AirdropMerkleProof {
     address public immutable airbroCampaignFactoryAddress;
