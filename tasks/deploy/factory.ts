@@ -14,6 +14,7 @@ task("deploy:AirbroCampaignFactory").setAction(async function (taskArguments: Ta
 
   const accounts: Signer[] = await ethers.getSigners();
   console.log("Deployer address: " + (await accounts[0].getAddress()));
+  console.log("Constuctor args: " + BACKEND_WALLET_ADDRESS);
 
   const AirbroCampaignFactoryFactory: AirbroCampaignFactory__factory = <AirbroCampaignFactory__factory>(
     await ethers.getContractFactory("AirbroCampaignFactory")

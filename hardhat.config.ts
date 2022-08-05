@@ -109,13 +109,14 @@ const config: HardhatUserConfig = {
     tests: "./test",
   },
   solidity: {
-    version: "0.8.14",
+    version: "0.8.15",
     settings: {
-      metadata: {
+      /* Having this implemented causes an error when verifying on Polygon Mumbai */
+      /* metadata: {
         // Not including the metadata hash
         // https://github.com/paulrberg/solidity-template/issues/31
         bytecodeHash: "none",
-      },
+      }, */
       // Disable the optimizer when debugging
       // https://hardhat.org/hardhat-network/#solidity-optimizer-support
       optimizer: {
