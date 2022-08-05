@@ -2,6 +2,7 @@ import { expect } from "chai";
 import { ethers, network } from "hardhat";
 import { MerkleTree } from "merkletreejs";
 const { keccak256 } = ethers.utils;
+import { claimFee } from "../../../shared/constants";
 
 const dayInSeconds: number = 86400;
 
@@ -53,7 +54,7 @@ export function ExistingERC20DropCampaignShouldBeEligible(): void {
 
       expect(await this.existingERC20DropCampaign.connect(this.signers.alice).isEligibleForReward(aliceHexProof)).to.be.equal(true);
       // alice claiming reward
-      await this.existingERC20DropCampaign.connect(this.signers.alice).claim(aliceHexProof, { value: ethers.utils.parseEther("0.02") });
+      await this.existingERC20DropCampaign.connect(this.signers.alice).claim(aliceHexProof, { value: claimFee });
 
       // should be false since user is no longer eligible for reward
       expect(await this.existingERC20DropCampaign.connect(this.signers.alice).isEligibleForReward(aliceHexProof)).to.be.equal(false);

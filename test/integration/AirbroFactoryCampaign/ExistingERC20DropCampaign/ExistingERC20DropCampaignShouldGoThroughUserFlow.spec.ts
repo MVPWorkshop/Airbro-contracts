@@ -3,6 +3,7 @@ import { ethers, network } from "hardhat";
 import { MerkleTree } from "merkletreejs";
 const { keccak256 } = ethers.utils;
 const dayInSeconds: number = 86400;
+import { claimFee } from "../../../shared/constants";
 
 export function ExistingERC20DropCampaignShouldGoThroughUserFlow(): void {
   describe("should go through user flow", async function () {
@@ -42,9 +43,7 @@ export function ExistingERC20DropCampaignShouldGoThroughUserFlow(): void {
       expect(await ExistingERC20DropCampaignContract.connect(this.signers.bob).getAirdropAmount(aliceHexProof)).to.be.equal(0); // Bob using wrong Merkle Proof should return 0
 
       // alice claiming her tokens
-      await expect(
-        ExistingERC20DropCampaignContract.connect(this.signers.alice).claim(aliceHexProof, { value: ethers.utils.parseEther("0.02") }),
-      )
+      await expect(ExistingERC20DropCampaignContract.connect(this.signers.alice).claim(aliceHexProof, { value: claimFee }))
         .to.emit(ExistingERC20DropCampaignContract, "Claimed")
         .withArgs(this.signers.alice.address);
 
@@ -62,9 +61,9 @@ export function ExistingERC20DropCampaignShouldGoThroughUserFlow(): void {
       await network.provider.send("evm_mine");
 
       // bob trying to claim after campaign expiration date
-      await expect(
-        ExistingERC20DropCampaignContract.connect(this.signers.bob).claim(bobHexProof, { value: ethers.utils.parseEther("0.02") }),
-      ).to.be.revertedWith("AirdropExpired");
+      await expect(ExistingERC20DropCampaignContract.connect(this.signers.bob).claim(bobHexProof, { value: claimFee })).to.be.revertedWith(
+        "AirdropExpired",
+      );
 
       // deployer withdrawing funds after campaign expiration date
       expect(await this.testToken.balanceOf(this.signers.deployer.address)).to.be.equal(0);
