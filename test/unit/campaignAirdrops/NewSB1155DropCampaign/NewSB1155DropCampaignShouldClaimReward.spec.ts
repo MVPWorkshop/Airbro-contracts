@@ -23,6 +23,7 @@ export function NewSB1155DropCampaignShouldClaimReward(): void {
       const hexProof = merkleTree.getHexProof(leaves[0]);
 
       expect(await this.newSB1155DropCampaign.hasClaimed(this.signers.alice.address)).to.be.equal(false);
+      const balanceBefore = await this.signers.alice.getBalance();
 
       // alice claiming her reward
       expect(await this.newSB1155DropCampaign.connect(this.signers.alice).claim(hexProof, { value: claimFee }))
@@ -31,6 +32,10 @@ export function NewSB1155DropCampaignShouldClaimReward(): void {
 
       // checking if hasClaimed is labeled true after claim
       expect(await this.newSB1155DropCampaign.hasClaimed(this.signers.alice.address)).to.be.equal(true);
+      // checking if claimFee has been withdrawn from claimer account
+      const balanceAfter = await this.signers.alice.getBalance();
+      expect(balanceBefore.sub(balanceAfter).gt(claimFee)).to.be.equal(true);
+
       // _tokenId variable is private and constant, but its value is 0 -> that is why constants.Zero is here
       // checking if alice is actual owner of 1 1155 NFT after claiming
       expect(await this.newSB1155DropCampaign.balanceOf(this.signers.alice.address, constants.Zero)).to.be.equal(constants.One);

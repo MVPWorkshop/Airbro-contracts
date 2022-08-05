@@ -59,7 +59,15 @@ const config: HardhatUserConfig = {
   gasReporter: {
     currency: "ETH",
     enabled: process.env.REPORT_GAS ? true : false,
-    excludeContracts: ["AirBro1155NftMint", "AirbroFactory", "TestNftCollection", "TestToken", "Existing1155NftDrop", "ExistingTokenDrop"],
+    excludeContracts: [
+      "AirBro1155NftMint",
+      "AirbroFactory",
+      "TestNftCollection",
+      "TestToken",
+      "Existing1155NftDrop",
+      "ExistingTokenDrop",
+      "TokenDrop",
+    ],
     src: "./contracts",
     coinmarketcap: process.env.COINMARKETCAP_API_KEY,
   },

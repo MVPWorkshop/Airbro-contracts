@@ -1,17 +1,21 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.15;
 
+import "hardhat/console.sol";
 import "./campaignAirdrops/NewERC1155DropCampaign.sol";
 import "./campaignAirdrops/NewSB1155DropCampaign.sol";
 import "./campaignAirdrops/ExistingERC20DropCampaign.sol";
 
 /// @title AirbroCampaignFactory - NFT/Token airdrop tool factory contract - for owners of 1155 Nfts
 contract AirbroCampaignFactory {
+    // address that collects protocol fees
+    address public immutable treasury = payable(0xa120690093Dcd21a987c02eEB5f1E0B851B940a5);
     // index of deployed airdrop contracts
     address[] public airdrops;
+    // address of admin address that can set dropContract merkleRootHashes
     address public admin;
     // protocol fee for claiming dropCampaign rewards
-    uint256 public claimFee = 2 * 10e16; // 0.02 ETH
+    uint256 public claimFee = 20_000_000_000_000_000; // 0.02 ETH
 
     uint256 public totalAirdropsCount;
 
@@ -30,7 +34,9 @@ contract AirbroCampaignFactory {
         admin = _admin;
     }
 
-    receive() external payable {}
+    receive() external payable {
+        console.log("receive");
+    }
 
     fallback() external payable {}
 

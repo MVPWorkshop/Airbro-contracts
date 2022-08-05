@@ -33,7 +33,7 @@ export function NewERC1155DropCampaignShouldClaimReward(): void {
       // checking if hasClaimed is labeled true after claim
       expect(await this.newERC1155DropCampaign.hasClaimed(this.signers.alice.address)).to.be.equal(true);
 
-      // checking if 0.02 ETH has been withdrawn from claimer account
+      // checking if claimFee has been withdrawn from claimer account
       const balanceAfter = await this.signers.alice.getBalance();
       expect(balanceBefore.sub(balanceAfter).gt(claimFee)).to.be.equal(true);
 

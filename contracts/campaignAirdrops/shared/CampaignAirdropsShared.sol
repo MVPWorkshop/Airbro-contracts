@@ -7,7 +7,6 @@ pragma solidity ^0.8.15;
 
 abstract contract CampaignAidropsShared is AirdropMerkleProof {
     address public immutable airbroCampaignFactoryAddress;
-    address public fundsAddress = 0xa120690093Dcd21a987c02eEB5f1E0B851B940a5;
 
     bool public airdropFunded;
     bool public merkleRootSet;
@@ -60,11 +59,7 @@ abstract contract CampaignAidropsShared is AirdropMerkleProof {
         if (checkProof(_merkleProof, merkleRoot) == false) revert NotEligible();
         if (msg.value != IAirBroFactory(airbroCampaignFactoryAddress).claimFee()) revert InvalidFeeAmount();
 
-        // hasClaimed[msg.sender] = true;
-
-        // emit Claimed(msg.sender);
-
-        (bool sent, ) = payable(airbroCampaignFactoryAddress).call{ value: msg.value }("");
+        (bool sent, ) = IAirBroFactory(airbroCampaignFactoryAddress).treasury().call{ value: msg.value }("");
 
         if (sent) {
             hasClaimed[msg.sender] = true;
