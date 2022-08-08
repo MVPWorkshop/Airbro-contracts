@@ -21,9 +21,12 @@ contract ExistingERC20DropCampaign is CampaignAidropsShared {
 
     address internal airdropFunder;
 
+    event WithdrawUnlocked();
+
     error AlreadyFunded();
     error AirdropStillActive();
     error AirdropExpired();
+    error SomeAddressesEligible();
 
     constructor(
         address _rewardToken,
@@ -56,6 +59,14 @@ contract ExistingERC20DropCampaign is CampaignAidropsShared {
 
         rewardToken.safeTransferFrom(msg.sender, address(this), tokenSupply);
         emit AirdropFunded(address(this));
+    }
+
+    /// @notice Allows admin to enable the funder address to withdraw funds early if no addresses are eligible to claim
+    function unlockWithdraw() external onlyAdmin {
+        if (merkleRootSet) revert SomeAddressesEligible();
+
+        airdropExpirationTimestamp = block.timestamp;
+        emit WithdrawUnlocked();
     }
 
     /// @notice Allows airdrop funder to withdraw back the funds after the airdrop has finished
