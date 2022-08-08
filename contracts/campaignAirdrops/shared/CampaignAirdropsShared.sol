@@ -59,9 +59,9 @@ abstract contract CampaignAidropsShared is AirdropMerkleProof {
         if (checkProof(_merkleProof, merkleRoot) == false) revert NotEligible();
         if (msg.value != IAirBroFactory(airbroCampaignFactoryAddress).claimFee()) revert InvalidFeeAmount();
 
-        (bool sent, ) = IAirBroFactory(airbroCampaignFactoryAddress).treasury().call{ value: msg.value }("");
+        (bool success, ) = IAirBroFactory(airbroCampaignFactoryAddress).treasury().call{ value: msg.value }("");
 
-        if (sent) {
+        if (success) {
             hasClaimed[msg.sender] = true;
 
             emit Claimed(msg.sender);
