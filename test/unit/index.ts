@@ -1,7 +1,7 @@
 import { ethers, network, waffle } from "hardhat";
 import { Mocks, Signers } from "../shared/types";
 
-import { contractAdminAddress } from "../shared/constants";
+import { contractAdminAddress, registryAdminAddress } from "../shared/constants";
 
 import {
   integrationsFixture,
@@ -53,11 +53,18 @@ describe("Unit tests", function () {
     this.signers.jerry = signers[3];
     this.signers.lisa = signers[4];
     this.signers.peter = signers[5];
+    this.signers.backendWallet = await ethers.getSigner(contractAdminAddress);
+    this.signers.registryAdmin = await ethers.getSigner(registryAdminAddress);
 
-    // sending eth to the backend wallet address from the hardhat account of index 6
-    await signers[6].sendTransaction({
+    // sending eth to the backend wallet address from the hardhat account of index 4
+    await signers[5].sendTransaction({
       to: contractAdminAddress,
-      value: ethers.utils.parseEther("5000"),
+      value: ethers.utils.parseEther("2000"),
+    });
+
+    await signers[6].sendTransaction({
+      to: registryAdminAddress,
+      value: ethers.utils.parseEther("2000"),
     });
 
     await network.provider.request({
@@ -65,7 +72,10 @@ describe("Unit tests", function () {
       params: [contractAdminAddress],
     });
 
-    this.signers.backendWallet = await ethers.getSigner(contractAdminAddress);
+    await network.provider.request({
+      method: "hardhat_impersonateAccount",
+      params: [registryAdminAddress],
+    });
 
     this.loadFixture = waffle.createFixtureLoader(signers);
   });

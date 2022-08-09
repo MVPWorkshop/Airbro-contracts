@@ -7,6 +7,7 @@ import { TestNftCollection } from "../../src/types/contracts/mocks/TestNftCollec
 import { TestToken } from "../../src/types/contracts/mocks/TestToken";
 import { AirBro1155NftMint } from "../../src/types/contracts/mocks/Airbro1155NftMint.sol/AirBro1155NftMint";
 
+import { AirdropRegistry } from "../../src/types/contracts/AirdropRegistry";
 import { AirbroFactory } from "../../src/types/contracts/AirbroFactory";
 import { Existing1155NftDrop } from "../../src/types/contracts/airdrops/Existing1155NftDrop";
 import { ExistingTokenDrop } from "../../src/types/contracts/airdrops/ExistingTokenDrop";
@@ -58,6 +59,7 @@ type UnitExistingERC20DropCampaignFixtureType = {
 };
 
 type IntegrationCampaignFixtureType = {
+  airdropRegistry: AirdropRegistry;
   airbroCampaignFactory: AirbroCampaignFactory;
   newERC1155DropCampaign: NewERC1155DropCampaign;
   newERC1155DropCampaignArgs: any;
@@ -164,11 +166,19 @@ export const unitExistingERC20DropCampaignFixture: Fixture<UnitExistingERC20Drop
 export const integrationCampaignFixture: Fixture<IntegrationCampaignFixtureType> = async (signers: Wallet[]) => {
   const deployer: Wallet = signers[0];
 
+  const airdropRegistryFactory: ContractFactory = await ethers.getContractFactory(`AirdropRegistry`);
+
+  const airdropRegistry: AirdropRegistry = (await airdropRegistryFactory
+    .connect(deployer)
+    .deploy(process.env.REGISTRY_ADMIN_WALLET_ADDRESS, treasuryAddress)) as AirdropRegistry;
+
+  await airdropRegistry.deployed();
+
   const airbroCampaignFactoryFactory: ContractFactory = await ethers.getContractFactory(`AirbroCampaignFactory`);
 
   const airbroCampaignFactory: AirbroCampaignFactory = (await airbroCampaignFactoryFactory
     .connect(deployer)
-    .deploy(process.env.BACKEND_WALLET_ADDRESS, treasuryAddress)) as AirbroCampaignFactory;
+    .deploy(process.env.BACKEND_WALLET_ADDRESS, airdropRegistry.address)) as AirbroCampaignFactory;
 
   await airbroCampaignFactory.deployed();
 
@@ -209,6 +219,7 @@ export const integrationCampaignFixture: Fixture<IntegrationCampaignFixtureType>
   await existingERC20DropCampaign.deployed();
 
   return {
+    airdropRegistry,
     airbroCampaignFactory,
     newERC1155DropCampaign,
     newERC1155DropCampaignArgs,
