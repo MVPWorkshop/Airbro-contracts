@@ -7,8 +7,6 @@ contract AirdropRegistry {
     // index of deployed airdrop contracts
     address[] public airdrops;
     address public admin;
-    // protocol fee for claiming dropCampaign rewards - should it be here or on the factory level?
-    uint256 public claimFee = 2_000_000_000_000_000; // 0.002 ETH
 
     uint256 public totalAirdropsCount;
 
@@ -51,7 +49,6 @@ contract AirdropRegistry {
         emit FactoryBlacklisted(_factoryAddress);
     }
 
-    // da li ovde da saljem msg.sender i "ERC20" ili to da ostane sa factory strane?
     function addAirdrop(
         address _airdropContract,
         address _creator,
@@ -61,7 +58,7 @@ contract AirdropRegistry {
         unchecked {
             totalAirdropsCount++;
         }
-        // needs to replace: emit NewAirdrop(address(airdropContract), msg.sender, "ERC20");
+
         emit NewAirdrop(_airdropContract, _creator, _airdropType);
     }
 
