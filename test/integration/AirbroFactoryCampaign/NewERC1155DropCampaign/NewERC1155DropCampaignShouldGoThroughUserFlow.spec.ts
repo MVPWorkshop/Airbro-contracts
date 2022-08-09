@@ -1,9 +1,9 @@
 import { expect } from "chai";
-import { ethers } from "hardhat";
+import { ethers, network } from "hardhat";
 import { MerkleTree } from "merkletreejs";
 const { keccak256 } = ethers.utils;
 import { constants } from "ethers";
-import { claimFee } from "../../../shared/constants";
+import { claimFee, uri } from "../../../shared/constants";
 
 const bytes32MerkleRootHash = "0x0000000000000000000000000000000000000000000000000000000000000000";
 
@@ -25,6 +25,15 @@ export function NewERC1155DropCampaignShouldGoThroughUserFlow() {
   });
 
   it("should test newERC1155DropCampaign Contract flow", async function () {
+    await expect(this.airdropRegistry.connect(this.signers.registryAdmin).addFactory(this.airbroCampaignFactory.address))
+      .to.emit(this.airdropRegistry, "FactoryWhitelisted")
+      .withArgs(this.airbroCampaignFactory.address);
+
+    // creating the ExistingERC20DropCampaign from the factory contract
+    await this.airbroCampaignFactory.connect(this.signers.deployer).createNewERC1155DropCampaign(uri);
+    const newERC1155DropCampaignFactory = await ethers.getContractFactory("NewERC1155DropCampaign");
+    const NewERC1155DropCampaignContract = newERC1155DropCampaignFactory.attach(await this.airdropRegistry.airdrops(constants.Zero));
+
     //create merkleRootHash
     const whitelisted = [this.signers.alice.address, this.signers.bob.address, this.signers.jerry.address];
     const leaves = whitelisted.map(addr => keccak256(addr));
@@ -32,25 +41,25 @@ export function NewERC1155DropCampaignShouldGoThroughUserFlow() {
     const roothash = merkleTree.getHexRoot();
 
     //backendWallet sets new merkleRootHash upon completion of the campaign (deadline has passed)
-    expect(await this.newERC1155DropCampaign.connect(this.signers.backendWallet).setMerkleRoot(roothash))
-      .to.emit(this.newERC1155DropCampaign, "MerkleRootSet")
+    expect(await NewERC1155DropCampaignContract.connect(this.signers.backendWallet).setMerkleRoot(roothash))
+      .to.emit(this.NewERC1155DropCampaignContract, "MerkleRootSet")
       .withArgs(roothash);
 
     //create Merkle Proof for alice
     const hexProof = merkleTree.getHexProof(leaves[0]);
 
     // alice withdrawing 1155 on basis of her address being included in the merkleRoot
-    expect(await this.newERC1155DropCampaign.connect(this.signers.alice).claim(hexProof, { value: claimFee }))
-      .to.emit(this.newERC1155DropCampaign, "Claimed")
+    expect(await NewERC1155DropCampaignContract.connect(this.signers.alice).claim(hexProof, { value: claimFee }))
+      .to.emit(NewERC1155DropCampaignContract, "Claimed")
       .withArgs(this.signers.alice.address);
 
     // alice trying to withdraw twice
-    await expect(this.newERC1155DropCampaign.connect(this.signers.alice).claim(hexProof, { value: claimFee })).to.be.revertedWith(
+    await expect(NewERC1155DropCampaignContract.connect(this.signers.alice).claim(hexProof, { value: claimFee })).to.be.revertedWith(
       "AlreadyRedeemed",
     );
 
     // address that is not in merkleRootHash trying to withdraw
-    await expect(this.newERC1155DropCampaign.connect(this.signers.lisa).claim(hexProof, { value: claimFee })).to.be.revertedWith(
+    await expect(NewERC1155DropCampaignContract.connect(this.signers.lisa).claim(hexProof, { value: claimFee })).to.be.revertedWith(
       "NotEligible",
     );
   });
