@@ -10,15 +10,10 @@ import "./interfaces/IAirdropRegistry.sol";
 contract AirbroCampaignFactory {
     IAirdropRegistry public immutable airdropRegistryAddress;
     address public immutable treasury;
-    // index of deployed airdrop contracts
-    // address[] public airdrops;
     address public admin;
     // protocol fee for claiming dropCampaign rewards
     uint256 public claimFee = 2_000_000_000_000_000; // 0.002 ETH
 
-    // uint256 public totalAirdropsCount;
-
-    // event NewAirdrop(address indexed airdropContract, address indexed airdropCreator, string airdropType);
     event AdminChanged(address indexed adminAddress);
     event ClaimFeeChanged(uint256 indexed claimFee);
 
