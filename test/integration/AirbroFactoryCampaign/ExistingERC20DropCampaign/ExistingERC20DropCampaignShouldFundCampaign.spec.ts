@@ -1,5 +1,6 @@
 import { expect } from "chai";
 import { ethers } from "hardhat";
+import { constants } from "ethers";
 
 export function ExistingERC20DropCampaignShouldFundCampaign(): void {
   describe("should fund campaign", async function () {
@@ -35,6 +36,35 @@ export function ExistingERC20DropCampaignShouldFundCampaign(): void {
 
       //   trying to fund 2nd time, should revert
       await expect(this.existingERC20DropCampaign.fundAirdrop()).to.be.revertedWith("AlreadyFunded");
+    });
+
+    it("should unlock withdraw of funds early", async function () {
+      const tokenSupply: number = this.existingERC20DropCampaignArgs.tokenSupply; // 100
+
+      //   minting and  approving the tokens for spend
+      await this.testToken.mint(this.signers.alice.address, tokenSupply);
+      await this.testToken.connect(this.signers.alice).approve(this.existingERC20DropCampaign.address, tokenSupply);
+
+      // not sure how to mock funding the contract
+      await expect(this.existingERC20DropCampaign.connect(this.signers.alice).fundAirdrop()).to.emit(
+        this.existingERC20DropCampaign,
+        "AirdropFunded",
+      );
+
+      await expect(this.existingERC20DropCampaign.connect(this.signers.backendWallet).unlockWithdraw()).to.emit(
+        this.existingERC20DropCampaign,
+        "WithdrawUnlocked",
+      );
+
+      expect(await this.testToken.balanceOf(this.signers.alice.address)).to.be.equal(constants.Zero);
+
+      expect(await this.existingERC20DropCampaign.connect(this.signers.alice).withdrawAirdropFunds()).to.emit(
+        this.existingERC20DropCampaign,
+        "FundsWithdrawn",
+      );
+
+      // checking if funds were returned to airdrop funder
+      expect(await this.testToken.balanceOf(this.signers.alice.address)).to.be.equal(tokenSupply);
     });
   });
 }

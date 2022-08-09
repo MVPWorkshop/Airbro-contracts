@@ -7,14 +7,18 @@ import "./campaignAirdrops/ExistingERC20DropCampaign.sol";
 
 /// @title AirbroCampaignFactory - NFT/Token airdrop tool factory contract - for owners of 1155 Nfts
 contract AirbroCampaignFactory {
+    address public immutable treasury;
     // index of deployed airdrop contracts
     address[] public airdrops;
     address public admin;
+    // protocol fee for claiming dropCampaign rewards
+    uint256 public claimFee = 2_000_000_000_000_000; // 0.002 ETH
 
     uint256 public totalAirdropsCount;
 
     event NewAirdrop(address indexed airdropContract, address indexed airdropCreator, string airdropType);
     event AdminChanged(address indexed adminAddress);
+    event ClaimFeeChanged(uint256 indexed claimFee);
 
     error NotAdmin();
 
@@ -23,9 +27,14 @@ contract AirbroCampaignFactory {
         _;
     }
 
-    constructor(address _admin) {
+    constructor(address _admin, address _treasury) {
         admin = _admin;
+        treasury = payable(_treasury);
     }
+
+    receive() external payable {}
+
+    fallback() external payable {}
 
     /// @notice Creates a new airdrop claim contract for specific NFT collection holders that will reward with existing ERC20 tokens
     /// @param rewardToken - ERC20 token's address that will be distributed as a reward
@@ -76,5 +85,12 @@ contract AirbroCampaignFactory {
     function changeAdmin(address _newAdmin) external onlyAdmin {
         admin = _newAdmin;
         emit AdminChanged(_newAdmin);
+    }
+
+    /// @notice Updates the protocol fee for claiming dropCampaign rewards
+    /// @param _newClaimFee - New claim fee that users will have to pay in order to claim their rewards
+    function changeFee(uint256 _newClaimFee) external onlyAdmin {
+        claimFee = _newClaimFee;
+        emit ClaimFeeChanged(_newClaimFee);
     }
 }

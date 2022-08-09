@@ -5,7 +5,7 @@ import "../../shared/AirdropMerkleProof.sol";
 import "../../interfaces/IAirBroFactory.sol";
 
 abstract contract CampaignAidropsShared is AirdropMerkleProof {
-    address public immutable airbroCampaignFactoryAddress;
+    IAirBroFactory public immutable airbroCampaignFactoryAddress;
 
     bool public airdropFunded;
     bool public merkleRootSet;
@@ -16,12 +16,12 @@ abstract contract CampaignAidropsShared is AirdropMerkleProof {
     mapping(address => bool) public hasClaimed;
 
     modifier onlyAdmin() {
-        if (msg.sender != IAirBroFactory(airbroCampaignFactoryAddress).admin()) revert Unauthorized();
+        if (msg.sender != airbroCampaignFactoryAddress.admin()) revert Unauthorized();
         _;
     }
 
     constructor(address _campaignFactoryAddress) {
-        airbroCampaignFactoryAddress = _campaignFactoryAddress;
+        airbroCampaignFactoryAddress = IAirBroFactory(_campaignFactoryAddress);
     }
 
     event MerkleRootSet(bytes32 merkleRoot);
@@ -32,6 +32,8 @@ abstract contract CampaignAidropsShared is AirdropMerkleProof {
     error AlreadyRedeemed();
     error NotEligible();
     error MerkleRootAlreadySet();
+    error InvalidFeeAmount();
+    error FeeNotSent();
 
     /// @notice Sets merkle root and state for contract variables.
     /// Sets only the shared variables, NewERC1155DropCampaign will have additional
@@ -54,10 +56,17 @@ abstract contract CampaignAidropsShared is AirdropMerkleProof {
     function claimHandler(bytes32[] calldata _merkleProof) internal {
         if (hasClaimed[msg.sender]) revert AlreadyRedeemed();
         if (checkProof(_merkleProof, merkleRoot) == false) revert NotEligible();
+        if (msg.value != airbroCampaignFactoryAddress.claimFee()) revert InvalidFeeAmount();
 
-        hasClaimed[msg.sender] = true;
+        (bool success, ) = airbroCampaignFactoryAddress.treasury().call{ value: msg.value }("");
 
-        emit Claimed(msg.sender);
+        if (success) {
+            hasClaimed[msg.sender] = true;
+
+            emit Claimed(msg.sender);
+        } else {
+            revert FeeNotSent();
+        }
     }
 
     /// @notice Checks if the user is eligible for this airdrop

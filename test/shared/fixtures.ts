@@ -26,6 +26,7 @@ import {
   unitNewERC1155DropCampaignArguments,
   unitNewSB1155DropCampaignArguments,
   UnitExistingERC20DropCampaignArgs,
+  treasuryAddress,
 } from "./constants";
 import {
   deployMockAirBroFactory,
@@ -167,7 +168,7 @@ export const integrationCampaignFixture: Fixture<IntegrationCampaignFixtureType>
 
   const airbroCampaignFactory: AirbroCampaignFactory = (await airbroCampaignFactoryFactory
     .connect(deployer)
-    .deploy(process.env.BACKEND_WALLET_ADDRESS)) as AirbroCampaignFactory;
+    .deploy(process.env.BACKEND_WALLET_ADDRESS, treasuryAddress)) as AirbroCampaignFactory;
 
   await airbroCampaignFactory.deployed();
 

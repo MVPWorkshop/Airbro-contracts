@@ -3,6 +3,7 @@ import "@typechain/hardhat";
 import "hardhat-gas-reporter";
 import "solidity-coverage";
 import "@nomiclabs/hardhat-etherscan";
+import "hardhat-gas-reporter";
 
 import "./tasks/accounts";
 import "./tasks/deploy";
@@ -56,10 +57,19 @@ function getChainConfig(network: keyof typeof chainIds): NetworkUserConfig {
 const config: HardhatUserConfig = {
   defaultNetwork: "hardhat",
   gasReporter: {
-    currency: "USD",
+    currency: "ETH",
     enabled: process.env.REPORT_GAS ? true : false,
-    excludeContracts: [],
+    excludeContracts: [
+      "AirBro1155NftMint",
+      "AirbroFactory",
+      "TestNftCollection",
+      "TestToken",
+      "Existing1155NftDrop",
+      "ExistingTokenDrop",
+      "TokenDrop",
+    ],
     src: "./contracts",
+    coinmarketcap: process.env.COINMARKETCAP_API_KEY,
   },
   networks: {
     hardhat: {

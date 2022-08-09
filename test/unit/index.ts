@@ -32,6 +32,7 @@ import { NewSB1155DropCampaignShouldClaimReward } from "./campaignAirdrops/NewSB
 import { ExistingERC20DropCampaignShouldDeploy } from "./campaignAirdrops/ExistingERC20DropCampaign/ExistingERC20DropCampaignShouldDeploy.spec";
 import { ExistingERC20DropCampaignShouldSetMerkleRoot } from "./campaignAirdrops/ExistingERC20DropCampaign/ExistingERC20DropCampaignShouldSetMerkleRoot.spec";
 import { ExistingERC20DropCampaignShouldClaimReward } from "./campaignAirdrops/ExistingERC20DropCampaign/ExistingERC20DropCampaignShouldClaimReward.spec";
+import { ExistingERC20DropCampaignShouldUnlockWithdraw } from "./campaignAirdrops/ExistingERC20DropCampaign/ExistingERC20DropCampaignShouldUnlockWithdraw.spec";
 
 import { AirdropCampaignDataShouldBeDeployed } from "./AirdropCampaignData/AirdropCampaignDataShouldBeDeployed.spec";
 import { AirdropCampaignDataShouldChangeAdmin } from "./AirdropCampaignData/AirdropCampaignDataShouldChangeAdmin.spec";
@@ -218,6 +219,7 @@ describe("Unit tests", function () {
       ExistingERC20DropCampaignShouldDeploy();
       ExistingERC20DropCampaignShouldSetMerkleRoot();
       ExistingERC20DropCampaignShouldClaimReward();
+      ExistingERC20DropCampaignShouldUnlockWithdraw();
     });
   });
 });

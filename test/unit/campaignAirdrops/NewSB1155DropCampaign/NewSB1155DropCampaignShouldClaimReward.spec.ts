@@ -3,7 +3,7 @@ import { ethers, network } from "hardhat";
 import { MerkleTree } from "merkletreejs";
 const { keccak256 } = ethers.utils;
 import { constants } from "ethers";
-import { oneWeekInSeconds } from "../../../shared/constants";
+import { claimFee } from "../../../shared/constants";
 
 export function NewSB1155DropCampaignShouldClaimReward(): void {
   describe("user should be able to claim reward", async function () {
@@ -23,14 +23,19 @@ export function NewSB1155DropCampaignShouldClaimReward(): void {
       const hexProof = merkleTree.getHexProof(leaves[0]);
 
       expect(await this.newSB1155DropCampaign.hasClaimed(this.signers.alice.address)).to.be.equal(false);
+      const balanceBefore = await this.signers.alice.getBalance();
 
       // alice claiming her reward
-      expect(await this.newSB1155DropCampaign.connect(this.signers.alice).claim(hexProof))
+      expect(await this.newSB1155DropCampaign.connect(this.signers.alice).claim(hexProof, { value: claimFee }))
         .to.emit(this.newSB1155DropCampaign, "Claimed")
         .withArgs(this.signers.alice.address);
 
       // checking if hasClaimed is labeled true after claim
       expect(await this.newSB1155DropCampaign.hasClaimed(this.signers.alice.address)).to.be.equal(true);
+      // checking if claimFee has been withdrawn from claimer account
+      const balanceAfter = await this.signers.alice.getBalance();
+      expect(balanceBefore.sub(balanceAfter).gt(claimFee)).to.be.equal(true);
+
       // _tokenId variable is private and constant, but its value is 0 -> that is why constants.Zero is here
       // checking if alice is actual owner of 1 1155 NFT after claiming
       expect(await this.newSB1155DropCampaign.balanceOf(this.signers.alice.address, constants.Zero)).to.be.equal(constants.One);
@@ -48,7 +53,9 @@ export function NewSB1155DropCampaignShouldClaimReward(): void {
 
       const hexProof = merkleTree.getHexProof(leaves[0]);
 
-      await expect(this.newSB1155DropCampaign.connect(this.signers.peter).claim(hexProof)).to.be.revertedWith(`NotEligible`);
+      await expect(this.newSB1155DropCampaign.connect(this.signers.peter).claim(hexProof, { value: claimFee })).to.be.revertedWith(
+        `NotEligible`,
+      );
     });
 
     it("should revert claim if already redeemed", async function () {
@@ -67,11 +74,13 @@ export function NewSB1155DropCampaignShouldClaimReward(): void {
       const hexProof = merkleTree.getHexProof(leaves[0]);
 
       // alice claiming her reward
-      expect(await this.newSB1155DropCampaign.connect(this.signers.alice).claim(hexProof))
+      expect(await this.newSB1155DropCampaign.connect(this.signers.alice).claim(hexProof, { value: claimFee }))
         .to.emit(this.newSB1155DropCampaign, "Claimed")
         .withArgs(this.signers.alice.address);
 
-      await expect(this.newSB1155DropCampaign.connect(this.signers.alice).claim(hexProof)).to.be.revertedWith(`AlreadyRedeemed`);
+      await expect(this.newSB1155DropCampaign.connect(this.signers.alice).claim(hexProof, { value: claimFee })).to.be.revertedWith(
+        `AlreadyRedeemed`,
+      );
     });
 
     it("function isEligibleForReward() should return true if eligible for reward", async function () {
@@ -104,7 +113,7 @@ export function NewSB1155DropCampaignShouldClaimReward(): void {
       const hexProof = merkleTree.getHexProof(leaves[0]);
 
       // alice claiming her reward
-      expect(await this.newSB1155DropCampaign.connect(this.signers.alice).claim(hexProof))
+      expect(await this.newSB1155DropCampaign.connect(this.signers.alice).claim(hexProof, { value: claimFee }))
         .to.emit(this.newSB1155DropCampaign, "Claimed")
         .withArgs(this.signers.alice.address);
 
@@ -130,7 +139,7 @@ export function NewSB1155DropCampaignShouldClaimReward(): void {
       expect(await this.newSB1155DropCampaign.connect(this.signers.alice).getAirdropAmount(hexProof)).to.be.equal(1);
 
       // alice claiming her reward
-      await this.newSB1155DropCampaign.connect(this.signers.alice).claim(hexProof);
+      await this.newSB1155DropCampaign.connect(this.signers.alice).claim(hexProof, { value: claimFee });
 
       // alice checking if she is eligible, now she isn't
       expect(await this.newSB1155DropCampaign.connect(this.signers.alice).isEligibleForReward(hexProof)).to.be.equal(false);

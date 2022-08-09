@@ -11,6 +11,7 @@ import { integrationsFixture } from "../shared/fixtures";
 
 import { AirbroCampaignFactoryShouldBehaveLikeFactory } from "./AirbroFactoryCampaign/AirbroCampaignFactoryShouldBehaveLikeFactory.spec";
 import { AirbroCampaignFactoryShouldChangeAdminInAllAirDrops } from "./AirbroFactoryCampaign/AirbroCampaignFactoryShouldChangeAdmin.spec";
+import { AirbroCampaignFactoryShouldChangeProtocolFeeInAllAirDrops } from "./AirbroFactoryCampaign/AirbroCampaignFactoryShouldChangeProtocolFee.spec";
 import { integrationCampaignFixture } from "../shared/fixtures";
 
 import { NewERC1155DropCampaignShouldGoThroughUserFlow } from "./AirbroFactoryCampaign/NewERC1155DropCampaign/NewERC1155DropCampaignShouldGoThroughUserFlow.spec";
@@ -95,6 +96,7 @@ describe("Integration tests", function () {
     describe("AirbroCampaignFactory", () => {
       AirbroCampaignFactoryShouldBehaveLikeFactory();
       AirbroCampaignFactoryShouldChangeAdminInAllAirDrops();
+      AirbroCampaignFactoryShouldChangeProtocolFeeInAllAirDrops();
     });
 
     describe("ExistingERC20DropCampaign", () => {

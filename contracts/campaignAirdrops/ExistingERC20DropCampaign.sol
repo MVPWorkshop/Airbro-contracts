@@ -21,9 +21,13 @@ contract ExistingERC20DropCampaign is CampaignAidropsShared {
 
     address internal airdropFunder;
 
+    event WithdrawUnlocked();
+    event FundsWithdrawn();
+
     error AlreadyFunded();
     error AirdropStillActive();
     error AirdropExpired();
+    error MerkleRootHashSet();
 
     constructor(
         address _rewardToken,
@@ -58,18 +62,27 @@ contract ExistingERC20DropCampaign is CampaignAidropsShared {
         emit AirdropFunded(address(this));
     }
 
+    /// @notice Allows admin to enable the funder address to withdraw funds early if no addresses are eligible to claim
+    function unlockWithdraw() external onlyAdmin {
+        if (merkleRootSet) revert MerkleRootHashSet();
+
+        airdropExpirationTimestamp = block.timestamp;
+        emit WithdrawUnlocked();
+    }
+
     /// @notice Allows airdrop funder to withdraw back the funds after the airdrop has finished
     function withdrawAirdropFunds() external {
         if (airdropFunder != msg.sender) revert Unauthorized();
         if (block.timestamp <= airdropExpirationTimestamp) revert AirdropStillActive();
 
         rewardToken.safeTransfer(msg.sender, rewardToken.balanceOf(address(this)));
+        emit FundsWithdrawn();
     }
 
     /// @notice Allows eligible users to claim their ERC20 airdrop
     /// @dev Implements a handler method from the parent contract for performing checks and changing state
     /// @param _merkleProof is the merkle proof that this user is eligible for claiming the ERC20 airdrop
-    function claim(bytes32[] calldata _merkleProof) external virtual {
+    function claim(bytes32[] calldata _merkleProof) external payable virtual {
         if (block.timestamp > airdropExpirationTimestamp) revert AirdropExpired();
         super.claimHandler(_merkleProof);
         rewardToken.safeTransfer(msg.sender, tokensPerClaim);

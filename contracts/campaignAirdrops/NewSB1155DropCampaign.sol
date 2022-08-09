@@ -37,7 +37,7 @@ contract NewSB1155DropCampaign is ERC1155, CampaignAidropsShared {
     /// @notice Allows the NFT holder to claim their ERC1155 airdrop
     /// @dev Implements a handler method from the parent contract for performing checks and changing state
     /// @param _merkleProof is the merkleRoot proof that this user is eligible for claiming reward
-    function claim(bytes32[] calldata _merkleProof) public virtual {
+    function claim(bytes32[] calldata _merkleProof) public payable virtual {
         super.claimHandler(_merkleProof);
 
         _mint(msg.sender, _tokenId, _tokenAmount, "0x0");
