@@ -7,7 +7,7 @@ import { AirbroCampaignFactory__factory } from "../../src/types/factories/contra
 import { Signer } from "@ethersproject/abstract-signer";
 import { isAddress } from "ethers/lib/utils";
 
-task("deploy:AirbroFactory").setAction(async function (taskArguments: TaskArguments, { ethers }) {
+task("deploy:AirbroCampaignFactory").setAction(async function (taskArguments: TaskArguments, { ethers }) {
   const BACKEND_WALLET_ADDRESS: string | undefined = process.env.BACKEND_WALLET_ADDRESS;
   if (BACKEND_WALLET_ADDRESS === undefined || BACKEND_WALLET_ADDRESS === "") {
     throw new Error("Please define the BACKEND_WALLET_ADDRESS in your .env file.");
@@ -19,6 +19,7 @@ task("deploy:AirbroFactory").setAction(async function (taskArguments: TaskArgume
 
   const accounts: Signer[] = await ethers.getSigners();
   console.log("Deployer address: " + (await accounts[0].getAddress()));
+  console.log("Constuctor args: " + BACKEND_WALLET_ADDRESS);
 
   const AirbroCampaignFactoryFactory: AirbroCampaignFactory__factory = <AirbroCampaignFactory__factory>(
     await ethers.getContractFactory("AirbroCampaignFactory")
