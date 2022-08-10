@@ -21,6 +21,8 @@ import { TokenDropShouldDeploy } from "./airdrops/TokenDrop/TokenDropShouldBeDep
 import { ExistingTokenDropShouldDeploy } from "./airdrops/ExistingTokenDrop/ExistingTokenDropShouldBeDeployed.spec";
 import { Existing1155NftDropShouldDeploy } from "./airdrops/Existing1155NftDrop/Existing1155NftDropShouldBeDeployed.spec";
 
+import { AirdropRegistryShouldChangeAdmin } from "./AirdropRegistry/AirdropRegistryShouldChangeAdmin.spec";
+
 import { NewERC1155DropCampaignShouldDeploy } from "./campaignAirdrops/NewERC1155DropCampaign/NewERC1155DropCampaignShouldDeploy.spec";
 import { NewERC1155DropCampaignShouldSetMerkleRoot } from "./campaignAirdrops/NewERC1155DropCampaign/NewERC1155DropCampaignShouldSetMerkleRoot.spec";
 import { NewERC1155DropCampaignShouldClaimReward } from "./campaignAirdrops/NewERC1155DropCampaign/NewERC1155DropCampaignShouldClaimReward.spec";
@@ -169,6 +171,16 @@ describe("Unit tests", function () {
 
       // AirbroFactorySMCampaignShouldBeCorrectAdmin(); // refactor
       // AirbroFactorySMCampaignShouldChangeAdminAddress(); // refactor
+    });
+
+    describe("AirdropRegistry", () => {
+      beforeEach(async function () {
+        const { airdropRegistry } = await this.loadFixture(integrationCampaignFixture);
+
+        this.airdropRegistry = airdropRegistry;
+      });
+
+      AirdropRegistryShouldChangeAdmin();
     });
 
     describe("NewERC1155DropCampaign", () => {
