@@ -45,7 +45,7 @@ export function ExistingERC20DropCampaignShouldFundCampaign(): void {
       await this.testToken.mint(this.signers.alice.address, tokenSupply);
       await this.testToken.connect(this.signers.alice).approve(this.existingERC20DropCampaign.address, tokenSupply);
 
-      // not sure how to mock funding the contract
+      // funding the contract
       await expect(this.existingERC20DropCampaign.connect(this.signers.alice).fundAirdrop()).to.emit(
         this.existingERC20DropCampaign,
         "AirdropFunded",

@@ -162,17 +162,6 @@ describe("Unit tests", function () {
   });
 
   describe("Airbro Campaigns", function () {
-    describe("AirbroCampaignFactory", () => {
-      beforeEach(async function () {
-        const { airbroCampaignFactory } = await this.loadFixture(integrationCampaignFixture);
-
-        this.airbroCampaignFactory = airbroCampaignFactory;
-      });
-
-      // AirbroFactorySMCampaignShouldBeCorrectAdmin(); // refactor
-      // AirbroFactorySMCampaignShouldChangeAdminAddress(); // refactor
-    });
-
     describe("AirdropRegistry", () => {
       beforeEach(async function () {
         const { airdropRegistry } = await this.loadFixture(integrationCampaignFixture);
