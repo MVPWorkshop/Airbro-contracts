@@ -1,5 +1,5 @@
 import { ethers, waffle, network } from "hardhat";
-import { contractAdminAddress } from "../shared/constants";
+import { contractAdminAddress, registryAdminAddress } from "../shared/constants";
 
 import { Signers } from "../shared/types";
 
@@ -34,16 +34,27 @@ describe("Integration tests", function () {
     this.signers.jerry = signers[3];
     this.signers.lisa = signers[4];
     this.signers.backendWallet = await ethers.getSigner(contractAdminAddress);
+    this.signers.registryAdmin = await ethers.getSigner(registryAdminAddress);
 
     // sending eth to the backend wallet address from the hardhat account of index 4
     await signers[5].sendTransaction({
       to: contractAdminAddress,
-      value: ethers.utils.parseEther("5000"),
+      value: ethers.utils.parseEther("2000"),
+    });
+
+    await signers[6].sendTransaction({
+      to: registryAdminAddress,
+      value: ethers.utils.parseEther("2000"),
     });
 
     await network.provider.request({
       method: "hardhat_impersonateAccount",
       params: [contractAdminAddress],
+    });
+
+    await network.provider.request({
+      method: "hardhat_impersonateAccount",
+      params: [registryAdminAddress],
     });
 
     this.loadFixture = waffle.createFixtureLoader(signers);
@@ -67,6 +78,7 @@ describe("Integration tests", function () {
   describe("Airbro Campaigns", () => {
     beforeEach(async function () {
       const {
+        airdropRegistry,
         airbroCampaignFactory,
         newERC1155DropCampaign,
         newERC1155DropCampaignArgs,
@@ -76,6 +88,8 @@ describe("Integration tests", function () {
         existingERC20DropCampaignArgs,
         testToken,
       } = await this.loadFixture(integrationCampaignFixture);
+
+      this.airdropRegistry = airdropRegistry;
 
       this.airbroCampaignFactory = airbroCampaignFactory;
 

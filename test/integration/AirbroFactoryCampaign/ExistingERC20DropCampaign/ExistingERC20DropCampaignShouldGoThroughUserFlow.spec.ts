@@ -4,16 +4,23 @@ import { MerkleTree } from "merkletreejs";
 const { keccak256 } = ethers.utils;
 const dayInSeconds: number = 86400;
 import { claimFee } from "../../../shared/constants";
+import { constants } from "ethers";
 
 export function ExistingERC20DropCampaignShouldGoThroughUserFlow(): void {
   describe("should go through user flow", async function () {
     it("should create and fund ExistingERC20DropCampaign, allow users to claim, and allow funder to withdraw remaining funds", async function () {
       const tokenSupply: number = this.existingERC20DropCampaignArgs.tokenSupply; // 100
 
+      await expect(this.airdropRegistry.connect(this.signers.registryAdmin).addFactory(this.airbroCampaignFactory.address))
+        .to.emit(this.airdropRegistry, "FactoryWhitelisted")
+        .withArgs(this.airbroCampaignFactory.address);
+
       // creating the ExistingERC20DropCampaign from the factory contract
-      await this.airbroCampaignFactory.connect(this.signers.deployer).createExistingERC20DropCampaign(this.testToken.address, 100);
+      await this.airbroCampaignFactory.connect(this.signers.deployer).createExistingERC20DropCampaign(this.testToken.address, tokenSupply);
       const existingERC20DropCampaignFactory = await ethers.getContractFactory("ExistingERC20DropCampaign");
-      const ExistingERC20DropCampaignContract = existingERC20DropCampaignFactory.attach(await this.airbroCampaignFactory.airdrops(0));
+      const ExistingERC20DropCampaignContract = existingERC20DropCampaignFactory.attach(
+        await this.airdropRegistry.airdrops(constants.Zero),
+      );
 
       //   deployer mints tokens, and approves them to the airdrop contract
       await this.testToken.mint(this.signers.deployer.address, tokenSupply);

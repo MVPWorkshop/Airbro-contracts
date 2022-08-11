@@ -4,32 +4,22 @@ pragma solidity ^0.8.15;
 import "./campaignAirdrops/NewERC1155DropCampaign.sol";
 import "./campaignAirdrops/NewSB1155DropCampaign.sol";
 import "./campaignAirdrops/ExistingERC20DropCampaign.sol";
+import "./interfaces/IAirdropRegistry.sol";
+import "./shared/AirdropAdmin.sol";
 
 /// @title AirbroCampaignFactory - NFT/Token airdrop tool factory contract - for owners of 1155 Nfts
-contract AirbroCampaignFactory {
+contract AirbroCampaignFactory is AirdropAdmin {
+    IAirdropRegistry public immutable airdropRegistryAddress;
     address public immutable treasury;
-    // index of deployed airdrop contracts
-    address[] public airdrops;
-    address public admin;
     // protocol fee for claiming dropCampaign rewards
     uint256 public claimFee = 2_000_000_000_000_000; // 0.002 ETH
 
-    uint256 public totalAirdropsCount;
-
-    event NewAirdrop(address indexed airdropContract, address indexed airdropCreator, string airdropType);
-    event AdminChanged(address indexed adminAddress);
     event ClaimFeeChanged(uint256 indexed claimFee);
 
-    error NotAdmin();
-
-    modifier onlyAdmin() {
-        if (msg.sender != admin) revert NotAdmin();
-        _;
-    }
-
-    constructor(address _admin, address _treasury) {
+    constructor(address _admin, address _airdropRegistryAddress) {
         admin = _admin;
-        treasury = payable(_treasury);
+        airdropRegistryAddress = IAirdropRegistry(_airdropRegistryAddress);
+        treasury = payable(airdropRegistryAddress.treasury());
     }
 
     receive() external payable {}
@@ -45,11 +35,8 @@ contract AirbroCampaignFactory {
             tokenSupply,
             address(this) // airBroFactory contract address -> used for getting back admin contract address in airdrop contracts
         );
-        airdrops.push(address(airdropContract));
-        unchecked {
-            totalAirdropsCount++;
-        }
-        emit NewAirdrop(address(airdropContract), msg.sender, "ERC20");
+
+        airdropRegistryAddress.addAirdrop(address(airdropContract), msg.sender, "ERC20");
     }
 
     /// @notice Creates a new airdrop claim contract for specific NFT collection holders that will reward participants with newly created ERC1155 NFTs
@@ -59,11 +46,8 @@ contract AirbroCampaignFactory {
             uri,
             address(this) // airBroFactory contract address -> used for getting back admin contract address in airdrop contracts
         );
-        airdrops.push(address(airdropContract));
-        unchecked {
-            totalAirdropsCount++;
-        }
-        emit NewAirdrop(address(airdropContract), msg.sender, "ERC1155");
+
+        airdropRegistryAddress.addAirdrop(address(airdropContract), msg.sender, "ERC1155");
     }
 
     /// @notice Creates a new airdrop claim contract for specific NFT collection holders that will reward participants with newly created Soulbound ERC1155 NFTs
@@ -73,18 +57,7 @@ contract AirbroCampaignFactory {
             uri,
             address(this) // airBroFactory contract address -> used for getting back admin contract address in airdrop contracts
         );
-        airdrops.push(address(airdropContract));
-        unchecked {
-            totalAirdropsCount++;
-        }
-        emit NewAirdrop(address(airdropContract), msg.sender, "SB1155");
-    }
-
-    /// @notice Updates the address of the admin variable
-    /// @param _newAdmin - New address for the admin of this contract, and the address for all newly created airdrop contracts
-    function changeAdmin(address _newAdmin) external onlyAdmin {
-        admin = _newAdmin;
-        emit AdminChanged(_newAdmin);
+        airdropRegistryAddress.addAirdrop(address(airdropContract), msg.sender, "SB1155");
     }
 
     /// @notice Updates the protocol fee for claiming dropCampaign rewards

@@ -24,6 +24,7 @@ export interface Signers {
   lisa: Wallet;
   peter: Wallet;
   backendWallet: SignerWithAddress;
+  registryAdmin: SignerWithAddress;
 }
 
 export interface Mocks {
