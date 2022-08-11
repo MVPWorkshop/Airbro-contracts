@@ -5,24 +5,16 @@ import "./campaignAirdrops/NewERC1155DropCampaign.sol";
 import "./campaignAirdrops/NewSB1155DropCampaign.sol";
 import "./campaignAirdrops/ExistingERC20DropCampaign.sol";
 import "./interfaces/IAirdropRegistry.sol";
+import "./shared/AirdropAdmin.sol";
 
 /// @title AirbroCampaignFactory - NFT/Token airdrop tool factory contract - for owners of 1155 Nfts
-contract AirbroCampaignFactory {
+contract AirbroCampaignFactory is AirdropAdmin {
     IAirdropRegistry public immutable airdropRegistryAddress;
     address public immutable treasury;
-    address public admin;
     // protocol fee for claiming dropCampaign rewards
     uint256 public claimFee = 2_000_000_000_000_000; // 0.002 ETH
 
-    event AdminChanged(address indexed adminAddress);
     event ClaimFeeChanged(uint256 indexed claimFee);
-
-    error NotAdmin();
-
-    modifier onlyAdmin() {
-        if (msg.sender != admin) revert NotAdmin();
-        _;
-    }
 
     constructor(address _admin, address _airdropRegistryAddress) {
         admin = _admin;
@@ -66,13 +58,6 @@ contract AirbroCampaignFactory {
             address(this) // airBroFactory contract address -> used for getting back admin contract address in airdrop contracts
         );
         airdropRegistryAddress.addAirdrop(address(airdropContract), msg.sender, "SB1155");
-    }
-
-    /// @notice Updates the address of the admin variable
-    /// @param _newAdmin - New address for the admin of this contract, and the address for all newly created airdrop contracts
-    function changeAdmin(address _newAdmin) external onlyAdmin {
-        admin = _newAdmin;
-        emit AdminChanged(_newAdmin);
     }
 
     /// @notice Updates the protocol fee for claiming dropCampaign rewards
