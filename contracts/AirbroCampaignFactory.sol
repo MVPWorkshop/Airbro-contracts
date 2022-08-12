@@ -69,10 +69,10 @@ contract AirbroCampaignFactory is AirdropAdmin {
         emit ClaimFeeChanged(_newClaimFee);
     }
 
-    /// @notice Updates the claim period during which campaign participants can claim dropCampaign rewards
+    /// @notice Updates the claim period
     /// @param _newClaimPeriod - New claim period in days
     function changeClaimPeriod(uint16 _newClaimPeriod) external onlyAdmin {
-        claimFee = _newClaimPeriod;
+        claimPeriodInDays = _newClaimPeriod;
         emit ClaimPeriodChanged(_newClaimPeriod);
     }
 }

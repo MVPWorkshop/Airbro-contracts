@@ -77,7 +77,7 @@ const config: HardhatUserConfig = {
         mnemonic,
       },
       chainId: chainIds.hardhat,
-      allowUnlimitedContractSize: true, // added this to override imposed contract size limit: https://github.com/NomicFoundation/hardhat/issues/1430#issuecomment-836733339
+      allowUnlimitedContractSize: false, // added this to override imposed contract size limit: https://github.com/NomicFoundation/hardhat/issues/1430#issuecomment-836733339
     },
     goerli: getChainConfig("goerli"),
     kovan: getChainConfig("kovan"),
