@@ -4,6 +4,7 @@ import "hardhat-gas-reporter";
 import "solidity-coverage";
 import "@nomiclabs/hardhat-etherscan";
 import "hardhat-gas-reporter";
+import "hardhat-contract-sizer";
 
 import "./tasks/accounts";
 import "./tasks/deploy";
@@ -70,6 +71,10 @@ const config: HardhatUserConfig = {
     ],
     src: "./contracts",
     coinmarketcap: process.env.COINMARKETCAP_API_KEY,
+  },
+  contractSizer: {
+    runOnCompile: true,
+    strict: true,
   },
   networks: {
     hardhat: {
