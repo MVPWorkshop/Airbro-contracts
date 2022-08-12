@@ -13,8 +13,10 @@ contract AirbroCampaignFactory is AirdropAdmin {
     address public immutable treasury;
     // protocol fee for claiming dropCampaign rewards
     uint256 public claimFee = 2_000_000_000_000_000; // 0.002 ETH
+    uint16 public claimPeriodInDays = 60;
 
     event ClaimFeeChanged(uint256 indexed claimFee);
+    event ClaimPeriodChanged(uint16 indexed claimPeriod);
 
     constructor(address _admin, address _airdropRegistryAddress) {
         admin = _admin;
@@ -65,5 +67,12 @@ contract AirbroCampaignFactory is AirdropAdmin {
     function changeFee(uint256 _newClaimFee) external onlyAdmin {
         claimFee = _newClaimFee;
         emit ClaimFeeChanged(_newClaimFee);
+    }
+
+    /// @notice Updates the claim period during which campaign participants can claim dropCampaign rewards
+    /// @param _newClaimPeriod - New claim period in days
+    function changeClaimPeriod(uint16 _newClaimPeriod) external onlyAdmin {
+        claimFee = _newClaimPeriod;
+        emit ClaimPeriodChanged(_newClaimPeriod);
     }
 }

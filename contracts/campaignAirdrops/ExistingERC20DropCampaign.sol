@@ -18,6 +18,7 @@ contract ExistingERC20DropCampaign is CampaignAidropsShared {
     uint256 internal numberOfClaimers;
     uint256 public tokensPerClaim;
     uint256 public airdropExpirationTimestamp;
+    uint16 public claimPeriodInDays;
 
     address internal airdropFunder;
 
@@ -36,6 +37,7 @@ contract ExistingERC20DropCampaign is CampaignAidropsShared {
     ) CampaignAidropsShared(_airbroCampaignFactoryAddress) {
         rewardToken = IERC20(_rewardToken);
         tokenSupply = _tokenSupply;
+        claimPeriodInDays = airbroCampaignFactoryAddress.claimPeriodInDays();
     }
 
     /// @notice Sets the merkleRoot and the number of claimers (also setting the amount each claimer receivers).
@@ -46,7 +48,7 @@ contract ExistingERC20DropCampaign is CampaignAidropsShared {
     function setMerkleRoot(bytes32 _merkleRoot, uint256 _numberOfClaimers) external onlyAdmin {
         super.setMerkleRootHandler(_merkleRoot);
 
-        airdropExpirationTimestamp = block.timestamp + 60 days;
+        airdropExpirationTimestamp = block.timestamp + (claimPeriodInDays * 1 days);
         numberOfClaimers = _numberOfClaimers;
         tokensPerClaim = tokenSupply / _numberOfClaimers;
     }

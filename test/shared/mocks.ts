@@ -8,7 +8,7 @@ import ERC20 from "../../artifacts/@openzeppelin/contracts/token/ERC20/ERC20.sol
 import ERC721 from "../../artifacts/@openzeppelin/contracts/token/ERC721/ERC721.sol/ERC721.json";
 import ERC1155 from "../../artifacts/@openzeppelin/contracts/token/ERC1155/ERC1155.sol/ERC1155.json";
 
-import { contractAdminAddress, claimFee, treasuryAddress } from "./constants";
+import { contractAdminAddress, claimFee, treasuryAddress, claimPeriodInDays } from "./constants";
 
 export async function deployMockAirBroFactory(deployer: Signer): Promise<MockContract> {
   const airBroFactory: MockContract = await waffle.deployMockContract(deployer, AirBroFactory.abi);
@@ -22,6 +22,7 @@ export async function deployMockAirbroCampaignFactory(deployer: Signer): Promise
   await airbroCampaignFactory.mock.admin.returns(contractAdminAddress);
   await airbroCampaignFactory.mock.claimFee.returns(claimFee);
   await airbroCampaignFactory.mock.treasury.returns(treasuryAddress);
+  await airbroCampaignFactory.mock.claimPeriodInDays.returns(claimPeriodInDays);
 
   return airbroCampaignFactory;
 }

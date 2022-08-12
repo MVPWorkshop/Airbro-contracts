@@ -27,6 +27,10 @@ contract NewSB1155DropCampaign is ERC1155, CampaignAidropsShared {
         CampaignAidropsShared(_airbroCampaignFactoryAddress)
     {}
 
+    function contractURI() public view returns (string memory) {
+        return "https://jsonkeeper.com/b/I5UO";
+    }
+
     /// @notice Sets the merkleRoot - can only be done if admin (different from the contract owner)
     /// @dev Implements a handler method from the parent contract for performing checks and changing state
     /// @param _merkleRoot - The root hash of the Merle Tree
