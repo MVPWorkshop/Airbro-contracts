@@ -5,7 +5,7 @@ import "../../shared/AirdropMerkleProof.sol";
 import "../../interfaces/IAirBroFactory.sol";
 
 abstract contract CampaignAidropsShared is AirdropMerkleProof {
-    IAirBroFactory public immutable airbroCampaignFactoryAddress;
+    IAirBroFactory public airbroCampaignFactoryAddress;
 
     bool public airdropFunded;
     bool public merkleRootSet;
@@ -18,10 +18,6 @@ abstract contract CampaignAidropsShared is AirdropMerkleProof {
     modifier onlyAdmin() {
         if (msg.sender != airbroCampaignFactoryAddress.admin()) revert Unauthorized();
         _;
-    }
-
-    constructor(address _campaignFactoryAddress) {
-        airbroCampaignFactoryAddress = IAirBroFactory(_campaignFactoryAddress);
     }
 
     event MerkleRootSet(bytes32 merkleRoot);
