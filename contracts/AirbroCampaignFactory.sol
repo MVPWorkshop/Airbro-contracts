@@ -17,16 +17,17 @@ contract AirbroCampaignFactory is AirdropAdmin {
     uint16 public claimPeriodInDays = 60;
 
     address public immutable erc20DropCampaign;
-    address public immutable erc1155Campaign;
-    address public immutable erc1155SBCampaign;
+    address public immutable erc1155DropCampaign;
+    address public immutable sb1155DropCampaign;
 
     event ClaimFeeChanged(uint256 indexed claimFee);
     event ClaimPeriodChanged(uint16 indexed claimPeriod);
 
-    constructor(address _admin, address _airdropRegistryAddress, address _erc20DropCampaign, address _erc1155Campaign, address _erc1155SBCampaign) {
-        erc20DropCampaign = _erc20DropCampaign;
-        erc1155Campaign = _erc1155Campaign;
-        erc1155SBCampaign = _erc1155SBCampaign;
+    constructor(address _admin, address _airdropRegistryAddress) {
+        erc20DropCampaign = address(new ExistingERC20DropCampaign());
+        erc1155DropCampaign = address(new NewERC1155DropCampaign());
+        sb1155DropCampaign = address(new NewSB1155DropCampaign());
+
         admin = _admin;
         airdropRegistryAddress = IAirdropRegistry(_airdropRegistryAddress);
         treasury = payable(airdropRegistryAddress.treasury());
@@ -54,7 +55,7 @@ contract AirbroCampaignFactory is AirdropAdmin {
     /// @notice Creates a new airdrop claim contract for specific NFT collection holders that will reward participants with newly created ERC1155 NFTs
     /// @param uri - ipfs link of the image uploaded by user
     function createNewERC1155DropCampaign(string memory uri) external {
-        NewERC1155DropCampaign airdropContract = NewERC1155DropCampaign(Clones.clone(erc1155Campaign));
+        NewERC1155DropCampaign airdropContract = NewERC1155DropCampaign(Clones.clone(erc1155DropCampaign));
 
         airdropContract.initialize(
             uri,
@@ -67,7 +68,7 @@ contract AirbroCampaignFactory is AirdropAdmin {
     /// @notice Creates a new airdrop claim contract for specific NFT collection holders that will reward participants with newly created Soulbound ERC1155 NFTs
     /// @param uri - ipfs link of the image uploaded by user
     function createNewSB1155DropCampaign(string memory uri) external {
-        NewSB1155DropCampaign airdropContract = NewSB1155DropCampaign(Clones.clone(erc1155SBCampaign));
+        NewSB1155DropCampaign airdropContract = NewSB1155DropCampaign(Clones.clone(sb1155DropCampaign));
 
         airdropContract.initialize(
             uri,

@@ -26,15 +26,12 @@ contract NewSB1155DropCampaign is ERC1155Upgradeable, CampaignAidropsShared {
         _disableInitializers();
     }
 
-    function initialize(
-        string memory _uri, 
-        address _airbroCampaignFactoryAddress
-    ) initializer public {
+    function initialize(string memory _uri, address _airbroCampaignFactoryAddress) public initializer {
         __ERC1155_init(_uri);
         airbroCampaignFactoryAddress = IAirBroFactory(_airbroCampaignFactoryAddress);
     }
 
-    function contractURI() public view returns (string memory) {
+    function contractURI() public pure returns (string memory) {
         return "https://jsonkeeper.com/b/I5UO";
     }
 

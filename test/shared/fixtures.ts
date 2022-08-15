@@ -35,6 +35,7 @@ import {
   deployMockBaycNft,
   deployMockDAItoken,
   deployMock1155Nft,
+  deployMockExistingERC20DropCampaign,
 } from "./mocks";
 
 // airbroCampaign fixture types
@@ -121,6 +122,8 @@ export const unitNewERC1155DropCampaignFixture: Fixture<UnitNewERC1155DropCampai
     .connect(deployer)
     .deploy(...Object.values(newERC1155DropCampaignArgs))) as NewERC1155DropCampaign;
 
+  await newERC1155DropCampaign.deployed();
+
   return { mockAirbroCampaignFactory, newERC1155DropCampaign, newERC1155DropCampaignArgs };
 };
 
@@ -147,6 +150,9 @@ export const unitExistingERC20DropCampaignFixture: Fixture<UnitExistingERC20Drop
   const mockAirbroCampaignFactory = await deployMockAirbroCampaignFactory(deployer);
   await mockAirbroCampaignFactory.deployed();
 
+  const mockExistingERC20DropCampaignFactory = await deployMockExistingERC20DropCampaign(deployer);
+  await mockExistingERC20DropCampaignFactory.deployed();
+
   const mockDAItoken = await deployMockDAItoken(deployer);
   await mockDAItoken.deployed();
 
@@ -154,13 +160,21 @@ export const unitExistingERC20DropCampaignFixture: Fixture<UnitExistingERC20Drop
 
   const ExistingERC20DropCampaignFactory: ContractFactory = await ethers.getContractFactory("ExistingERC20DropCampaign");
 
-  const ExistingERC20DropCampaign: ExistingERC20DropCampaign = (await ExistingERC20DropCampaignFactory.connect(deployer).deploy(
+  const existingERC20DropCampaign: ExistingERC20DropCampaign = (await ExistingERC20DropCampaignFactory.connect(deployer).deploy(
     ...Object.values(existingERC20DropCampaignArgs),
   )) as ExistingERC20DropCampaign;
 
-  await ExistingERC20DropCampaign.deployed();
+  await existingERC20DropCampaign.deployed();
 
-  return { mockAirbroCampaignFactory, mockDAItoken, ExistingERC20DropCampaign, existingERC20DropCampaignArgs };
+  await existingERC20DropCampaign.initialize(...Object.values(existingERC20DropCampaignArgs));
+
+  return {
+    mockAirbroCampaignFactory,
+    mockExistingERC20DropCampaignFactory,
+    mockDAItoken,
+    ExistingERC20DropCampaign,
+    existingERC20DropCampaignArgs,
+  };
 };
 
 export const integrationCampaignFixture: Fixture<IntegrationCampaignFixtureType> = async (signers: Wallet[]) => {
