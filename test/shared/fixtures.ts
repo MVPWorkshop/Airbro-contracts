@@ -1,6 +1,6 @@
 import { Fixture, MockContract } from "ethereum-waffle";
-import { ContractFactory } from "ethers";
-import { ethers } from "hardhat";
+import { constants, ContractFactory } from "ethers";
+import { ethers, network } from "hardhat";
 import { Wallet } from "@ethersproject/wallet";
 
 import { TestNftCollection } from "../../src/types/contracts/mocks/TestNftCollection";
@@ -27,7 +27,10 @@ import {
   unitNewERC1155DropCampaignArguments,
   unitNewSB1155DropCampaignArguments,
   UnitExistingERC20DropCampaignArgs,
+  UnitExistingERC20DropCampaignArgsMockFactory,
   treasuryAddress,
+  registryAdminAddress,
+  uri,
 } from "./constants";
 import {
   deployMockAirBroFactory,
@@ -36,6 +39,7 @@ import {
   deployMockDAItoken,
   deployMock1155Nft,
   deployMockExistingERC20DropCampaign,
+  deployMockAirdropRegistry,
 } from "./mocks";
 
 // airbroCampaign fixture types
@@ -55,7 +59,9 @@ type UnitNewSB1155DropCampaignFixtureType = {
 type UnitExistingERC20DropCampaignFixtureType = {
   mockAirbroCampaignFactory: MockContract;
   mockDAItoken: MockContract;
-  ExistingERC20DropCampaign: ExistingERC20DropCampaign;
+  mockAirdropRegistry: MockContract;
+  // mockExistingERC20DropCampaign: MockContract;
+  existingERC20DropCampaign: ExistingERC20DropCampaign;
   existingERC20DropCampaignArgs: any;
 };
 
@@ -63,9 +69,9 @@ type IntegrationCampaignFixtureType = {
   airdropRegistry: AirdropRegistry;
   airbroCampaignFactory: AirbroCampaignFactory;
   newERC1155DropCampaign: NewERC1155DropCampaign;
-  newERC1155DropCampaignArgs: any;
+  // newERC1155DropCampaignArgs: any;
   newSB1155DropCampaign: NewERC1155DropCampaign;
-  newSB1155DropCampaignArgs: any;
+  // newSB1155DropCampaignArgs: any;
   existingERC20DropCampaign: ExistingERC20DropCampaign;
   existingERC20DropCampaignArgs: any;
   testToken: TestToken;
@@ -147,38 +153,57 @@ export const unitNewSB1155DropCampaignFixture: Fixture<UnitNewSB1155DropCampaign
 export const unitExistingERC20DropCampaignFixture: Fixture<UnitExistingERC20DropCampaignFixtureType> = async (signers: Wallet[]) => {
   const deployer: Wallet = signers[0];
 
+  const mockAirdropRegistry = await deployMockAirdropRegistry(deployer);
+  await mockAirdropRegistry.deployed();
+
   const mockAirbroCampaignFactory = await deployMockAirbroCampaignFactory(deployer);
   await mockAirbroCampaignFactory.deployed();
 
-  const mockExistingERC20DropCampaignFactory = await deployMockExistingERC20DropCampaign(deployer);
-  await mockExistingERC20DropCampaignFactory.deployed();
+  // const mockExistingERC20DropCampaignFactory = await deployMockExistingERC20DropCampaign(deployer);
+  // await mockExistingERC20DropCampaignFactory.deployed();
 
   const mockDAItoken = await deployMockDAItoken(deployer);
   await mockDAItoken.deployed();
 
-  const existingERC20DropCampaignArgs = await UnitExistingERC20DropCampaignArgs(mockDAItoken.address, mockAirbroCampaignFactory.address);
+  // const existingERC20DropCampaignArgs = await UnitExistingERC20DropCampaignArgs(mockDAItoken.address, mockAirbroCampaignFactory.address);
+  const existingERC20DropCampaignArgs = await UnitExistingERC20DropCampaignArgsMockFactory(mockDAItoken.address);
 
-  const ExistingERC20DropCampaignFactory: ContractFactory = await ethers.getContractFactory("ExistingERC20DropCampaign");
+  // const ExistingERC20DropCampaignFactory: ContractFactory = await ethers.getContractFactory("ExistingERC20DropCampaign");
 
-  const existingERC20DropCampaign: ExistingERC20DropCampaign = (await ExistingERC20DropCampaignFactory.connect(deployer).deploy(
-    ...Object.values(existingERC20DropCampaignArgs),
-  )) as ExistingERC20DropCampaign;
+  // const existingERC20DropCampaign: ExistingERC20DropCampaign = (await ExistingERC20DropCampaignFactory.connect(deployer).deploy(
+  //   ...Object.values(existingERC20DropCampaignArgs),
+  // )) as ExistingERC20DropCampaign;
 
-  await existingERC20DropCampaign.deployed();
+  // creating the ExistingERC20DropCampaign from the factory contract
+  await mockAirbroCampaignFactory.connect(deployer).createExistingERC20DropCampaign(...Object.values(existingERC20DropCampaignArgs));
+  const existingERC20DropCampaignFactory = await ethers.getContractFactory("ExistingERC20DropCampaign");
+  const existingERC20DropCampaign = existingERC20DropCampaignFactory.attach(await mockAirdropRegistry.airdrops(constants.Zero));
 
-  await existingERC20DropCampaign.initialize(...Object.values(existingERC20DropCampaignArgs));
+  // await existingERC20DropCampaign.deployed();
 
   return {
+    mockAirdropRegistry,
     mockAirbroCampaignFactory,
-    mockExistingERC20DropCampaignFactory,
+    // mockExistingERC20DropCampaignFactory,
     mockDAItoken,
-    ExistingERC20DropCampaign,
+    existingERC20DropCampaign,
     existingERC20DropCampaignArgs,
   };
 };
 
 export const integrationCampaignFixture: Fixture<IntegrationCampaignFixtureType> = async (signers: Wallet[]) => {
   const deployer: Wallet = signers[0];
+  const registryAdmin = await ethers.getSigner(registryAdminAddress);
+
+  await signers[6].sendTransaction({
+    to: registryAdminAddress,
+    value: ethers.utils.parseEther("2000"),
+  });
+
+  await network.provider.request({
+    method: "hardhat_impersonateAccount",
+    params: [registryAdminAddress],
+  });
 
   const airdropRegistryFactory: ContractFactory = await ethers.getContractFactory(`AirdropRegistry`);
 
@@ -196,26 +221,43 @@ export const integrationCampaignFixture: Fixture<IntegrationCampaignFixtureType>
 
   await airbroCampaignFactory.deployed();
 
-  const newERC1155DropCampaignFactory: ContractFactory = await ethers.getContractFactory(`NewERC1155DropCampaign`);
+  await airdropRegistry.connect(registryAdmin).addFactory(airbroCampaignFactory.address);
 
-  const newERC1155DropCampaignArgs = await unitNewERC1155DropCampaignArguments(airbroCampaignFactory.address);
+  //
+  // const newERC1155DropCampaignFactory: ContractFactory = await ethers.getContractFactory(`NewERC1155DropCampaign`);
 
-  const newERC1155DropCampaign: NewERC1155DropCampaign = (await newERC1155DropCampaignFactory
-    .connect(deployer)
-    .deploy(...Object.values(newERC1155DropCampaignArgs))) as NewERC1155DropCampaign;
+  // const newERC1155DropCampaignArgs = await unitNewERC1155DropCampaignArguments(airbroCampaignFactory.address);
+
+  // const newERC1155DropCampaign: NewERC1155DropCampaign = (await newERC1155DropCampaignFactory
+  //   .connect(deployer)
+  //   .deploy(...Object.values(newERC1155DropCampaignArgs))) as NewERC1155DropCampaign;
+
+  // await newERC1155DropCampaign.deployed();
+  //
+  // creating the NewERC1155DropCampaign from the factory contract
+  await airbroCampaignFactory.connect(deployer).createNewERC1155DropCampaign(uri);
+  const newERC1155DropCampaignFactory = await ethers.getContractFactory("NewERC1155DropCampaign");
+  const newERC1155DropCampaign = newERC1155DropCampaignFactory.attach(await airdropRegistry.airdrops(constants.Zero));
 
   await newERC1155DropCampaign.deployed();
 
-  const newSB1155DropCampaignFactory: ContractFactory = await ethers.getContractFactory(`NewSB1155DropCampaign`);
+  // -----
+  // const newSB1155DropCampaignFactory: ContractFactory = await ethers.getContractFactory(`NewSB1155DropCampaign`);
 
-  const newSB1155DropCampaignArgs = await unitNewSB1155DropCampaignArguments(airbroCampaignFactory.address);
+  // const newSB1155DropCampaignArgs = await unitNewSB1155DropCampaignArguments(airbroCampaignFactory.address);
 
-  const newSB1155DropCampaign: NewSB1155DropCampaign = (await newSB1155DropCampaignFactory
-    .connect(deployer)
-    .deploy(...Object.values(newSB1155DropCampaignArgs))) as NewSB1155DropCampaign;
+  // const newSB1155DropCampaign: NewSB1155DropCampaign = (await newSB1155DropCampaignFactory
+  //   .connect(deployer)
+  //   .deploy(...Object.values(newSB1155DropCampaignArgs))) as NewSB1155DropCampaign;
+
+  // await newSB1155DropCampaign.deployed();
+  // creating the NewSB1155DropCampaign from the factory contract
+  await airbroCampaignFactory.connect(deployer).createNewSB1155DropCampaign(uri);
+  const newSB1155DropCampaignFactory = await ethers.getContractFactory("NewSB1155DropCampaign");
+  const newSB1155DropCampaign = newSB1155DropCampaignFactory.attach(await airdropRegistry.airdrops(constants.One));
 
   await newSB1155DropCampaign.deployed();
-
+  // -----
   const testTokenFactory: ContractFactory = await ethers.getContractFactory(`TestToken`);
 
   const testToken: TestToken = (await testTokenFactory.connect(deployer).deploy()) as TestToken;
@@ -236,9 +278,9 @@ export const integrationCampaignFixture: Fixture<IntegrationCampaignFixtureType>
     airdropRegistry,
     airbroCampaignFactory,
     newERC1155DropCampaign,
-    newERC1155DropCampaignArgs,
+    // newERC1155DropCampaignArgs,
     newSB1155DropCampaign,
-    newSB1155DropCampaignArgs,
+    // newSB1155DropCampaignArgs,
     existingERC20DropCampaign,
     existingERC20DropCampaignArgs,
     testToken,
