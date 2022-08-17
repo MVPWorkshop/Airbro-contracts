@@ -26,7 +26,7 @@ task("deploy").setAction(async function (taskArguments: TaskArguments, { ethers 
   const accounts: Signer[] = await ethers.getSigners();
   const DEPLOYER_ADDRESS = await accounts[0].getAddress();
 
-  /* ADeployment of Airdrop Registry */
+  /* Deployment of Airdrop Registry */
   console.log("| -- 1. Airdrop Registry -- |");
   console.log("Deployer address: " + DEPLOYER_ADDRESS);
   console.log("Constuctor args: " + REGISTRY_ADMIN_WALLET_ADDRESS, TREASURY_WALLET_ADDRESS);
