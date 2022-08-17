@@ -30,10 +30,6 @@ contract ExistingERC20DropCampaign is CampaignAidropsShared {
     error AirdropExpired();
     error MerkleRootHashSet();
 
-    constructor() {
-        initialized = true;
-    }
-
     function initialize(
         address _rewardToken,
         uint256 _tokenSupply,

@@ -22,9 +22,9 @@ contract NewSB1155DropCampaign is ERC1155Upgradeable, CampaignAidropsShared {
     event Attest(address indexed to);
     event Revoke(address indexed from);
 
-    constructor() {
-        _disableInitializers();
-    }
+    // constructor() {
+    //     _disableInitializers();
+    // }
 
     function initialize(string memory _uri, address _airbroCampaignFactoryAddress) public initializer {
         __ERC1155_init(_uri);
