@@ -30,4 +30,6 @@ export interface Signers {
 export interface Mocks {
   mockAirBroFactory: MockContract;
   mockAirbroCampaignFactory: MockContract;
+  // mockExistingERC20DropCampaign: MockContract;
+  mockAirdropRegistry: MockContract;
 }

@@ -26,7 +26,7 @@ task("deploy").setAction(async function (taskArguments: TaskArguments, { ethers 
   const accounts: Signer[] = await ethers.getSigners();
   const DEPLOYER_ADDRESS = await accounts[0].getAddress();
 
-  /* ADeployment of Airdrop Registry */
+  /* Deployment of Airdrop Registry */
   console.log("| -- 1. Airdrop Registry -- |");
   console.log("Deployer address: " + DEPLOYER_ADDRESS);
   console.log("Constuctor args: " + REGISTRY_ADMIN_WALLET_ADDRESS, TREASURY_WALLET_ADDRESS);
@@ -40,6 +40,25 @@ task("deploy").setAction(async function (taskArguments: TaskArguments, { ethers 
 
   console.log("Awaiting deployment confirmation...");
   await airdropRegistry.deployed();
+
+  // deploy blueprints
+  // const existingerc20blueprint = await ethers.getContractFactory("ExistingERC20DropCampaign");
+  // let tx = await existingerc20blueprint.deploy();
+  // await tx.deployed();
+  // const existingAdress = tx.address;
+  // console.log("ExistingERC20DropCampaign: ", tx.address);
+
+  // const new1155 = await ethers.getContractFactory("NewERC1155DropCampaign");
+  // tx = await new1155.deploy();
+  // await tx.deployed();
+  // const new1155address = tx.address;
+  // console.log("NewERC1155DropCampaign: ", tx.address);
+
+  // const newsb = await ethers.getContractFactory("NewSB1155DropCampaign");
+  // tx = await newsb.deploy();
+  // await tx.deployed();
+  // const sbaddress = tx.address;
+  // console.log("NewSB1155DropCampaign: ", tx.address);
 
   console.log("Airdrop Registry deployed to: ", airdropRegistry.address);
 
@@ -57,6 +76,7 @@ task("deploy").setAction(async function (taskArguments: TaskArguments, { ethers 
   const airbroCampaignFactory: AirbroCampaignFactory = <AirbroCampaignFactory>(
     await AirbroCampaignFactoryFactory.deploy(BACKEND_WALLET_ADDRESS, airdropRegistry.address)
   );
+  // , existingAdress, new1155address, sbaddress
 
   console.log("Awaiting deployment confirmation...");
   await airbroCampaignFactory.deployed();

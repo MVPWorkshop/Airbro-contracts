@@ -2,11 +2,12 @@
 pragma solidity ^0.8.15;
 
 import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC1155/ERC1155Upgradeable.sol";
 
 import "./shared/CampaignAirdropsShared.sol";
 
 /// @title Airdrops new ERC1155 tokens for airdrop recipients
-contract NewERC1155DropCampaign is ERC1155, CampaignAidropsShared {
+contract NewERC1155DropCampaign is ERC1155Upgradeable, CampaignAidropsShared {
     uint256 private constant _tokenId = 0;
     uint256 private constant _tokenAmount = 1;
     uint256 public constant tokensPerClaim = 1; // 1 reward per wallet
@@ -16,10 +17,10 @@ contract NewERC1155DropCampaign is ERC1155, CampaignAidropsShared {
 
     address internal airdropFundingHolder;
 
-    constructor(string memory uri, address _airbroCampaignFactoryAddress)
-        ERC1155(uri)
-        CampaignAidropsShared(_airbroCampaignFactoryAddress)
-    {}
+    function initialize(string memory _uri, address _airbroCampaignFactoryAddress) public initializer {
+        __ERC1155_init(_uri);
+        airbroCampaignFactoryAddress = IAirBroFactory(_airbroCampaignFactoryAddress);
+    }
 
     function contractURI() public pure returns (string memory) {
         return "https://jsonkeeper.com/b/I5UO";

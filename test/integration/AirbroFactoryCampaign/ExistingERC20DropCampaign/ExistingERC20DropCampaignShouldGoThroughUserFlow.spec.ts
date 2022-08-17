@@ -16,7 +16,9 @@ export function ExistingERC20DropCampaignShouldGoThroughUserFlow(): void {
         .withArgs(this.airbroCampaignFactory.address);
 
       // creating the ExistingERC20DropCampaign from the factory contract
-      await this.airbroCampaignFactory.connect(this.signers.deployer).createExistingERC20DropCampaign(this.testToken.address, tokenSupply);
+      await expect(
+        this.airbroCampaignFactory.connect(this.signers.deployer).createExistingERC20DropCampaign(this.testToken.address, tokenSupply),
+      ).to.emit(this.airdropRegistry, "NewAirdrop");
       const existingERC20DropCampaignFactory = await ethers.getContractFactory("ExistingERC20DropCampaign");
       const ExistingERC20DropCampaignContract = existingERC20DropCampaignFactory.attach(
         await this.airdropRegistry.airdrops(constants.Zero),

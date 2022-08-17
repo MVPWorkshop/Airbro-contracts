@@ -3,17 +3,29 @@ import { Signer } from "ethers";
 import { waffle } from "hardhat";
 import AirBroFactory from "../../artifacts/contracts/AirbroFactory.sol/AirbroFactory.json";
 import AirbroCampaignFactory from "../../artifacts/contracts/AirbroCampaignFactory.sol/AirbroCampaignFactory.json";
+import AirdropRegistry from "../../artifacts/contracts/AirdropRegistry.sol/AirdropRegistry.json";
+import ExistingERC20DropCampaign from "../../artifacts/contracts/campaignAirdrops/ExistingERC20DropCampaign.sol/ExistingERC20DropCampaign.json";
 
 import ERC20 from "../../artifacts/@openzeppelin/contracts/token/ERC20/ERC20.sol/ERC20.json";
 import ERC721 from "../../artifacts/@openzeppelin/contracts/token/ERC721/ERC721.sol/ERC721.json";
 import ERC1155 from "../../artifacts/@openzeppelin/contracts/token/ERC1155/ERC1155.sol/ERC1155.json";
 
-import { contractAdminAddress, claimFee, treasuryAddress, claimPeriodInDays } from "./constants";
+import { contractAdminAddress, claimFee, treasuryAddress, claimPeriodInDays, registryAdminAddress } from "./constants";
 
 export async function deployMockAirBroFactory(deployer: Signer): Promise<MockContract> {
   const airBroFactory: MockContract = await waffle.deployMockContract(deployer, AirBroFactory.abi);
 
   return airBroFactory;
+}
+
+export async function deployMockAirdropRegistry(deployer: Signer): Promise<MockContract> {
+  const airdropRegistry: MockContract = await waffle.deployMockContract(deployer, AirdropRegistry.abi);
+
+  airdropRegistry.mock.admin.returns(registryAdminAddress);
+  airdropRegistry.mock.treasury.returns(treasuryAddress);
+  airdropRegistry.mock.factories.returns(true);
+
+  return airdropRegistry;
 }
 
 export async function deployMockAirbroCampaignFactory(deployer: Signer): Promise<MockContract> {
@@ -25,6 +37,14 @@ export async function deployMockAirbroCampaignFactory(deployer: Signer): Promise
   await airbroCampaignFactory.mock.claimPeriodInDays.returns(claimPeriodInDays);
 
   return airbroCampaignFactory;
+}
+
+export async function deployMockExistingERC20DropCampaign(deployer: Signer): Promise<MockContract> {
+  const existingERC20DropCampaign: MockContract = await waffle.deployMockContract(deployer, ExistingERC20DropCampaign.abi);
+
+  await existingERC20DropCampaign.mock.initialized.returns(false);
+
+  return existingERC20DropCampaign;
 }
 
 export async function deployMockDAItoken(deployer: Signer): Promise<MockContract> {

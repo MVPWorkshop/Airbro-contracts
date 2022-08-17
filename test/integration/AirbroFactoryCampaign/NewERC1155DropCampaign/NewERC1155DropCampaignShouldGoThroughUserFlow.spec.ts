@@ -23,14 +23,23 @@ export function NewERC1155DropCampaignShouldGoThroughUserFlow() {
       "Unauthorized",
     );
   });
-  
+
   it("should test newERC1155DropCampaign Contract flow", async function () {
     await expect(this.airdropRegistry.connect(this.signers.registryAdmin).addFactory(this.airbroCampaignFactory.address))
       .to.emit(this.airdropRegistry, "FactoryWhitelisted")
       .withArgs(this.airbroCampaignFactory.address);
 
+    // testing whether the cloned contracts can initialize even if the OG "library" contract is
+    // initalized, the OG contract from which the clones are made from
+    const newERC1155DropCampaignOGFactory = await ethers.getContractFactory("NewERC1155DropCampaign");
+    const NewERC1155DropCampaignOGContract = newERC1155DropCampaignOGFactory.attach(await this.airbroCampaignFactory.erc1155DropCampaign());
+    await NewERC1155DropCampaignOGContract.initialize(uri, this.airbroCampaignFactory.address);
+
     // creating the NewERC1155DropCampaign from the factory contract
-    await this.airbroCampaignFactory.connect(this.signers.deployer).createNewERC1155DropCampaign(uri);
+    await expect(this.airbroCampaignFactory.connect(this.signers.deployer).createNewERC1155DropCampaign(uri)).to.emit(
+      this.airdropRegistry,
+      "NewAirdrop",
+    );
     const newERC1155DropCampaignFactory = await ethers.getContractFactory("NewERC1155DropCampaign");
     const NewERC1155DropCampaignContract = newERC1155DropCampaignFactory.attach(await this.airdropRegistry.airdrops(constants.Zero));
 

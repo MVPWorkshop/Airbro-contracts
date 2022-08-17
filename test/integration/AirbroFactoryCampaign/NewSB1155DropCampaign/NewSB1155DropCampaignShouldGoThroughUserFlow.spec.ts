@@ -30,7 +30,10 @@ export function NewSB1155DropCampaignShouldGoThroughUserFlow() {
       .withArgs(this.airbroCampaignFactory.address);
 
     // creating the NewSB1155DropCampaign from the factory contract
-    await this.airbroCampaignFactory.connect(this.signers.deployer).createNewSB1155DropCampaign(uri);
+    await expect(this.airbroCampaignFactory.connect(this.signers.deployer).createNewSB1155DropCampaign(uri)).to.emit(
+      this.airdropRegistry,
+      "NewAirdrop",
+    );
     const newSB1155DropCampaignFactory = await ethers.getContractFactory("NewSB1155DropCampaign");
     const NewSB1155DropCampaignContract = newSB1155DropCampaignFactory.attach(await this.airdropRegistry.airdrops(constants.Zero));
 

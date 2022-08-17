@@ -43,6 +43,14 @@ export async function UnitExistingERC20DropCampaignArgs(mockDAItokenAddress: Str
   };
 }
 
+// /*  Arguments for ExistingERC20DropCampaign fixture deployment through mock factory contract */
+// export async function UnitExistingERC20DropCampaignArgsMockFactory(mockDAItokenAddress: String) {
+//   return {
+//     rewardToken: mockDAItokenAddress,
+//     tokenSupply: 100,
+//   };
+// }
+
 /*  Arguments for TokenDrop fixture deployment */
 export async function unitTokenDropFixtureArguments(mockBaycNftAddress: String) {
   return {

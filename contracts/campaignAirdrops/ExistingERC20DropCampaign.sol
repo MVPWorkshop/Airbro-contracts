@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.15;
 
-import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 
@@ -11,8 +10,9 @@ import "./shared/CampaignAirdropsShared.sol";
 contract ExistingERC20DropCampaign is CampaignAidropsShared {
     using SafeERC20 for IERC20;
 
-    IERC20 public immutable rewardToken;
-    uint256 public immutable tokenSupply;
+    IERC20 public rewardToken;
+    uint256 public tokenSupply;
+    bool public initialized;
 
     string public constant airdropType = "ERC20";
     uint256 internal numberOfClaimers;
@@ -30,13 +30,16 @@ contract ExistingERC20DropCampaign is CampaignAidropsShared {
     error AirdropExpired();
     error MerkleRootHashSet();
 
-    constructor(
+    function initialize(
         address _rewardToken,
         uint256 _tokenSupply,
         address _airbroCampaignFactoryAddress
-    ) CampaignAidropsShared(_airbroCampaignFactoryAddress) {
+    ) public {
+        require(!initialized);
+        initialized = true;
         rewardToken = IERC20(_rewardToken);
         tokenSupply = _tokenSupply;
+        airbroCampaignFactoryAddress = IAirBroFactory(_airbroCampaignFactoryAddress);
         claimPeriodInDays = airbroCampaignFactoryAddress.claimPeriodInDays();
     }
 

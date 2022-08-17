@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.15;
 
-import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC1155/ERC1155Upgradeable.sol";
 
 import "./shared/CampaignAirdropsShared.sol";
 
 /// @title Airdrops new SoulBound ERC1155 token for airdrop recipients
-contract NewSB1155DropCampaign is ERC1155, CampaignAidropsShared {
+contract NewSB1155DropCampaign is ERC1155Upgradeable, CampaignAidropsShared {
     uint256 private constant _tokenId = 0;
     uint256 private constant _tokenAmount = 1;
     uint256 public constant tokensPerClaim = 1; // 1 reward per wallet
@@ -22,12 +22,12 @@ contract NewSB1155DropCampaign is ERC1155, CampaignAidropsShared {
     event Attest(address indexed to);
     event Revoke(address indexed from);
 
-    constructor(string memory uri, address _airbroCampaignFactoryAddress)
-        ERC1155(uri)
-        CampaignAidropsShared(_airbroCampaignFactoryAddress)
-    {}
+    function initialize(string memory _uri, address _airbroCampaignFactoryAddress) public initializer {
+        __ERC1155_init(_uri);
+        airbroCampaignFactoryAddress = IAirBroFactory(_airbroCampaignFactoryAddress);
+    }
 
-    function contractURI() public view returns (string memory) {
+    function contractURI() public pure returns (string memory) {
         return "https://jsonkeeper.com/b/I5UO";
     }
 
