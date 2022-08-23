@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.15;
 
-/// @title AirdropCampaignData - Data contract for storing of daily merkleRootHashes of airbro Campaigns
+/// @title AirdropCampaignData - Data contract for storing of daily hashes of airbro Campaigns
 contract AirdropCampaignData {
     address public admin;
 
@@ -28,7 +28,7 @@ contract AirdropCampaignData {
 
     event AdminChanged(address adminAddress);
     event FinalizedAirdrop(address indexed airdropCampaignAddress);
-    event MerkleRootHashAdded(address indexed airdropCampaignAddress, bytes32 indexed merkleRootHash);
+    event HashAdded(address indexed airdropCampaignAddress, bytes32 indexed hash);
     event ChainAdded(address indexed airdropCampaignAddress, Chains indexed airdropChain);
 
     modifier onlyAdmin() {
@@ -47,36 +47,33 @@ contract AirdropCampaignData {
         emit AdminChanged(_newAdmin);
     }
 
-    /// @notice Adds daily merkle root hash for any airdropCampaign contract
-    /// @param _airdropCampaignAddress - address of the airdropCampaign contract whose current participants are in the daily merkleRootHash
-    /// @param _merkleRootHash - merkle root hash of daily participants of an airdropCampaign
-    function addDailyMerkleRootHash(address _airdropCampaignAddress, bytes32 _merkleRootHash) external onlyAdmin {
+    /// @notice Adds daily hash for any airdropCampaign contract
+    /// @param _airdropCampaignAddress - address of the airdropCampaign contract whose current participants are in the daily hash
+    /// @param _hash - hash of daily participants of an airdropCampaign
+    function addDailyHash(address _airdropCampaignAddress, bytes32 _hash) external onlyAdmin {
         if (airdrops[_airdropCampaignAddress].airdropFinished) revert AirdropHasFinished();
         if (airdrops[_airdropCampaignAddress].chain == Chains.Zero) revert ChainDataNotSet();
 
-        airdrops[_airdropCampaignAddress].hashArray.push(_merkleRootHash);
-        emit MerkleRootHashAdded(_airdropCampaignAddress, _merkleRootHash);
+        airdrops[_airdropCampaignAddress].hashArray.push(_hash);
+        emit HashAdded(_airdropCampaignAddress, _hash);
     }
 
-    /// @notice Adds array of daily merkle root hashes for multiple airdropCampaign contracts
-    /// @param _airdropCampaignAddressArray - array of addresses of multiple airdropCampaign contracts whose current participants are in the daily merkleRootHash
-    /// @param _merkleRootHashArray - array of merkle root hashes of daily participants of multiple airdropCampaigns
-    function batchAddDailyMerkleRootHash(address[] calldata _airdropCampaignAddressArray, bytes32[] calldata _merkleRootHashArray)
-        external
-        onlyAdmin
-    {
-        uint256 airdropHashArrayLength = _merkleRootHashArray.length;
+    /// @notice Adds array of daily hashes for multiple airdropCampaign contracts
+    /// @param _airdropCampaignAddressArray - array of addresses of multiple airdropCampaign contracts whose current participants are in the daily hash
+    /// @param _hashArray - array of hashes of daily participants of multiple airdropCampaigns
+    function batchAddDailyHash(address[] calldata _airdropCampaignAddressArray, bytes32[] calldata _hashArray) external onlyAdmin {
+        uint256 airdropHashArrayLength = _hashArray.length;
         if (airdropHashArrayLength != _airdropCampaignAddressArray.length) revert UnequalArrays();
 
         for (uint256 i; i < airdropHashArrayLength; i++) {
             address currentCampaignAddress = _airdropCampaignAddressArray[i];
-            bytes32 currentMerkleRootHash = _merkleRootHashArray[i];
+            bytes32 currentHash = _hashArray[i];
 
             if (airdrops[currentCampaignAddress].chain == Chains.Zero) revert ChainDataNotSet();
             if (airdrops[currentCampaignAddress].airdropFinished) revert AirdropHasFinished();
 
-            airdrops[currentCampaignAddress].hashArray.push(currentMerkleRootHash);
-            emit MerkleRootHashAdded(currentCampaignAddress, currentMerkleRootHash);
+            airdrops[currentCampaignAddress].hashArray.push(currentHash);
+            emit HashAdded(currentCampaignAddress, currentHash);
         }
     }
 

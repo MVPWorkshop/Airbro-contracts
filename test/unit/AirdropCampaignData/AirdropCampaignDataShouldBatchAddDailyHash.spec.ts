@@ -8,7 +8,7 @@ const bytes32MerkleRootHashes = [
 
 const batchArrayLimit: number = 1200; // an amount for the length of array submitted in the batchAdd methods that will fail
 
-export function AirdropCampaignDataShouldBatchAddDailyMerkleRootHash(): void {
+export function AirdropCampaignDataShouldbatchAddDailyHash(): void {
   describe("should batch set daily merkle root hash", async function () {
     it("should allow admin to set daily merkle root hash", async function () {
       const randomAddressesArray = [this.signers.alice.address, this.signers.bob.address]; // two random addresses
@@ -19,13 +19,11 @@ export function AirdropCampaignDataShouldBatchAddDailyMerkleRootHash(): void {
         .batchAddAirdropCampaignChain(randomAddressesArray, [chains.Eth, chains.Pols]);
 
       await expect(
-        this.airdropCampaignData
-          .connect(this.signers.backendWallet)
-          .batchAddDailyMerkleRootHash(randomAddressesArray, bytes32MerkleRootHashes),
+        this.airdropCampaignData.connect(this.signers.backendWallet).batchAddDailyHash(randomAddressesArray, bytes32MerkleRootHashes),
       )
-        .to.emit(this.airdropCampaignData, "MerkleRootHashAdded")
+        .to.emit(this.airdropCampaignData, "HashAdded")
         .withArgs(randomAddressesArray[0], bytes32MerkleRootHashes[0])
-        .and.to.emit(this.airdropCampaignData, "MerkleRootHashAdded")
+        .and.to.emit(this.airdropCampaignData, "HashAdded")
         .withArgs(randomAddressesArray[1], bytes32MerkleRootHashes[1]);
     });
 
@@ -33,7 +31,7 @@ export function AirdropCampaignDataShouldBatchAddDailyMerkleRootHash(): void {
       const randomAddressesArray = [this.signers.alice.address, this.signers.bob.address]; // two random addresses
 
       await expect(
-        this.airdropCampaignData.connect(this.signers.alice).batchAddDailyMerkleRootHash(randomAddressesArray, bytes32MerkleRootHashes),
+        this.airdropCampaignData.connect(this.signers.alice).batchAddDailyHash(randomAddressesArray, bytes32MerkleRootHashes),
       ).to.be.revertedWith("NotAdmin");
     });
 
@@ -43,7 +41,7 @@ export function AirdropCampaignDataShouldBatchAddDailyMerkleRootHash(): void {
       const oneHashArray = ["0x0000000000000000000000000000000000000000000000000000000000000000"]; // 1 hash
 
       await expect(
-        this.airdropCampaignData.connect(this.signers.backendWallet).batchAddDailyMerkleRootHash(twoRandomAddressesArray, oneHashArray),
+        this.airdropCampaignData.connect(this.signers.backendWallet).batchAddDailyHash(twoRandomAddressesArray, oneHashArray),
       ).to.be.revertedWith("UnequalArrays");
 
       /* 2. One address, two hashes */
@@ -54,7 +52,7 @@ export function AirdropCampaignDataShouldBatchAddDailyMerkleRootHash(): void {
       ]; // 2 hashes
 
       await expect(
-        this.airdropCampaignData.connect(this.signers.backendWallet).batchAddDailyMerkleRootHash(oneRandomAddressArray, twoHashesArray),
+        this.airdropCampaignData.connect(this.signers.backendWallet).batchAddDailyHash(oneRandomAddressArray, twoHashesArray),
       ).to.be.revertedWith("UnequalArrays");
     });
 
@@ -63,7 +61,7 @@ export function AirdropCampaignDataShouldBatchAddDailyMerkleRootHash(): void {
       await expect(
         this.airdropCampaignData
           .connect(this.signers.backendWallet)
-          .batchAddDailyMerkleRootHash(this.randomAddressesArray, this.bytes32MerkleRootHashArray),
+          .batchAddDailyHash(this.randomAddressesArray, this.bytes32MerkleRootHashArray),
       ).to.be.reverted;
     }); */
   });

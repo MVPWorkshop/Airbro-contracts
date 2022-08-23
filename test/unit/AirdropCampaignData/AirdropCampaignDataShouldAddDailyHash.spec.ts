@@ -10,16 +10,14 @@ const chains = {
   Pols: 2,
 };
 
-export function AirdropCampaignDataShouldAddDailyMerkleRootHash(): void {
+export function AirdropCampaignDataShouldaddDailyHash(): void {
   describe("should set daily merkle root hash", async function () {
     it("should allow admin to set daily merkle root hash", async function () {
       // adding chain (mandatory before editing anything for a campaign on this contract)
       await this.airdropCampaignData.connect(this.signers.backendWallet).addAirdropCampaignChain(randomAddress, chains.Eth);
 
-      await expect(
-        this.airdropCampaignData.connect(this.signers.backendWallet).addDailyMerkleRootHash(randomAddress, bytes32MerkleRootHash),
-      )
-        .to.emit(this.airdropCampaignData, "MerkleRootHashAdded")
+      await expect(this.airdropCampaignData.connect(this.signers.backendWallet).addDailyHash(randomAddress, bytes32MerkleRootHash))
+        .to.emit(this.airdropCampaignData, "HashAdded")
         .withArgs(randomAddress, bytes32MerkleRootHash);
 
       //   console.log(await this.airdropCampaignData.connect(this.signers.backendWallet).airdrops(randomAddress)); //returns 0, why? Maybe we need a method to specifically construct all the data for users to view
@@ -29,13 +27,13 @@ export function AirdropCampaignDataShouldAddDailyMerkleRootHash(): void {
       await this.airdropCampaignData.connect(this.signers.backendWallet).addAirdropCampaignChain(randomAddress, chains.Eth);
 
       await expect(
-        this.airdropCampaignData.connect(this.signers.alice).addDailyMerkleRootHash(randomAddress, bytes32MerkleRootHash),
+        this.airdropCampaignData.connect(this.signers.alice).addDailyHash(randomAddress, bytes32MerkleRootHash),
       ).to.be.revertedWith("NotAdmin");
     });
 
     it("should revert if chain is not set", async function () {
       await expect(
-        this.airdropCampaignData.connect(this.signers.backendWallet).addDailyMerkleRootHash(randomAddress, bytes32MerkleRootHash),
+        this.airdropCampaignData.connect(this.signers.backendWallet).addDailyHash(randomAddress, bytes32MerkleRootHash),
       ).to.be.revertedWith("ChainDataNotSet");
     });
   });

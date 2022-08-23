@@ -7,6 +7,9 @@ import { AirdropRegistry__factory } from "../../src/types/factories/contracts/Ai
 import { AirbroCampaignFactory } from "../../src/types/contracts/AirbroCampaignFactory";
 import { AirbroCampaignFactory__factory } from "../../src/types/factories/contracts/AirbroCampaignFactory__factory";
 
+import { AirdropCampaignData } from "../../src/types/contracts/AirdropCampaignData";
+import { AirdropCampaignData__factory } from "../../src/types/factories/contracts/AirdropCampaignData__factory";
+
 import { Signer } from "@ethersproject/abstract-signer";
 
 task("deploy").setAction(async function (taskArguments: TaskArguments, { ethers }) {
@@ -82,5 +85,24 @@ task("deploy").setAction(async function (taskArguments: TaskArguments, { ethers 
   await airbroCampaignFactory.deployed();
 
   console.log("Airbro Campaign Factory deployed to: ", airbroCampaignFactory.address);
+  console.log("| -- --------------------- -- |");
+
+  /* Deployment of AirdropCampaignData */
+  console.log("| -- --------------------- -- |");
+  console.log("| -- 3. AirdropCampaignData -- |");
+  console.log("Deployer address: " + DEPLOYER_ADDRESS);
+  console.log("Constuctor args: " + BACKEND_WALLET_ADDRESS);
+
+  const AirdropCampaignDataFactory: AirdropCampaignData__factory = <AirdropCampaignData__factory>(
+    await ethers.getContractFactory("AirdropCampaignData")
+  );
+
+  console.log("Deploying AirdropCampaignData...");
+  const airdropCampaignData: AirdropCampaignData = <AirdropCampaignData>await AirdropCampaignDataFactory.deploy(BACKEND_WALLET_ADDRESS);
+
+  console.log("Awaiting deployment confirmation...");
+  await airdropCampaignData.deployed();
+
+  console.log("Airdrop Campaign Data Contract deployed to: ", airdropCampaignData.address);
   console.log("| -- --------------------- -- |");
 });

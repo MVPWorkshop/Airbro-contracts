@@ -38,8 +38,8 @@ import { ExistingERC20DropCampaignShouldUnlockWithdraw } from "./campaignAirdrop
 
 import { AirdropCampaignDataShouldBeDeployed } from "./AirdropCampaignData/AirdropCampaignDataShouldBeDeployed.spec";
 import { AirdropCampaignDataShouldChangeAdmin } from "./AirdropCampaignData/AirdropCampaignDataShouldChangeAdmin.spec";
-import { AirdropCampaignDataShouldAddDailyMerkleRootHash } from "./AirdropCampaignData/AirdropCampaignDataShouldAddDailyMerkleRootHash.spec";
-import { AirdropCampaignDataShouldBatchAddDailyMerkleRootHash } from "./AirdropCampaignData/AirdropCampaignDataShouldBatchAddDailyMerkleRootHash.spec";
+import { AirdropCampaignDataShouldaddDailyHash } from "./AirdropCampaignData/AirdropCampaignDataShouldAddDailyHash.spec";
+import { AirdropCampaignDataShouldbatchAddDailyHash } from "./AirdropCampaignData/AirdropCampaignDataShouldBatchAddDailyHash.spec";
 import { AirdropCampaignDataShouldAddAirdropCampaignChain } from "./AirdropCampaignData/AirdropCampaignDataShouldAddAirdropCampaignChain.spec";
 import { AirdropCampaignDataShouldBatchAddAirdropCampaignChain } from "./AirdropCampaignData/AirdropCampaignDataShouldBatchAddAirdropCampaignChain.spec";
 import { AirdropCampaignDataShouldFinalizeAirdrop } from "./AirdropCampaignData/AirdropCampaignDataShouldFinalizeAirdrop.spec";
@@ -90,8 +90,8 @@ describe("Unit tests", function () {
 
     AirdropCampaignDataShouldBeDeployed();
     AirdropCampaignDataShouldChangeAdmin();
-    AirdropCampaignDataShouldAddDailyMerkleRootHash();
-    AirdropCampaignDataShouldBatchAddDailyMerkleRootHash();
+    AirdropCampaignDataShouldaddDailyHash();
+    AirdropCampaignDataShouldbatchAddDailyHash();
     AirdropCampaignDataShouldAddAirdropCampaignChain();
     AirdropCampaignDataShouldBatchAddAirdropCampaignChain();
     AirdropCampaignDataShouldFinalizeAirdrop();
