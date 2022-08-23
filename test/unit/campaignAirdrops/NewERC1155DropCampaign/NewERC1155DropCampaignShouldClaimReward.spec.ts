@@ -9,10 +9,20 @@ export function NewERC1155DropCampaignShouldClaimReward(): void {
   describe("user should be able to claim reward", async function () {
     it("should be able to claim if part of merkleRoot", async function () {
       // making merkleTree and merkleRootHash
+      // console.log("alice: " + this.signers.alice.address);
+      // console.log("bob: " + this.signers.bob.address);
+      // console.log("jerry: " + this.signers.jerry.address);
+      // console.log("lisa: " + this.signers.lisa.address);
+
       const whitelisted = [this.signers.alice.address, this.signers.bob.address, this.signers.jerry.address, this.signers.lisa.address];
       const leaves = whitelisted.map(addr => keccak256(addr));
+      // console.log("leaves: " + leaves);
+
       const merkleTree = new MerkleTree(leaves, keccak256, { sort: true });
+      // console.log("merkleTree: " + merkleTree);
+
       const roothash = merkleTree.getHexRoot();
+      // console.log("roothash: " + roothash);
 
       // setting merkleRootHash
       expect(await this.newERC1155DropCampaign.connect(this.signers.backendWallet).setMerkleRoot(roothash))
@@ -21,6 +31,7 @@ export function NewERC1155DropCampaignShouldClaimReward(): void {
 
       // making merkleProof for alice's address
       const hexProof = merkleTree.getHexProof(leaves[0]);
+      console.log("hexProof: " + hexProof);
 
       expect(await this.newERC1155DropCampaign.hasClaimed(this.signers.alice.address)).to.be.equal(false);
       const balanceBefore = await this.signers.alice.getBalance();
