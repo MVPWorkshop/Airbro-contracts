@@ -15,13 +15,24 @@ contract AirbroCampaignFactory is AirdropAdmin {
     // protocol fee for claiming dropCampaign rewards
     uint256 public claimFee = 2_000_000_000_000_000; // 0.002 ETH
     uint16 public claimPeriodInDays = 60;
+    bool beta = true;
 
+    address public immutable betaAddress = 0xa120690093Dcd21a987c02eEB5f1E0B851B940a5;
     address public immutable erc20DropCampaign;
     address public immutable erc1155DropCampaign;
     address public immutable sb1155DropCampaign;
 
     event ClaimFeeChanged(uint256 indexed claimFee);
     event ClaimPeriodChanged(uint16 indexed claimPeriod);
+
+    error NotBetaAddress();
+
+    modifier onlyBeta() {
+        if (beta) {
+            if (msg.sender != betaAddress) revert NotBetaAddress();
+        }
+        _;
+    }
 
     constructor(address _admin, address _airdropRegistryAddress) {
         erc20DropCampaign = address(new ExistingERC20DropCampaign());
@@ -40,7 +51,7 @@ contract AirbroCampaignFactory is AirdropAdmin {
     /// @notice Creates a new airdrop claim contract for specific NFT collection holders that will reward with existing ERC20 tokens
     /// @param rewardToken - ERC20 token's address that will be distributed as a reward
     /// @param tokenSupply - total amount of ERC20 tokens to be supplied for the rewards
-    function createExistingERC20DropCampaign(address rewardToken, uint256 tokenSupply) external {
+    function createExistingERC20DropCampaign(address rewardToken, uint256 tokenSupply) external onlyBeta {
         ExistingERC20DropCampaign airdropContract = ExistingERC20DropCampaign(Clones.clone(erc20DropCampaign));
 
         airdropContract.initialize(
@@ -54,7 +65,7 @@ contract AirbroCampaignFactory is AirdropAdmin {
 
     /// @notice Creates a new airdrop claim contract for specific NFT collection holders that will reward participants with newly created ERC1155 NFTs
     /// @param uri - ipfs link of the image uploaded by user
-    function createNewERC1155DropCampaign(string memory uri) external {
+    function createNewERC1155DropCampaign(string memory uri) external onlyBeta {
         NewERC1155DropCampaign airdropContract = NewERC1155DropCampaign(Clones.clone(erc1155DropCampaign));
 
         airdropContract.initialize(
@@ -67,7 +78,7 @@ contract AirbroCampaignFactory is AirdropAdmin {
 
     /// @notice Creates a new airdrop claim contract for specific NFT collection holders that will reward participants with newly created Soulbound ERC1155 NFTs
     /// @param uri - ipfs link of the image uploaded by user
-    function createNewSB1155DropCampaign(string memory uri) external {
+    function createNewSB1155DropCampaign(string memory uri) external onlyBeta {
         NewSB1155DropCampaign airdropContract = NewSB1155DropCampaign(Clones.clone(sb1155DropCampaign));
 
         airdropContract.initialize(
@@ -90,5 +101,10 @@ contract AirbroCampaignFactory is AirdropAdmin {
     function changeClaimPeriod(uint16 _newClaimPeriod) external onlyAdmin {
         claimPeriodInDays = _newClaimPeriod;
         emit ClaimPeriodChanged(_newClaimPeriod);
+    }
+
+    /// @notice Closes beta and allows for any address to create campaigns
+    function closeBeta() external onlyAdmin {
+        beta = false;
     }
 }
