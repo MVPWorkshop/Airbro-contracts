@@ -10,7 +10,7 @@ export function AirbroCampaignFactoryShouldChangeProtocolFeeInAllAirDrops(): voi
 
   it("admin should be able to change protocol fee", async function () {
     // checking if admin address is able to change protocol fee
-    expect(await this.airbroCampaignFactory.connect(this.signers.backendWallet).changeFee(newClaimFee))
+    expect(await this.airbroCampaignFactory.connect(this.signers.backendWallet).changeClaimFee(newClaimFee))
       .to.emit(this.airbroCampaignFactory, "ClaimFeeChanged")
       .withArgs(newClaimFee);
 
@@ -26,10 +26,10 @@ export function AirbroCampaignFactoryShouldChangeProtocolFeeInAllAirDrops(): voi
     expect(await this.airbroCampaignFactory.admin()).to.be.equal(this.signers.lisa.address);
 
     // checking if old admin can change protocol fee
-    await expect(this.airbroCampaignFactory.connect(this.signers.backendWallet).changeFee(newClaimFee)).to.be.revertedWith(`NotAdmin`);
+    await expect(this.airbroCampaignFactory.connect(this.signers.backendWallet).changeClaimFee(newClaimFee)).to.be.revertedWith(`NotAdmin`);
 
     // checking if new admin address is able to change protocol fee
-    expect(await this.airbroCampaignFactory.connect(this.signers.lisa).changeFee(newClaimFee))
+    expect(await this.airbroCampaignFactory.connect(this.signers.lisa).changeClaimFee(newClaimFee))
       .to.emit(this.airbroCampaignFactory, "ClaimFeeChanged")
       .withArgs(newClaimFee);
 
@@ -38,7 +38,7 @@ export function AirbroCampaignFactoryShouldChangeProtocolFeeInAllAirDrops(): voi
 
   it("new protocol fee should instantly be different on all daughter dropContracts", async function () {
     // changing protocol fee
-    expect(await this.airbroCampaignFactory.connect(this.signers.backendWallet).changeFee(newClaimFee))
+    expect(await this.airbroCampaignFactory.connect(this.signers.backendWallet).changeClaimFee(newClaimFee))
       .to.emit(this.airbroCampaignFactory, "ClaimFeeChanged")
       .withArgs(newClaimFee);
 

@@ -14,6 +14,8 @@ contract AirbroCampaignFactory is AirdropAdmin {
     address public immutable treasury;
     // protocol fee for claiming dropCampaign rewards
     uint256 public claimFee = 2_000_000_000_000_000; // 0.002 ETH
+    // protocol fee for creating dropCampaigns
+    uint256 public creatorFee = 0; // 0.000 ETH
     uint16 public claimPeriodInDays = 60;
     bool beta = true;
 
@@ -23,11 +25,14 @@ contract AirbroCampaignFactory is AirdropAdmin {
     address public immutable sb1155DropCampaign;
 
     event ClaimFeeChanged(uint256 indexed claimFee);
+    event CreatorFeeChanged(uint256 indexed creatorFee);
     event ClaimPeriodChanged(uint16 indexed claimPeriod);
 
     error NotBetaAddress();
+    error InvalidFeeAmount();
+    error FeeNotSent();
 
-    modifier onlyBeta() {
+    modifier duringBeta() {
         if (beta) {
             if (msg.sender != betaAddress) revert NotBetaAddress();
         }
@@ -51,49 +56,80 @@ contract AirbroCampaignFactory is AirdropAdmin {
     /// @notice Creates a new airdrop claim contract for specific NFT collection holders that will reward with existing ERC20 tokens
     /// @param rewardToken - ERC20 token's address that will be distributed as a reward
     /// @param tokenSupply - total amount of ERC20 tokens to be supplied for the rewards
-    function createExistingERC20DropCampaign(address rewardToken, uint256 tokenSupply) external onlyBeta {
-        ExistingERC20DropCampaign airdropContract = ExistingERC20DropCampaign(Clones.clone(erc20DropCampaign));
+    function createExistingERC20DropCampaign(address rewardToken, uint256 tokenSupply) external payable duringBeta {
+        if (msg.value != creatorFee) revert InvalidFeeAmount();
 
-        airdropContract.initialize(
-            rewardToken,
-            tokenSupply,
-            address(this) // airBroFactory contract address -> used for getting back admin contract address in airdrop contracts)
-        );
+        (bool success, ) = treasury.call{ value: msg.value }("");
 
-        airdropRegistryAddress.addAirdrop(address(airdropContract), msg.sender, "ERC20");
+        if (success) {
+            ExistingERC20DropCampaign airdropContract = ExistingERC20DropCampaign(Clones.clone(erc20DropCampaign));
+
+            airdropContract.initialize(
+                rewardToken,
+                tokenSupply,
+                address(this) // airBroFactory contract address -> used for getting back admin contract address in airdrop contracts)
+            );
+
+            airdropRegistryAddress.addAirdrop(address(airdropContract), msg.sender, "ERC20");
+        } else {
+            revert FeeNotSent();
+        }
     }
 
     /// @notice Creates a new airdrop claim contract for specific NFT collection holders that will reward participants with newly created ERC1155 NFTs
     /// @param uri - ipfs link of the image uploaded by user
-    function createNewERC1155DropCampaign(string memory uri) external onlyBeta {
-        NewERC1155DropCampaign airdropContract = NewERC1155DropCampaign(Clones.clone(erc1155DropCampaign));
+    function createNewERC1155DropCampaign(string memory uri) external payable duringBeta {
+        if (msg.value != creatorFee) revert InvalidFeeAmount();
 
-        airdropContract.initialize(
-            uri,
-            address(this) // airBroFactory contract address -> used for getting back admin contract address in airdrop contracts
-        );
+        (bool success, ) = treasury.call{ value: msg.value }("");
 
-        airdropRegistryAddress.addAirdrop(address(airdropContract), msg.sender, "ERC1155");
+        if (success) {
+            NewERC1155DropCampaign airdropContract = NewERC1155DropCampaign(Clones.clone(erc1155DropCampaign));
+
+            airdropContract.initialize(
+                uri,
+                address(this) // airBroFactory contract address -> used for getting back admin contract address in airdrop contracts
+            );
+
+            airdropRegistryAddress.addAirdrop(address(airdropContract), msg.sender, "ERC1155");
+        } else {
+            revert FeeNotSent();
+        }
     }
 
     /// @notice Creates a new airdrop claim contract for specific NFT collection holders that will reward participants with newly created Soulbound ERC1155 NFTs
     /// @param uri - ipfs link of the image uploaded by user
-    function createNewSB1155DropCampaign(string memory uri) external onlyBeta {
-        NewSB1155DropCampaign airdropContract = NewSB1155DropCampaign(Clones.clone(sb1155DropCampaign));
+    function createNewSB1155DropCampaign(string memory uri) external payable duringBeta {
+        if (msg.value != creatorFee) revert InvalidFeeAmount();
 
-        airdropContract.initialize(
-            uri,
-            address(this) // airBroFactory contract address -> used for getting back admin contract address in airdrop contracts
-        );
+        (bool success, ) = treasury.call{ value: msg.value }("");
 
-        airdropRegistryAddress.addAirdrop(address(airdropContract), msg.sender, "SB1155");
+        if (success) {
+            NewSB1155DropCampaign airdropContract = NewSB1155DropCampaign(Clones.clone(sb1155DropCampaign));
+
+            airdropContract.initialize(
+                uri,
+                address(this) // airBroFactory contract address -> used for getting back admin contract address in airdrop contracts
+            );
+
+            airdropRegistryAddress.addAirdrop(address(airdropContract), msg.sender, "SB1155");
+        } else {
+            revert FeeNotSent();
+        }
     }
 
     /// @notice Updates the protocol fee for claiming dropCampaign rewards
     /// @param _newClaimFee - New claim fee that users will have to pay in order to claim their rewards
-    function changeFee(uint256 _newClaimFee) external onlyAdmin {
+    function changeClaimFee(uint256 _newClaimFee) external onlyAdmin {
         claimFee = _newClaimFee;
         emit ClaimFeeChanged(_newClaimFee);
+    }
+
+    /// @notice Updates the protocol fee for creating dropCampaigns
+    /// @param _newCreatorFee - New creator fee that users will have to pay in order to create new dropCampaigns
+    function changeCreatorFee(uint256 _newCreatorFee) external onlyAdmin {
+        creatorFee = _newCreatorFee;
+        emit CreatorFeeChanged(_newCreatorFee);
     }
 
     /// @notice Updates the claim period
