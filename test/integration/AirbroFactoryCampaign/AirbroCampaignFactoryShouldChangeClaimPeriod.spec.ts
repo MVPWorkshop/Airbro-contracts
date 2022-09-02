@@ -38,6 +38,11 @@ export function AirbroCampaignFactoryShouldChangeClaimPeriod(): void {
   it("new claim period should be different on all dropContracts made after it has been changed", async function () {
     const oldClaimPeriodInDays = await this.airbroCampaignFactory.claimPeriodInDays();
 
+    await expect(this.airbroCampaignFactory.connect(this.signers.backendWallet).closeBeta()).to.emit(
+      this.airbroCampaignFactory,
+      "BetaClosed",
+    );
+
     // changing claim period
     expect(await this.airbroCampaignFactory.connect(this.signers.backendWallet).changeClaimPeriod(newClaimPeriod))
       .to.emit(this.airbroCampaignFactory, "ClaimPeriodChanged")

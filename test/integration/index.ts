@@ -1,5 +1,5 @@
 import { ethers, waffle, network } from "hardhat";
-import { contractAdminAddress, registryAdminAddress } from "../shared/constants";
+import { contractAdminAddress, registryAdminAddress, betaAddress } from "../shared/constants";
 
 import { Signers } from "../shared/types";
 
@@ -22,6 +22,7 @@ import { NewSB1155DropCampaignShouldGoThroughUserFlow } from "./AirbroFactoryCam
 import { ExistingERC20DropCampaignShouldFundCampaign } from "./AirbroFactoryCampaign/ExistingERC20DropCampaign/ExistingERC20DropCampaignShouldFundCampaign.spec";
 import { ExistingERC20DropCampaignShouldBeEligible } from "./AirbroFactoryCampaign/ExistingERC20DropCampaign/ExistingERC20DropCampaignShouldBeEligible.spec";
 import { ExistingERC20DropCampaignShouldGoThroughUserFlow } from "./AirbroFactoryCampaign/ExistingERC20DropCampaign/ExistingERC20DropCampaignShouldGoThroughUserFlow.spec";
+import { AirbroCampaignFactoryShouldHaveBetaPhase } from "./AirbroFactoryCampaign/AirbroCampaignFactoryShouldHaveBetaPhase";
 
 describe("Integration tests", function () {
   before(async function () {
@@ -36,6 +37,7 @@ describe("Integration tests", function () {
     this.signers.lisa = signers[4];
     this.signers.backendWallet = await ethers.getSigner(contractAdminAddress);
     this.signers.registryAdmin = await ethers.getSigner(registryAdminAddress);
+    this.signers.betaAddress = await ethers.getSigner(betaAddress);
 
     // sending eth to the backend wallet address from the hardhat account of index 4
     await signers[5].sendTransaction({
@@ -48,6 +50,11 @@ describe("Integration tests", function () {
       value: ethers.utils.parseEther("2000"),
     });
 
+    await signers[7].sendTransaction({
+      to: betaAddress,
+      value: ethers.utils.parseEther("2000"),
+    });
+
     await network.provider.request({
       method: "hardhat_impersonateAccount",
       params: [contractAdminAddress],
@@ -56,6 +63,11 @@ describe("Integration tests", function () {
     await network.provider.request({
       method: "hardhat_impersonateAccount",
       params: [registryAdminAddress],
+    });
+
+    await network.provider.request({
+      method: "hardhat_impersonateAccount",
+      params: [betaAddress],
     });
 
     this.loadFixture = waffle.createFixtureLoader(signers);
@@ -113,6 +125,7 @@ describe("Integration tests", function () {
       AirbroCampaignFactoryShouldChangeAdminInAllAirDrops();
       AirbroCampaignFactoryShouldChangeProtocolFeeInAllAirDrops();
       AirbroCampaignFactoryShouldChangeClaimPeriod();
+      AirbroCampaignFactoryShouldHaveBetaPhase();
     });
 
     describe("ExistingERC20DropCampaign", () => {

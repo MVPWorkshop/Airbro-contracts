@@ -17,7 +17,7 @@ contract AirbroCampaignFactory is AirdropAdmin {
     // protocol fee for creating dropCampaigns
     uint256 public creatorFee = 0; // 0.000 ETH
     uint16 public claimPeriodInDays = 60;
-    bool beta = true;
+    bool public beta = true;
 
     address public immutable betaAddress = 0xa120690093Dcd21a987c02eEB5f1E0B851B940a5;
     address public immutable erc20DropCampaign;
@@ -27,6 +27,7 @@ contract AirbroCampaignFactory is AirdropAdmin {
     event ClaimFeeChanged(uint256 indexed claimFee);
     event CreatorFeeChanged(uint256 indexed creatorFee);
     event ClaimPeriodChanged(uint16 indexed claimPeriod);
+    event BetaClosed();
 
     error NotBetaAddress();
     error InvalidFeeAmount();
@@ -142,5 +143,6 @@ contract AirbroCampaignFactory is AirdropAdmin {
     /// @notice Closes beta and allows for any address to create campaigns
     function closeBeta() external onlyAdmin {
         beta = false;
+        emit BetaClosed();
     }
 }

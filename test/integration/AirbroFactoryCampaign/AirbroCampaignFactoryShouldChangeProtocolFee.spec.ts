@@ -7,9 +7,10 @@ import { claimFee } from "../../shared/constants";
 
 export function AirbroCampaignFactoryShouldChangeProtocolFeeInAllAirDrops(): void {
   const newClaimFee = ethers.utils.parseEther("0.04");
+  const newCreatorFee = ethers.utils.parseEther("0.08");
 
-  it("admin should be able to change protocol fee", async function () {
-    // checking if admin address is able to change protocol fee
+  it("admin should be able to change protocol claim fee", async function () {
+    // checking if admin address is able to change protocol claim fee
     expect(await this.airbroCampaignFactory.connect(this.signers.backendWallet).changeClaimFee(newClaimFee))
       .to.emit(this.airbroCampaignFactory, "ClaimFeeChanged")
       .withArgs(newClaimFee);
@@ -17,7 +18,7 @@ export function AirbroCampaignFactoryShouldChangeProtocolFeeInAllAirDrops(): voi
     expect(await this.airbroCampaignFactory.claimFee()).to.be.equal(newClaimFee);
   });
 
-  it("new admin should be able to change protocol fee", async function () {
+  it("new admin should be able to change protocol claim fee", async function () {
     // changing admin address in the airbroCampaignFactory Contract
     await expect(this.airbroCampaignFactory.connect(this.signers.backendWallet).changeAdmin(this.signers.lisa.address))
       .to.emit(this.airbroCampaignFactory, `AdminChanged`)
@@ -28,7 +29,7 @@ export function AirbroCampaignFactoryShouldChangeProtocolFeeInAllAirDrops(): voi
     // checking if old admin can change protocol fee
     await expect(this.airbroCampaignFactory.connect(this.signers.backendWallet).changeClaimFee(newClaimFee)).to.be.revertedWith(`NotAdmin`);
 
-    // checking if new admin address is able to change protocol fee
+    // checking if new admin address is able to change protocol claim fee
     expect(await this.airbroCampaignFactory.connect(this.signers.lisa).changeClaimFee(newClaimFee))
       .to.emit(this.airbroCampaignFactory, "ClaimFeeChanged")
       .withArgs(newClaimFee);
@@ -36,7 +37,7 @@ export function AirbroCampaignFactoryShouldChangeProtocolFeeInAllAirDrops(): voi
     expect(await this.airbroCampaignFactory.claimFee()).to.be.equal(newClaimFee);
   });
 
-  it("new protocol fee should instantly be different on all daughter dropContracts", async function () {
+  it("new protocol claim fee should instantly be different on all daughter dropContracts", async function () {
     // changing protocol fee
     expect(await this.airbroCampaignFactory.connect(this.signers.backendWallet).changeClaimFee(newClaimFee))
       .to.emit(this.airbroCampaignFactory, "ClaimFeeChanged")
@@ -71,5 +72,35 @@ export function AirbroCampaignFactoryShouldChangeProtocolFeeInAllAirDrops(): voi
     // checking if claimFee has been withdrawn from claimer account
     const balanceAfter = await this.signers.alice.getBalance();
     expect(balanceBefore.sub(balanceAfter).gt(newClaimFee)).to.be.equal(true);
+  });
+
+  it("admin should be able to change protocol creator fee", async function () {
+    // checking if admin address is able to change protocol creator fee
+    expect(await this.airbroCampaignFactory.connect(this.signers.backendWallet).changeCreatorFee(newCreatorFee))
+      .to.emit(this.airbroCampaignFactory, "CreatorFeeChanged")
+      .withArgs(newCreatorFee);
+
+    expect(await this.airbroCampaignFactory.creatorFee()).to.be.equal(newCreatorFee);
+  });
+
+  it("new admin should be able to change protocol creator fee", async function () {
+    // changing admin address in the airbroCampaignFactory Contract
+    await expect(this.airbroCampaignFactory.connect(this.signers.backendWallet).changeAdmin(this.signers.lisa.address))
+      .to.emit(this.airbroCampaignFactory, `AdminChanged`)
+      .withArgs(this.signers.lisa.address);
+
+    expect(await this.airbroCampaignFactory.admin()).to.be.equal(this.signers.lisa.address);
+
+    // checking if old admin can change protocol fee
+    await expect(this.airbroCampaignFactory.connect(this.signers.backendWallet).changeCreatorFee(newCreatorFee)).to.be.revertedWith(
+      `NotAdmin`,
+    );
+
+    // checking if new admin address is able to change protocol creator fee
+    expect(await this.airbroCampaignFactory.connect(this.signers.lisa).changeCreatorFee(newCreatorFee))
+      .to.emit(this.airbroCampaignFactory, "CreatorFeeChanged")
+      .withArgs(newCreatorFee);
+
+    expect(await this.airbroCampaignFactory.creatorFee()).to.be.equal(newCreatorFee);
   });
 }

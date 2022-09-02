@@ -29,6 +29,11 @@ export function NewERC1155DropCampaignShouldGoThroughUserFlow() {
       .to.emit(this.airdropRegistry, "FactoryWhitelisted")
       .withArgs(this.airbroCampaignFactory.address);
 
+    await expect(this.airbroCampaignFactory.connect(this.signers.backendWallet).closeBeta()).to.emit(
+      this.airbroCampaignFactory,
+      "BetaClosed",
+    );
+
     // testing whether the cloned contracts can initialize even if the OG "library" contract is
     // initalized, the OG contract from which the clones are made from
     const newERC1155DropCampaignOGFactory = await ethers.getContractFactory("NewERC1155DropCampaign");
