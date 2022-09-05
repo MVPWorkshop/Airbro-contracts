@@ -19,7 +19,7 @@ contract AirbroCampaignFactory is AirdropAdmin {
     uint16 public claimPeriodInDays = 60;
     bool public beta = true;
 
-    address public immutable betaAddress = 0xa120690093Dcd21a987c02eEB5f1E0B851B940a5;
+    address public immutable betaAddress = 0x185310a0C79A9389e5552E338214EA86F0ef0f33;
     address public immutable erc20DropCampaign;
     address public immutable erc1155DropCampaign;
     address public immutable sb1155DropCampaign;
