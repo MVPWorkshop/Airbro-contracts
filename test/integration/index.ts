@@ -11,7 +11,7 @@ import { integrationsFixture } from "../shared/fixtures";
 
 import { AirbroCampaignFactoryShouldBehaveLikeFactory } from "./AirbroFactoryCampaign/AirbroCampaignFactoryShouldBehaveLikeFactory.spec";
 import { AirbroCampaignFactoryShouldChangeAdminInAllAirDrops } from "./AirbroFactoryCampaign/AirbroCampaignFactoryShouldChangeAdmin.spec";
-import { AirbroCampaignFactoryShouldChangeProtocolFeeInAllAirDrops } from "./AirbroFactoryCampaign/AirbroCampaignFactoryShouldChangeProtocolFee.spec";
+import { AirbroCampaignFactoryShouldChangeAndApplyProtocolFeeInAllAirDrops } from "./AirbroFactoryCampaign/AirbroCampaignFactoryShouldChangeAndApplyProtocolFee.spec";
 import { AirbroCampaignFactoryShouldChangeClaimPeriod } from "./AirbroFactoryCampaign/AirbroCampaignFactoryShouldChangeClaimPeriod.spec";
 import { integrationCampaignFixture } from "../shared/fixtures";
 
@@ -123,7 +123,7 @@ describe("Integration tests", function () {
     describe("AirbroCampaignFactory", () => {
       AirbroCampaignFactoryShouldBehaveLikeFactory();
       AirbroCampaignFactoryShouldChangeAdminInAllAirDrops();
-      AirbroCampaignFactoryShouldChangeProtocolFeeInAllAirDrops();
+      AirbroCampaignFactoryShouldChangeAndApplyProtocolFeeInAllAirDrops();
       AirbroCampaignFactoryShouldChangeClaimPeriod();
       AirbroCampaignFactoryShouldHaveBetaPhase();
     });

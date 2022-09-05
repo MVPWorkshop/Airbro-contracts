@@ -1,11 +1,12 @@
 import { expect } from "chai";
-import { ethers, network } from "hardhat";
+import { ethers, waffle } from "hardhat";
+const provider = waffle.provider;
 import { MerkleTree } from "merkletreejs";
 const { keccak256 } = ethers.utils;
 import { constants } from "ethers";
-import { claimFee } from "../../shared/constants";
+import { claimFee, uri, randomAddress, treasuryAddress } from "../../shared/constants";
 
-export function AirbroCampaignFactoryShouldChangeProtocolFeeInAllAirDrops(): void {
+export function AirbroCampaignFactoryShouldChangeAndApplyProtocolFeeInAllAirDrops(): void {
   const newClaimFee = ethers.utils.parseEther("0.04");
   const newCreatorFee = ethers.utils.parseEther("0.08");
 
@@ -102,5 +103,46 @@ export function AirbroCampaignFactoryShouldChangeProtocolFeeInAllAirDrops(): voi
       .withArgs(newCreatorFee);
 
     expect(await this.airbroCampaignFactory.creatorFee()).to.be.equal(newCreatorFee);
+  });
+
+  it("creator fee should be applied to all dropCampaign creations", async function () {
+    await expect(this.airdropRegistry.connect(this.signers.registryAdmin).addFactory(this.airbroCampaignFactory.address))
+      .to.emit(this.airdropRegistry, "FactoryWhitelisted")
+      .withArgs(this.airbroCampaignFactory.address);
+
+    // checking if admin address is able to change protocol creator fee
+    expect(await this.airbroCampaignFactory.connect(this.signers.backendWallet).changeCreatorFee(newCreatorFee))
+      .to.emit(this.airbroCampaignFactory, "CreatorFeeChanged")
+      .withArgs(newCreatorFee);
+
+    expect(await this.airbroCampaignFactory.creatorFee()).to.be.equal(newCreatorFee);
+
+    await expect(this.airbroCampaignFactory.connect(this.signers.backendWallet).closeBeta()).to.emit(
+      this.airbroCampaignFactory,
+      "BetaClosed",
+    );
+
+    const treasuryBefore = await provider.getBalance(treasuryAddress);
+    // console.log(treasuryBefore);
+
+    await expect(
+      this.airbroCampaignFactory.connect(this.signers.deployer).createNewERC1155DropCampaign(uri, { value: newCreatorFee }),
+    ).to.emit(this.airdropRegistry, "NewAirdrop");
+
+    await expect(
+      this.airbroCampaignFactory.connect(this.signers.deployer).createNewSB1155DropCampaign(uri, { value: newCreatorFee }),
+    ).to.emit(this.airdropRegistry, "NewAirdrop");
+
+    await expect(
+      this.airbroCampaignFactory
+        .connect(this.signers.deployer)
+        .createExistingERC20DropCampaign(randomAddress, 1000, { value: newCreatorFee }),
+    ).to.emit(this.airdropRegistry, "NewAirdrop");
+
+    const treasuryAfter = await provider.getBalance(treasuryAddress);
+    // console.log(treasuryAfter);
+
+    const campaignsCreated = 3;
+    expect(treasuryAfter.sub(treasuryBefore)).to.equal(newCreatorFee.mul(campaignsCreated));
   });
 }
