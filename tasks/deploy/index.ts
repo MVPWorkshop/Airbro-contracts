@@ -1,1 +1,2 @@
 import "./factory";
+import "./upgradeTest";

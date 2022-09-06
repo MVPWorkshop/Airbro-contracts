@@ -1,16 +1,18 @@
-// scripts/deploy_upgradeable_box.js
-import { ethers, upgrades } from "hardhat";
+import { task } from "hardhat/config";
+import { TaskArguments } from "hardhat/types";
 
 /* STILL HAVE TO TEST IF THIS WORKS */
-async function main() {
+task("deploy:upgradable").setAction(async function (taskArguments: TaskArguments, { ethers, upgrades }) {
+  const BACKEND_WALLET_ADDRESS: string | undefined = process.env.BACKEND_WALLET_ADDRESS;
+  if (BACKEND_WALLET_ADDRESS === undefined || BACKEND_WALLET_ADDRESS === "") {
+    throw new Error("Please define the BACKEND_WALLET_ADDRESS in your .env file.");
+  }
+
   const AirdropCampaignDataFactory = await ethers.getContractFactory("AirdropCampaignData");
+
   console.log("Deploying AirdropCampaignData...");
-  const AirdropCampaignData = await upgrades.deployProxy(AirdropCampaignDataFactory, [42], { initializer: "store" });
+  const AirdropCampaignData = await upgrades.deployProxy(AirdropCampaignDataFactory, [BACKEND_WALLET_ADDRESS]);
   await AirdropCampaignData.deployed();
+
   console.log("AirdropCampaignData deployed to:", AirdropCampaignData.address);
-  console.log("main");
-}
-
-/* ALSO, IMPLEMENT ALL OF THIS AS A TASK WITH setTask. So deloy of upgradable, and upgrade of upgradable. */
-
-main();
+});
