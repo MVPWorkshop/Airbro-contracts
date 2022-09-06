@@ -6,6 +6,8 @@ import "@nomiclabs/hardhat-etherscan";
 import "hardhat-gas-reporter";
 import "hardhat-contract-sizer";
 
+import "@openzeppelin/hardhat-upgrades";
+
 import "./tasks/accounts";
 import "./tasks/deploy";
 
