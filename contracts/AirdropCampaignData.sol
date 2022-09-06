@@ -1,8 +1,10 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.15;
 
+import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+
 /// @title AirdropCampaignData - Data contract for storing of daily hashes of airbro Campaigns
-contract AirdropCampaignData {
+contract AirdropCampaignData is Initializable {
     address public admin;
 
     enum Chains {
@@ -36,7 +38,14 @@ contract AirdropCampaignData {
         _;
     }
 
+    /* might have to completely update this to just contain _disableInitializers, not sure yet. */
     constructor(address _admin) {
+        admin = _admin;
+        initialize(_admin);
+        _disableInitializers();
+    }
+
+    function initialize(address _admin) public initializer {
         admin = _admin;
     }
 
