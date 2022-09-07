@@ -10,16 +10,17 @@ export function AirdropCampaignDataShouldBeUpgradable(): void {
     }
 
     it("should be upgradable", async function () {
-      console.log(BACKEND_WALLET_ADDRESS);
       const Box = await ethers.getContractFactory("AirdropCampaignData");
 
       const instance = await upgrades.deployProxy(Box, [BACKEND_WALLET_ADDRESS]); // https://forum.openzeppelin.com/t/types-values-length-mismatch/4613/8
       await instance.deployed();
-      console.log(instance.address);
+      expect(await instance.admin()).to.be.equal(BACKEND_WALLET_ADDRESS); // should be the same, right?
 
       const BoxV2 = await ethers.getContractFactory("AirdropCampaignData");
-      //   const upgraded = await upgrades.upgradeProxy(instance.address, BoxV2);
-      //   expect(await upgraded.admin()).to.be.equal(BACKEND_WALLET_ADDRESS); // should be the same, right?
+      const upgraded = await upgrades.upgradeProxy(instance.address, BoxV2);
+      await upgraded.deployed();
+
+      expect(await upgraded.admin()).to.be.equal(BACKEND_WALLET_ADDRESS); // should be the same, right?
     });
   });
 }

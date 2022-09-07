@@ -38,12 +38,10 @@ contract AirdropCampaignData is Initializable {
         _;
     }
 
-    /* might have to completely update this to just contain _disableInitializers, not sure yet. */
-    constructor(address _admin) {
+    /* Remove this constructor, and update the fixute for this contract */
+    /* constructor(address _admin) {
         admin = _admin;
-        initialize(_admin);
-        _disableInitializers();
-    }
+    } */
 
     function initialize(address _admin) public initializer {
         admin = _admin;
