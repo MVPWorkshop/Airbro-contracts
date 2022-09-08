@@ -5,7 +5,7 @@ import "./AirdropAdmin.sol";
 
 abstract contract AirdropBeta is AirdropAdmin {
     bool public beta = true;
-    address public constant betaAddress = 0x185310a0C79A9389e5552E338214EA86F0ef0f33;
+    address public immutable betaAddress;
 
     event BetaClosed();
 
@@ -16,6 +16,10 @@ abstract contract AirdropBeta is AirdropAdmin {
             if (msg.sender != betaAddress) revert NotBetaAddress();
         }
         _;
+    }
+
+    constructor(address _betaAddress) {
+        betaAddress = _betaAddress;
     }
 
     /// @notice Closes beta and allows for any address to create campaigns

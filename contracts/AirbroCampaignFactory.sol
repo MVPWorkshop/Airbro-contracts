@@ -35,7 +35,11 @@ contract AirbroCampaignFactory is AirdropAdmin, AirdropBeta {
         _;
     }
 
-    constructor(address _admin, address _airdropRegistryAddress) {
+    constructor(
+        address _admin,
+        address _airdropRegistryAddress,
+        address _betaAddress
+    ) AirdropBeta(_betaAddress) {
         erc20DropCampaign = address(new ExistingERC20DropCampaign());
         erc1155DropCampaign = address(new NewERC1155DropCampaign());
         sb1155DropCampaign = address(new NewSB1155DropCampaign());
