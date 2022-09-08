@@ -4,7 +4,7 @@ pragma solidity ^0.8.15;
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 
 /// @title AirdropCampaignData - Data contract for storing of daily hashes of airbro Campaigns
-contract AirdropCampaignData is Initializable {
+contract AirdropCampaignDataUpgrade is Initializable {
     address public admin;
 
     enum Chains {
@@ -20,6 +20,8 @@ contract AirdropCampaignData is Initializable {
     }
 
     mapping(address => AirdropData) public airdrops;
+
+    string public newUpgradeVar; // ------------------- newly added var to upgrade the contract
 
     error NotAdmin();
     error UnequalArrays();
@@ -122,5 +124,11 @@ contract AirdropCampaignData is Initializable {
 
         airdrops[_airdropCampaignAddress].airdropFinished = true;
         emit FinalizedAirdrop(_airdropCampaignAddress);
+    }
+
+    /// @notice Method which returns the string "test_text"
+    /// @dev Used to test upgradability of the contract
+    function getUpgradedValue() external pure returns (string memory) {
+        return "test_text";
     }
 }

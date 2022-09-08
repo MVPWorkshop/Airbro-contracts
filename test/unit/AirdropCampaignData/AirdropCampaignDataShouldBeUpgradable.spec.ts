@@ -4,23 +4,12 @@ import { ethers, upgrades } from "hardhat";
 /* NOT WORKING, SHOULD PROBABLY CHANGE SC */
 export function AirdropCampaignDataShouldBeUpgradable(): void {
   describe("upgradable", async function () {
-    const BACKEND_WALLET_ADDRESS: string | undefined = process.env.BACKEND_WALLET_ADDRESS;
-    if (BACKEND_WALLET_ADDRESS === undefined || BACKEND_WALLET_ADDRESS === "") {
-      throw new Error("Please define the BACKEND_WALLET_ADDRESS in your .env file.");
-    }
-
     it("should be upgradable", async function () {
-      const Box = await ethers.getContractFactory("AirdropCampaignData");
-
-      const instance = await upgrades.deployProxy(Box, [BACKEND_WALLET_ADDRESS]); // https://forum.openzeppelin.com/t/types-values-length-mismatch/4613/8
-      await instance.deployed();
-      expect(await instance.admin()).to.be.equal(BACKEND_WALLET_ADDRESS); // should be the same, right?
-
-      const BoxV2 = await ethers.getContractFactory("AirdropCampaignData");
-      const upgraded = await upgrades.upgradeProxy(instance.address, BoxV2);
+      const airbroCampaignData_upgraded__factory = await ethers.getContractFactory("AirdropCampaignDataUpgrade");
+      const upgraded = await upgrades.upgradeProxy(this.airdropCampaignData.address, airbroCampaignData_upgraded__factory);
       await upgraded.deployed();
 
-      expect(await upgraded.admin()).to.be.equal(BACKEND_WALLET_ADDRESS); // should be the same, right?
+      expect(await upgraded.getUpgradedValue()).to.be.equal("test_text");
     });
   });
 }

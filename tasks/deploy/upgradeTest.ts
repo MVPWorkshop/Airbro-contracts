@@ -8,11 +8,11 @@ task("deploy:upgradable").setAction(async function (taskArguments: TaskArguments
     throw new Error("Please define the BACKEND_WALLET_ADDRESS in your .env file.");
   }
 
-  const AirdropCampaignDataFactory = await ethers.getContractFactory("AirdropCampaignData");
+  const airdropCampaignDataFactory = await ethers.getContractFactory("AirdropCampaignData");
 
   console.log("Deploying AirdropCampaignData...");
-  const AirdropCampaignData = await upgrades.deployProxy(AirdropCampaignDataFactory, [BACKEND_WALLET_ADDRESS]);
-  await AirdropCampaignData.deployed();
+  const airdropCampaignData = await upgrades.deployProxy(airdropCampaignDataFactory, [BACKEND_WALLET_ADDRESS]);
+  await airdropCampaignData.deployed();
 
-  console.log("AirdropCampaignData deployed to:", AirdropCampaignData.address);
+  console.log("airdropCampaignData deployed to:", airdropCampaignData.address);
 });

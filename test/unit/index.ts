@@ -84,7 +84,7 @@ describe("Unit tests", function () {
   });
 
   describe("AirdropsCampaignData", async function () {
-    /* beforeEach(async function () {
+    beforeEach(async function () {
       const { airdropCampaignData } = await this.loadFixture(airdropCampaignDataFixture);
       this.airdropCampaignData = airdropCampaignData;
     });
@@ -95,8 +95,8 @@ describe("Unit tests", function () {
     AirdropCampaignDataShouldbatchAddDailyHash();
     AirdropCampaignDataShouldAddAirdropCampaignChain();
     AirdropCampaignDataShouldBatchAddAirdropCampaignChain();
-    AirdropCampaignDataShouldFinalizeAirdrop(); */
-    AirdropCampaignDataShouldBeUpgradable();
+    AirdropCampaignDataShouldFinalizeAirdrop();
+    AirdropCampaignDataShouldBeUpgradable(); // upgrades the upgradable fixture which is deployed
   });
 
   describe("Airbro - Classic", function () {

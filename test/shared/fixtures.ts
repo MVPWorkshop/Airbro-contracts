@@ -1,6 +1,6 @@
 import { Fixture, MockContract } from "ethereum-waffle";
 import { ContractFactory } from "ethers";
-import { ethers } from "hardhat";
+import { ethers, upgrades } from "hardhat";
 import { Wallet } from "@ethersproject/wallet";
 
 import { TestNftCollection } from "../../src/types/contracts/mocks/TestNftCollection";
@@ -346,9 +346,15 @@ export const airdropCampaignDataFixture: Fixture<AirdropCampaignDataFixtureType>
 
   const airdropCampaignDataFactory = await ethers.getContractFactory("AirdropCampaignData");
 
-  const airdropCampaignData = (await airdropCampaignDataFactory
+  // --- Old way of deployign the contract
+  /* const airdropCampaignData = (await airdropCampaignDataFactory
     .connect(deployer)
-    .deploy(process.env.BACKEND_WALLET_ADDRESS)) as AirdropCampaignData;
+    .deploy(process.env.BACKEND_WALLET_ADDRESS)) as AirdropCampaignData; */
+
+  // --- New way of deployign the contract - UPGRADABLE
+  const airdropCampaignData = (await upgrades.deployProxy(airdropCampaignDataFactory, [
+    process.env.BACKEND_WALLET_ADDRESS,
+  ])) as AirdropCampaignData;
 
   await airdropCampaignData.deployed();
 
