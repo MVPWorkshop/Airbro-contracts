@@ -29,6 +29,11 @@ export function NewSB1155DropCampaignShouldGoThroughUserFlow() {
       .to.emit(this.airdropRegistry, "FactoryWhitelisted")
       .withArgs(this.airbroCampaignFactory.address);
 
+    await expect(this.airbroCampaignFactory.connect(this.signers.backendWallet).closeBeta()).to.emit(
+      this.airbroCampaignFactory,
+      "BetaClosed",
+    );
+
     // creating the NewSB1155DropCampaign from the factory contract
     await expect(this.airbroCampaignFactory.connect(this.signers.deployer).createNewSB1155DropCampaign(uri)).to.emit(
       this.airdropRegistry,

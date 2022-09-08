@@ -4,6 +4,7 @@ import { ethers, network } from "hardhat";
 export const contractAdminAddress: string = process.env.BACKEND_WALLET_ADDRESS as string;
 export const registryAdminAddress: string = process.env.REGISTRY_ADMIN_WALLET_ADDRESS as string;
 export const treasuryAddress: string = process.env.TREASURY_WALLET_ADDRESS as string;
+export const betaAddress: string = process.env.BETA_WALLET_ADDRESS as string;
 export const randomAddress: string = "0x6B175474E89094C44Da98b954EedeAC495271d0F";
 
 export const oneWeekInSeconds: number = 604800;

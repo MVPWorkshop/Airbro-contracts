@@ -15,6 +15,11 @@ export function ExistingERC20DropCampaignShouldGoThroughUserFlow(): void {
         .to.emit(this.airdropRegistry, "FactoryWhitelisted")
         .withArgs(this.airbroCampaignFactory.address);
 
+      await expect(this.airbroCampaignFactory.connect(this.signers.backendWallet).closeBeta()).to.emit(
+        this.airbroCampaignFactory,
+        "BetaClosed",
+      );
+
       // creating the ExistingERC20DropCampaign from the factory contract
       await expect(
         this.airbroCampaignFactory.connect(this.signers.deployer).createExistingERC20DropCampaign(this.testToken.address, tokenSupply),
