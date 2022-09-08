@@ -12,7 +12,7 @@ import { AirdropCampaignData__factory } from "../../src/types/factories/contract
 
 import { Signer } from "@ethersproject/abstract-signer";
 
-task("deploy").setAction(async function (taskArguments: TaskArguments, { ethers }) {
+task("deploy").setAction(async function (taskArguments: TaskArguments, { ethers, upgrades }) {
   const REGISTRY_ADMIN_WALLET_ADDRESS: string | undefined = process.env.REGISTRY_ADMIN_WALLET_ADDRESS;
   if (REGISTRY_ADMIN_WALLET_ADDRESS === undefined || REGISTRY_ADMIN_WALLET_ADDRESS === "") {
     throw new Error("Please define the REGISTRY_ADMIN_WALLET_ADDRESS in your .env file.");
@@ -29,7 +29,9 @@ task("deploy").setAction(async function (taskArguments: TaskArguments, { ethers 
   const accounts: Signer[] = await ethers.getSigners();
   const DEPLOYER_ADDRESS = await accounts[0].getAddress();
 
-  /* Deployment of Airdrop Registry */
+  /**
+   *  1. Deployment of Airdrop Registry
+   * */
   console.log("| -- 1. Airdrop Registry -- |");
   console.log("Deployer address: " + DEPLOYER_ADDRESS);
   console.log("Constuctor args: " + REGISTRY_ADMIN_WALLET_ADDRESS, TREASURY_WALLET_ADDRESS);
@@ -65,7 +67,9 @@ task("deploy").setAction(async function (taskArguments: TaskArguments, { ethers 
 
   console.log("Airdrop Registry deployed to: ", airdropRegistry.address);
 
-  /* Deployment of AirbroCampaignFactory */
+  /**
+   * 2. Deployment of AirbroCampaignFactory
+   * */
   console.log("| -- --------------------- -- |");
   console.log("| -- 2. AirbroCampaignFactory -- |");
   console.log("Deployer address: " + DEPLOYER_ADDRESS);
@@ -87,18 +91,22 @@ task("deploy").setAction(async function (taskArguments: TaskArguments, { ethers 
   console.log("Airbro Campaign Factory deployed to: ", airbroCampaignFactory.address);
   console.log("| -- --------------------- -- |");
 
-  /* Deployment of AirdropCampaignData */
-  console.log("| -- --------------------- -- |");
+  /**
+   * 3. Deployment of AirdropCampaignData - now upgradable
+   * */
   console.log("| -- 3. AirdropCampaignData -- |");
   console.log("Deployer address: " + DEPLOYER_ADDRESS);
   console.log("Constuctor args: " + BACKEND_WALLET_ADDRESS);
 
-  const AirdropCampaignDataFactory: AirdropCampaignData__factory = <AirdropCampaignData__factory>(
+  const airdropCampaignDataFactory: AirdropCampaignData__factory = <AirdropCampaignData__factory>(
     await ethers.getContractFactory("AirdropCampaignData")
   );
 
   console.log("Deploying AirdropCampaignData...");
-  const airdropCampaignData: AirdropCampaignData = <AirdropCampaignData>await AirdropCampaignDataFactory.deploy(BACKEND_WALLET_ADDRESS);
+  const airdropCampaignData = await upgrades.deployProxy(airdropCampaignDataFactory, [BACKEND_WALLET_ADDRESS]);
+  await airdropCampaignData.deployed();
+
+  console.log("airdropCampaignData deployed to:", airdropCampaignData.address);
 
   console.log("Awaiting deployment confirmation...");
   await airdropCampaignData.deployed();
