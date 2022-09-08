@@ -123,7 +123,6 @@ export function AirbroCampaignFactoryShouldChangeAndApplyProtocolFeeInAllAirDrop
     );
 
     const treasuryBefore = await provider.getBalance(treasuryAddress);
-    // console.log(treasuryBefore);
 
     await expect(
       this.airbroCampaignFactory.connect(this.signers.deployer).createNewERC1155DropCampaign(uri, { value: newCreatorFee }),
@@ -140,7 +139,6 @@ export function AirbroCampaignFactoryShouldChangeAndApplyProtocolFeeInAllAirDrop
     ).to.emit(this.airdropRegistry, "NewAirdrop");
 
     const treasuryAfter = await provider.getBalance(treasuryAddress);
-    // console.log(treasuryAfter);
 
     const campaignsCreated = 3;
     expect(treasuryAfter.sub(treasuryBefore)).to.equal(newCreatorFee.mul(campaignsCreated));
