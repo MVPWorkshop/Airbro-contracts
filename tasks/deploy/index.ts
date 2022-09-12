@@ -1,2 +1,2 @@
 import "./factory";
-// import "./upgrade";
+import "./upgrade";

@@ -5,23 +5,22 @@ import { TaskArguments } from "hardhat/types";
  *
  *
  *
- * NOTE: Still have to write script to upgrade the AirdropCampaignData contract
- *
+ * NOTE: Still have to test if this works.
+ * Should work with the following script: yarn upgrade:AidropCampaignData --address [address_of_deployed_contract_here]
  *
  *
  *   */
 
-/* task("deploy:upgradable").setAction(async function (taskArguments: TaskArguments, { ethers, upgrades }) {
-  const BACKEND_WALLET_ADDRESS: string | undefined = process.env.BACKEND_WALLET_ADDRESS;
-  if (BACKEND_WALLET_ADDRESS === undefined || BACKEND_WALLET_ADDRESS === "") {
-    throw new Error("Please define the BACKEND_WALLET_ADDRESS in your .env file.");
-  }
+task("upgrade:airdropCampaignData")
+  .addParam("address", "Address of deployed AirdropCampaignData contract")
+  .setAction(async function (taskArguments: TaskArguments, { ethers, upgrades }) {
+    const airbroCampaignData_upgraded__factory = await ethers.getContractFactory("AirdropCampaignDataUpgrade");
 
-  const AirdropCampaignDataFactory = await ethers.getContractFactory("AirdropCampaignData");
+    console.log("Upgrading AirdropCampaignData...");
+    const upgraded = await upgrades.upgradeProxy(taskArguments.address, airbroCampaignData_upgraded__factory);
 
-  console.log("Deploying AirdropCampaignData...");
-  const AirdropCampaignData = await upgrades.deployProxy(AirdropCampaignDataFactory, [BACKEND_WALLET_ADDRESS]);
-  await AirdropCampaignData.deployed();
+    console.log("Awaiting upgrade confirmation...");
+    await upgraded.deployed();
 
-  console.log("AirdropCampaignData deployed to:", AirdropCampaignData.address);
-}); */
+    console.log(`AirdropCampaignData upgraded at ${upgraded.address}`); // or it is just taskAruguments.address ? Check if it is the same
+  });
