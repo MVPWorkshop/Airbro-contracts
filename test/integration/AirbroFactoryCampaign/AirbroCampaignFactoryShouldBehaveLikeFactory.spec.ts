@@ -9,6 +9,11 @@ export function AirbroCampaignFactoryShouldBehaveLikeFactory(): void {
       .to.emit(this.airdropRegistry, "FactoryWhitelisted")
       .withArgs(this.airbroCampaignFactory.address);
 
+    await expect(this.airbroCampaignFactory.connect(this.signers.backendWallet).closeBeta()).to.emit(
+      this.airbroCampaignFactory,
+      "BetaClosed",
+    );
+
     await expect(this.airbroCampaignFactory.connect(this.signers.deployer).createNewERC1155DropCampaign(uri)).to.emit(
       this.airdropRegistry,
       "NewAirdrop",
@@ -19,6 +24,11 @@ export function AirbroCampaignFactoryShouldBehaveLikeFactory(): void {
     await expect(this.airdropRegistry.connect(this.signers.registryAdmin).addFactory(this.airbroCampaignFactory.address))
       .to.emit(this.airdropRegistry, "FactoryWhitelisted")
       .withArgs(this.airbroCampaignFactory.address);
+
+    await expect(this.airbroCampaignFactory.connect(this.signers.backendWallet).closeBeta()).to.emit(
+      this.airbroCampaignFactory,
+      "BetaClosed",
+    );
 
     await expect(this.airbroCampaignFactory.connect(this.signers.deployer).createNewSB1155DropCampaign(uri)).to.emit(
       this.airdropRegistry,
@@ -31,6 +41,11 @@ export function AirbroCampaignFactoryShouldBehaveLikeFactory(): void {
       .to.emit(this.airdropRegistry, "FactoryWhitelisted")
       .withArgs(this.airbroCampaignFactory.address);
 
+    await expect(this.airbroCampaignFactory.connect(this.signers.backendWallet).closeBeta()).to.emit(
+      this.airbroCampaignFactory,
+      "BetaClosed",
+    );
+
     await expect(this.airbroCampaignFactory.connect(this.signers.deployer).createExistingERC20DropCampaign(randomAddress, 1000)).to.emit(
       this.airdropRegistry,
       "NewAirdrop",
@@ -38,6 +53,11 @@ export function AirbroCampaignFactoryShouldBehaveLikeFactory(): void {
   });
 
   it("should revert NotWhitelisted if factory contract is not whitelisted on airdropRegistry contract", async function () {
+    await expect(this.airbroCampaignFactory.connect(this.signers.backendWallet).closeBeta()).to.emit(
+      this.airbroCampaignFactory,
+      "BetaClosed",
+    );
+
     await expect(this.airbroCampaignFactory.connect(this.signers.deployer).createNewERC1155DropCampaign(uri)).to.be.revertedWith(
       "NotWhitelisted",
     );
@@ -47,6 +67,11 @@ export function AirbroCampaignFactoryShouldBehaveLikeFactory(): void {
     await expect(this.airdropRegistry.connect(this.signers.registryAdmin).addFactory(this.airbroCampaignFactory.address))
       .to.emit(this.airdropRegistry, "FactoryWhitelisted")
       .withArgs(this.airbroCampaignFactory.address);
+
+    await expect(this.airbroCampaignFactory.connect(this.signers.backendWallet).closeBeta()).to.emit(
+      this.airbroCampaignFactory,
+      "BetaClosed",
+    );
 
     await expect(this.airbroCampaignFactory.connect(this.signers.deployer).createNewERC1155DropCampaign(uri)).to.emit(
       this.airdropRegistry,
@@ -68,6 +93,11 @@ export function AirbroCampaignFactoryShouldBehaveLikeFactory(): void {
     await expect(this.airdropRegistry.connect(this.signers.registryAdmin).addFactory(this.airbroCampaignFactory.address))
       .to.emit(this.airdropRegistry, "FactoryWhitelisted")
       .withArgs(this.airbroCampaignFactory.address);
+
+    await expect(this.airbroCampaignFactory.connect(this.signers.backendWallet).closeBeta()).to.emit(
+      this.airbroCampaignFactory,
+      "BetaClosed",
+    );
 
     await expect(this.airbroCampaignFactory.connect(this.signers.deployer).createNewERC1155DropCampaign(uri)).to.emit(
       this.airdropRegistry,

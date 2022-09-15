@@ -1,7 +1,6 @@
 import { expect } from "chai";
 import { ethers, upgrades } from "hardhat";
 
-/* NOT WORKING, SHOULD PROBABLY CHANGE SC */
 export function AirdropCampaignDataShouldBeUpgradable(): void {
   describe("upgradable", async function () {
     it("should be upgradable", async function () {

@@ -25,6 +25,10 @@ task("deploy").setAction(async function (taskArguments: TaskArguments, { ethers,
   if (BACKEND_WALLET_ADDRESS === undefined || BACKEND_WALLET_ADDRESS === "") {
     throw new Error("Please define the BACKEND_WALLET_ADDRESS in your .env file.");
   }
+  const BETA_WALLET_ADDRESS: string | undefined = process.env.BETA_WALLET_ADDRESS;
+  if (BETA_WALLET_ADDRESS === undefined || BETA_WALLET_ADDRESS === "") {
+    throw new Error("Please define the BETA_WALLET_ADDRESS in your .env file.");
+  }
 
   const accounts: Signer[] = await ethers.getSigners();
   const DEPLOYER_ADDRESS = await accounts[0].getAddress();
@@ -73,7 +77,7 @@ task("deploy").setAction(async function (taskArguments: TaskArguments, { ethers,
   console.log("| -- --------------------- -- |");
   console.log("| -- 2. AirbroCampaignFactory -- |");
   console.log("Deployer address: " + DEPLOYER_ADDRESS);
-  console.log("Constuctor args: " + BACKEND_WALLET_ADDRESS, airdropRegistry.address);
+  console.log("Constuctor args: " + BACKEND_WALLET_ADDRESS, airdropRegistry.address, BETA_WALLET_ADDRESS);
 
   const AirbroCampaignFactoryFactory: AirbroCampaignFactory__factory = <AirbroCampaignFactory__factory>(
     await ethers.getContractFactory("AirbroCampaignFactory")
@@ -81,7 +85,7 @@ task("deploy").setAction(async function (taskArguments: TaskArguments, { ethers,
 
   console.log("Deploying AirbroCampaignFactory...");
   const airbroCampaignFactory: AirbroCampaignFactory = <AirbroCampaignFactory>(
-    await AirbroCampaignFactoryFactory.deploy(BACKEND_WALLET_ADDRESS, airdropRegistry.address)
+    await AirbroCampaignFactoryFactory.deploy(BACKEND_WALLET_ADDRESS, airdropRegistry.address, BETA_WALLET_ADDRESS)
   );
   // , existingAdress, new1155address, sbaddress
 

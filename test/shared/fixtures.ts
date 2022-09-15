@@ -185,7 +185,7 @@ export const integrationCampaignFixture: Fixture<IntegrationCampaignFixtureType>
 
   const airbroCampaignFactory: AirbroCampaignFactory = (await airbroCampaignFactoryFactory
     .connect(deployer)
-    .deploy(process.env.BACKEND_WALLET_ADDRESS, airdropRegistry.address)) as AirbroCampaignFactory;
+    .deploy(process.env.BACKEND_WALLET_ADDRESS, airdropRegistry.address, process.env.BETA_WALLET_ADDRESS)) as AirbroCampaignFactory;
 
   await airbroCampaignFactory.deployed();
 
