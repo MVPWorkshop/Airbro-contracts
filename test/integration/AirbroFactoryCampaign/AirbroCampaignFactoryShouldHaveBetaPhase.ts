@@ -1,6 +1,6 @@
 import { expect } from "chai";
 import { ethers } from "hardhat";
-import { randomAddress, treasuryAddress, uri } from "../../shared/constants";
+import { randomAddress, treasuryAddress, name, symbol, uri } from "../../shared/constants";
 import { constants } from "ethers";
 
 export function AirbroCampaignFactoryShouldHaveBetaPhase(): void {
@@ -11,11 +11,11 @@ export function AirbroCampaignFactoryShouldHaveBetaPhase(): void {
 
     expect(await this.airbroCampaignFactory.beta()).to.be.equal(true);
 
-    await expect(this.airbroCampaignFactory.connect(this.signers.deployer).createNewSB1155DropCampaign(uri)).to.be.revertedWith(
-      "NotBetaAddress",
-    );
+    await expect(
+      this.airbroCampaignFactory.connect(this.signers.deployer).createNewSB1155DropCampaign(name, symbol, uri),
+    ).to.be.revertedWith("NotBetaAddress");
 
-    await expect(this.airbroCampaignFactory.connect(this.signers.betaAddress).createNewSB1155DropCampaign(uri)).to.emit(
+    await expect(this.airbroCampaignFactory.connect(this.signers.betaAddress).createNewSB1155DropCampaign(name, symbol, uri)).to.emit(
       this.airdropRegistry,
       "NewAirdrop",
     );
@@ -27,7 +27,7 @@ export function AirbroCampaignFactoryShouldHaveBetaPhase(): void {
 
     expect(await this.airbroCampaignFactory.beta()).to.be.equal(false);
 
-    await expect(this.airbroCampaignFactory.connect(this.signers.deployer).createNewSB1155DropCampaign(uri)).to.emit(
+    await expect(this.airbroCampaignFactory.connect(this.signers.deployer).createNewSB1155DropCampaign(name, symbol, uri)).to.emit(
       this.airdropRegistry,
       "NewAirdrop",
     );

@@ -74,7 +74,11 @@ contract AirbroCampaignFactory is AirdropAdmin, AirdropBeta {
 
     /// @notice Creates a new airdrop claim contract for specific NFT collection holders that will reward participants with newly created ERC1155 NFTs
     /// @param uri - ipfs link of the image uploaded by user
-    function createNewERC1155DropCampaign(string memory uri) external payable duringBeta validFeeAmount {
+    function createNewERC1155DropCampaign(
+        string memory name,
+        string memory symbol,
+        string memory uri
+    ) external payable duringBeta validFeeAmount {
         (bool success, ) = treasury.call{ value: msg.value }("");
 
         if (!success) {
@@ -83,15 +87,21 @@ contract AirbroCampaignFactory is AirdropAdmin, AirdropBeta {
 
         NewERC1155DropCampaign airdropContract = NewERC1155DropCampaign(Clones.clone(erc1155DropCampaign));
         airdropContract.initialize(
+            name,
+            symbol,
             uri,
-            address(this) // airBroFactory contract address -> used for getting back admin contract address in airdrop contracts
+            address(this) // airBroFactory contract address
         );
         airdropRegistryAddress.addAirdrop(address(airdropContract), msg.sender, "ERC1155");
     }
 
     /// @notice Creates a new airdrop claim contract for specific NFT collection holders that will reward participants with newly created Soulbound ERC1155 NFTs
     /// @param uri - ipfs link of the image uploaded by user
-    function createNewSB1155DropCampaign(string memory uri) external payable duringBeta validFeeAmount {
+    function createNewSB1155DropCampaign(
+        string memory name,
+        string memory symbol,
+        string memory uri
+    ) external payable duringBeta validFeeAmount {
         (bool success, ) = treasury.call{ value: msg.value }("");
 
         if (!success) {
@@ -100,8 +110,10 @@ contract AirbroCampaignFactory is AirdropAdmin, AirdropBeta {
 
         NewSB1155DropCampaign airdropContract = NewSB1155DropCampaign(Clones.clone(sb1155DropCampaign));
         airdropContract.initialize(
+            name,
+            symbol,
             uri,
-            address(this) // airBroFactory contract address -> used for getting back admin contract address in airdrop contracts
+            address(this) // airBroFactory contract address
         );
         airdropRegistryAddress.addAirdrop(address(airdropContract), msg.sender, "SB1155");
     }

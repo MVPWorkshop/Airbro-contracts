@@ -11,6 +11,8 @@ export const oneWeekInSeconds: number = 604800;
 export const claimFee = ethers.utils.parseEther("0.002"); // 0.02 ETH
 export const claimPeriodInDays = 60;
 export const uri: string = "ipfs://bafybeict2kq6gt4ikgulypt7h7nwj4hmfi2kevrqvnx2osibfulyy5x3hu/no-time-to-explain.jpeg";
+export const name: string = "Collection Name";
+export const symbol: string = "CLCTN SMBL";
 
 // struct used in contract
 export const chains = {

@@ -12,6 +12,8 @@ contract NewSB1155DropCampaign is ERC1155Upgradeable, CampaignAidropsShared {
     uint256 public constant tokensPerClaim = 1; // 1 reward per wallet
     string public constant airdropType = "SB1155";
 
+    string public name;
+    string public symbol;
     uint256 public airdropFundBlockTimestamp;
 
     address internal airdropFundingHolder;
@@ -22,12 +24,19 @@ contract NewSB1155DropCampaign is ERC1155Upgradeable, CampaignAidropsShared {
     event Attest(address indexed to);
     event Revoke(address indexed from);
 
-    function initialize(string memory _uri, address _airbroCampaignFactoryAddress) public initializer {
+    function initialize(
+        string memory _name,
+        string memory _symbol,
+        string memory _uri,
+        address _airbroCampaignFactoryAddress
+    ) public initializer {
         __ERC1155_init(_uri);
         airbroCampaignFactoryAddress = IAirBroFactory(_airbroCampaignFactoryAddress);
+        name = _name;
+        symbol = _symbol;
     }
 
-    function contractURI() public pure returns (string memory) {
+    function contractURI() public view returns (string memory) {
         return "https://jsonkeeper.com/b/I5UO";
     }
 

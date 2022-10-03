@@ -13,17 +13,28 @@ contract NewERC1155DropCampaign is ERC1155Upgradeable, CampaignAidropsShared {
     uint256 public constant tokensPerClaim = 1; // 1 reward per wallet
     string public constant airdropType = "ERC1155";
 
+    string public name;
+    string public symbol;
+    string public contractURI;
     uint256 public airdropFundBlockTimestamp;
 
     address internal airdropFundingHolder;
 
-    function initialize(string memory _uri, address _airbroCampaignFactoryAddress) public initializer {
+    function initialize(
+        string memory _name,
+        string memory _symbol,
+        string memory _uri,
+        address _airbroCampaignFactoryAddress
+    ) public initializer {
         __ERC1155_init(_uri);
         airbroCampaignFactoryAddress = IAirBroFactory(_airbroCampaignFactoryAddress);
+        name = _name;
+        symbol = _symbol;
     }
 
-    function contractURI() public pure returns (string memory) {
-        return "https://jsonkeeper.com/b/I5UO";
+    function setContractURI(string memory _contractURI) external onlyAdmin {
+        // return "https://jsonkeeper.com/b/I5UO";
+        contractURI = _contractURI;
     }
 
     /// @notice Sets the merkleRoot - can only be done if admin (different from the contract owner)
