@@ -42,25 +42,17 @@ export function NewERC1155DropCampaignShouldClaimReward(): void {
       expect(await this.newERC1155DropCampaign.balanceOf(this.signers.alice.address, constants.Zero)).to.be.equal(constants.One);
     });
 
-    it.only("should revert claim if not part of merkleRoot", async function () {
-      // this.signers.alice.address
-      const whitelisted = [
-        "0xeAD6eb00dA66E2520681070e07caD5fe2373a4C5",
-        this.signers.bob.address,
-        this.signers.jerry.address,
-        this.signers.lisa.address,
-      ];
+    it("should revert claim if not part of merkleRoot", async function () {
+      const whitelisted = [this.signers.alice.address, this.signers.bob.address, this.signers.jerry.address, this.signers.lisa.address];
       const leaves = whitelisted.map(addr => keccak256(addr));
       const merkleTree = new MerkleTree(leaves, keccak256, { sort: true });
       const roothash = merkleTree.getHexRoot();
-      console.log("roothash: " + roothash);
 
       expect(await this.newERC1155DropCampaign.connect(this.signers.backendWallet).setMerkleRoot(roothash))
         .to.emit(this.newERC1155DropCampaign, "MerkleRootSet")
         .withArgs(roothash);
 
       const hexProof = merkleTree.getHexProof(leaves[0]);
-      console.log("hexProof: " + hexProof);
 
       await expect(this.newERC1155DropCampaign.connect(this.signers.peter).claim(hexProof, { value: claimFee })).to.be.revertedWith(
         `NotEligible`,

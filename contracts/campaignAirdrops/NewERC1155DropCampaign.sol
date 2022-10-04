@@ -32,8 +32,9 @@ contract NewERC1155DropCampaign is ERC1155Upgradeable, CampaignAidropsShared {
         symbol = _symbol;
     }
 
+    /// @notice Sets the contractURI - can only be done by admin
+    /// @param _contractURI - link to contract metadata
     function setContractURI(string memory _contractURI) external onlyAdmin {
-        // return "https://jsonkeeper.com/b/I5UO";
         contractURI = _contractURI;
     }
 

@@ -14,6 +14,7 @@ contract NewSB1155DropCampaign is ERC1155Upgradeable, CampaignAidropsShared {
 
     string public name;
     string public symbol;
+    string public contractURI;
     uint256 public airdropFundBlockTimestamp;
 
     address internal airdropFundingHolder;
@@ -36,8 +37,10 @@ contract NewSB1155DropCampaign is ERC1155Upgradeable, CampaignAidropsShared {
         symbol = _symbol;
     }
 
-    function contractURI() public view returns (string memory) {
-        return "https://jsonkeeper.com/b/I5UO";
+    /// @notice Sets the contractURI - can only be done by admin
+    /// @param _contractURI - link to contract metadata
+    function setContractURI(string memory _contractURI) external onlyAdmin {
+        contractURI = _contractURI;
     }
 
     /// @notice Sets the merkleRoot - can only be done if admin (different from the contract owner)
