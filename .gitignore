@@ -17,7 +17,6 @@
 .idea/*
 .vscode
 .DS_Store
-.openzeppelin
 
 # files
 *.env
