@@ -52,16 +52,16 @@ abstract contract CampaignAidropsShared is AirdropMerkleProof {
     function claimHandler(bytes32[] calldata _merkleProof) internal {
         if (hasClaimed[msg.sender]) revert AlreadyRedeemed();
         if (checkProof(_merkleProof, merkleRoot) == false) revert NotEligible();
-        if (msg.value != airbroCampaignFactoryAddress.claimFee()) revert InvalidFeeAmount();
 
+        hasClaimed[msg.sender] = true;
+
+        if (msg.value != airbroCampaignFactoryAddress.claimFee()) revert InvalidFeeAmount();
         (bool success, ) = airbroCampaignFactoryAddress.treasury().call{ value: msg.value }("");
 
-        if (success) {
-            hasClaimed[msg.sender] = true;
-
-            emit Claimed(msg.sender);
-        } else {
+        if (!success) {
             revert FeeNotSent();
+        } else {
+            emit Claimed(msg.sender);
         }
     }
 
