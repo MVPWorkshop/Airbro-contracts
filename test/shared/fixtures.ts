@@ -352,9 +352,10 @@ export const airdropCampaignDataFixture: Fixture<AirdropCampaignDataFixtureType>
     .deploy(process.env.BACKEND_WALLET_ADDRESS)) as AirdropCampaignData; */
 
   // --- New way of deployign the contract - UPGRADABLE
-  const airdropCampaignData = (await upgrades.deployProxy(airdropCampaignDataFactory, [
-    process.env.BACKEND_WALLET_ADDRESS,
-  ])) as AirdropCampaignData;
+  const airdropCampaignData = (await upgrades.deployProxy(airdropCampaignDataFactory, [process.env.BACKEND_WALLET_ADDRESS], {
+    initializer: "initialize",
+    kind: "uups",
+  })) as AirdropCampaignData;
 
   await airdropCampaignData.deployed();
 

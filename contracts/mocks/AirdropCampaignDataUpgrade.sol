@@ -2,9 +2,11 @@
 pragma solidity ^0.8.15;
 
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 
 /// @title AirdropCampaignData - Data contract for storing of daily hashes of airbro Campaigns
-contract AirdropCampaignDataUpgrade is Initializable {
+contract AirdropCampaignDataUpgrade is Initializable, UUPSUpgradeable, OwnableUpgradeable {
     address public admin;
 
     enum Chains {
@@ -21,8 +23,6 @@ contract AirdropCampaignDataUpgrade is Initializable {
 
     mapping(address => AirdropData) public airdrops;
 
-    string public newUpgradeVar; // ------------------- newly added var to upgrade the contract
-
     error NotAdmin();
     error UnequalArrays();
     error ChainDataNotSet();
@@ -30,7 +30,7 @@ contract AirdropCampaignDataUpgrade is Initializable {
     error AirdropHasFinished();
     error AlreadyFinalized();
 
-    event AdminChanged(address adminAddress);
+    event ContractAdminChanged(address adminAddress);
     event FinalizedAirdrop(address indexed airdropCampaignAddress);
     event HashAdded(address indexed airdropCampaignAddress, bytes32 indexed hash);
     event ChainAdded(address indexed airdropCampaignAddress, Chains indexed airdropChain);
@@ -40,15 +40,22 @@ contract AirdropCampaignDataUpgrade is Initializable {
         _;
     }
 
+    // should this be onlyAdmin (backend wallet address),
+    // or should the deployer be able to upgrade
+    // (which means the cotract should have ownable)?
+    function _authorizeUpgrade(address) internal override onlyOwner {}
+
     function initialize(address _admin) public initializer {
         admin = _admin;
+        __Ownable_init();
+        __UUPSUpgradeable_init();
     }
 
     /// @notice Updates the address of the admin variable
     /// @param _newAdmin - New address for the admin of this contract, and the address for all newly created airdrop contracts
     function changeAdmin(address _newAdmin) external onlyAdmin {
         admin = _newAdmin;
-        emit AdminChanged(_newAdmin);
+        emit ContractAdminChanged(_newAdmin);
     }
 
     /// @notice Adds daily hash for any airdropCampaign contract

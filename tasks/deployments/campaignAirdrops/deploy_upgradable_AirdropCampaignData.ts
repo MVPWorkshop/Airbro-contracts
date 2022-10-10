@@ -16,8 +16,19 @@ export async function deploy_upgradable_AirdropCampaignData(
   console.log("Constuctor args: ");
   console.log({ BACKEND_WALLET_ADDRESS });
 
-  const airdropCampaignData: AirdropCampaignData = <AirdropCampaignData>(
+  // Old Transparent implementation
+  /* const airdropCampaignData: AirdropCampaignData = <AirdropCampaignData>(
     await this.upgrades.deployProxy(airdropCampaignDataFactory, [BACKEND_WALLET_ADDRESS])
+  ); */
+
+  // New UUPS implementation
+  const airdropCampaignData: AirdropCampaignData = <AirdropCampaignData>await this.upgrades.deployProxy(
+    airdropCampaignDataFactory,
+    [BACKEND_WALLET_ADDRESS],
+    {
+      initializer: "initialize",
+      kind: "uups",
+    },
   );
 
   console.log("Awaiting deployment confirmation...");
