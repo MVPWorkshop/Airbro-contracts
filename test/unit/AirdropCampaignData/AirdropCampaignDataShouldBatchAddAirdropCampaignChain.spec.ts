@@ -27,7 +27,7 @@ export function AirdropCampaignDataShouldBatchAddAirdropCampaignChain(): void {
 
       await expect(
         this.airdropCampaignData.connect(this.signers.alice).batchAddAirdropCampaignChain(randomAddressesArray, [chains.Eth, chains.Pols]),
-      ).to.be.revertedWith("NotAdmin");
+      ).to.be.revertedWith("NotAirbroManager");
     });
 
     it("should revert if length of array arguments do not match", async function () {

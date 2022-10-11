@@ -28,7 +28,7 @@ export function AirdropCampaignDataShouldaddDailyHash(): void {
 
       await expect(
         this.airdropCampaignData.connect(this.signers.alice).addDailyHash(randomAddress, bytes32MerkleRootHash),
-      ).to.be.revertedWith("NotAdmin");
+      ).to.be.revertedWith("NotAirbroManager");
     });
 
     it("should revert if chain is not set", async function () {

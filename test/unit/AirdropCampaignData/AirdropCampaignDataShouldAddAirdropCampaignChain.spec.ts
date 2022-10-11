@@ -25,7 +25,7 @@ export function AirdropCampaignDataShouldAddAirdropCampaignChain(): void {
     it("should revert non admin wallet", async function () {
       await expect(
         this.airdropCampaignData.connect(this.signers.alice).addAirdropCampaignChain(campaignAddress, chains.Eth),
-      ).to.be.revertedWith("NotAdmin");
+      ).to.be.revertedWith("NotAirbroManager");
     });
 
     it("should revert chain data if it is 0 (chains.zero)", async function () {

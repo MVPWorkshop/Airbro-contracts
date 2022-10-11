@@ -58,11 +58,8 @@ abstract contract CampaignAidropsShared is AirdropMerkleProof {
         if (msg.value != airbroCampaignFactoryAddress.claimFee()) revert InvalidFeeAmount();
         (bool success, ) = airbroCampaignFactoryAddress.treasury().call{ value: msg.value }("");
 
-        if (!success) {
-            revert FeeNotSent();
-        } else {
-            emit Claimed(msg.sender);
-        }
+        if (!success) revert FeeNotSent();
+        emit Claimed(msg.sender);
     }
 
     /// @notice Checks if the user is eligible for this airdrop

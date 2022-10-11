@@ -37,7 +37,7 @@ import { ExistingERC20DropCampaignShouldClaimReward } from "./campaignAirdrops/E
 import { ExistingERC20DropCampaignShouldUnlockWithdraw } from "./campaignAirdrops/ExistingERC20DropCampaign/ExistingERC20DropCampaignShouldUnlockWithdraw.spec";
 
 import { AirdropCampaignDataShouldBeDeployed } from "./AirdropCampaignData/AirdropCampaignDataShouldBeDeployed.spec";
-import { AirdropCampaignDataShouldChangeAdmin } from "./AirdropCampaignData/AirdropCampaignDataShouldChangeAdmin.spec";
+import { AirdropCampaignDataShouldChangeAirbroManager } from "./AirdropCampaignData/AirdropCampaignDataShouldChangeAirbroManager.spec";
 import { AirdropCampaignDataShouldaddDailyHash } from "./AirdropCampaignData/AirdropCampaignDataShouldAddDailyHash.spec";
 import { AirdropCampaignDataShouldbatchAddDailyHash } from "./AirdropCampaignData/AirdropCampaignDataShouldBatchAddDailyHash.spec";
 import { AirdropCampaignDataShouldAddAirdropCampaignChain } from "./AirdropCampaignData/AirdropCampaignDataShouldAddAirdropCampaignChain.spec";
@@ -90,7 +90,7 @@ describe("Unit tests", function () {
     });
 
     AirdropCampaignDataShouldBeDeployed();
-    AirdropCampaignDataShouldChangeAdmin();
+    AirdropCampaignDataShouldChangeAirbroManager();
     AirdropCampaignDataShouldaddDailyHash();
     AirdropCampaignDataShouldbatchAddDailyHash();
     AirdropCampaignDataShouldAddAirdropCampaignChain();
