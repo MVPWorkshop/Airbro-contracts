@@ -16,6 +16,7 @@ contract NewSB1155DropCampaign is ERC1155Upgradeable, CampaignAidropsShared {
     string public symbol;
     string public contractURI;
     uint256 public airdropFundBlockTimestamp;
+    bool public contractURIset;
 
     address internal airdropFundingHolder;
 
@@ -24,15 +25,19 @@ contract NewSB1155DropCampaign is ERC1155Upgradeable, CampaignAidropsShared {
 
     event Attest(address indexed to);
     event Revoke(address indexed from);
+    event ContractURISet(string indexed contractURI);
 
     function initialize(
         string memory _name,
         string memory _symbol,
-        string memory _uri,
-        address _airbroCampaignFactoryAddress
-    ) public initializer {
+        string memory _uri
+    )
+        public
+        /// address _airbroCampaignFactoryAddress
+        initializer
+    {
         __ERC1155_init(_uri);
-        airbroCampaignFactoryAddress = IAirBroFactory(_airbroCampaignFactoryAddress);
+        airbroCampaignFactoryAddress = IAirBroFactory(msg.sender);
         name = _name;
         symbol = _symbol;
     }
@@ -41,6 +46,8 @@ contract NewSB1155DropCampaign is ERC1155Upgradeable, CampaignAidropsShared {
     /// @param _contractURI - link to contract metadata
     function setContractURI(string memory _contractURI) external onlyAdmin {
         contractURI = _contractURI;
+        contractURIset = true;
+        emit ContractURISet(_contractURI);
     }
 
     /// @notice Sets the merkleRoot - can only be done if admin (different from the contract owner)

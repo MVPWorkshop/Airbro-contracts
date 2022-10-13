@@ -32,14 +32,13 @@ contract ExistingERC20DropCampaign is CampaignAidropsShared {
 
     function initialize(
         address _rewardToken,
-        uint256 _tokenSupply,
-        address _airbroCampaignFactoryAddress
+        uint256 _tokenSupply /// address _airbroCampaignFactoryAddress
     ) public {
         require(!initialized);
         initialized = true;
         rewardToken = IERC20(_rewardToken);
         tokenSupply = _tokenSupply;
-        airbroCampaignFactoryAddress = IAirBroFactory(_airbroCampaignFactoryAddress);
+        airbroCampaignFactoryAddress = IAirBroFactory(msg.sender);
         claimPeriodInDays = airbroCampaignFactoryAddress.claimPeriodInDays();
     }
 

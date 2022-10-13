@@ -66,8 +66,8 @@ contract AirbroCampaignFactory is AirdropAdmin, AirdropBeta {
         ExistingERC20DropCampaign airdropContract = ExistingERC20DropCampaign(Clones.clone(erc20DropCampaign));
         airdropContract.initialize(
             rewardToken,
-            tokenSupply,
-            address(this) // airBroFactory contract address -> used for getting back admin contract address in airdrop contracts)
+            tokenSupply
+            // address(this) // airBroFactory contract address -> used for getting back admin contract address in airdrop contracts)
         );
         airdropRegistryAddress.addAirdrop(address(airdropContract), msg.sender, "ERC20");
     }
@@ -89,8 +89,8 @@ contract AirbroCampaignFactory is AirdropAdmin, AirdropBeta {
         airdropContract.initialize(
             name,
             symbol,
-            uri,
-            address(this) // airBroFactory contract address
+            uri
+            // address(this) // airBroFactory contract address
         );
         airdropRegistryAddress.addAirdrop(address(airdropContract), msg.sender, "ERC1155");
     }
@@ -112,8 +112,8 @@ contract AirbroCampaignFactory is AirdropAdmin, AirdropBeta {
         airdropContract.initialize(
             name,
             symbol,
-            uri,
-            address(this) // airBroFactory contract address
+            uri
+            // address(this) // airBroFactory contract address
         );
         airdropRegistryAddress.addAirdrop(address(airdropContract), msg.sender, "SB1155");
     }
