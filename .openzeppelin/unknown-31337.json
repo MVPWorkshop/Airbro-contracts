@@ -162,7 +162,7 @@
     },
     "56e17cef697e3df61374ca67e9f8765188be24cbf68f0a0019b9d91485a422cc": {
       "address": "0xd1840c871e786A7Bd3727f973AE053984a140c6e",
-      "txHash": "0xf32a1d073d1d3df3ede8df239af9be4a8307b1a3acda9ef0e5286f5c11efbadb",
+      "txHash": "0x6003772b576394ce10d99ba1b32e79c620c6675e51fddbb27b91dc3cb9f919fd",
       "layout": {
         "storage": [
           {
@@ -227,16 +227,16 @@
             "offset": 0,
             "slot": "201",
             "type": "t_address",
-            "contract": "AirdropCampaignDataUpgrade",
-            "src": "contracts/mocks/AirdropCampaignDataUpgrade.sol:10"
+            "contract": "AirdropCampaignData",
+            "src": "contracts/AirdropCampaignData.sol:10"
           },
           {
             "label": "airdrops",
             "offset": 0,
             "slot": "202",
-            "type": "t_mapping(t_address,t_struct(AirdropData)10293_storage)",
-            "contract": "AirdropCampaignDataUpgrade",
-            "src": "contracts/mocks/AirdropCampaignDataUpgrade.sol:24"
+            "type": "t_mapping(t_address,t_struct(AirdropData)7879_storage)",
+            "contract": "AirdropCampaignData",
+            "src": "contracts/AirdropCampaignData.sol:24"
           }
         ],
         "types": {
@@ -264,8 +264,8 @@
             "label": "bytes32",
             "numberOfBytes": "32"
           },
-          "t_enum(Chains)10284": {
-            "label": "enum AirdropCampaignDataUpgrade.Chains",
+          "t_enum(Chains)7870": {
+            "label": "enum AirdropCampaignData.Chains",
             "members": [
               "Zero",
               "Eth",
@@ -273,16 +273,16 @@
             ],
             "numberOfBytes": "1"
           },
-          "t_mapping(t_address,t_struct(AirdropData)10293_storage)": {
-            "label": "mapping(address => struct AirdropCampaignDataUpgrade.AirdropData)",
+          "t_mapping(t_address,t_struct(AirdropData)7879_storage)": {
+            "label": "mapping(address => struct AirdropCampaignData.AirdropData)",
             "numberOfBytes": "32"
           },
-          "t_struct(AirdropData)10293_storage": {
-            "label": "struct AirdropCampaignDataUpgrade.AirdropData",
+          "t_struct(AirdropData)7879_storage": {
+            "label": "struct AirdropCampaignData.AirdropData",
             "members": [
               {
                 "label": "chain",
-                "type": "t_enum(Chains)10284",
+                "type": "t_enum(Chains)7870",
                 "offset": 0,
                 "slot": "0"
               },
