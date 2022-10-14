@@ -15,8 +15,8 @@ contract NewSB1155DropCampaign is ERC1155Upgradeable, CampaignAidropsShared {
     string public name;
     string public symbol;
     string public contractURI;
-    uint256 public airdropFundBlockTimestamp;
     bool public contractURIset;
+    uint256 public airdropFundBlockTimestamp;
 
     address internal airdropFundingHolder;
 
@@ -30,14 +30,11 @@ contract NewSB1155DropCampaign is ERC1155Upgradeable, CampaignAidropsShared {
     function initialize(
         string memory _name,
         string memory _symbol,
-        string memory _uri
-    )
-        public
-        /// address _airbroCampaignFactoryAddress
-        initializer
-    {
+        string memory _uri,
+        address _airbroCampaignFactoryAddress
+    ) public initializer {
         __ERC1155_init(_uri);
-        airbroCampaignFactoryAddress = IAirBroFactory(msg.sender);
+        airbroCampaignFactoryAddress = IAirBroFactory(_airbroCampaignFactoryAddress);
         name = _name;
         symbol = _symbol;
     }
