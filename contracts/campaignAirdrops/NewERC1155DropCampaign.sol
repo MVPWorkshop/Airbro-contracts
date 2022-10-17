@@ -3,6 +3,7 @@ pragma solidity ^0.8.15;
 
 import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC1155/ERC1155Upgradeable.sol";
+// import "@openzeppelin/contracts-upgradeable/metatx/ERC2771ContextUpgradeable.sol";
 
 import "./shared/CampaignAirdropsShared.sol";
 
@@ -17,8 +18,13 @@ contract NewERC1155DropCampaign is ERC1155Upgradeable, CampaignAidropsShared {
 
     address internal airdropFundingHolder;
 
-    function initialize(string memory _uri, address _airbroCampaignFactoryAddress) public initializer {
+    function initialize(
+        string memory _uri,
+        address _airbroCampaignFactoryAddress,
+        address _trustedForwarderAddress
+    ) public initializer {
         __ERC1155_init(_uri);
+        ERC2771ContextUpgradeable(_trustedForwarderAddress);
         airbroCampaignFactoryAddress = IAirBroFactory(_airbroCampaignFactoryAddress);
     }
 
@@ -38,7 +44,7 @@ contract NewERC1155DropCampaign is ERC1155Upgradeable, CampaignAidropsShared {
     /// @param _merkleProof is the merkleRoot proof that this user is eligible for claiming reward
     function claim(bytes32[] calldata _merkleProof) external payable {
         super.claimHandler(_merkleProof);
-        _mint(msg.sender, _tokenId, _tokenAmount, "0x0");
+        _mint(_msgSender(), _tokenId, _tokenAmount, "0x0");
     }
 
     /// @notice Returns the amount of airdrop tokens a user can claim
@@ -46,5 +52,13 @@ contract NewERC1155DropCampaign is ERC1155Upgradeable, CampaignAidropsShared {
     /// @param _merkleProof The proof a user can claim a reward
     function getAirdropAmount(bytes32[] calldata _merkleProof) external view returns (uint256) {
         return super.isEligibleForReward(_merkleProof) ? tokensPerClaim : 0;
+    }
+
+    function _msgSender() internal view virtual override(ContextUpgradeable, ERC2771ContextUpgradeable) returns (address sender) {
+        return ERC2771ContextUpgradeable._msgSender();
+    }
+
+    function _msgData() internal view virtual override(ContextUpgradeable, ERC2771ContextUpgradeable) returns (bytes calldata) {
+        return ERC2771ContextUpgradeable._msgData();
     }
 }

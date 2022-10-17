@@ -50,16 +50,16 @@ abstract contract CampaignAidropsShared is AirdropMerkleProof {
     /// - the logic for this is handled in the child contract.
     /// @param _merkleProof is the merkle proof that this user is eligible for claiming the ERC20 airdrop
     function claimHandler(bytes32[] calldata _merkleProof) internal {
-        if (hasClaimed[msg.sender]) revert AlreadyRedeemed();
+        if (hasClaimed[_msgSender()]) revert AlreadyRedeemed();
         if (checkProof(_merkleProof, merkleRoot) == false) revert NotEligible();
         if (msg.value != airbroCampaignFactoryAddress.claimFee()) revert InvalidFeeAmount();
 
         (bool success, ) = airbroCampaignFactoryAddress.treasury().call{ value: msg.value }("");
 
         if (success) {
-            hasClaimed[msg.sender] = true;
+            hasClaimed[_msgSender()] = true;
 
-            emit Claimed(msg.sender);
+            emit Claimed(_msgSender());
         } else {
             revert FeeNotSent();
         }

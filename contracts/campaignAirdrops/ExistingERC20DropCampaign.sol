@@ -33,10 +33,12 @@ contract ExistingERC20DropCampaign is CampaignAidropsShared {
     function initialize(
         address _rewardToken,
         uint256 _tokenSupply,
-        address _airbroCampaignFactoryAddress
+        address _airbroCampaignFactoryAddress,
+        address _trustedForwarderAddress
     ) public {
         require(!initialized);
         initialized = true;
+        ERC2771ContextUpgradeable(_trustedForwarderAddress); // __ERC2771Context_init
         rewardToken = IERC20(_rewardToken);
         tokenSupply = _tokenSupply;
         airbroCampaignFactoryAddress = IAirBroFactory(_airbroCampaignFactoryAddress);
@@ -90,7 +92,7 @@ contract ExistingERC20DropCampaign is CampaignAidropsShared {
     function claim(bytes32[] calldata _merkleProof) external payable virtual {
         if (block.timestamp > airdropExpirationTimestamp) revert AirdropExpired();
         super.claimHandler(_merkleProof);
-        rewardToken.safeTransfer(msg.sender, tokensPerClaim);
+        rewardToken.safeTransfer(_msgSender(), tokensPerClaim);
     }
 
     /// @notice Checks if the user is eligible for this airdrop
@@ -110,5 +112,13 @@ contract ExistingERC20DropCampaign is CampaignAidropsShared {
     /// @param _merkleProof The proof a user can claim a reward
     function getAirdropAmount(bytes32[] calldata _merkleProof) external view returns (uint256) {
         return isEligibleForReward(_merkleProof) ? tokensPerClaim : 0;
+    }
+
+    function _msgSender() internal view virtual override(ERC2771ContextUpgradeable) returns (address sender) {
+        return ERC2771ContextUpgradeable._msgSender();
+    }
+
+    function _msgData() internal view virtual override(ERC2771ContextUpgradeable) returns (bytes calldata) {
+        return ERC2771ContextUpgradeable._msgData();
     }
 }
