@@ -4,7 +4,7 @@ const provider = waffle.provider;
 import { MerkleTree } from "merkletreejs";
 const { keccak256 } = ethers.utils;
 import { constants } from "ethers";
-import { claimFee, uri, randomAddress, treasuryAddress } from "../../shared/constants";
+import { claimFee, uri, name, symbol, randomAddress, treasuryAddress } from "../../shared/constants";
 
 export function AirbroCampaignFactoryShouldChangeAndApplyProtocolFeeInAllAirDrops(): void {
   const newClaimFee = ethers.utils.parseEther("0.04");
@@ -125,17 +125,15 @@ export function AirbroCampaignFactoryShouldChangeAndApplyProtocolFeeInAllAirDrop
     const treasuryBefore = await provider.getBalance(treasuryAddress);
 
     await expect(
-      this.airbroCampaignFactory.connect(this.signers.deployer).createNewERC1155DropCampaign(uri, { value: newCreatorFee }),
+      this.airbroCampaignFactory.connect(this.signers.alice).createNewERC1155DropCampaign(name, symbol, uri, { value: newCreatorFee }),
     ).to.emit(this.airdropRegistry, "NewAirdrop");
 
     await expect(
-      this.airbroCampaignFactory.connect(this.signers.deployer).createNewSB1155DropCampaign(uri, { value: newCreatorFee }),
+      this.airbroCampaignFactory.connect(this.signers.alice).createNewSB1155DropCampaign(name, symbol, uri, { value: newCreatorFee }),
     ).to.emit(this.airdropRegistry, "NewAirdrop");
 
     await expect(
-      this.airbroCampaignFactory
-        .connect(this.signers.deployer)
-        .createExistingERC20DropCampaign(randomAddress, 1000, { value: newCreatorFee }),
+      this.airbroCampaignFactory.connect(this.signers.alice).createExistingERC20DropCampaign(randomAddress, 1000, { value: newCreatorFee }),
     ).to.emit(this.airdropRegistry, "NewAirdrop");
 
     const treasuryAfter = await provider.getBalance(treasuryAddress);

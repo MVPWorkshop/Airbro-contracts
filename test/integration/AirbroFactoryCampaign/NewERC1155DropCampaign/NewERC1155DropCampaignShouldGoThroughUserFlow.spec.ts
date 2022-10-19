@@ -3,7 +3,7 @@ import { ethers, network } from "hardhat";
 import { MerkleTree } from "merkletreejs";
 const { keccak256 } = ethers.utils;
 import { constants } from "ethers";
-import { claimFee, uri } from "../../../shared/constants";
+import { claimFee, uri, name, symbol } from "../../../shared/constants";
 
 const bytes32MerkleRootHash = "0x0000000000000000000000000000000000000000000000000000000000000000";
 
@@ -38,10 +38,10 @@ export function NewERC1155DropCampaignShouldGoThroughUserFlow() {
     // initalized, the OG contract from which the clones are made from
     const newERC1155DropCampaignOGFactory = await ethers.getContractFactory("NewERC1155DropCampaign");
     const NewERC1155DropCampaignOGContract = newERC1155DropCampaignOGFactory.attach(await this.airbroCampaignFactory.erc1155DropCampaign());
-    await NewERC1155DropCampaignOGContract.initialize(uri, this.airbroCampaignFactory.address);
+    await NewERC1155DropCampaignOGContract.initialize(name, symbol, uri, this.airbroCampaignFactory.address);
 
     // creating the NewERC1155DropCampaign from the factory contract
-    await expect(this.airbroCampaignFactory.connect(this.signers.deployer).createNewERC1155DropCampaign(uri)).to.emit(
+    await expect(this.airbroCampaignFactory.connect(this.signers.deployer).createNewERC1155DropCampaign(name, symbol, uri)).to.emit(
       this.airdropRegistry,
       "NewAirdrop",
     );

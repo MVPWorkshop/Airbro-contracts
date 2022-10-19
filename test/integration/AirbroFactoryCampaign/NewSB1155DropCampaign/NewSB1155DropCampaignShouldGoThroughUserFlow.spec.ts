@@ -3,7 +3,7 @@ import { ethers } from "hardhat";
 import { MerkleTree } from "merkletreejs";
 const { keccak256 } = ethers.utils;
 import { constants } from "ethers";
-import { claimFee, uri } from "../../../shared/constants";
+import { claimFee, uri, name, symbol } from "../../../shared/constants";
 
 const bytes32MerkleRootHash = "0x0000000000000000000000000000000000000000000000000000000000000000";
 
@@ -35,7 +35,7 @@ export function NewSB1155DropCampaignShouldGoThroughUserFlow() {
     );
 
     // creating the NewSB1155DropCampaign from the factory contract
-    await expect(this.airbroCampaignFactory.connect(this.signers.deployer).createNewSB1155DropCampaign(uri)).to.emit(
+    await expect(this.airbroCampaignFactory.connect(this.signers.deployer).createNewSB1155DropCampaign(name, symbol, uri)).to.emit(
       this.airdropRegistry,
       "NewAirdrop",
     );

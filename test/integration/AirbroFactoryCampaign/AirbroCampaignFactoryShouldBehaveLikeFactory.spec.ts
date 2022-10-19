@@ -1,6 +1,6 @@
 import { expect } from "chai";
 import { ethers } from "hardhat";
-import { randomAddress, treasuryAddress, uri } from "../../shared/constants";
+import { randomAddress, treasuryAddress, uri, name, symbol } from "../../shared/constants";
 import { constants } from "ethers";
 
 export function AirbroCampaignFactoryShouldBehaveLikeFactory(): void {
@@ -14,7 +14,7 @@ export function AirbroCampaignFactoryShouldBehaveLikeFactory(): void {
       "BetaClosed",
     );
 
-    await expect(this.airbroCampaignFactory.connect(this.signers.deployer).createNewERC1155DropCampaign(uri)).to.emit(
+    await expect(this.airbroCampaignFactory.connect(this.signers.deployer).createNewERC1155DropCampaign(name, symbol, uri)).to.emit(
       this.airdropRegistry,
       "NewAirdrop",
     );
@@ -30,7 +30,7 @@ export function AirbroCampaignFactoryShouldBehaveLikeFactory(): void {
       "BetaClosed",
     );
 
-    await expect(this.airbroCampaignFactory.connect(this.signers.deployer).createNewSB1155DropCampaign(uri)).to.emit(
+    await expect(this.airbroCampaignFactory.connect(this.signers.deployer).createNewSB1155DropCampaign(name, symbol, uri)).to.emit(
       this.airdropRegistry,
       "NewAirdrop",
     );
@@ -58,9 +58,9 @@ export function AirbroCampaignFactoryShouldBehaveLikeFactory(): void {
       "BetaClosed",
     );
 
-    await expect(this.airbroCampaignFactory.connect(this.signers.deployer).createNewERC1155DropCampaign(uri)).to.be.revertedWith(
-      "NotWhitelisted",
-    );
+    await expect(
+      this.airbroCampaignFactory.connect(this.signers.deployer).createNewERC1155DropCampaign(name, symbol, uri),
+    ).to.be.revertedWith("NotWhitelisted");
   });
 
   it("should revert NotWhitelisted if factory contract is blacklisted on airdropRegistry contract", async function () {
@@ -73,7 +73,7 @@ export function AirbroCampaignFactoryShouldBehaveLikeFactory(): void {
       "BetaClosed",
     );
 
-    await expect(this.airbroCampaignFactory.connect(this.signers.deployer).createNewERC1155DropCampaign(uri)).to.emit(
+    await expect(this.airbroCampaignFactory.connect(this.signers.deployer).createNewERC1155DropCampaign(name, symbol, uri)).to.emit(
       this.airdropRegistry,
       "NewAirdrop",
     );
@@ -82,9 +82,9 @@ export function AirbroCampaignFactoryShouldBehaveLikeFactory(): void {
       .to.emit(this.airdropRegistry, "FactoryBlacklisted")
       .withArgs(this.airbroCampaignFactory.address);
 
-    await expect(this.airbroCampaignFactory.connect(this.signers.deployer).createNewSB1155DropCampaign(uri)).to.be.revertedWith(
-      "NotWhitelisted",
-    );
+    await expect(
+      this.airbroCampaignFactory.connect(this.signers.deployer).createNewSB1155DropCampaign(name, symbol, uri),
+    ).to.be.revertedWith("NotWhitelisted");
   });
 
   it("should increment totalAirdropsCount", async function () {
@@ -99,7 +99,7 @@ export function AirbroCampaignFactoryShouldBehaveLikeFactory(): void {
       "BetaClosed",
     );
 
-    await expect(this.airbroCampaignFactory.connect(this.signers.deployer).createNewERC1155DropCampaign(uri)).to.emit(
+    await expect(this.airbroCampaignFactory.connect(this.signers.deployer).createNewERC1155DropCampaign(name, symbol, uri)).to.emit(
       this.airdropRegistry,
       "NewAirdrop",
     );
