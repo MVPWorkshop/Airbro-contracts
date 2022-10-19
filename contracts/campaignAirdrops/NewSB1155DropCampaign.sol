@@ -22,13 +22,8 @@ contract NewSB1155DropCampaign is ERC1155Upgradeable, CampaignAidropsShared {
     event Attest(address indexed to);
     event Revoke(address indexed from);
 
-    function initialize(
-        string memory _uri,
-        address _airbroCampaignFactoryAddress,
-        address _trustedForwarderAddress
-    ) public initializer {
+    function initialize(string memory _uri, address _airbroCampaignFactoryAddress) public initializer {
         __ERC1155_init(_uri);
-        ERC2771ContextUpgradeable(_trustedForwarderAddress);
         airbroCampaignFactoryAddress = IAirBroFactory(_airbroCampaignFactoryAddress);
     }
 
@@ -46,10 +41,11 @@ contract NewSB1155DropCampaign is ERC1155Upgradeable, CampaignAidropsShared {
     /// @notice Allows the NFT holder to claim their ERC1155 airdrop
     /// @dev Implements a handler method from the parent contract for performing checks and changing state
     /// @param _merkleProof is the merkleRoot proof that this user is eligible for claiming reward
-    function claim(bytes32[] calldata _merkleProof) public payable virtual {
-        super.claimHandler(_merkleProof);
+    function claim(bytes32[] calldata _merkleProof, address _claimerAddress) public payable virtual {
+        address sender = (msg.sender == airbroCampaignFactoryAddress.trustedRelayer()) ? _claimerAddress : msg.sender;
 
-        _mint(_msgSender(), _tokenId, _tokenAmount, "0x0");
+        super.claimHandler(_merkleProof, sender);
+        _mint(msg.sender, _tokenId, _tokenAmount, "0x0");
     }
 
     /// @notice Returns the amount of airdrop tokens a user can claim
@@ -68,14 +64,6 @@ contract NewSB1155DropCampaign is ERC1155Upgradeable, CampaignAidropsShared {
         bytes memory
     ) internal virtual override {
         if (from != address(0) && to != address(0)) revert SoulboundTokenUntransferable();
-    }
-
-    function _msgSender() internal view virtual override(ContextUpgradeable, ERC2771ContextUpgradeable) returns (address sender) {
-        return ERC2771ContextUpgradeable._msgSender();
-    }
-
-    function _msgData() internal view virtual override(ContextUpgradeable, ERC2771ContextUpgradeable) returns (bytes calldata) {
-        return ERC2771ContextUpgradeable._msgData();
     }
 
     /// @dev Overriding _afterTokenTransfer in order to emit propper events for minting and burning soulbound tokens

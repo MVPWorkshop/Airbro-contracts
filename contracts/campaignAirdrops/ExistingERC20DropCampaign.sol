@@ -33,12 +33,10 @@ contract ExistingERC20DropCampaign is CampaignAidropsShared {
     function initialize(
         address _rewardToken,
         uint256 _tokenSupply,
-        address _airbroCampaignFactoryAddress,
-        address _trustedForwarderAddress
+        address _airbroCampaignFactoryAddress
     ) public {
         require(!initialized);
         initialized = true;
-        ERC2771ContextUpgradeable(_trustedForwarderAddress); // __ERC2771Context_init
         rewardToken = IERC20(_rewardToken);
         tokenSupply = _tokenSupply;
         airbroCampaignFactoryAddress = IAirBroFactory(_airbroCampaignFactoryAddress);
@@ -89,10 +87,12 @@ contract ExistingERC20DropCampaign is CampaignAidropsShared {
     /// @notice Allows eligible users to claim their ERC20 airdrop
     /// @dev Implements a handler method from the parent contract for performing checks and changing state
     /// @param _merkleProof is the merkle proof that this user is eligible for claiming the ERC20 airdrop
-    function claim(bytes32[] calldata _merkleProof) external payable virtual {
+    function claim(bytes32[] calldata _merkleProof, address _claimerAddress) external payable virtual {
         if (block.timestamp > airdropExpirationTimestamp) revert AirdropExpired();
-        super.claimHandler(_merkleProof);
-        rewardToken.safeTransfer(_msgSender(), tokensPerClaim);
+        address sender = (msg.sender == airbroCampaignFactoryAddress.trustedRelayer()) ? _claimerAddress : msg.sender;
+
+        super.claimHandler(_merkleProof, sender);
+        rewardToken.safeTransfer(msg.sender, tokensPerClaim);
     }
 
     /// @notice Checks if the user is eligible for this airdrop
@@ -112,13 +112,5 @@ contract ExistingERC20DropCampaign is CampaignAidropsShared {
     /// @param _merkleProof The proof a user can claim a reward
     function getAirdropAmount(bytes32[] calldata _merkleProof) external view returns (uint256) {
         return isEligibleForReward(_merkleProof) ? tokensPerClaim : 0;
-    }
-
-    function _msgSender() internal view virtual override(ERC2771ContextUpgradeable) returns (address sender) {
-        return ERC2771ContextUpgradeable._msgSender();
-    }
-
-    function _msgData() internal view virtual override(ERC2771ContextUpgradeable) returns (bytes calldata) {
-        return ERC2771ContextUpgradeable._msgData();
     }
 }
