@@ -143,7 +143,7 @@ contract AirbroCampaignFactory is AirdropAdmin, AirdropBeta {
 
     /// @notice Updates the trusted relayer address
     /// @param _trustedRelayer - New trusted relayer address
-    function changeClaimPeriod(address _trustedRelayer) external onlyAdmin {
+    function changeTrustedRelayer(address _trustedRelayer) external onlyAdmin {
         trustedRelayer = _trustedRelayer;
         emit TrustedRelayerChanged(_trustedRelayer);
     }
