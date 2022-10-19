@@ -43,6 +43,7 @@ export function NewERC1155DropCampaignShouldClaimReward(): void {
     });
 
     it("should revert claim if not part of merkleRoot", async function () {
+      // this.signers.alice.address
       const whitelisted = [this.signers.alice.address, this.signers.bob.address, this.signers.jerry.address, this.signers.lisa.address];
       const leaves = whitelisted.map(addr => keccak256(addr));
       const merkleTree = new MerkleTree(leaves, keccak256, { sort: true });

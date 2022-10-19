@@ -29,6 +29,8 @@ import {
   UnitExistingERC20DropCampaignArgs,
   treasuryAddress,
   uri,
+  name,
+  symbol,
 } from "./constants";
 import {
   deployMockAirBroFactory,
@@ -122,7 +124,7 @@ export const unitNewERC1155DropCampaignFixture: Fixture<UnitNewERC1155DropCampai
     .connect(deployer)
     .deploy()) as NewERC1155DropCampaign;
   // ...Object.values(newERC1155DropCampaignArgs)
-  await newERC1155DropCampaign.initialize(uri, mockAirbroCampaignFactory.address);
+  await newERC1155DropCampaign.initialize(name, symbol, uri, mockAirbroCampaignFactory.address);
 
   return { mockAirbroCampaignFactory, newERC1155DropCampaign, newERC1155DropCampaignArgs };
 };
@@ -141,7 +143,7 @@ export const unitNewSB1155DropCampaignFixture: Fixture<UnitNewSB1155DropCampaign
     .connect(deployer)
     .deploy()) as NewSB1155DropCampaign;
   // ...Object.values(newSB1155DropCampaignArgs)
-  await newSB1155DropCampaign.initialize(uri, mockAirbroCampaignFactory.address);
+  await newSB1155DropCampaign.initialize(name, symbol, uri, mockAirbroCampaignFactory.address);
 
   return { mockAirbroCampaignFactory, newSB1155DropCampaign, newSB1155DropCampaignArgs };
 };
@@ -199,7 +201,7 @@ export const integrationCampaignFixture: Fixture<IntegrationCampaignFixtureType>
 
   await newERC1155DropCampaign.deployed();
   // ...Object.values(newERC1155DropCampaignArgs)
-  await newERC1155DropCampaign.initialize(uri, airbroCampaignFactory.address);
+  await newERC1155DropCampaign.initialize(name, symbol, uri, airbroCampaignFactory.address);
 
   const newSB1155DropCampaignFactory: ContractFactory = await ethers.getContractFactory(`NewSB1155DropCampaign`);
 
@@ -211,7 +213,7 @@ export const integrationCampaignFixture: Fixture<IntegrationCampaignFixtureType>
 
   await newSB1155DropCampaign.deployed();
   // ...Object.values(newSB1155DropCampaignArgs)
-  await newSB1155DropCampaign.initialize(uri, airbroCampaignFactory.address);
+  await newSB1155DropCampaign.initialize(name, symbol, uri, airbroCampaignFactory.address);
 
   const testTokenFactory: ContractFactory = await ethers.getContractFactory(`TestToken`);
 
