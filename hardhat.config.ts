@@ -6,8 +6,11 @@ import "@nomiclabs/hardhat-etherscan";
 import "hardhat-gas-reporter";
 import "hardhat-contract-sizer";
 
+// upgradable contracts
+import "@openzeppelin/hardhat-upgrades";
+
 import "./tasks/accounts";
-import "./tasks/deploy";
+import "./tasks/index";
 
 import { resolve } from "path";
 

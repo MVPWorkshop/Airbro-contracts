@@ -37,12 +37,13 @@ import { ExistingERC20DropCampaignShouldClaimReward } from "./campaignAirdrops/E
 import { ExistingERC20DropCampaignShouldUnlockWithdraw } from "./campaignAirdrops/ExistingERC20DropCampaign/ExistingERC20DropCampaignShouldUnlockWithdraw.spec";
 
 import { AirdropCampaignDataShouldBeDeployed } from "./AirdropCampaignData/AirdropCampaignDataShouldBeDeployed.spec";
-import { AirdropCampaignDataShouldChangeAdmin } from "./AirdropCampaignData/AirdropCampaignDataShouldChangeAdmin.spec";
+import { AirdropCampaignDataShouldChangeAirbroManager } from "./AirdropCampaignData/AirdropCampaignDataShouldChangeAirbroManager.spec";
 import { AirdropCampaignDataShouldaddDailyHash } from "./AirdropCampaignData/AirdropCampaignDataShouldAddDailyHash.spec";
 import { AirdropCampaignDataShouldbatchAddDailyHash } from "./AirdropCampaignData/AirdropCampaignDataShouldBatchAddDailyHash.spec";
 import { AirdropCampaignDataShouldAddAirdropCampaignChain } from "./AirdropCampaignData/AirdropCampaignDataShouldAddAirdropCampaignChain.spec";
 import { AirdropCampaignDataShouldBatchAddAirdropCampaignChain } from "./AirdropCampaignData/AirdropCampaignDataShouldBatchAddAirdropCampaignChain.spec";
 import { AirdropCampaignDataShouldFinalizeAirdrop } from "./AirdropCampaignData/AirdropCampaignDataShouldFinalizeAirdrop.spec";
+import { AirdropCampaignDataShouldBeUpgradable } from "./AirdropCampaignData/AirdropCampaignDataShouldBeUpgradable.spec";
 
 describe("Unit tests", function () {
   before(async function () {
@@ -89,12 +90,13 @@ describe("Unit tests", function () {
     });
 
     AirdropCampaignDataShouldBeDeployed();
-    AirdropCampaignDataShouldChangeAdmin();
+    AirdropCampaignDataShouldChangeAirbroManager();
     AirdropCampaignDataShouldaddDailyHash();
     AirdropCampaignDataShouldbatchAddDailyHash();
     AirdropCampaignDataShouldAddAirdropCampaignChain();
     AirdropCampaignDataShouldBatchAddAirdropCampaignChain();
     AirdropCampaignDataShouldFinalizeAirdrop();
+    AirdropCampaignDataShouldBeUpgradable(); // upgrades the upgradable fixture which is deployed
   });
 
   describe("Airbro - Classic", function () {

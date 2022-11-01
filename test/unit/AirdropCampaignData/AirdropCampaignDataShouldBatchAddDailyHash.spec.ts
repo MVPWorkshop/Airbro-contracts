@@ -32,7 +32,7 @@ export function AirdropCampaignDataShouldbatchAddDailyHash(): void {
 
       await expect(
         this.airdropCampaignData.connect(this.signers.alice).batchAddDailyHash(randomAddressesArray, bytes32MerkleRootHashes),
-      ).to.be.revertedWith("NotAdmin");
+      ).to.be.revertedWith("NotAirbroManager");
     });
 
     it("should revert if length of array arguments do not match", async function () {

@@ -4,6 +4,10 @@
 
 You can find the frontend repo here: https://github.com/MVPWorkshop/Airbro-interfaces
 
+## Backend
+
+You can find the backend repo here: https://github.com/MVPWorkshop/Airbro-engine
+
 ### Pre Requisites
 
 Before running any command, you need to create a `.env` file and set a BIP-39 compatible mnemonic as an environment
@@ -91,6 +95,18 @@ Deploy the contracts to Hardhat Network:
 
 ```sh
 $ yarn deploy --greeting "Bonjour, le monde!"
+```
+
+## Upgrading contracts
+
+Upgradable contracts
+
+- contracts/AirdropCampaignData.sol
+
+To upgrade, change the code of the contract, and then runn the following code:
+
+```sh
+$ yarn upgrade:AidropCampaignData --address [address_of_deployed_contract_here]
 ```
 
 ### Latest verified polygon mumbai testnet deployment
