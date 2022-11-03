@@ -26,7 +26,7 @@ contract Existing1155NftDrop is IERC1155Receiver, AirdropExistingToken {
 
     /// @notice Allows one wallet to provide funds for the airdrop reward once
     /// @dev Implements a handler method from the parent contract for checks and state change
-    function fundAirdrop() public virtual {
+    function fundAirdrop() external virtual {
         super.fundAirdropHandler();
         rewardToken.safeTransferFrom(msg.sender, address(this), rewardTokenId, totalAirdropAmount, "");
     }

@@ -34,7 +34,7 @@ contract ExistingERC20DropCampaign is CampaignAidropsShared {
         address _rewardToken,
         uint256 _tokenSupply,
         address _airbroCampaignFactoryAddress
-    ) public {
+    ) external {
         require(!initialized);
         initialized = true;
         rewardToken = IERC20(_rewardToken);

@@ -24,8 +24,7 @@ contract AirdropRegistry is AirdropAdmin {
         _;
     }
 
-    constructor(address _admin, address _treasury) {
-        admin = _admin;
+    constructor(address _admin, address _treasury) AirdropAdmin(_admin) {
         treasury = payable(_treasury);
     }
 

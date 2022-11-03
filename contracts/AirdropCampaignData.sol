@@ -17,8 +17,8 @@ contract AirdropCampaignData is Initializable, UUPSUpgradeable, OwnableUpgradeab
 
     struct AirdropData {
         Chains chain;
-        bytes32[] hashArray;
         bool airdropFinished;
+        bytes32[] hashArray;
     }
 
     mapping(address => AirdropData) public airdrops;

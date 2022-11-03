@@ -18,7 +18,7 @@ abstract contract AirdropBeta is AirdropAdmin {
         _;
     }
 
-    constructor(address _betaAddress) {
+    constructor(address _betaAddress, address _admin) AirdropAdmin(_admin) {
         betaAddress = _betaAddress;
     }
 
