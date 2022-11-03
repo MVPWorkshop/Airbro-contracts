@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.16;
 
-import "@rari-capital/solmate/src/tokens/ERC20.sol";
+import "solmate/src/tokens/ERC20.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "./shared/AirdropTimeData.sol";
 
