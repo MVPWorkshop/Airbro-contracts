@@ -10,13 +10,12 @@ import "@openzeppelin/contracts/access/Ownable.sol";
  */
 contract Airbro1155Contract is ERC1155, Ownable {
     uint256 private constant _tokenID = 0;
-
-    string public name = "Airbro";
+    string public constant name = "Airbro";
 
     constructor(string memory uri_) ERC1155(uri_) {}
 
     /// @notice minting a 1155 NFT always of the same Id
-    function mint() public {
+    function mint() external {
         _mint(msg.sender, _tokenID, 1, "0x");
     }
 }

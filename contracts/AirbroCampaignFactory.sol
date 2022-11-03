@@ -10,7 +10,7 @@ import "./shared/AirdropAdmin.sol";
 import "./shared/AirdropBeta.sol";
 
 /// @title AirbroCampaignFactory - NFT/Token airdrop tool factory contract - for owners of 1155 Nfts
-contract AirbroCampaignFactory is AirdropAdmin, AirdropBeta {
+contract AirbroCampaignFactory is AirdropBeta {
     IAirdropRegistry public immutable airdropRegistryAddress;
     address public immutable treasury;
     // protocol fee for claiming dropCampaign rewards
@@ -39,12 +39,11 @@ contract AirbroCampaignFactory is AirdropAdmin, AirdropBeta {
         address _admin,
         address _airdropRegistryAddress,
         address _betaAddress
-    ) AirdropBeta(_betaAddress) {
+    ) AirdropBeta(_betaAddress, _admin) {
         erc20DropCampaign = address(new ExistingERC20DropCampaign());
         erc1155DropCampaign = address(new NewERC1155DropCampaign());
         sb1155DropCampaign = address(new NewSB1155DropCampaign());
 
-        admin = _admin;
         airdropRegistryAddress = IAirdropRegistry(_airdropRegistryAddress);
         treasury = payable(airdropRegistryAddress.treasury());
     }

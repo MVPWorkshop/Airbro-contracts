@@ -13,6 +13,10 @@ abstract contract AirdropAdmin {
 
     event AdminChanged(address indexed adminAddress);
 
+    constructor(address _admin) {
+        admin = _admin;
+    }
+
     /// @notice Updates the address of the admin variable
     /// @param _newAdmin - New address for the admin of this contract, and the address for all newly created airdrop contracts
     function changeAdmin(address _newAdmin) external onlyAdmin {

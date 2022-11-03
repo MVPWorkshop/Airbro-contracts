@@ -13,8 +13,6 @@ contract AirbroFactory {
 
     event NewAirdrop(address indexed rewardedNftCollection, address indexed airdropContract, address indexed airdropCreator);
 
-    constructor() {}
-
     /// @notice Creates a new airdrop ERC20 claim contract for specific NFT collection holders
     /// @param rewardedNftCollection - Rewarded NFT collection address
     function dropNewTokensToNftHolders(
