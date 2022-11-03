@@ -3,14 +3,14 @@
   "proxies": [
     {
       "address": "0xA64e27215ACCF3D49236624C90f6F90d4Bf23EF8",
-      "txHash": "0x7f4745fd2f55a5c7f23430c5888f7ac4b3a1e297de4b9576be8890532120398e",
+      "txHash": "0x5c208c8663be78a1266eca0a348ee059f2933ef27cb95da75b8ecb4be989bc9f",
       "kind": "uups"
     }
   ],
   "impls": {
-    "7498f57b2772222e0e2049f3684c5fb5fdbdd771877f2ddf51d9bc90ef9d716b": {
+    "61267db65d1f0c36ac307231e7910cf2c467743423730c4f87337a0bd582690b": {
       "address": "0x5Ec03Adec9A3A3f6AdE2250d9d2FacCC2B2058Cc",
-      "txHash": "0xa72020de456d33f4d434b4c2450baf5620fd5918239e2270f1e1af474853a451",
+      "txHash": "0x5e1c1edd9d52e312978d85b77ee232a6478b154c5e193c8b98a96bd49a1927cd",
       "layout": {
         "storage": [
           {
@@ -82,7 +82,7 @@
             "label": "airdrops",
             "offset": 0,
             "slot": "202",
-            "type": "t_mapping(t_address,t_struct(AirdropData)7879_storage)",
+            "type": "t_mapping(t_address,t_struct(AirdropData)7891_storage)",
             "contract": "AirdropCampaignData",
             "src": "contracts/AirdropCampaignData.sol:24"
           }
@@ -112,7 +112,7 @@
             "label": "bytes32",
             "numberOfBytes": "32"
           },
-          "t_enum(Chains)7870": {
+          "t_enum(Chains)7882": {
             "label": "enum AirdropCampaignData.Chains",
             "members": [
               "Zero",
@@ -121,16 +121,16 @@
             ],
             "numberOfBytes": "1"
           },
-          "t_mapping(t_address,t_struct(AirdropData)7879_storage)": {
+          "t_mapping(t_address,t_struct(AirdropData)7891_storage)": {
             "label": "mapping(address => struct AirdropCampaignData.AirdropData)",
             "numberOfBytes": "32"
           },
-          "t_struct(AirdropData)7879_storage": {
+          "t_struct(AirdropData)7891_storage": {
             "label": "struct AirdropCampaignData.AirdropData",
             "members": [
               {
                 "label": "chain",
-                "type": "t_enum(Chains)7870",
+                "type": "t_enum(Chains)7882",
                 "offset": 0,
                 "slot": "0"
               },
@@ -160,9 +160,9 @@
         }
       }
     },
-    "56e17cef697e3df61374ca67e9f8765188be24cbf68f0a0019b9d91485a422cc": {
+    "c3985902b565ccddb8432ce07b939da530f6001e4df95bb5fa63f0e43894d123": {
       "address": "0xd1840c871e786A7Bd3727f973AE053984a140c6e",
-      "txHash": "0x6003772b576394ce10d99ba1b32e79c620c6675e51fddbb27b91dc3cb9f919fd",
+      "txHash": "0x8f03b59d46f5b43a6859c3bb6efdc10a599a8e7ece0eb7680c296d193ecf8633",
       "layout": {
         "storage": [
           {
@@ -234,7 +234,7 @@
             "label": "airdrops",
             "offset": 0,
             "slot": "202",
-            "type": "t_mapping(t_address,t_struct(AirdropData)7879_storage)",
+            "type": "t_mapping(t_address,t_struct(AirdropData)7891_storage)",
             "contract": "AirdropCampaignData",
             "src": "contracts/AirdropCampaignData.sol:24"
           }
@@ -264,7 +264,7 @@
             "label": "bytes32",
             "numberOfBytes": "32"
           },
-          "t_enum(Chains)7870": {
+          "t_enum(Chains)7882": {
             "label": "enum AirdropCampaignData.Chains",
             "members": [
               "Zero",
@@ -273,16 +273,16 @@
             ],
             "numberOfBytes": "1"
           },
-          "t_mapping(t_address,t_struct(AirdropData)7879_storage)": {
+          "t_mapping(t_address,t_struct(AirdropData)7891_storage)": {
             "label": "mapping(address => struct AirdropCampaignData.AirdropData)",
             "numberOfBytes": "32"
           },
-          "t_struct(AirdropData)7879_storage": {
+          "t_struct(AirdropData)7891_storage": {
             "label": "struct AirdropCampaignData.AirdropData",
             "members": [
               {
                 "label": "chain",
-                "type": "t_enum(Chains)7870",
+                "type": "t_enum(Chains)7882",
                 "offset": 0,
                 "slot": "0"
               },

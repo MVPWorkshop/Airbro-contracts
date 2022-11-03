@@ -128,7 +128,7 @@ const config: HardhatUserConfig = {
     tests: "./test",
   },
   solidity: {
-    version: "0.8.15",
+    version: "0.8.16",
     settings: {
       /* Having this implemented causes an error when verifying on Polygon Mumbai */
       /* metadata: {
