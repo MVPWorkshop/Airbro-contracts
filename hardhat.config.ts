@@ -116,9 +116,9 @@ const config: HardhatUserConfig = {
     // Your API key for Etherscan
     // Obtain one at https://etherscan.io/
     apiKey: {
-      mainnet: process.env.ETHERSCAN_API_KEY,
-      polygon: process.env.POLYGON_API_KEY,
-      polygonMumbai: process.env.POLYGON_API_KEY,
+      mainnet: process.env.ETHERSCAN_API_KEY || "",
+      polygon: process.env.POLYGON_API_KEY || "",
+      polygonMumbai: process.env.POLYGON_API_KEY || "",
     },
   },
   paths: {
@@ -141,6 +141,11 @@ const config: HardhatUserConfig = {
       optimizer: {
         enabled: true,
         runs: 200,
+      },
+      outputSelection: {
+        "*": {
+          "*": ["storageLayout"],
+        },
       },
     },
   },

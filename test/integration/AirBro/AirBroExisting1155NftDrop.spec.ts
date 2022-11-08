@@ -61,7 +61,9 @@ export function shouldAirdropExisting1155NftDrop() {
       this.test1155NftCollection,
       "ApprovalForAll",
     );
-    await expect(dropContract.connect(this.signers.bob).fundAirdrop()).to.be.revertedWith("ERC1155: caller is not owner nor approved");
+    await expect(dropContract.connect(this.signers.bob).fundAirdrop()).to.be.revertedWith(
+      "ERC1155: caller is not token owner nor approved",
+    );
     await expect(dropContract.fundAirdrop()).to.emit(dropContract, "AirdropFunded").withArgs(dropContract.address);
 
     const blockNumBefore = await ethers.provider.getBlockNumber();
