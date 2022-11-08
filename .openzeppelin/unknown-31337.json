@@ -2,16 +2,22 @@
   "manifestVersion": "3.2",
   "proxies": [
     {
+      "address": "0xbEa6d9b8D807E6D8c22a6b555051C53abde17495",
+      "txHash": "0x16d7345dd39d0d43167e71619a53469d70071acbb2ecdbdc99ce27f3a5e1646f",
+      "kind": "uups"
+    },
+    {
       "address": "0xA64e27215ACCF3D49236624C90f6F90d4Bf23EF8",
-      "txHash": "0xe819701d066efb709ef9a9f5ba308cbffb45ce1c10013caa5bad880497e16396",
+      "txHash": "0xd200334a320633b8cd8bac27dc7f769c206a42623291b4fbdbf25da920679a08",
       "kind": "uups"
     }
   ],
   "impls": {
     "1e781372bcc9ef8f5accb3b3d1c65071af7598b9e2941e237be5d79f5463276f": {
       "address": "0x5Ec03Adec9A3A3f6AdE2250d9d2FacCC2B2058Cc",
-      "txHash": "0x0368a6e22f621d1c781737517bcd4881cf033ff451c6fa8e6c99bf7422b30742",
+      "txHash": "0x6bdd822568ff83948a08c0a1dda56fbd8d198fb669ce397d232e14f6009ea86b",
       "layout": {
+        "solcVersion": "0.8.16",
         "storage": [
           {
             "label": "_initialized",
@@ -82,7 +88,7 @@
             "label": "airdrops",
             "offset": 0,
             "slot": "202",
-            "type": "t_mapping(t_address,t_struct(AirdropData)7494_storage)",
+            "type": "t_mapping(t_address,t_struct(AirdropData)8028_storage)",
             "contract": "AirdropCampaignData",
             "src": "contracts/AirdropCampaignData.sol:24"
           }
@@ -112,7 +118,7 @@
             "label": "bytes32",
             "numberOfBytes": "32"
           },
-          "t_enum(Chains)7485": {
+          "t_enum(Chains)8019": {
             "label": "enum AirdropCampaignData.Chains",
             "members": [
               "Zero",
@@ -121,16 +127,16 @@
             ],
             "numberOfBytes": "1"
           },
-          "t_mapping(t_address,t_struct(AirdropData)7494_storage)": {
+          "t_mapping(t_address,t_struct(AirdropData)8028_storage)": {
             "label": "mapping(address => struct AirdropCampaignData.AirdropData)",
             "numberOfBytes": "32"
           },
-          "t_struct(AirdropData)7494_storage": {
+          "t_struct(AirdropData)8028_storage": {
             "label": "struct AirdropCampaignData.AirdropData",
             "members": [
               {
                 "label": "chain",
-                "type": "t_enum(Chains)7485",
+                "type": "t_enum(Chains)8019",
                 "offset": 0,
                 "slot": "0"
               },
@@ -162,8 +168,9 @@
     },
     "db59e9cea3e7f5edcca3a1cb037d37873fdf4c94da3c38b43b86021ef9a92f30": {
       "address": "0xd1840c871e786A7Bd3727f973AE053984a140c6e",
-      "txHash": "0x442f796c7043b291d6c0e821229a2e3a6eb253c8ad5234babc4121c0346269a7",
+      "txHash": "0x84fca909f997bb2b828c1edc6107f7363e44f78d06647b845b94243543ab119f",
       "layout": {
+        "solcVersion": "0.8.16",
         "storage": [
           {
             "label": "_initialized",
@@ -234,7 +241,7 @@
             "label": "airdrops",
             "offset": 0,
             "slot": "202",
-            "type": "t_mapping(t_address,t_struct(AirdropData)7494_storage)",
+            "type": "t_mapping(t_address,t_struct(AirdropData)8028_storage)",
             "contract": "AirdropCampaignData",
             "src": "contracts/AirdropCampaignData.sol:24"
           }
@@ -264,7 +271,7 @@
             "label": "bytes32",
             "numberOfBytes": "32"
           },
-          "t_enum(Chains)7485": {
+          "t_enum(Chains)8019": {
             "label": "enum AirdropCampaignData.Chains",
             "members": [
               "Zero",
@@ -273,16 +280,16 @@
             ],
             "numberOfBytes": "1"
           },
-          "t_mapping(t_address,t_struct(AirdropData)7494_storage)": {
+          "t_mapping(t_address,t_struct(AirdropData)8028_storage)": {
             "label": "mapping(address => struct AirdropCampaignData.AirdropData)",
             "numberOfBytes": "32"
           },
-          "t_struct(AirdropData)7494_storage": {
+          "t_struct(AirdropData)8028_storage": {
             "label": "struct AirdropCampaignData.AirdropData",
             "members": [
               {
                 "label": "chain",
-                "type": "t_enum(Chains)7485",
+                "type": "t_enum(Chains)8019",
                 "offset": 0,
                 "slot": "0"
               },

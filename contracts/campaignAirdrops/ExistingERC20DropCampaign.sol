@@ -11,16 +11,16 @@ contract ExistingERC20DropCampaign is CampaignAidropsShared {
     using SafeERC20 for IERC20;
 
     IERC20 public rewardToken;
-    uint256 public tokenSupply;
-    bool public initialized;
-
     string public constant airdropType = "ERC20";
+
+    uint256 public tokenSupply;
     uint256 internal numberOfClaimers;
     uint256 public tokensPerClaim;
     uint256 public airdropExpirationTimestamp;
     uint16 public claimPeriodInDays;
 
     address internal airdropFunder;
+    bool public initialized;
 
     event WithdrawUnlocked();
     event FundsWithdrawn();
