@@ -1,5 +1,4 @@
 import { expect } from "chai";
-import { ethers } from "hardhat";
 import { constants } from "ethers";
 
 export function ExistingERC20DropCampaignShouldFundCampaign(): void {
@@ -58,7 +57,7 @@ export function ExistingERC20DropCampaignShouldFundCampaign(): void {
 
       expect(await this.testToken.balanceOf(this.signers.alice.address)).to.be.equal(constants.Zero);
 
-      expect(await this.existingERC20DropCampaign.connect(this.signers.alice).withdrawAirdropFunds()).to.emit(
+      void expect(await this.existingERC20DropCampaign.connect(this.signers.alice).withdrawAirdropFunds()).to.emit(
         this.existingERC20DropCampaign,
         "FundsWithdrawn",
       );

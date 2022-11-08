@@ -49,7 +49,7 @@ export function NewSB1155DropCampaignShouldGoThroughUserFlow() {
     const roothash = merkleTree.getHexRoot();
 
     //backendWallet sets new merkleRootHash upon completion of the campaign (deadline has passed)
-    expect(await NewSB1155DropCampaignContract.connect(this.signers.backendWallet).setMerkleRoot(roothash))
+    void expect(await NewSB1155DropCampaignContract.connect(this.signers.backendWallet).setMerkleRoot(roothash))
       .to.emit(NewSB1155DropCampaignContract, "MerkleRootSet")
       .withArgs(roothash);
 
@@ -57,7 +57,7 @@ export function NewSB1155DropCampaignShouldGoThroughUserFlow() {
     const hexProof = merkleTree.getHexProof(leaves[0]);
 
     // alice withdrawing 1155 on basis of her address being included in the merkleRoot
-    expect(await NewSB1155DropCampaignContract.connect(this.signers.alice).claim(hexProof, { value: claimFee }))
+    void expect(await NewSB1155DropCampaignContract.connect(this.signers.alice).claim(hexProof, { value: claimFee }))
       .to.emit(NewSB1155DropCampaignContract, "Claimed")
       .withArgs(this.signers.alice.address)
       .and.to.emit(NewSB1155DropCampaignContract, "Attest")
@@ -85,7 +85,7 @@ export function NewSB1155DropCampaignShouldGoThroughUserFlow() {
     ).to.be.revertedWith(`SoulboundTokenUntransferable`);
 
     // burning souldbound nft reward
-    expect(await NewSB1155DropCampaignContract.connect(this.signers.alice).burn())
+    void expect(await NewSB1155DropCampaignContract.connect(this.signers.alice).burn())
       .to.emit(NewSB1155DropCampaignContract, "Revoke")
       .withArgs(this.signers.alice.address);
 

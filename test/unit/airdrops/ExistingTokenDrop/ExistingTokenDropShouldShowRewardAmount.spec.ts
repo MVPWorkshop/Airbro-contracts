@@ -1,5 +1,4 @@
 import { expect } from "chai";
-import { ethers } from "hardhat";
 
 export const ExistingTokenDropShouldShowRewardAmount = (): void => {
   describe("should show airdrop reward amount for the user", async function () {
