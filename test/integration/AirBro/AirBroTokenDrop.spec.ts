@@ -18,7 +18,7 @@ export function shouldAirDropNewToken(): void {
     await this.testNftCollection.connect(this.signers.deployer).safeMint(this.signers.deployer.address);
 
     // create new airdrop, along with new ERC20
-    expect(
+    void expect(
       await this.airbroFactory.connect(this.signers.deployer).dropNewTokensToNftHolders(
         this.testNftCollection.address, // rewardedNftCollection,
         newTokenName, // Name of new ERC20 Token
@@ -53,7 +53,7 @@ export function shouldAirDropNewToken(): void {
     await this.testNftCollection.connect(this.signers.deployer).safeMint(this.signers.deployer.address);
 
     // create new airdrop, along with new ERC20
-    expect(
+    void expect(
       await this.airbroFactory.connect(this.signers.deployer).dropNewTokensToNftHolders(
         this.testNftCollection.address, // rewardedNftCollection,
         newTokenName, // Name of new ERC20 Token
@@ -84,7 +84,7 @@ export function shouldAirDropNewToken(): void {
     await this.testNftCollection.connect(this.signers.deployer).safeMint(this.signers.deployer.address);
 
     // create new airdrop, along with new ERC20
-    expect(
+    void expect(
       await this.airbroFactory.connect(this.signers.deployer).dropNewTokensToNftHolders(
         this.testNftCollection.address, // rewardedNftCollection,
         newTokenName, // Name of new ERC20 Token
@@ -112,7 +112,7 @@ export function shouldAirDropNewToken(): void {
     const airdropDuration: number = 3;
 
     // create new airdrop, along with new ERC20
-    expect(
+    void expect(
       await this.airbroFactory.connect(this.signers.deployer).dropNewTokensToNftHolders(
         this.testNftCollection.address, // rewardedNftCollection,
         newTokenName, // Name of new ERC20 Token
@@ -126,7 +126,7 @@ export function shouldAirDropNewToken(): void {
     const newDropFactory = await ethers.getContractFactory("TokenDrop");
     const tokenDropContract = newDropFactory.attach(await this.airbroFactory.airdrops(0));
 
-    const tokenIdArray: Array<Number> = [0, 1];
+    const tokenIdArray: Array<number> = [0, 1];
     // minting 2 NFTs to deployer wallet
     await this.testNftCollection.connect(this.signers.deployer).safeMint(this.signers.deployer.address);
     await this.testNftCollection.connect(this.signers.deployer).safeMint(this.signers.deployer.address);
@@ -145,7 +145,7 @@ export function shouldAirDropNewToken(): void {
     const airdropDuration: number = 3;
 
     // create new airdrop, along with new ERC20
-    expect(
+    void expect(
       await this.airbroFactory.connect(this.signers.deployer).dropNewTokensToNftHolders(
         this.testNftCollection.address, // rewardedNftCollection,
         newTokenName, // Name of new ERC20 Token
@@ -159,7 +159,7 @@ export function shouldAirDropNewToken(): void {
     const newDropFactory = await ethers.getContractFactory("TokenDrop");
     const tokenDropContract = newDropFactory.attach(await this.airbroFactory.airdrops(0));
 
-    const tokenIdArray: Array<Number> = [0, 1];
+    const tokenIdArray: Array<number> = [0, 1];
     // minting 2 NFTs to deployer wallet
     await this.testNftCollection.connect(this.signers.deployer).safeMint(this.signers.deployer.address);
     await this.testNftCollection.connect(this.signers.deployer).safeMint(this.signers.deployer.address);
@@ -177,7 +177,7 @@ export function shouldAirDropNewToken(): void {
     const airdropDuration: number = 3;
 
     // create new airdrop, along with new ERC20
-    expect(
+    void expect(
       await this.airbroFactory.connect(this.signers.deployer).dropNewTokensToNftHolders(
         this.testNftCollection.address, // rewardedNftCollection,
         newTokenName, // Name of new ERC20 Token
@@ -191,7 +191,7 @@ export function shouldAirDropNewToken(): void {
     const newDropFactory = await ethers.getContractFactory("TokenDrop");
     const tokenDropContract = newDropFactory.attach(await this.airbroFactory.airdrops(0));
 
-    const tokenIdArray: Array<Number> = [0, 1];
+    const tokenIdArray: Array<number> = [0, 1];
     // minting 1 NFT to deployer, 1 NFT to alice
     await this.testNftCollection.connect(this.signers.deployer).safeMint(this.signers.deployer.address);
     await this.testNftCollection.connect(this.signers.deployer).safeMint(this.signers.alice.address);
@@ -205,7 +205,7 @@ export function shouldAirDropNewToken(): void {
     const newTokenSymbol: string = "WKND";
 
     // create new airdrop, along with new ERC20
-    expect(
+    void expect(
       await this.airbroFactory.connect(this.signers.deployer).dropNewTokensToNftHolders(
         this.testNftCollection.address, // rewardedNftCollection,
         newTokenName, // Name of new ERC20 Token

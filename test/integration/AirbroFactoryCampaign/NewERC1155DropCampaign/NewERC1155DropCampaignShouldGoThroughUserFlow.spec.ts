@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import { ethers, network } from "hardhat";
+import { ethers } from "hardhat";
 import { MerkleTree } from "merkletreejs";
 const { keccak256 } = ethers.utils;
 import { constants } from "ethers";
@@ -55,7 +55,7 @@ export function NewERC1155DropCampaignShouldGoThroughUserFlow() {
     const roothash = merkleTree.getHexRoot();
 
     //backendWallet sets new merkleRootHash upon completion of the campaign (deadline has passed)
-    expect(await NewERC1155DropCampaignContract.connect(this.signers.backendWallet).setMerkleRoot(roothash))
+    void expect(await NewERC1155DropCampaignContract.connect(this.signers.backendWallet).setMerkleRoot(roothash))
       .to.emit(NewERC1155DropCampaignContract, "MerkleRootSet")
       .withArgs(roothash);
 
@@ -63,7 +63,7 @@ export function NewERC1155DropCampaignShouldGoThroughUserFlow() {
     const hexProof = merkleTree.getHexProof(leaves[0]);
 
     // alice withdrawing 1155 on basis of her address being included in the merkleRoot
-    expect(await NewERC1155DropCampaignContract.connect(this.signers.alice).claim(hexProof, { value: claimFee }))
+    void expect(await NewERC1155DropCampaignContract.connect(this.signers.alice).claim(hexProof, { value: claimFee }))
       .to.emit(NewERC1155DropCampaignContract, "Claimed")
       .withArgs(this.signers.alice.address);
 

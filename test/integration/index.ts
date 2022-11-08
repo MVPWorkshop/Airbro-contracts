@@ -22,7 +22,7 @@ import { NewSB1155DropCampaignShouldGoThroughUserFlow } from "./AirbroFactoryCam
 import { ExistingERC20DropCampaignShouldFundCampaign } from "./AirbroFactoryCampaign/ExistingERC20DropCampaign/ExistingERC20DropCampaignShouldFundCampaign.spec";
 import { ExistingERC20DropCampaignShouldBeEligible } from "./AirbroFactoryCampaign/ExistingERC20DropCampaign/ExistingERC20DropCampaignShouldBeEligible.spec";
 import { ExistingERC20DropCampaignShouldGoThroughUserFlow } from "./AirbroFactoryCampaign/ExistingERC20DropCampaign/ExistingERC20DropCampaignShouldGoThroughUserFlow.spec";
-import { AirbroCampaignFactoryShouldHaveBetaPhase } from "./AirbroFactoryCampaign/AirbroCampaignFactoryShouldHaveBetaPhase";
+import { AirbroCampaignFactoryShouldHaveBetaPhase } from "./AirbroFactoryCampaign/AirbroCampaignFactoryShouldHaveBetaPhase.spec";
 
 describe("Integration tests", function () {
   before(async function () {

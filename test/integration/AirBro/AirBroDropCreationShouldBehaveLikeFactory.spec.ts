@@ -1,5 +1,4 @@
 import { expect } from "chai";
-import { ethers } from "hardhat";
 
 export function shouldBehaveLikeFactory(): void {
   it("should emit NewAirdrop event", async function () {

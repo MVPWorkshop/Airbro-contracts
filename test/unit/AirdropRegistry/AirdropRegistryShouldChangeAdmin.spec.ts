@@ -1,5 +1,4 @@
 import { expect } from "chai";
-import { ethers } from "hardhat";
 import { randomAddress } from "../../shared/constants";
 
 export function AirdropRegistryShouldChangeAdmin(): void {

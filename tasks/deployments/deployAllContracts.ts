@@ -53,6 +53,7 @@ task("deploy").setAction(async function (taskArguments: TaskArguments, { ethers,
   /* ****************** 2. Deployment of AirbroCampaignFactory ****************** */
   console.log(lineBreak);
   console.log("\n 2. AirbroCampaignFactory");
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const airbroCapaignFactory: AirbroCampaignFactory = await deployAirbroCampaignFactory.apply({ ethers }, [
     BACKEND_WALLET_ADDRESS,
     airdropRegistry.address,
@@ -62,6 +63,7 @@ task("deploy").setAction(async function (taskArguments: TaskArguments, { ethers,
   /* ****************** 3. Deployment of AirdropCampaignData - now upgradable ****************** */
   console.log(lineBreak);
   console.log("\n 3. AirdropCampaignData");
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const airdropCampaignData: AirdropCampaignData = await deploy_upgradable_AirdropCampaignData.apply({ ethers, upgrades }, [
     BACKEND_WALLET_ADDRESS,
   ]);

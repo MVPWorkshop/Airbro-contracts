@@ -344,7 +344,8 @@ export const integrationsFixture: Fixture<IntegrationFixtureType> = async (signe
 };
 
 export const airdropCampaignDataFixture: Fixture<AirdropCampaignDataFixtureType> = async (signers: Wallet[]) => {
-  const deployer: Wallet = signers[0];
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const deployer: Wallet = signers[0]; // keeping this here just in case
 
   const airdropCampaignDataFactory = await ethers.getContractFactory("AirdropCampaignData");
 

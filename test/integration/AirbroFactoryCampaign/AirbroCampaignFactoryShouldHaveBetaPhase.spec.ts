@@ -1,7 +1,5 @@
 import { expect } from "chai";
-import { ethers } from "hardhat";
-import { randomAddress, treasuryAddress, name, symbol, uri } from "../../shared/constants";
-import { constants } from "ethers";
+import { name, symbol, uri } from "../../shared/constants";
 
 export function AirbroCampaignFactoryShouldHaveBetaPhase(): void {
   it("should not allow anyone but betaAddress to create dropCampaigns while beta bool is active", async function () {

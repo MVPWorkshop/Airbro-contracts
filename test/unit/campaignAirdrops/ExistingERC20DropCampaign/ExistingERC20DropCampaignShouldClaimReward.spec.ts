@@ -6,7 +6,7 @@ const { keccak256 } = ethers.utils;
 export function ExistingERC20DropCampaignShouldClaimReward(): void {
   describe("user should be able to claim reward", async function () {
     it("should be able to claim if part of merkleRoot", async function () {
-      const tokenSupply: number = this.existingERC20DropCampaignArgs.tokenSupply;
+      // const tokenSupply: number = this.existingERC20DropCampaignArgs.tokenSupply;
       const numOfClaimers: number = 1;
 
       // making merkleTree and merkleRootHash
@@ -16,12 +16,12 @@ export function ExistingERC20DropCampaignShouldClaimReward(): void {
       const roothash = merkleTree.getHexRoot();
 
       // setting merkleRootHash
-      expect(await this.existingERC20DropCampaign.connect(this.signers.backendWallet).setMerkleRoot(roothash, numOfClaimers))
+      void expect(await this.existingERC20DropCampaign.connect(this.signers.backendWallet).setMerkleRoot(roothash, numOfClaimers))
         .to.emit(this.existingERC20DropCampaign, "MerkleRootSet")
         .withArgs(roothash);
 
       // making merkleProof for alice's address
-      const hexProof = merkleTree.getHexProof(leaves[0]);
+      // const hexProof = merkleTree.getHexProof(leaves[0]);
 
       expect(await this.existingERC20DropCampaign.hasClaimed(this.signers.alice.address)).to.be.equal(false);
 

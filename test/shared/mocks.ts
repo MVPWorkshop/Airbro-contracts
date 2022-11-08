@@ -21,9 +21,9 @@ export async function deployMockAirBroFactory(deployer: Signer): Promise<MockCon
 export async function deployMockAirdropRegistry(deployer: Signer): Promise<MockContract> {
   const airdropRegistry: MockContract = await waffle.deployMockContract(deployer, AirdropRegistry.abi);
 
-  airdropRegistry.mock.admin.returns(registryAdminAddress);
-  airdropRegistry.mock.treasury.returns(treasuryAddress);
-  airdropRegistry.mock.factories.returns(true);
+  await airdropRegistry.mock.admin.returns(registryAdminAddress);
+  await airdropRegistry.mock.treasury.returns(treasuryAddress);
+  await airdropRegistry.mock.factories.returns(true);
 
   return airdropRegistry;
 }

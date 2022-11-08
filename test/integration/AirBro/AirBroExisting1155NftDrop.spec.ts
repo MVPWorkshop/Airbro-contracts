@@ -3,8 +3,6 @@ import { ethers } from "hardhat";
 import { oneWeekInSeconds } from "../../shared/constants";
 
 export function shouldAirdropExisting1155NftDrop() {
-  const bytes32MerkleRootHash = "0x0000000000000000000000000000000000000000000000000000000000000000";
-
   it("should mint and drop existing IERC1155 NFT token", async function () {
     // minting an NFT's to alice and bob. Both addresses should receive a reward for holding this NFT collection
     await this.testNftCollection.connect(this.signers.deployer).safeMint(this.signers.alice.address);
