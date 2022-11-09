@@ -63,18 +63,20 @@ export function NewERC1155DropCampaignShouldGoThroughUserFlow() {
     const hexProof = merkleTree.getHexProof(leaves[0]);
 
     // alice withdrawing 1155 on basis of her address being included in the merkleRoot
-    expect(await NewERC1155DropCampaignContract.connect(this.signers.alice).claim(hexProof, { value: claimFee }))
+    expect(
+      await NewERC1155DropCampaignContract.connect(this.signers.alice).claim(hexProof, this.signers.alice.address, { value: claimFee }),
+    )
       .to.emit(NewERC1155DropCampaignContract, "Claimed")
       .withArgs(this.signers.alice.address);
 
     // alice trying to withdraw twice
-    await expect(NewERC1155DropCampaignContract.connect(this.signers.alice).claim(hexProof, { value: claimFee })).to.be.revertedWith(
-      "AlreadyRedeemed",
-    );
+    await expect(
+      NewERC1155DropCampaignContract.connect(this.signers.alice).claim(hexProof, this.signers.alice.address, { value: claimFee }),
+    ).to.be.revertedWith("AlreadyRedeemed");
 
     // address that is not in merkleRootHash trying to withdraw
-    await expect(NewERC1155DropCampaignContract.connect(this.signers.lisa).claim(hexProof, { value: claimFee })).to.be.revertedWith(
-      "NotEligible",
-    );
+    await expect(
+      NewERC1155DropCampaignContract.connect(this.signers.lisa).claim(hexProof, this.signers.alice.address, { value: claimFee }),
+    ).to.be.revertedWith("NotEligible");
   });
 }

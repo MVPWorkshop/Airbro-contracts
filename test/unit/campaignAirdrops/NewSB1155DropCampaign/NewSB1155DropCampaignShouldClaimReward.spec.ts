@@ -26,7 +26,7 @@ export function NewSB1155DropCampaignShouldClaimReward(): void {
       const balanceBefore = await this.signers.alice.getBalance();
 
       // alice claiming her reward
-      expect(await this.newSB1155DropCampaign.connect(this.signers.alice).claim(hexProof, { value: claimFee }))
+      expect(await this.newSB1155DropCampaign.connect(this.signers.alice).claim(hexProof, this.signers.alice.address, { value: claimFee }))
         .to.emit(this.newSB1155DropCampaign, "Claimed")
         .withArgs(this.signers.alice.address);
 
@@ -53,9 +53,9 @@ export function NewSB1155DropCampaignShouldClaimReward(): void {
 
       const hexProof = merkleTree.getHexProof(leaves[0]);
 
-      await expect(this.newSB1155DropCampaign.connect(this.signers.peter).claim(hexProof, { value: claimFee })).to.be.revertedWith(
-        `NotEligible`,
-      );
+      await expect(
+        this.newSB1155DropCampaign.connect(this.signers.peter).claim(hexProof, this.signers.alice.address, { value: claimFee }),
+      ).to.be.revertedWith(`NotEligible`);
     });
 
     it("should revert claim if already redeemed", async function () {
@@ -74,13 +74,13 @@ export function NewSB1155DropCampaignShouldClaimReward(): void {
       const hexProof = merkleTree.getHexProof(leaves[0]);
 
       // alice claiming her reward
-      expect(await this.newSB1155DropCampaign.connect(this.signers.alice).claim(hexProof, { value: claimFee }))
+      expect(await this.newSB1155DropCampaign.connect(this.signers.alice).claim(hexProof, this.signers.alice.address, { value: claimFee }))
         .to.emit(this.newSB1155DropCampaign, "Claimed")
         .withArgs(this.signers.alice.address);
 
-      await expect(this.newSB1155DropCampaign.connect(this.signers.alice).claim(hexProof, { value: claimFee })).to.be.revertedWith(
-        `AlreadyRedeemed`,
-      );
+      await expect(
+        this.newSB1155DropCampaign.connect(this.signers.alice).claim(hexProof, this.signers.alice.address, { value: claimFee }),
+      ).to.be.revertedWith(`AlreadyRedeemed`);
     });
 
     it("function isEligibleForReward() should return true if eligible for reward", async function () {
@@ -113,7 +113,7 @@ export function NewSB1155DropCampaignShouldClaimReward(): void {
       const hexProof = merkleTree.getHexProof(leaves[0]);
 
       // alice claiming her reward
-      expect(await this.newSB1155DropCampaign.connect(this.signers.alice).claim(hexProof, { value: claimFee }))
+      expect(await this.newSB1155DropCampaign.connect(this.signers.alice).claim(hexProof, this.signers.alice.address, { value: claimFee }))
         .to.emit(this.newSB1155DropCampaign, "Claimed")
         .withArgs(this.signers.alice.address);
 
@@ -139,7 +139,7 @@ export function NewSB1155DropCampaignShouldClaimReward(): void {
       expect(await this.newSB1155DropCampaign.connect(this.signers.alice).getAirdropAmount(hexProof)).to.be.equal(1);
 
       // alice claiming her reward
-      await this.newSB1155DropCampaign.connect(this.signers.alice).claim(hexProof, { value: claimFee });
+      await this.newSB1155DropCampaign.connect(this.signers.alice).claim(hexProof, this.signers.alice.address, { value: claimFee });
 
       // alice checking if she is eligible, now she isn't
       expect(await this.newSB1155DropCampaign.connect(this.signers.alice).isEligibleForReward(hexProof)).to.be.equal(false);
