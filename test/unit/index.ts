@@ -1,5 +1,5 @@
 import { ethers, network, waffle } from "hardhat";
-import { Mocks, Signers } from "../shared/types";
+import { Mocks, Signers } from "../shared/typesShared/types";
 
 import { contractAdminAddress, registryAdminAddress } from "../shared/constants";
 

@@ -65,7 +65,9 @@ export function AirbroCampaignFactoryShouldChangeAndApplyProtocolFeeInAllAirDrop
     const balanceBefore = await this.signers.alice.getBalance();
 
     // alice withdrawing 1155 on basis of her address being included in the merkleRoot
-    void expect(await this.newERC1155DropCampaign.connect(this.signers.alice).claim(hexProof, { value: newClaimFee }))
+    void expect(
+      await this.newERC1155DropCampaign.connect(this.signers.alice).claim(hexProof, this.signers.alice.address, { value: newClaimFee }),
+    )
       .to.emit(this.newERC1155DropCampaign, "Claimed")
       .withArgs(this.signers.alice.address);
 

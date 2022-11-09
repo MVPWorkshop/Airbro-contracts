@@ -49,17 +49,17 @@ abstract contract CampaignAidropsShared is AirdropMerkleProof {
     /// @dev This method does not deal with the transfer/ minting of tokens
     /// - the logic for this is handled in the child contract.
     /// @param _merkleProof is the merkle proof that this user is eligible for claiming the ERC20 airdrop
-    function claimHandler(bytes32[] calldata _merkleProof) internal {
-        if (hasClaimed[msg.sender]) revert AlreadyRedeemed();
-        if (checkProof(_merkleProof, merkleRoot) == false) revert NotEligible();
+    function claimHandler(bytes32[] calldata _merkleProof, address _sender) internal {
+        if (hasClaimed[_sender]) revert AlreadyRedeemed();
+        if (checkProof(_merkleProof, merkleRoot, _sender) == false) revert NotEligible();
 
-        hasClaimed[msg.sender] = true;
+        hasClaimed[_sender] = true;
 
         if (msg.value != airbroCampaignFactoryAddress.claimFee()) revert InvalidFeeAmount();
         (bool success, ) = airbroCampaignFactoryAddress.treasury().call{ value: msg.value }("");
 
         if (!success) revert FeeNotSent();
-        emit Claimed(msg.sender);
+        emit Claimed(_sender);
     }
 
     /// @notice Checks if the user is eligible for this airdrop
@@ -68,6 +68,6 @@ abstract contract CampaignAidropsShared is AirdropMerkleProof {
     /// @return true if user is eligibleto claim a reward
     function isEligibleForReward(bytes32[] calldata _merkleProof) public view virtual returns (bool) {
         if (hasClaimed[msg.sender]) return false;
-        return checkProof(_merkleProof, merkleRoot);
+        return checkProof(_merkleProof, merkleRoot, msg.sender);
     }
 }

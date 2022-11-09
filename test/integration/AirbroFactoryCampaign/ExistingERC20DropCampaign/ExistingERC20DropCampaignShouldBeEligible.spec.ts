@@ -54,7 +54,9 @@ export function ExistingERC20DropCampaignShouldBeEligible(): void {
 
       expect(await this.existingERC20DropCampaign.connect(this.signers.alice).isEligibleForReward(aliceHexProof)).to.be.equal(true);
       // alice claiming reward
-      await this.existingERC20DropCampaign.connect(this.signers.alice).claim(aliceHexProof, { value: claimFee });
+      await this.existingERC20DropCampaign
+        .connect(this.signers.alice)
+        .claim(aliceHexProof, this.signers.alice.address, { value: claimFee });
 
       // should be false since user is no longer eligible for reward
       expect(await this.existingERC20DropCampaign.connect(this.signers.alice).isEligibleForReward(aliceHexProof)).to.be.equal(false);

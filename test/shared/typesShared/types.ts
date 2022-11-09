@@ -2,9 +2,9 @@ import type { SignerWithAddress } from "@nomiclabs/hardhat-ethers/dist/src/signe
 import type { Fixture, MockContract } from "ethereum-waffle";
 import { Wallet } from "@ethersproject/wallet";
 
-import type { AirbroFactory } from "../../src/types/contracts/AirbroFactory";
-import { TestNftCollection } from "../../src/types/contracts/mocks/TestNftCollection";
-import { TestToken } from "../../src/types/contracts/mocks/TestToken";
+import type { AirbroFactory } from "../../../src/types/contracts/AirbroFactory";
+import { TestNftCollection } from "../../../src/types/contracts/mocks/TestNftCollection";
+import { TestToken } from "../../../src/types/contracts/mocks/TestToken";
 
 declare module "mocha" {
   export interface Context {

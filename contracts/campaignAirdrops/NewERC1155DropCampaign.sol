@@ -3,6 +3,7 @@ pragma solidity ^0.8.16;
 
 import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC1155/ERC1155Upgradeable.sol";
+// import "@openzeppelin/contracts-upgradeable/metatx/ERC2771ContextUpgradeable.sol";
 
 import "./shared/CampaignAirdropsShared.sol";
 
@@ -52,9 +53,12 @@ contract NewERC1155DropCampaign is ERC1155Upgradeable, CampaignAidropsShared {
     /// @notice Allows the NFT holder to claim their ERC1155 airdrop
     /// @dev Implements a handler method from the parent contract for performing checks and changing state
     /// @param _merkleProof is the merkleRoot proof that this user is eligible for claiming reward
-    function claim(bytes32[] calldata _merkleProof) external payable {
-        super.claimHandler(_merkleProof);
-        _mint(msg.sender, _tokenId, _tokenAmount, "0x0");
+    /// @param _claimerAddress is the address of the one signing the transaction and trying to claim the reward, added due to use of relayers
+    function claim(bytes32[] calldata _merkleProof, address _claimerAddress) external payable {
+        address sender = (msg.sender == airbroCampaignFactoryAddress.trustedRelayer()) ? _claimerAddress : msg.sender;
+
+        super.claimHandler(_merkleProof, sender);
+        _mint(sender, _tokenId, _tokenAmount, "0x0");
     }
 
     /// @notice Returns the amount of airdrop tokens a user can claim

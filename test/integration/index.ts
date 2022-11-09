@@ -1,7 +1,7 @@
 import { ethers, waffle, network } from "hardhat";
 import { contractAdminAddress, registryAdminAddress, betaAddress } from "../shared/constants";
 
-import { Signers } from "../shared/types";
+import { Signers } from "../shared/typesShared/types";
 
 import { shouldBehaveLikeFactory } from "./AirBro/AirBroDropCreationShouldBehaveLikeFactory.spec";
 import { shouldAirDropExistingToken } from "./AirBro/AirBroExistingTokenDrop.spec";

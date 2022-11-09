@@ -13,6 +13,7 @@ import "./shared/AirdropBeta.sol";
 contract AirbroCampaignFactory is AirdropBeta {
     IAirdropRegistry public immutable airdropRegistryAddress;
     address public immutable treasury;
+    address public trustedRelayer;
     // protocol fee for claiming dropCampaign rewards
     uint256 public claimFee = 2_000_000_000_000_000; // 0.002 ETH
     // protocol fee for creating dropCampaigns
@@ -26,6 +27,7 @@ contract AirbroCampaignFactory is AirdropBeta {
     event ClaimFeeChanged(uint256 indexed claimFee);
     event CreatorFeeChanged(uint256 indexed creatorFee);
     event ClaimPeriodChanged(uint16 indexed claimPeriod);
+    event TrustedRelayerChanged(address indexed trustedRelayer);
 
     error InvalidFeeAmount();
     error FeeNotSent();
@@ -136,5 +138,12 @@ contract AirbroCampaignFactory is AirdropBeta {
     function changeClaimPeriod(uint16 _newClaimPeriod) external onlyAdmin {
         claimPeriodInDays = _newClaimPeriod;
         emit ClaimPeriodChanged(_newClaimPeriod);
+    }
+
+    /// @notice Updates the trusted relayer address
+    /// @param _trustedRelayer - New trusted relayer address
+    function changeTrustedRelayer(address _trustedRelayer) external onlyAdmin {
+        trustedRelayer = _trustedRelayer;
+        emit TrustedRelayerChanged(_trustedRelayer);
     }
 }

@@ -21,11 +21,11 @@ export function ExistingERC20DropCampaignShouldClaimReward(): void {
         .withArgs(roothash);
 
       // making merkleProof for alice's address
-      // const hexProof = merkleTree.getHexProof(leaves[0]);
+      const hexProof = merkleTree.getHexProof(leaves[0]);
 
       expect(await this.existingERC20DropCampaign.hasClaimed(this.signers.alice.address)).to.be.equal(false);
 
-      //expect(await this.existingERC20DropCampaign.connect(this.signers.alice).isEligibleForReward(hexProof)).to.be.equal(true); // contract must be funded first, this is why this wont work
+      expect(await this.existingERC20DropCampaign.connect(this.signers.alice).isEligibleForReward(hexProof)).to.be.equal(true); // contract must be funded first, this is why this wont work
 
       // checking if hasClaimed is labeled true after claim
       /* expect(await this.existingERC20DropCampaign.hasClaimed(this.signers.alice.address)).to.be.equal(false); */

@@ -26,7 +26,9 @@ export function NewERC1155DropCampaignShouldClaimReward(): void {
       const balanceBefore = await this.signers.alice.getBalance();
 
       // alice claiming her reward
-      void expect(await this.newERC1155DropCampaign.connect(this.signers.alice).claim(hexProof, { value: claimFee }))
+      void expect(
+        await this.newERC1155DropCampaign.connect(this.signers.alice).claim(hexProof, this.signers.alice.address, { value: claimFee }),
+      )
         .to.emit(this.newERC1155DropCampaign, "Claimed")
         .withArgs(this.signers.alice.address);
 
@@ -55,9 +57,9 @@ export function NewERC1155DropCampaignShouldClaimReward(): void {
 
       const hexProof = merkleTree.getHexProof(leaves[0]);
 
-      await expect(this.newERC1155DropCampaign.connect(this.signers.peter).claim(hexProof, { value: claimFee })).to.be.revertedWith(
-        `NotEligible`,
-      );
+      await expect(
+        this.newERC1155DropCampaign.connect(this.signers.peter).claim(hexProof, this.signers.peter.address, { value: claimFee }),
+      ).to.be.revertedWith(`NotEligible`);
     });
 
     it("should revert claim if already redeemed", async function () {
@@ -76,13 +78,15 @@ export function NewERC1155DropCampaignShouldClaimReward(): void {
       const hexProof = merkleTree.getHexProof(leaves[0]);
 
       // alice claiming her reward
-      void expect(await this.newERC1155DropCampaign.connect(this.signers.alice).claim(hexProof, { value: claimFee }))
+      void expect(
+        await this.newERC1155DropCampaign.connect(this.signers.alice).claim(hexProof, this.signers.alice.address, { value: claimFee }),
+      )
         .to.emit(this.newERC1155DropCampaign, "Claimed")
         .withArgs(this.signers.alice.address);
 
-      await expect(this.newERC1155DropCampaign.connect(this.signers.alice).claim(hexProof, { value: claimFee })).to.be.revertedWith(
-        `AlreadyRedeemed`,
-      );
+      await expect(
+        this.newERC1155DropCampaign.connect(this.signers.alice).claim(hexProof, this.signers.alice.address, { value: claimFee }),
+      ).to.be.revertedWith(`AlreadyRedeemed`);
     });
 
     it("function isEligibleForReward() should return true if eligible for reward", async function () {
@@ -115,7 +119,9 @@ export function NewERC1155DropCampaignShouldClaimReward(): void {
       const hexProof = merkleTree.getHexProof(leaves[0]);
 
       // alice claiming her reward
-      void expect(await this.newERC1155DropCampaign.connect(this.signers.alice).claim(hexProof, { value: claimFee }))
+      void expect(
+        await this.newERC1155DropCampaign.connect(this.signers.alice).claim(hexProof, this.signers.alice.address, { value: claimFee }),
+      )
         .to.emit(this.newERC1155DropCampaign, "Claimed")
         .withArgs(this.signers.alice.address);
 
@@ -141,7 +147,7 @@ export function NewERC1155DropCampaignShouldClaimReward(): void {
       expect(await this.newERC1155DropCampaign.connect(this.signers.alice).getAirdropAmount(hexProof)).to.be.equal(1);
 
       // alice claiming her reward
-      await this.newERC1155DropCampaign.connect(this.signers.alice).claim(hexProof, { value: claimFee });
+      await this.newERC1155DropCampaign.connect(this.signers.alice).claim(hexProof, this.signers.alice.address, { value: claimFee });
 
       // alice checking if she is eligible, now she isn't
       expect(await this.newERC1155DropCampaign.connect(this.signers.alice).isEligibleForReward(hexProof)).to.be.equal(false);
