@@ -13,6 +13,7 @@ import {
   existingTokenDropConstructorArgsType,
   newERC1155DropCampaignArgsType,
   newSB1155DropCampaignArgsType,
+  unitTokenDropCampaignArgsType,
 } from "./constructorArgTypes";
 
 import { Existing1155NftDrop } from "../../../src/types/contracts/airdrops/Existing1155NftDrop";
@@ -45,7 +46,7 @@ export type UnitExistingTokenDropFixtureType = {
 export type UnitTokenDropFixtureType = {
   tokenDrop: TokenDrop;
   mockAirBroFactory: MockContract;
-  tokenDropConstructorArgs: any;
+  tokenDropConstructorArgs: unitTokenDropCampaignArgsType;
   mockBaycNft: MockContract;
 };
 
