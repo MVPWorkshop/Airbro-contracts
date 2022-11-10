@@ -16,7 +16,11 @@ export function AirbroCampaignFactoryShouldChangeClaimPeriod(): void {
 
   it("new admin should be able to change claim period", async function () {
     // changing admin address in the airbroCampaignFactory Contract
-    await expect(this.airbroCampaignFactory.connect(this.signers.backendWallet).changeAdmin(this.signers.lisa.address))
+    await expect(this.airbroCampaignFactory.connect(this.signers.backendWallet).initiateAdminTranfer(this.signers.lisa.address))
+      .to.emit(this.airbroCampaignFactory, `AdminTransferInitiated`)
+      .withArgs(this.signers.lisa.address);
+
+    await expect(this.airbroCampaignFactory.connect(this.signers.lisa).acceptAdminTransfer())
       .to.emit(this.airbroCampaignFactory, `AdminChanged`)
       .withArgs(this.signers.lisa.address);
 
