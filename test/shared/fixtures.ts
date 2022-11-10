@@ -32,6 +32,7 @@ import {
   unitExistingTokenDropFixtureArguments,
   treasuryAddress,
 } from "./constants";
+
 import {
   deployMockBaycNft,
   deployMock1155Nft,
@@ -53,6 +54,23 @@ import {
 } from "./typesShared/fixtureTypes";
 
 // airbroCampaign
+export const unitAirbroCampaignFactoryFixure: Fixture<{ airbroCampaignFactory: AirbroCampaignFactory }> = async (signers: Wallet[]) => {
+  const deployer: Wallet = signers[0];
+
+  const airdropRegistryFactory: ContractFactory = await ethers.getContractFactory(`AirdropRegistry`);
+  const airdropRegistry: AirdropRegistry = (await airdropRegistryFactory
+    .connect(deployer)
+    .deploy(process.env.REGISTRY_ADMIN_WALLET_ADDRESS, treasuryAddress)) as AirdropRegistry;
+  await airdropRegistry.deployed();
+
+  const airbroCampaignFactoryFactory: ContractFactory = await ethers.getContractFactory(`AirbroCampaignFactory`);
+  const airbroCampaignFactory: AirbroCampaignFactory = (await airbroCampaignFactoryFactory
+    .connect(deployer)
+    .deploy(process.env.BACKEND_WALLET_ADDRESS, airdropRegistry.address, process.env.BETA_WALLET_ADDRESS)) as AirbroCampaignFactory;
+  await airbroCampaignFactory.deployed();
+
+  return { airbroCampaignFactory };
+};
 
 export const unitNewERC1155DropCampaignFixture: Fixture<UnitNewERC1155DropCampaignFixtureType> = async (signers: Wallet[]) => {
   const deployer: Wallet = signers[0];

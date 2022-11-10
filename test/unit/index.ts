@@ -13,6 +13,7 @@ import {
   integrationCampaignFixture,
   unitExistingERC20DropCampaignFixture,
   airdropCampaignDataFixture,
+  unitAirbroCampaignFactoryFixure,
 } from "../shared/fixtures";
 
 import { shouldDeploy } from "./AirbroFactory/AirbroFactoryShouldDeploy.spec";
@@ -44,6 +45,7 @@ import { AirdropCampaignDataShouldAddAirdropCampaignChain } from "./AirdropCampa
 import { AirdropCampaignDataShouldBatchAddAirdropCampaignChain } from "./AirdropCampaignData/AirdropCampaignDataShouldBatchAddAirdropCampaignChain.spec";
 import { AirdropCampaignDataShouldFinalizeAirdrop } from "./AirdropCampaignData/AirdropCampaignDataShouldFinalizeAirdrop.spec";
 import { AirdropCampaignDataShouldBeUpgradable } from "./AirdropCampaignData/AirdropCampaignDataShouldBeUpgradable.spec";
+import { AirbroCampaignFactoryShouldChangeAdmin } from "./AirbroCampaignFactory/AirbroCampaignFactoryShouldChangeAdmin.spec";
 
 describe("Unit tests", function () {
   before(async function () {
@@ -172,6 +174,16 @@ describe("Unit tests", function () {
       });
 
       AirdropRegistryShouldChangeAdmin();
+    });
+
+    describe("AirbroCampaignFactory", () => {
+      beforeEach(async function () {
+        const { airbroCampaignFactory } = await this.loadFixture(unitAirbroCampaignFactoryFixure);
+
+        this.airbroCampaignFactory = airbroCampaignFactory;
+      });
+
+      AirbroCampaignFactoryShouldChangeAdmin();
     });
 
     describe("NewERC1155DropCampaign", () => {

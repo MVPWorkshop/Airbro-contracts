@@ -3,7 +3,7 @@ pragma solidity ^0.8.16;
 
 abstract contract AirdropAdmin {
     address public admin;
-    address private newAdmin;
+    address public newAdmin;
 
     error NotAdmin();
 
@@ -24,6 +24,12 @@ abstract contract AirdropAdmin {
         admin = _admin;
     }
 
+    /// @notice Returns true if admin transfer is initiated
+    /// @dev admin transfer is considered initiated if newAdmin is anything else than address(0)
+    function isTransferInitiated() external view returns (bool) {
+        return (newAdmin != address(0));
+    }
+
     /// @notice Adds address which can transfer admin role to itself
     /// @dev If the var newAdmin is not address(0), calling method with the same newAdmin address will revert. But if we
     /// call with a different address, it will emit AdminTransferCanceled for current newAdmin address, and
@@ -33,7 +39,7 @@ abstract contract AirdropAdmin {
     function initiateAdminTranfer(address _newAdmin) external onlyAdmin {
         if (_newAdmin == address(0)) revert InvalidNewAdminAddress();
         if (newAdmin == _newAdmin) revert TransferToAddressAlreadyInitiated(_newAdmin);
-        if (newAdmin != address(0)) emit AdminTransferCanceled(newAdmin);
+        if (this.isTransferInitiated() == true) emit AdminTransferCanceled(newAdmin);
 
         newAdmin = _newAdmin;
         emit AdminTransferInitiated(_newAdmin);
