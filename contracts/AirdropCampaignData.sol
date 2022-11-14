@@ -28,7 +28,6 @@ contract AirdropCampaignData is Initializable, UUPSUpgradeable, OwnableUpgradeab
     event FinalizedAirdrop(address indexed airdropCampaignAddress);
     event HashAdded(address indexed airdropCampaignAddress, bytes32 indexed hash);
     event ChainAdded(address indexed airdropCampaignAddress, Chains indexed airdropChain);
-
     event ManagerTransferInitiated(address receiverAddress);
     event ManagerTransferCanceled(address receiverAddress);
     event ManagerChanged(address managerAddress);
@@ -39,7 +38,6 @@ contract AirdropCampaignData is Initializable, UUPSUpgradeable, OwnableUpgradeab
     error ChainAlreadySet();
     error AirdropHasFinished();
     error AlreadyFinalized();
-
     error InvalidNewManagerAddress();
     error TransferToAddressAlreadyInitiated(address receiverAddress);
     error NotEligibleForManagerTransfer(address caller);
