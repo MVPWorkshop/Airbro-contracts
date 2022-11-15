@@ -1,10 +1,11 @@
 import { expect } from "chai";
 import { ethers } from "hardhat";
+import { constants } from "ethers";
 import { MerkleTree } from "merkletreejs";
 const { keccak256 } = ethers.utils;
 
 export function ExistingERC20DropCampaignShouldClaimReward(): void {
-  describe("user should be able to claim reward", async function () {
+  describe.only("user should be able to claim reward", async function () {
     it("should be able to claim if part of merkleRoot", async function () {
       // const tokenSupply: number = this.existingERC20DropCampaignArgs.tokenSupply;
       const numOfClaimers: number = 1;
@@ -25,11 +26,7 @@ export function ExistingERC20DropCampaignShouldClaimReward(): void {
 
       expect(await this.existingERC20DropCampaign.hasClaimed(this.signers.alice.address)).to.be.equal(false);
 
-      expect(await this.existingERC20DropCampaign.connect(this.signers.alice).isEligibleForReward(hexProof)).to.be.equal(true); // contract must be funded first, this is why this wont work
-
-      // checking if hasClaimed is labeled true after claim
-      /* expect(await this.existingERC20DropCampaign.hasClaimed(this.signers.alice.address)).to.be.equal(false); */
-      /* expect(await this.existingERC20DropCampaign.balanceOf(this.signers.alice.address, constants.Zero)).to.be.equal(0); */
+      expect(await this.existingERC20DropCampaign.connect(this.signers.alice).isEligibleForReward(hexProof)).to.be.equal(true);
     });
   });
 }
