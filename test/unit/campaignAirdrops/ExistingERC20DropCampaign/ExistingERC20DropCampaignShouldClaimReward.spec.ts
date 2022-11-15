@@ -1,6 +1,5 @@
 import { expect } from "chai";
 import { ethers } from "hardhat";
-import { constants } from "ethers";
 import { MerkleTree } from "merkletreejs";
 const { keccak256 } = ethers.utils;
 
