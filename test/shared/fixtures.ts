@@ -1,4 +1,4 @@
-import { Fixture, MockContract } from "ethereum-waffle";
+import { Fixture } from "ethereum-waffle";
 import { ContractFactory } from "ethers";
 import { ethers, upgrades } from "hardhat";
 import { Wallet } from "@ethersproject/wallet";
@@ -40,73 +40,19 @@ import {
   deployMock1155Nft,
 } from "./mocks";
 
+import {
+  IntegrationFixtureType,
+  UnitTokenDropFixtureType,
+  AirdropCampaignDataFixtureType,
+  IntegrationCampaignFixtureType,
+  UnitExistingTokenDropFixtureType,
+  UnitExisting1155NFTDropFixtureType,
+  UnitNewSB1155DropCampaignFixtureType,
+  UnitNewERC1155DropCampaignFixtureType,
+  UnitExistingERC20DropCampaignFixtureType,
+} from "./typesShared/fixtureTypes";
+
 // airbroCampaign fixture types
-
-type UnitNewERC1155DropCampaignFixtureType = {
-  newERC1155DropCampaign: NewERC1155DropCampaign;
-  mockAirbroCampaignFactory: MockContract;
-  newERC1155DropCampaignArgs: any;
-};
-
-type UnitNewSB1155DropCampaignFixtureType = {
-  newSB1155DropCampaign: NewSB1155DropCampaign;
-  mockAirbroCampaignFactory: MockContract;
-  newSB1155DropCampaignArgs: any;
-};
-
-type UnitExistingERC20DropCampaignFixtureType = {
-  mockAirbroCampaignFactory: MockContract;
-  mockDAItoken: MockContract;
-  ExistingERC20DropCampaign: ExistingERC20DropCampaign;
-  existingERC20DropCampaignArgs: any;
-};
-
-type IntegrationCampaignFixtureType = {
-  airdropRegistry: AirdropRegistry;
-  airbroCampaignFactory: AirbroCampaignFactory;
-  newERC1155DropCampaign: NewERC1155DropCampaign;
-  newERC1155DropCampaignArgs: any;
-  newSB1155DropCampaign: NewERC1155DropCampaign;
-  newSB1155DropCampaignArgs: any;
-  existingERC20DropCampaign: ExistingERC20DropCampaign;
-  existingERC20DropCampaignArgs: any;
-  testToken: TestToken;
-};
-
-// airbro classic fixture types
-
-type UnitExisting1155NFTDropFixtureType = {
-  existing1155NftDrop: Existing1155NftDrop;
-  mockAirBroFactory: MockContract;
-  mock1155Nft: MockContract;
-  mockBaycNft: MockContract;
-  existing1155NFTDropConstructorArgs: any;
-};
-
-type UnitExistingTokenDropFixtureType = {
-  existingTokenDrop: ExistingTokenDrop;
-  existingTokenDropConstructorArgs: any;
-  mockDAItoken: MockContract;
-  mockBaycNft: MockContract;
-};
-
-type UnitTokenDropFixtureType = {
-  tokenDrop: TokenDrop;
-  mockAirBroFactory: MockContract;
-  tokenDropConstructorArgs: any;
-  mockBaycNft: MockContract;
-};
-
-type IntegrationFixtureType = {
-  airbroFactory: AirbroFactory;
-  testNftCollection: TestNftCollection;
-  testToken: TestToken;
-  airBro1155NftMint: AirBro1155NftMint;
-};
-
-type AirdropCampaignDataFixtureType = {
-  airdropCampaignData: AirdropCampaignData;
-};
 
 // airbroCampaign
 
@@ -123,7 +69,7 @@ export const unitNewERC1155DropCampaignFixture: Fixture<UnitNewERC1155DropCampai
   const newERC1155DropCampaign: NewERC1155DropCampaign = (await newERC1155DropCampaignFactory
     .connect(deployer)
     .deploy()) as NewERC1155DropCampaign;
-  // ...Object.values(newERC1155DropCampaignArgs)
+
   await newERC1155DropCampaign.initialize(name, symbol, uri, mockAirbroCampaignFactory.address);
 
   return { mockAirbroCampaignFactory, newERC1155DropCampaign, newERC1155DropCampaignArgs };
@@ -142,7 +88,7 @@ export const unitNewSB1155DropCampaignFixture: Fixture<UnitNewSB1155DropCampaign
   const newSB1155DropCampaign: NewSB1155DropCampaign = (await newSB1155DropCampaignFactory
     .connect(deployer)
     .deploy()) as NewSB1155DropCampaign;
-  // ...Object.values(newSB1155DropCampaignArgs)
+
   await newSB1155DropCampaign.initialize(name, symbol, uri, mockAirbroCampaignFactory.address);
 
   return { mockAirbroCampaignFactory, newSB1155DropCampaign, newSB1155DropCampaignArgs };
@@ -166,7 +112,7 @@ export const unitExistingERC20DropCampaignFixture: Fixture<UnitExistingERC20Drop
   ).deploy()) as ExistingERC20DropCampaign;
 
   await ExistingERC20DropCampaign.deployed();
-  // ...Object.values(existingERC20DropCampaignArgs)
+
   await ExistingERC20DropCampaign.initialize(mockDAItoken.address, 100, mockAirbroCampaignFactory.address);
 
   return { mockAirbroCampaignFactory, mockDAItoken, ExistingERC20DropCampaign, existingERC20DropCampaignArgs };
@@ -200,7 +146,7 @@ export const integrationCampaignFixture: Fixture<IntegrationCampaignFixtureType>
     .deploy()) as NewERC1155DropCampaign;
 
   await newERC1155DropCampaign.deployed();
-  // ...Object.values(newERC1155DropCampaignArgs)
+
   await newERC1155DropCampaign.initialize(name, symbol, uri, airbroCampaignFactory.address);
 
   const newSB1155DropCampaignFactory: ContractFactory = await ethers.getContractFactory(`NewSB1155DropCampaign`);
@@ -230,7 +176,7 @@ export const integrationCampaignFixture: Fixture<IntegrationCampaignFixtureType>
     .deploy()) as ExistingERC20DropCampaign;
 
   await existingERC20DropCampaign.deployed();
-  // ...Object.values(existingERC20DropCampaignArgs)
+
   await existingERC20DropCampaign.initialize(testToken.address, 100, airbroCampaignFactory.address);
 
   return {

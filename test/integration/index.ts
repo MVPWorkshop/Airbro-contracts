@@ -1,8 +1,6 @@
 import { ethers, waffle, network } from "hardhat";
 import { contractAdminAddress, registryAdminAddress, betaAddress } from "../shared/constants";
 
-import { Signers } from "../shared/types";
-
 import { shouldBehaveLikeFactory } from "./AirBro/AirBroDropCreationShouldBehaveLikeFactory.spec";
 import { shouldAirDropExistingToken } from "./AirBro/AirBroExistingTokenDrop.spec";
 import { shouldAirDropNewToken } from "./AirBro/AirBroTokenDrop.spec";
@@ -23,6 +21,7 @@ import { ExistingERC20DropCampaignShouldFundCampaign } from "./AirbroFactoryCamp
 import { ExistingERC20DropCampaignShouldBeEligible } from "./AirbroFactoryCampaign/ExistingERC20DropCampaign/ExistingERC20DropCampaignShouldBeEligible.spec";
 import { ExistingERC20DropCampaignShouldGoThroughUserFlow } from "./AirbroFactoryCampaign/ExistingERC20DropCampaign/ExistingERC20DropCampaignShouldGoThroughUserFlow.spec";
 import { AirbroCampaignFactoryShouldHaveBetaPhase } from "./AirbroFactoryCampaign/AirbroCampaignFactoryShouldHaveBetaPhase.spec";
+import { Signers } from "../shared/typesShared/types";
 
 describe("Integration tests", function () {
   before(async function () {
