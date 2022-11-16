@@ -4,7 +4,7 @@ import { MerkleTree } from "merkletreejs";
 const { keccak256 } = ethers.utils;
 
 export function ExistingERC20DropCampaignShouldClaimReward(): void {
-  describe.only("user should be able to claim reward", async function () {
+  describe("user should be able to claim reward", async function () {
     it("should be able to claim if part of merkleRoot", async function () {
       // const tokenSupply: number = this.existingERC20DropCampaignArgs.tokenSupply;
       const numOfClaimers: number = 1;

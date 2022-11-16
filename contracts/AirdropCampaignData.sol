@@ -52,14 +52,16 @@ contract AirdropCampaignData is Initializable, UUPSUpgradeable, OwnableUpgradeab
     }
 
     /// @notice Updates the address of the admin variable
-    /// @param _newAirbroManager - New address for the admin of this contract, and the address for all newly created airdrop contracts
+    /// @param _newAirbroManager - New address for the admin of this contract, and the address for all
+    ///  newly created airdrop contracts
     function changeAdmin(address _newAirbroManager) external onlyAirbroManager {
         airbroManager = _newAirbroManager;
         emit AirbroManagerChanged(_newAirbroManager);
     }
 
     /// @notice Adds daily hash for any airdropCampaign contract
-    /// @param _airdropCampaignAddress - address of the airdropCampaign contract whose current participants are in the daily hash
+    /// @param _airdropCampaignAddress - address of the airdropCampaign contract whose current participants
+    /// are in the daily hash
     /// @param _hash - hash of daily participants of an airdropCampaign
     function addDailyHash(address _airdropCampaignAddress, bytes32 _hash) external onlyAirbroManager {
         if (airdrops[_airdropCampaignAddress].airdropFinished) revert AirdropHasFinished();
@@ -70,9 +72,13 @@ contract AirdropCampaignData is Initializable, UUPSUpgradeable, OwnableUpgradeab
     }
 
     /// @notice Adds array of daily hashes for multiple airdropCampaign contracts
-    /// @param _airdropCampaignAddressArray - array of addresses of multiple airdropCampaign contracts whose current participants are in the daily hash
+    /// @param _airdropCampaignAddressArray - array of addresses of multiple airdropCampaign contracts whose
+    /// current participants are in the daily hash
     /// @param _hashArray - array of hashes of daily participants of multiple airdropCampaigns
-    function batchAddDailyHash(address[] calldata _airdropCampaignAddressArray, bytes32[] calldata _hashArray) external onlyAirbroManager {
+    function batchAddDailyHash(address[] calldata _airdropCampaignAddressArray, bytes32[] calldata _hashArray)
+        external
+        onlyAirbroManager
+    {
         uint256 airdropHashArrayLength = _hashArray.length;
         if (airdropHashArrayLength != _airdropCampaignAddressArray.length) revert UnequalArrays();
 
@@ -100,13 +106,14 @@ contract AirdropCampaignData is Initializable, UUPSUpgradeable, OwnableUpgradeab
         emit ChainAdded(_airdropCampaignAddress, _airdropChain);
     }
 
-    /// @notice Adds array of Chain info: "Eth" or "Pol" to mapping depending on which Chain the airdropCampaign contracts are on
+    /// @notice Adds array of Chain info: "Eth" or "Pol" to mapping depending on which Chain
+    /// the airdropCampaign contracts are on
     /// @param _airdropCampaignAddressArray - address of airdropCampaign contract
     /// @param _airdropChainArray - array of uints representing blockchain chain
-    function batchAddAirdropCampaignChain(address[] calldata _airdropCampaignAddressArray, Chains[] calldata _airdropChainArray)
-        external
-        onlyAirbroManager
-    {
+    function batchAddAirdropCampaignChain(
+        address[] calldata _airdropCampaignAddressArray,
+        Chains[] calldata _airdropChainArray
+    ) external onlyAirbroManager {
         uint256 airdropChainArrayLength = _airdropChainArray.length;
         if (airdropChainArrayLength != _airdropCampaignAddressArray.length) revert UnequalArrays();
 

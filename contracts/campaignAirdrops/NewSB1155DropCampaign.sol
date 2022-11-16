@@ -56,7 +56,8 @@ contract NewSB1155DropCampaign is ERC1155Upgradeable, CampaignAidropsShared {
     /// @notice Allows the NFT holder to claim their ERC1155 airdrop
     /// @dev Implements a handler method from the parent contract for performing checks and changing state
     /// @param _merkleProof is the merkleRoot proof that this user is eligible for claiming reward
-    /// @param _claimerAddress is the address of the one signing the transaction and trying to claim the reward, added due to use of relayers
+    /// @param _claimerAddress is the address of the one signing the transaction and trying to claim the reward,
+    /// added due to use of relayers
     function claim(bytes32[] calldata _merkleProof, address _claimerAddress) public payable virtual {
         address sender = (msg.sender == airbroCampaignFactoryAddress.trustedRelayer()) ? _claimerAddress : msg.sender;
 

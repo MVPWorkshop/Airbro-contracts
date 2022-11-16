@@ -63,7 +63,11 @@ contract TokenDrop is ERC20, AirdropTimeData {
     /// @param tokenId is the rewarded NFT token ID
     /// @return true if user is eligible to receive a reward
     function isEligibleForReward(uint256 tokenId) external view returns (bool) {
-        if ((block.timestamp > airdropFinishTime) || (hasClaimed[tokenId]) || (rewardedNft.ownerOf(tokenId) != msg.sender)) {
+        if (
+            (block.timestamp > airdropFinishTime) ||
+            (hasClaimed[tokenId]) ||
+            (rewardedNft.ownerOf(tokenId) != msg.sender)
+        ) {
             return false;
         }
         return true;

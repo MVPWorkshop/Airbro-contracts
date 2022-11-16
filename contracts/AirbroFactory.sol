@@ -11,7 +11,11 @@ contract AirbroFactory {
     address[] public airdrops;
     uint256 public totalAirdropsCount;
 
-    event NewAirdrop(address indexed rewardedNftCollection, address indexed airdropContract, address indexed airdropCreator);
+    event NewAirdrop(
+        address indexed rewardedNftCollection,
+        address indexed airdropContract,
+        address indexed airdropCreator
+    );
 
     /// @notice Creates a new airdrop ERC20 claim contract for specific NFT collection holders
     /// @param rewardedNftCollection - Rewarded NFT collection address
@@ -22,7 +26,13 @@ contract AirbroFactory {
         uint256 tokensPerClaim,
         uint256 airdropDuration
     ) external {
-        TokenDrop tokenDropContract = new TokenDrop(rewardedNftCollection, tokensPerClaim, newTokenName, newTokenSymbol, airdropDuration);
+        TokenDrop tokenDropContract = new TokenDrop(
+            rewardedNftCollection,
+            tokensPerClaim,
+            newTokenName,
+            newTokenSymbol,
+            airdropDuration
+        );
 
         airdrops.push(address(tokenDropContract));
         unchecked {
