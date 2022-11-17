@@ -15,6 +15,7 @@ abstract contract AirdropAdmin {
 
     constructor(address _admin) {
         admin = _admin;
+        emit AdminChanged(_admin);
     }
 
     /// @notice Updates the address of the admin variable
