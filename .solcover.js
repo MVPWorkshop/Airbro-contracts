@@ -5,5 +5,5 @@ module.exports = {
   providerOptions: {
     mnemonic: process.env.MNEMONIC,
   },
-  skipFiles: ["test", "Airbro1155Contract.sol", "shared/AirdropMerkleProof.sol"],
+  skipFiles: ["test", "shared/AirdropMerkleProof.sol"],
 };
