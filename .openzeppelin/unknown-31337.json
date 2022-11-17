@@ -8,14 +8,14 @@
     },
     {
       "address": "0xA64e27215ACCF3D49236624C90f6F90d4Bf23EF8",
-      "txHash": "0xc0d0676ab62659545b1f29b6d96dec2331f765247486a5762cc42d24113e9db9",
+      "txHash": "0x90aaa268f6c7c746589c8d1803d46c53c9d3bc8d2b28c1f23ed5255c4fbfc0da",
       "kind": "uups"
     }
   ],
   "impls": {
-    "1e781372bcc9ef8f5accb3b3d1c65071af7598b9e2941e237be5d79f5463276f": {
+    "1ef982abae03d9c3e16fdf94f75d9d5aed778ac55979aef5df3cbe06f5099457": {
       "address": "0x5Ec03Adec9A3A3f6AdE2250d9d2FacCC2B2058Cc",
-      "txHash": "0xb0e2ac3e4c4c7b32d3cb585883baa6606936d0109e984e474182e18b54c4628e",
+      "txHash": "0x956bba7892f0c8f081698130d24e4dfebe002c2ce533d2be20522f5fada19806",
       "layout": {
         "solcVersion": "0.8.16",
         "storage": [
@@ -82,15 +82,15 @@
             "slot": "201",
             "type": "t_address",
             "contract": "AirdropCampaignData",
-            "src": "contracts/AirdropCampaignData.sol:10"
+            "src": "contracts/AirdropCampaignData.sol:14"
           },
           {
             "label": "airdrops",
             "offset": 0,
             "slot": "202",
-            "type": "t_mapping(t_address,t_struct(AirdropData)8028_storage)",
+            "type": "t_mapping(t_address,t_struct(AirdropData)8477_storage)",
             "contract": "AirdropCampaignData",
-            "src": "contracts/AirdropCampaignData.sol:24"
+            "src": "contracts/AirdropCampaignData.sol:28"
           }
         ],
         "types": {
@@ -118,7 +118,7 @@
             "label": "bytes32",
             "numberOfBytes": "32"
           },
-          "t_enum(Chains)8019": {
+          "t_enum(Chains)8468": {
             "label": "enum AirdropCampaignData.Chains",
             "members": [
               "Zero",
@@ -127,16 +127,16 @@
             ],
             "numberOfBytes": "1"
           },
-          "t_mapping(t_address,t_struct(AirdropData)8028_storage)": {
+          "t_mapping(t_address,t_struct(AirdropData)8477_storage)": {
             "label": "mapping(address => struct AirdropCampaignData.AirdropData)",
             "numberOfBytes": "32"
           },
-          "t_struct(AirdropData)8028_storage": {
+          "t_struct(AirdropData)8477_storage": {
             "label": "struct AirdropCampaignData.AirdropData",
             "members": [
               {
                 "label": "chain",
-                "type": "t_enum(Chains)8019",
+                "type": "t_enum(Chains)8468",
                 "offset": 0,
                 "slot": "0"
               },
@@ -166,9 +166,9 @@
         }
       }
     },
-    "db59e9cea3e7f5edcca3a1cb037d37873fdf4c94da3c38b43b86021ef9a92f30": {
+    "88ddb4c5306b5be9fd6af5fa4ef1bdd4986bd035355685cc5778e97f2e3ddb9e": {
       "address": "0xd1840c871e786A7Bd3727f973AE053984a140c6e",
-      "txHash": "0x25165669149121c504e9e740cdbc7930e0526d4e64cdd371433d36d31736d128",
+      "txHash": "0xc7f36d04921565c45c12090e989d2258be6b93d36ef92fa11494b5f7eb4f3edc",
       "layout": {
         "solcVersion": "0.8.16",
         "storage": [
@@ -235,15 +235,15 @@
             "slot": "201",
             "type": "t_address",
             "contract": "AirdropCampaignData",
-            "src": "contracts/AirdropCampaignData.sol:10"
+            "src": "contracts/AirdropCampaignData.sol:14"
           },
           {
             "label": "airdrops",
             "offset": 0,
             "slot": "202",
-            "type": "t_mapping(t_address,t_struct(AirdropData)8028_storage)",
+            "type": "t_mapping(t_address,t_struct(AirdropData)8477_storage)",
             "contract": "AirdropCampaignData",
-            "src": "contracts/AirdropCampaignData.sol:24"
+            "src": "contracts/AirdropCampaignData.sol:28"
           }
         ],
         "types": {
@@ -271,7 +271,7 @@
             "label": "bytes32",
             "numberOfBytes": "32"
           },
-          "t_enum(Chains)8019": {
+          "t_enum(Chains)8468": {
             "label": "enum AirdropCampaignData.Chains",
             "members": [
               "Zero",
@@ -280,16 +280,16 @@
             ],
             "numberOfBytes": "1"
           },
-          "t_mapping(t_address,t_struct(AirdropData)8028_storage)": {
+          "t_mapping(t_address,t_struct(AirdropData)8477_storage)": {
             "label": "mapping(address => struct AirdropCampaignData.AirdropData)",
             "numberOfBytes": "32"
           },
-          "t_struct(AirdropData)8028_storage": {
+          "t_struct(AirdropData)8477_storage": {
             "label": "struct AirdropCampaignData.AirdropData",
             "members": [
               {
                 "label": "chain",
-                "type": "t_enum(Chains)8019",
+                "type": "t_enum(Chains)8468",
                 "offset": 0,
                 "slot": "0"
               },
