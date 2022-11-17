@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import { ethers } from "hardhat";
+import { ethers, network } from "hardhat";
 import { oneWeekInSeconds } from "../../shared/constants";
 
 export function shouldAirdropExisting1155NftDrop() {
@@ -105,7 +105,7 @@ export function shouldAirdropExisting1155NftDrop() {
     // airdropFunds provider withdrawing their leftover funds after the airdrop has finished
     await expect(dropContract.connect(this.signers.deployer).withdrawAirdropFunds()).to.be.revertedWith("AirdropStillInProgress");
 
-    await ethers.provider.send("evm_increaseTime", [oneWeekInSeconds]); // add one week worth of seconds
+    await network.provider.send("evm_increaseTime", [oneWeekInSeconds]); // add one week worth of seconds
 
     await expect(dropContract.connect(this.signers.bob).withdrawAirdropFunds()).to.be.revertedWith("Unauthorized");
 

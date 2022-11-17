@@ -35,6 +35,7 @@ contract TokenDrop is ERC20, AirdropTimeData {
     /// @param tokenId is the rewarded NFT collections token ID
     function claim(uint256 tokenId) external {
         validateClaim(tokenId);
+        if (block.timestamp > airdropFinishTime) revert AirdropExpired();
 
         hasClaimed[tokenId] = true;
 
