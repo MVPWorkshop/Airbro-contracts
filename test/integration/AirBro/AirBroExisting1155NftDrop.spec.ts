@@ -1,10 +1,8 @@
 import { expect } from "chai";
-import { ethers } from "hardhat";
+import { ethers, network } from "hardhat";
 import { oneWeekInSeconds } from "../../shared/constants";
 
 export function shouldAirdropExisting1155NftDrop() {
-  const bytes32MerkleRootHash = "0x0000000000000000000000000000000000000000000000000000000000000000";
-
   it("should mint and drop existing IERC1155 NFT token", async function () {
     // minting an NFT's to alice and bob. Both addresses should receive a reward for holding this NFT collection
     await this.testNftCollection.connect(this.signers.deployer).safeMint(this.signers.alice.address);
@@ -61,7 +59,9 @@ export function shouldAirdropExisting1155NftDrop() {
       this.test1155NftCollection,
       "ApprovalForAll",
     );
-    await expect(dropContract.connect(this.signers.bob).fundAirdrop()).to.be.revertedWith("ERC1155: caller is not owner nor approved");
+    await expect(dropContract.connect(this.signers.bob).fundAirdrop()).to.be.revertedWith(
+      "ERC1155: caller is not token owner nor approved",
+    );
     await expect(dropContract.fundAirdrop()).to.emit(dropContract, "AirdropFunded").withArgs(dropContract.address);
 
     const blockNumBefore = await ethers.provider.getBlockNumber();
@@ -105,7 +105,7 @@ export function shouldAirdropExisting1155NftDrop() {
     // airdropFunds provider withdrawing their leftover funds after the airdrop has finished
     await expect(dropContract.connect(this.signers.deployer).withdrawAirdropFunds()).to.be.revertedWith("AirdropStillInProgress");
 
-    await ethers.provider.send("evm_increaseTime", [oneWeekInSeconds]); // add one week worth of seconds
+    await network.provider.send("evm_increaseTime", [oneWeekInSeconds]); // add one week worth of seconds
 
     await expect(dropContract.connect(this.signers.bob).withdrawAirdropFunds()).to.be.revertedWith("Unauthorized");
 

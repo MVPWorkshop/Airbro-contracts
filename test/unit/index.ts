@@ -1,6 +1,5 @@
 import { ethers, network, waffle } from "hardhat";
-import { Mocks, Signers } from "../shared/types";
-
+import { Signers, Mocks } from "../shared/typesShared/types";
 import { contractAdminAddress, registryAdminAddress } from "../shared/constants";
 
 import {
@@ -44,6 +43,8 @@ import { AirdropCampaignDataShouldAddAirdropCampaignChain } from "./AirdropCampa
 import { AirdropCampaignDataShouldBatchAddAirdropCampaignChain } from "./AirdropCampaignData/AirdropCampaignDataShouldBatchAddAirdropCampaignChain.spec";
 import { AirdropCampaignDataShouldFinalizeAirdrop } from "./AirdropCampaignData/AirdropCampaignDataShouldFinalizeAirdrop.spec";
 import { AirdropCampaignDataShouldBeUpgradable } from "./AirdropCampaignData/AirdropCampaignDataShouldBeUpgradable.spec";
+import { NewERC1155DropCampaignShouldSetContractURI } from "./campaignAirdrops/NewERC1155DropCampaign/NewERC1155DropCampaignShouldSetContractURI.spec";
+import { NewSBDropCampaignShouldSetContractURI } from "./campaignAirdrops/NewSB1155DropCampaign/NewSB1155DropCampaignShouldSetContractURI.spec";
 
 describe("Unit tests", function () {
   before(async function () {
@@ -128,9 +129,8 @@ describe("Unit tests", function () {
 
     describe("ExistingTokenDrop", () => {
       beforeEach(async function () {
-        const { existingTokenDrop, existingTokenDropConstructorArgs, mockDAItoken, mockBaycNft } = await this.loadFixture(
-          unitExistingTokenDropFixture,
-        );
+        const { existingTokenDrop, existingTokenDropConstructorArgs, mockDAItoken, mockBaycNft } =
+          await this.loadFixture(unitExistingTokenDropFixture);
         this.existingTokenDrop = existingTokenDrop;
 
         this.mocks = {} as Mocks;
@@ -149,7 +149,9 @@ describe("Unit tests", function () {
 
     describe("TokenDrop", () => {
       beforeEach(async function () {
-        const { tokenDrop, mockAirBroFactory, tokenDropConstructorArgs, mockBaycNft } = await this.loadFixture(unitTokenDropFixture);
+        const { tokenDrop, mockAirBroFactory, tokenDropConstructorArgs, mockBaycNft } = await this.loadFixture(
+          unitTokenDropFixture,
+        );
         this.tokenDrop = tokenDrop;
 
         this.mocks = {} as Mocks;
@@ -176,9 +178,8 @@ describe("Unit tests", function () {
 
     describe("NewERC1155DropCampaign", () => {
       beforeEach(async function () {
-        const { mockAirbroCampaignFactory, newERC1155DropCampaign, newERC1155DropCampaignArgs } = await this.loadFixture(
-          unitNewERC1155DropCampaignFixture,
-        );
+        const { mockAirbroCampaignFactory, newERC1155DropCampaign, newERC1155DropCampaignArgs } =
+          await this.loadFixture(unitNewERC1155DropCampaignFixture);
 
         this.newERC1155DropCampaign = newERC1155DropCampaign;
 
@@ -191,6 +192,7 @@ describe("Unit tests", function () {
       NewERC1155DropCampaignShouldDeploy();
       NewERC1155DropCampaignShouldSetMerkleRoot();
       NewERC1155DropCampaignShouldClaimReward();
+      NewERC1155DropCampaignShouldSetContractURI();
     });
 
     describe("NewSB1155DropCampaign", () => {
@@ -210,6 +212,7 @@ describe("Unit tests", function () {
       NewSB1155DropCampaignShouldDeploy();
       NewSB1155DropCampaignShouldSetMerkleRoot();
       NewSB1155DropCampaignShouldClaimReward();
+      NewSBDropCampaignShouldSetContractURI();
     });
 
     describe("ExistingERC20DropCampaign", () => {

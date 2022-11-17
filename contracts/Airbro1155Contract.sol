@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.15;
+pragma solidity ^0.8.16;
 
 import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
@@ -10,13 +10,13 @@ import "@openzeppelin/contracts/access/Ownable.sol";
  */
 contract Airbro1155Contract is ERC1155, Ownable {
     uint256 private constant _tokenID = 0;
+    string public constant name = "Airbro";
 
-    string public name = "Airbro";
-
+    // solhint-disable-next-line no-empty-blocks
     constructor(string memory uri_) ERC1155(uri_) {}
 
     /// @notice minting a 1155 NFT always of the same Id
-    function mint() public {
+    function mint() external {
         _mint(msg.sender, _tokenID, 1, "0x");
     }
 }

@@ -148,7 +148,7 @@ export function shouldAirDropExistingToken(): void {
 
     // skip funding airdrop
 
-    const tokenIdArray: Array<Number> = [0, 1];
+    const tokenIdArray: Array<number> = [0, 1];
     // minting 2 NFTs to deployer wallet
     await this.testNftCollection.connect(this.signers.deployer).safeMint(this.signers.deployer.address);
     await this.testNftCollection.connect(this.signers.deployer).safeMint(this.signers.deployer.address);
@@ -187,7 +187,7 @@ export function shouldAirDropExistingToken(): void {
     // funding airdrop
     await expect(tokenDropContract.fundAirdrop()).to.emit(tokenDropContract, "AirdropFunded").withArgs(tokenDropContract.address);
 
-    const tokenIdArray: Array<Number> = [0, 1];
+    const tokenIdArray: Array<number> = [0, 1];
     // minting 2 NFTs to deployer wallet
     await this.testNftCollection.connect(this.signers.deployer).safeMint(this.signers.deployer.address);
     await this.testNftCollection.connect(this.signers.deployer).safeMint(this.signers.deployer.address);
@@ -226,7 +226,7 @@ export function shouldAirDropExistingToken(): void {
     // funding airdrop
     await expect(tokenDropContract.fundAirdrop()).to.emit(tokenDropContract, "AirdropFunded").withArgs(tokenDropContract.address);
 
-    const tokenIdArray: Array<Number> = [0, 1];
+    const tokenIdArray: Array<number> = [0, 1];
     // minting 2 NFTs to deployer wallet
     await this.testNftCollection.connect(this.signers.deployer).safeMint(this.signers.deployer.address);
     await this.testNftCollection.connect(this.signers.deployer).safeMint(this.signers.deployer.address);
@@ -264,7 +264,7 @@ export function shouldAirDropExistingToken(): void {
     // funding airdrop
     await expect(tokenDropContract.fundAirdrop()).to.emit(tokenDropContract, "AirdropFunded").withArgs(tokenDropContract.address);
 
-    const tokenIdArray: Array<Number> = [0, 1];
+    const tokenIdArray: Array<number> = [0, 1];
     // minting 1 NFT to deployer, 1 NFT to alice
     await this.testNftCollection.connect(this.signers.deployer).safeMint(this.signers.deployer.address);
     await this.testNftCollection.connect(this.signers.deployer).safeMint(this.signers.alice.address);
@@ -382,7 +382,7 @@ export function shouldAirDropExistingToken(): void {
     await expect(tokenDropContract.claim(0)).to.be.revertedWith("AlreadyRedeemed");
     leftoverNftAmount = leftoverNftAmount.sub(tokensPerClaim);
 
-    const tokenIdArray: Array<Number> = [1, 2];
+    const tokenIdArray: Array<number> = [1, 2];
     // minting more NFTs to deployer wallet
     await this.testNftCollection.connect(this.signers.deployer).safeMint(this.signers.deployer.address);
     await this.testNftCollection.connect(this.signers.deployer).safeMint(this.signers.deployer.address);

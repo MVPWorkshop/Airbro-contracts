@@ -6,8 +6,6 @@ const bytes32MerkleRootHashes = [
   "0x0000000000000000000000000000000000000000000000000000000000000001",
 ];
 
-const batchArrayLimit: number = 1200; // an amount for the length of array submitted in the batchAdd methods that will fail
-
 export function AirdropCampaignDataShouldbatchAddDailyHash(): void {
   describe("should batch set daily merkle root hash", async function () {
     it("should allow admin to set daily merkle root hash", async function () {
@@ -55,14 +53,5 @@ export function AirdropCampaignDataShouldbatchAddDailyHash(): void {
         this.airdropCampaignData.connect(this.signers.backendWallet).batchAddDailyHash(oneRandomAddressArray, twoHashesArray),
       ).to.be.revertedWith("UnequalArrays");
     });
-
-    /* Not necessary, revert will happen on its own */
-    /* it("should revert if length of array exceeds batchArrayLimit", async function () {
-      await expect(
-        this.airdropCampaignData
-          .connect(this.signers.backendWallet)
-          .batchAddDailyHash(this.randomAddressesArray, this.bytes32MerkleRootHashArray),
-      ).to.be.reverted;
-    }); */
   });
 }

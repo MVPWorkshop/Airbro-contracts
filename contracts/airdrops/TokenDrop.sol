@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.15;
+pragma solidity ^0.8.16;
 
-import "@rari-capital/solmate/src/tokens/ERC20.sol";
+import "solmate/src/tokens/ERC20.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "./shared/AirdropTimeData.sol";
 
@@ -23,10 +23,10 @@ contract TokenDrop is ERC20, AirdropTimeData {
     constructor(
         address _rewardedNft,
         uint256 _tokensPerClaim,
-        string memory name,
-        string memory symbol,
+        string memory _name,
+        string memory _symbol,
         uint256 _airdropDuration
-    ) ERC20(name, symbol, 18) AirdropTimeData(_airdropDuration) {
+    ) ERC20(_name, _symbol, 18) AirdropTimeData(_airdropDuration) {
         rewardedNft = IERC721(_rewardedNft);
         tokensPerClaim = _tokensPerClaim;
     }
@@ -35,6 +35,7 @@ contract TokenDrop is ERC20, AirdropTimeData {
     /// @param tokenId is the rewarded NFT collections token ID
     function claim(uint256 tokenId) external {
         validateClaim(tokenId);
+        if (block.timestamp > airdropFinishTime) revert AirdropExpired();
 
         hasClaimed[tokenId] = true;
 
@@ -62,8 +63,12 @@ contract TokenDrop is ERC20, AirdropTimeData {
     /// @notice Checks if the user is eligible for this airdrop
     /// @param tokenId is the rewarded NFT token ID
     /// @return true if user is eligible to receive a reward
-    function isEligibleForReward(uint256 tokenId) public view returns (bool) {
-        if ((block.timestamp > airdropFinishTime) || (hasClaimed[tokenId]) || (rewardedNft.ownerOf(tokenId) != msg.sender)) {
+    function isEligibleForReward(uint256 tokenId) external view returns (bool) {
+        if (
+            (block.timestamp > airdropFinishTime) ||
+            (hasClaimed[tokenId]) ||
+            (rewardedNft.ownerOf(tokenId) != msg.sender)
+        ) {
             return false;
         }
         return true;

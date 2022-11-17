@@ -1,5 +1,4 @@
 import { expect } from "chai";
-import { ethers } from "hardhat";
 import { constants } from "ethers";
 
 export function NewERC1155DropCampaignShouldDeploy(): void {

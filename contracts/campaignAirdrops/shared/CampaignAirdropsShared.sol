@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.15;
+pragma solidity ^0.8.16;
 
 import "../../shared/AirdropMerkleProof.sol";
 import "../../interfaces/IAirBroFactory.sol";
@@ -56,6 +56,8 @@ abstract contract CampaignAidropsShared is AirdropMerkleProof {
         hasClaimed[msg.sender] = true;
 
         if (msg.value != airbroCampaignFactoryAddress.claimFee()) revert InvalidFeeAmount();
+
+        // solhint-disable-next-line avoid-low-level-calls
         (bool success, ) = airbroCampaignFactoryAddress.treasury().call{ value: msg.value }("");
 
         if (!success) revert FeeNotSent();
