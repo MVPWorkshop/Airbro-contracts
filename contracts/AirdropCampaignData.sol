@@ -66,10 +66,10 @@ contract AirdropCampaignData is Initializable, UUPSUpgradeable, OwnableUpgradeab
     }
 
     /// @notice Adds address which can transfer airbroManager role to itself
-    /// @dev If the var newAirbroManager is not address(0), calling method with the same airbroManager address will revert.
-    /// But if we call with a different address, it will emit ManagerTransferCanceled for current newAirbroManager address, and
-    /// ManagerTransferInitiated for the newly set newAirbroManager address. But if newAirbroManager is address(0),
-    /// it will just set newAirbroManager and emit ManagerTransferInitiated.
+    /// @dev If the var newAirbroManager is not address(0), calling method with the same airbroManager
+    /// address will revert. But if we call with a different address, it will emit ManagerTransferCanceled for
+    /// current newAirbroManager address, and ManagerTransferInitiated for the newly set newAirbroManager address.
+    /// But if newAirbroManager is address(0), it will just set newAirbroManager and emit ManagerTransferInitiated.
     /// @param _newAirbroManager address which will be able to accept/replace current airbro manager role
     function initiateManagerTranfer(address _newAirbroManager) external onlyAirbroManager {
         if (_newAirbroManager == address(0)) revert InvalidNewManagerAddress();
