@@ -28,6 +28,7 @@ contract AirdropRegistry is AirdropAdmin {
         treasury = payable(_treasury);
     }
 
+    // solhint-disable-next-line no-empty-blocks
     receive() external payable {}
 
     fallback() external payable {}

@@ -12,6 +12,7 @@ contract Airbro1155Contract is ERC1155, Ownable {
     uint256 private constant _tokenID = 0;
     string public constant name = "Airbro";
 
+    // solhint-disable-next-line no-empty-blocks
     constructor(string memory uri_) ERC1155(uri_) {}
 
     /// @notice minting a 1155 NFT always of the same Id

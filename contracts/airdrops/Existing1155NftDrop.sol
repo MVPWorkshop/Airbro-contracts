@@ -35,7 +35,13 @@ contract Existing1155NftDrop is IERC1155Receiver, AirdropExistingToken {
     /// @dev Implements a handler method from the parent contract for checks
     function withdrawAirdropFunds() external virtual {
         super.withdrawAirdropFundsHandler();
-        rewardToken.safeTransferFrom(address(this), msg.sender, rewardTokenId, rewardToken.balanceOf(address(this), rewardTokenId), "");
+        rewardToken.safeTransferFrom(
+            address(this),
+            msg.sender,
+            rewardTokenId,
+            rewardToken.balanceOf(address(this), rewardTokenId),
+            ""
+        );
     }
 
     /// @notice Allows the NFT holder to claim his ERC1155 airdrop

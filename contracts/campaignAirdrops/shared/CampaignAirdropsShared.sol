@@ -56,6 +56,8 @@ abstract contract CampaignAidropsShared is AirdropMerkleProof {
         hasClaimed[msg.sender] = true;
 
         if (msg.value != airbroCampaignFactoryAddress.claimFee()) revert InvalidFeeAmount();
+
+        // solhint-disable-next-line avoid-low-level-calls
         (bool success, ) = airbroCampaignFactoryAddress.treasury().call{ value: msg.value }("");
 
         if (!success) revert FeeNotSent();

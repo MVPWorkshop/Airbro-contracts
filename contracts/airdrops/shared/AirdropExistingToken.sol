@@ -99,7 +99,11 @@ abstract contract AirdropExistingToken is AirdropTimeData {
     /// @param tokenId the token id based on which the user wishes to claim the reward
     /// @return true if user is eligible to receive a reward
     function isEligibleForReward(uint256 tokenId) public view returns (bool) {
-        if ((block.timestamp > airdropFinishTime) || (hasClaimed[tokenId]) || (rewardedNft.ownerOf(tokenId) != msg.sender)) {
+        if (
+            (block.timestamp > airdropFinishTime) ||
+            (hasClaimed[tokenId]) ||
+            (rewardedNft.ownerOf(tokenId) != msg.sender)
+        ) {
             return false;
         }
         return true;

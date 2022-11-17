@@ -10,6 +10,7 @@ contract TestNftCollection is ERC721, Ownable {
 
     Counters.Counter private _tokenIdCounter;
 
+    // solhint-disable-next-line no-empty-blocks
     constructor() ERC721("MyToken", "MTK") {}
 
     function safeMint(address to) public onlyOwner {
