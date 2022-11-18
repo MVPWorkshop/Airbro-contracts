@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.15;
+pragma solidity ^0.8.16;
 
 import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
@@ -17,6 +17,7 @@ contract AirBro1155NftMint is ERC1155, Ownable {
     mapping(string => uint256) public idMap;
     mapping(uint256 => string) public lookupMap;
 
+    // solhint-disable-next-line no-empty-blocks
     constructor() ERC1155("https://ipfs.moralis.io:2053/ipfs/") {}
 
     function setURI(string memory newUri) public onlyOwner {

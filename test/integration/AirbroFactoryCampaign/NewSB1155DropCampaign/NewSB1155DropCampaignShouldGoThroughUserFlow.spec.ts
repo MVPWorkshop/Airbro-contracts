@@ -9,7 +9,9 @@ const bytes32MerkleRootHash = "0x00000000000000000000000000000000000000000000000
 
 export function NewSB1155DropCampaignShouldGoThroughUserFlow() {
   it("should set airbroCampaignFactoryAddress to the airbroFactory address", async function () {
-    expect(await this.newSB1155DropCampaign.airbroCampaignFactoryAddress()).to.be.equal(this.airbroCampaignFactory.address);
+    expect(await this.newSB1155DropCampaign.airbroCampaignFactoryAddress()).to.be.equal(
+      this.airbroCampaignFactory.address,
+    );
   });
 
   it("should allow factory admin to set merkleRoot", async function () {
@@ -19,13 +21,15 @@ export function NewSB1155DropCampaignShouldGoThroughUserFlow() {
   });
 
   it("should revert merkleRoot change from non admin account", async function () {
-    await expect(this.newSB1155DropCampaign.connect(this.signers.alice).setMerkleRoot(bytes32MerkleRootHash)).to.be.revertedWith(
-      "Unauthorized",
-    );
+    await expect(
+      this.newSB1155DropCampaign.connect(this.signers.alice).setMerkleRoot(bytes32MerkleRootHash),
+    ).to.be.revertedWith("Unauthorized");
   });
 
   it("should test newSB1155DropCampaign Contract flow", async function () {
-    await expect(this.airdropRegistry.connect(this.signers.registryAdmin).addFactory(this.airbroCampaignFactory.address))
+    await expect(
+      this.airdropRegistry.connect(this.signers.registryAdmin).addFactory(this.airbroCampaignFactory.address),
+    )
       .to.emit(this.airdropRegistry, "FactoryWhitelisted")
       .withArgs(this.airbroCampaignFactory.address);
 
@@ -35,12 +39,13 @@ export function NewSB1155DropCampaignShouldGoThroughUserFlow() {
     );
 
     // creating the NewSB1155DropCampaign from the factory contract
-    await expect(this.airbroCampaignFactory.connect(this.signers.deployer).createNewSB1155DropCampaign(name, symbol, uri)).to.emit(
-      this.airdropRegistry,
-      "NewAirdrop",
-    );
+    await expect(
+      this.airbroCampaignFactory.connect(this.signers.deployer).createNewSB1155DropCampaign(name, symbol, uri),
+    ).to.emit(this.airdropRegistry, "NewAirdrop");
     const newSB1155DropCampaignFactory = await ethers.getContractFactory("NewSB1155DropCampaign");
-    const NewSB1155DropCampaignContract = newSB1155DropCampaignFactory.attach(await this.airdropRegistry.airdrops(constants.Zero));
+    const NewSB1155DropCampaignContract = newSB1155DropCampaignFactory.attach(
+      await this.airdropRegistry.airdrops(constants.Zero),
+    );
 
     //create merkleRootHash
     const whitelisted = [this.signers.alice.address, this.signers.bob.address, this.signers.jerry.address];
@@ -49,7 +54,7 @@ export function NewSB1155DropCampaignShouldGoThroughUserFlow() {
     const roothash = merkleTree.getHexRoot();
 
     //backendWallet sets new merkleRootHash upon completion of the campaign (deadline has passed)
-    expect(await NewSB1155DropCampaignContract.connect(this.signers.backendWallet).setMerkleRoot(roothash))
+    void expect(await NewSB1155DropCampaignContract.connect(this.signers.backendWallet).setMerkleRoot(roothash))
       .to.emit(NewSB1155DropCampaignContract, "MerkleRootSet")
       .withArgs(roothash);
 
@@ -57,7 +62,11 @@ export function NewSB1155DropCampaignShouldGoThroughUserFlow() {
     const hexProof = merkleTree.getHexProof(leaves[0]);
 
     // alice withdrawing 1155 on basis of her address being included in the merkleRoot
-    expect(await NewSB1155DropCampaignContract.connect(this.signers.alice).claim(hexProof, this.signers.alice.address, { value: claimFee }))
+    void expect(
+      await NewSB1155DropCampaignContract.connect(this.signers.alice).claim(hexProof, this.signers.alice.address, {
+        value: claimFee,
+      }),
+    )
       .to.emit(NewSB1155DropCampaignContract, "Claimed")
       .withArgs(this.signers.alice.address)
       .and.to.emit(NewSB1155DropCampaignContract, "Attest")
@@ -65,12 +74,16 @@ export function NewSB1155DropCampaignShouldGoThroughUserFlow() {
 
     // alice trying to withdraw twice
     await expect(
-      NewSB1155DropCampaignContract.connect(this.signers.alice).claim(hexProof, this.signers.alice.address, { value: claimFee }),
+      NewSB1155DropCampaignContract.connect(this.signers.alice).claim(hexProof, this.signers.alice.address, {
+        value: claimFee,
+      }),
     ).to.be.revertedWith("AlreadyRedeemed");
 
     // address that is not in merkleRootHash trying to withdraw
     await expect(
-      NewSB1155DropCampaignContract.connect(this.signers.lisa).claim(hexProof, this.signers.lisa.address, { value: claimFee }),
+      NewSB1155DropCampaignContract.connect(this.signers.lisa).claim(hexProof, this.signers.lisa.address, {
+        value: claimFee,
+      }),
     ).to.be.revertedWith("NotEligible");
 
     // alice attempts to transfer soulbound token to another account -> it should revert
@@ -85,7 +98,7 @@ export function NewSB1155DropCampaignShouldGoThroughUserFlow() {
     ).to.be.revertedWith(`SoulboundTokenUntransferable`);
 
     // burning souldbound nft reward
-    expect(await NewSB1155DropCampaignContract.connect(this.signers.alice).burn())
+    void expect(await NewSB1155DropCampaignContract.connect(this.signers.alice).burn())
       .to.emit(NewSB1155DropCampaignContract, "Revoke")
       .withArgs(this.signers.alice.address);
 

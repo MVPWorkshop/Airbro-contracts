@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.15;
+pragma solidity ^0.8.16;
 
 import "@openzeppelin/contracts/token/ERC1155/IERC1155.sol";
 import "@openzeppelin/contracts/token/ERC1155/IERC1155Receiver.sol";
@@ -26,7 +26,7 @@ contract Existing1155NftDrop is IERC1155Receiver, AirdropExistingToken {
 
     /// @notice Allows one wallet to provide funds for the airdrop reward once
     /// @dev Implements a handler method from the parent contract for checks and state change
-    function fundAirdrop() public virtual {
+    function fundAirdrop() external virtual {
         super.fundAirdropHandler();
         rewardToken.safeTransferFrom(msg.sender, address(this), rewardTokenId, totalAirdropAmount, "");
     }
@@ -35,7 +35,13 @@ contract Existing1155NftDrop is IERC1155Receiver, AirdropExistingToken {
     /// @dev Implements a handler method from the parent contract for checks
     function withdrawAirdropFunds() external virtual {
         super.withdrawAirdropFundsHandler();
-        rewardToken.safeTransferFrom(address(this), msg.sender, rewardTokenId, rewardToken.balanceOf(address(this), rewardTokenId), "");
+        rewardToken.safeTransferFrom(
+            address(this),
+            msg.sender,
+            rewardTokenId,
+            rewardToken.balanceOf(address(this), rewardTokenId),
+            ""
+        );
     }
 
     /// @notice Allows the NFT holder to claim his ERC1155 airdrop

@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.15;
+pragma solidity ^0.8.16;
 
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "./AirdropTimeData.sol";
@@ -99,7 +99,11 @@ abstract contract AirdropExistingToken is AirdropTimeData {
     /// @param tokenId the token id based on which the user wishes to claim the reward
     /// @return true if user is eligible to receive a reward
     function isEligibleForReward(uint256 tokenId) public view returns (bool) {
-        if ((block.timestamp > airdropFinishTime) || (hasClaimed[tokenId]) || (rewardedNft.ownerOf(tokenId) != msg.sender)) {
+        if (
+            (block.timestamp > airdropFinishTime) ||
+            (hasClaimed[tokenId]) ||
+            (rewardedNft.ownerOf(tokenId) != msg.sender)
+        ) {
             return false;
         }
         return true;

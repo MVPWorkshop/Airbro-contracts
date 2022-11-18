@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.15;
+pragma solidity ^0.8.16;
 
 import "./shared/AirdropAdmin.sol";
 
@@ -24,11 +24,11 @@ contract AirdropRegistry is AirdropAdmin {
         _;
     }
 
-    constructor(address _admin, address _treasury) {
-        admin = _admin;
+    constructor(address _admin, address _treasury) AirdropAdmin(_admin) {
         treasury = payable(_treasury);
     }
 
+    // solhint-disable-next-line no-empty-blocks
     receive() external payable {}
 
     fallback() external payable {}

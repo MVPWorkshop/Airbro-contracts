@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.15;
+pragma solidity ^0.8.16;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
@@ -11,16 +11,16 @@ contract ExistingERC20DropCampaign is CampaignAidropsShared {
     using SafeERC20 for IERC20;
 
     IERC20 public rewardToken;
-    uint256 public tokenSupply;
-    bool public initialized;
-
     string public constant airdropType = "ERC20";
+
+    uint256 public tokenSupply;
     uint256 internal numberOfClaimers;
     uint256 public tokensPerClaim;
     uint256 public airdropExpirationTimestamp;
     uint16 public claimPeriodInDays;
 
     address internal airdropFunder;
+    bool public initialized;
 
     event WithdrawUnlocked();
     event FundsWithdrawn();
@@ -34,8 +34,8 @@ contract ExistingERC20DropCampaign is CampaignAidropsShared {
         address _rewardToken,
         uint256 _tokenSupply,
         address _airbroCampaignFactoryAddress
-    ) public {
-        require(!initialized);
+    ) external {
+        require(!initialized, "Contract already initialized");
         initialized = true;
         rewardToken = IERC20(_rewardToken);
         tokenSupply = _tokenSupply;

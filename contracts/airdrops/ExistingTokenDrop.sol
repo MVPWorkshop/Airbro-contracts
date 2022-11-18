@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.15;
+pragma solidity ^0.8.16;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
@@ -48,7 +48,7 @@ contract ExistingTokenDrop is AirdropExistingToken {
     /// @notice Claim multiple ERC20 airdrops at once
     /// @dev Implements a handler method from the parent contract for checks and state change
     /// @param tokenIds are the rewarded NFT collections token ID's
-    function batchClaim(uint256[] calldata tokenIds) public virtual {
+    function batchClaim(uint256[] calldata tokenIds) external virtual {
         super.batchClaimHandler(tokenIds);
         rewardToken.safeTransfer(msg.sender, tokensPerClaim * tokenIds.length);
     }

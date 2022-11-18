@@ -1,5 +1,15 @@
-import { BigNumber } from "ethers";
-import { ethers, network } from "hardhat";
+// import { BigNumber } from "ethers";
+import { ethers } from "hardhat";
+import {
+  unitTokenDropCampaignArgsType,
+  newSB1155DropCampaignArgsType,
+  newERC1155DropCampaignArgsType,
+  existingERC20DropCampaignArgsType,
+  existingTokenDropConstructorArgsType,
+  existing1155NFTDropConstructorArgsType,
+  unitTokenDropSMCampaignCampaignArgsType,
+  unitExistingTokenDropSMCampaignFixtureArgsType,
+} from "./typesShared/constructorArgTypes";
 
 export const contractAdminAddress: string = process.env.BACKEND_WALLET_ADDRESS as string;
 export const registryAdminAddress: string = process.env.REGISTRY_ADMIN_WALLET_ADDRESS as string;
@@ -23,7 +33,7 @@ export const chains = {
 };
 
 /*  Arguments for newERC1155DropCampaign fixture deployment */
-export async function unitNewERC1155DropCampaignArguments(_airbroCampaignFactoryAddress: String) {
+export async function unitNewERC1155DropCampaignArguments(_airbroCampaignFactoryAddress: string): Promise<newERC1155DropCampaignArgsType> {
   return {
     uri: uri,
     airbroCampaignFactoryAddress: _airbroCampaignFactoryAddress,
@@ -31,7 +41,7 @@ export async function unitNewERC1155DropCampaignArguments(_airbroCampaignFactory
 }
 
 /*  Arguments for newSB1155DropCampaign fixture deployment */
-export async function unitNewSB1155DropCampaignArguments(_airbroCampaignFactoryAddress: String) {
+export async function unitNewSB1155DropCampaignArguments(_airbroCampaignFactoryAddress: string): Promise<newSB1155DropCampaignArgsType> {
   return {
     uri: uri,
     airbroCampaignFactoryAddress: _airbroCampaignFactoryAddress,
@@ -39,7 +49,10 @@ export async function unitNewSB1155DropCampaignArguments(_airbroCampaignFactoryA
 }
 
 /*  Arguments for ExistingERC20DropCampaign fixture deployment */
-export async function UnitExistingERC20DropCampaignArgs(mockDAItokenAddress: String, airbroCampaignFactoryAddress: String) {
+export async function UnitExistingERC20DropCampaignArgs(
+  mockDAItokenAddress: string,
+  airbroCampaignFactoryAddress: string,
+): Promise<existingERC20DropCampaignArgsType> {
   return {
     rewardToken: mockDAItokenAddress,
     tokenSupply: 100,
@@ -48,7 +61,7 @@ export async function UnitExistingERC20DropCampaignArgs(mockDAItokenAddress: Str
 }
 
 // /*  Arguments for ExistingERC20DropCampaign fixture deployment through mock factory contract */
-// export async function UnitExistingERC20DropCampaignArgsMockFactory(mockDAItokenAddress: String) {
+// export async function UnitExistingERC20DropCampaignArgsMockFactory(mockDAItokenAddress: string) {
 //   return {
 //     rewardToken: mockDAItokenAddress,
 //     tokenSupply: 100,
@@ -56,7 +69,7 @@ export async function UnitExistingERC20DropCampaignArgs(mockDAItokenAddress: Str
 // }
 
 /*  Arguments for TokenDrop fixture deployment */
-export async function unitTokenDropFixtureArguments(mockBaycNftAddress: String) {
+export async function unitTokenDropFixtureArguments(mockBaycNftAddress: string): Promise<unitTokenDropCampaignArgsType> {
   return {
     rewardedNft: mockBaycNftAddress,
     tokensPerClaim: 2,
@@ -66,7 +79,9 @@ export async function unitTokenDropFixtureArguments(mockBaycNftAddress: String) 
   };
 }
 
-export async function unitTokenDropSMCampaignFixtureArguments(airBroFactory1155Address: String) {
+export async function unitTokenDropSMCampaignFixtureArguments(
+  airBroFactory1155Address: string,
+): Promise<unitTokenDropSMCampaignCampaignArgsType> {
   return {
     rewardedNft: randomAddress,
     tokensPerClaim: 2,
@@ -78,7 +93,10 @@ export async function unitTokenDropSMCampaignFixtureArguments(airBroFactory1155A
 }
 
 /*  Arguments for ExistingTokenDrop and ExistingTokenDropSMCampaign fixture deployment */
-export async function unitExistingTokenDropFixtureArguments(mockTokenAddress: String, mockBaycNftAddress: String) {
+export async function unitExistingTokenDropFixtureArguments(
+  mockTokenAddress: string,
+  mockBaycNftAddress: string,
+): Promise<existingTokenDropConstructorArgsType> {
   return {
     rewardedNft: mockBaycNftAddress,
     tokensPerClaim: 2,
@@ -88,7 +106,10 @@ export async function unitExistingTokenDropFixtureArguments(mockTokenAddress: St
   };
 }
 
-export async function unitExistingTokenDropSMCampaignFixtureArguments(mockTokenAddress: String, mockAirBroFactorySMCampaign: String) {
+export async function unitExistingTokenDropSMCampaignFixtureArguments(
+  mockTokenAddress: string,
+  mockAirBroFactorySMCampaign: string,
+): Promise<unitExistingTokenDropSMCampaignFixtureArgsType> {
   return {
     rewardedNft: randomAddress,
     tokensPerClaim: 2,
@@ -100,7 +121,10 @@ export async function unitExistingTokenDropSMCampaignFixtureArguments(mockTokenA
 }
 
 /*  Arguments for Existing1155NFTDrop and Existing1155NFTDropSMCampaign fixture deployment */
-export async function unitExisting1155NFTDropArguments(rewardedNftAddress: String, rewardTokenAddress: String) {
+export async function unitExisting1155NFTDropArguments(
+  rewardedNftAddress: string,
+  rewardTokenAddress: string,
+): Promise<existing1155NFTDropConstructorArgsType> {
   return {
     rewardedNft: rewardedNftAddress,
     reward1155Nft: rewardTokenAddress,
@@ -110,5 +134,3 @@ export async function unitExisting1155NFTDropArguments(rewardedNftAddress: Strin
     airdropDuration: 2,
   };
 }
-
-// implement for Existing1155NFTDropSMCampaign

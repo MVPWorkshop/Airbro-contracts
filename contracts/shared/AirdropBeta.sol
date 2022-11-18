@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.15;
+pragma solidity ^0.8.16;
 
 import "./AirdropAdmin.sol";
 
@@ -18,7 +18,7 @@ abstract contract AirdropBeta is AirdropAdmin {
         _;
     }
 
-    constructor(address _betaAddress) {
+    constructor(address _betaAddress, address _admin) AirdropAdmin(_admin) {
         betaAddress = _betaAddress;
     }
 

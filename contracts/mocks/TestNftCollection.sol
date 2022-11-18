@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.15;
+pragma solidity ^0.8.16;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
@@ -10,6 +10,7 @@ contract TestNftCollection is ERC721, Ownable {
 
     Counters.Counter private _tokenIdCounter;
 
+    // solhint-disable-next-line no-empty-blocks
     constructor() ERC721("MyToken", "MTK") {}
 
     function safeMint(address to) public onlyOwner {

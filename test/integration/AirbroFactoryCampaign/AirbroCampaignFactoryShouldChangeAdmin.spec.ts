@@ -1,12 +1,12 @@
 import { expect } from "chai";
-import { ethers, network } from "hardhat";
+import { ethers } from "hardhat";
 import { MerkleTree } from "merkletreejs";
 const { keccak256 } = ethers.utils;
-import { constants } from "ethers";
 
 export function AirbroCampaignFactoryShouldChangeAdminInAllAirDrops(): void {
   const bytes32MerkleRootHash = "0x0000000000000000000000000000000000000000000000000000000000000000";
 
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   it("change admin inheritance - ExistingERC20DropCampaign - empty test", async function () {});
 
   it("change admin inheritance - NewERC1155DropCampaign", async function () {

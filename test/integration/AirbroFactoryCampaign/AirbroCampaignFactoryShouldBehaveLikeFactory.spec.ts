@@ -1,6 +1,5 @@
 import { expect } from "chai";
-import { ethers } from "hardhat";
-import { randomAddress, treasuryAddress, uri, name, symbol } from "../../shared/constants";
+import { randomAddress, uri, name, symbol } from "../../shared/constants";
 import { constants } from "ethers";
 
 export function AirbroCampaignFactoryShouldBehaveLikeFactory(): void {

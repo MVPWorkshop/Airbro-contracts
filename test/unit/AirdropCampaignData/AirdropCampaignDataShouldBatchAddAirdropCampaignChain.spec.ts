@@ -1,8 +1,6 @@
 import { expect } from "chai";
 import { chains } from "../../shared/constants";
 
-const batchArrayLimit: number = 1200; // an amount for the length of array submitted in the batchAdd methods that will fail
-
 export function AirdropCampaignDataShouldBatchAddAirdropCampaignChain(): void {
   describe("should batch add airdrop campaign chain", async function () {
     it("should allow admin to batch add airdrop campaign chain", async function () {
@@ -27,7 +25,7 @@ export function AirdropCampaignDataShouldBatchAddAirdropCampaignChain(): void {
 
       await expect(
         this.airdropCampaignData.connect(this.signers.alice).batchAddAirdropCampaignChain(randomAddressesArray, [chains.Eth, chains.Pols]),
-      ).to.be.revertedWith("NotAdmin");
+      ).to.be.revertedWith("NotAirbroManager");
     });
 
     it("should revert if length of array arguments do not match", async function () {
@@ -51,15 +49,6 @@ export function AirdropCampaignDataShouldBatchAddAirdropCampaignChain(): void {
           .batchAddAirdropCampaignChain(oneRandomAddressArray, twoCampaignChainsArray),
       ).to.be.revertedWith("UnequalArrays");
     });
-
-    /* Not necessary, revert will happen on its own */
-    /* it("should revert if length of array exceeds batchArrayLimit", async function () {
-      await expect(
-        this.airdropCampaignData
-          .connect(this.signers.backendWallet)
-          .batchAddAirdropCampaignChain(this.randomAddressesArray, this.randomChainsArray),
-      ).to.be.reverted;
-    }); */
 
     it("should revert if sent chain data is 0 (status.zero)", async function () {
       const randomAddressesArray = [this.signers.alice.address, this.signers.bob.address];

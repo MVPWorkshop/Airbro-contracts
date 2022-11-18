@@ -7,7 +7,7 @@ export function AirbroCampaignFactoryShouldChangeClaimPeriod(): void {
 
   it("admin should be able to change claim period", async function () {
     // checking if admin address is able to change claim period
-    expect(await this.airbroCampaignFactory.connect(this.signers.backendWallet).changeClaimPeriod(newClaimPeriod))
+    void expect(await this.airbroCampaignFactory.connect(this.signers.backendWallet).changeClaimPeriod(newClaimPeriod))
       .to.emit(this.airbroCampaignFactory, "ClaimPeriodChanged")
       .withArgs(newClaimPeriod);
 
@@ -28,7 +28,7 @@ export function AirbroCampaignFactoryShouldChangeClaimPeriod(): void {
     );
 
     // checking if new admin address is able to change claim period
-    expect(await this.airbroCampaignFactory.connect(this.signers.lisa).changeClaimPeriod(newClaimPeriod))
+    void expect(await this.airbroCampaignFactory.connect(this.signers.lisa).changeClaimPeriod(newClaimPeriod))
       .to.emit(this.airbroCampaignFactory, "ClaimPeriodChanged")
       .withArgs(newClaimPeriod);
 
@@ -44,7 +44,7 @@ export function AirbroCampaignFactoryShouldChangeClaimPeriod(): void {
     );
 
     // changing claim period
-    expect(await this.airbroCampaignFactory.connect(this.signers.backendWallet).changeClaimPeriod(newClaimPeriod))
+    void expect(await this.airbroCampaignFactory.connect(this.signers.backendWallet).changeClaimPeriod(newClaimPeriod))
       .to.emit(this.airbroCampaignFactory, "ClaimPeriodChanged")
       .withArgs(newClaimPeriod);
 

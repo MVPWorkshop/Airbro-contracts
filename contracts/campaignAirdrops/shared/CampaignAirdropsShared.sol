@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.15;
+pragma solidity ^0.8.16;
 
 import "../../shared/AirdropMerkleProof.sol";
 import "../../interfaces/IAirBroFactory.sol";
@@ -49,21 +49,19 @@ abstract contract CampaignAidropsShared is AirdropMerkleProof {
     /// @dev This method does not deal with the transfer/ minting of tokens
     /// - the logic for this is handled in the child contract.
     /// @param _merkleProof is the merkle proof that this user is eligible for claiming the ERC20 airdrop
-    /// @param _sender is the address of the one signing the transaction and trying to claim the reward, added due to use of relayers
+    /// @param _sender is the address attempting to claim the reward, added due to use of relayers
     function claimHandler(bytes32[] calldata _merkleProof, address _sender) internal {
         if (hasClaimed[_sender]) revert AlreadyRedeemed();
         if (checkProof(_merkleProof, merkleRoot, _sender) == false) revert NotEligible();
         if (msg.value != airbroCampaignFactoryAddress.claimFee()) revert InvalidFeeAmount();
 
+        hasClaimed[_sender] = true;
+
+        // solhint-disable-next-line avoid-low-level-calls
         (bool success, ) = airbroCampaignFactoryAddress.treasury().call{ value: msg.value }("");
 
-        if (success) {
-            hasClaimed[_sender] = true;
-
-            emit Claimed(_sender);
-        } else {
-            revert FeeNotSent();
-        }
+        if (!success) revert FeeNotSent();
+        emit Claimed(msg.sender);
     }
 
     /// @notice Checks if the user is eligible for this airdrop

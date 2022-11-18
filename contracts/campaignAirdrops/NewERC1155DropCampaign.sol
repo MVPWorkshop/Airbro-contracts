@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.15;
+pragma solidity ^0.8.16;
 
 import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC1155/ERC1155Upgradeable.sol";
@@ -18,7 +18,6 @@ contract NewERC1155DropCampaign is ERC1155Upgradeable, CampaignAidropsShared {
     string public symbol;
     string public contractURI;
     bool public contractURIset;
-    uint256 public airdropFundBlockTimestamp;
 
     address internal airdropFundingHolder;
 
@@ -27,10 +26,10 @@ contract NewERC1155DropCampaign is ERC1155Upgradeable, CampaignAidropsShared {
     function initialize(
         string memory _name,
         string memory _symbol,
-        string memory _uri,
+        string memory uri_,
         address _airbroCampaignFactoryAddress
-    ) public initializer {
-        __ERC1155_init(_uri);
+    ) external initializer {
+        __ERC1155_init(uri_);
         airbroCampaignFactoryAddress = IAirBroFactory(_airbroCampaignFactoryAddress);
         name = _name;
         symbol = _symbol;

@@ -45,7 +45,7 @@ export const TokenDropShouldDeploy = (): void => {
       );
     });
 
-    it("should return correct airdrp type", async function () {
+    it("should return correct airdrop type", async function () {
       expect(await this.tokenDrop.airdropType()).to.be.equal("ERC20");
     });
 

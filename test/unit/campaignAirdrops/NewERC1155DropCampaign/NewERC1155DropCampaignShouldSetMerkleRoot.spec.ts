@@ -1,5 +1,4 @@
 import { expect } from "chai";
-import { ethers } from "hardhat";
 
 export function NewERC1155DropCampaignShouldSetMerkleRoot(): void {
   const bytes32MerkleRootHash = "0x0000000000000000000000000000000000000000000000000000000000000000";

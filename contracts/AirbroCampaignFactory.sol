@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.15;
+pragma solidity ^0.8.16;
 
 import "@openzeppelin/contracts/proxy/Clones.sol";
 import "./campaignAirdrops/NewERC1155DropCampaign.sol";
@@ -10,7 +10,7 @@ import "./shared/AirdropAdmin.sol";
 import "./shared/AirdropBeta.sol";
 
 /// @title AirbroCampaignFactory - NFT/Token airdrop tool factory contract - for owners of 1155 Nfts
-contract AirbroCampaignFactory is AirdropAdmin, AirdropBeta {
+contract AirbroCampaignFactory is AirdropBeta {
     IAirdropRegistry public immutable airdropRegistryAddress;
     address public immutable treasury;
     address public trustedRelayer;
@@ -41,24 +41,31 @@ contract AirbroCampaignFactory is AirdropAdmin, AirdropBeta {
         address _admin,
         address _airdropRegistryAddress,
         address _betaAddress
-    ) AirdropBeta(_betaAddress) {
+    ) AirdropBeta(_betaAddress, _admin) {
         erc20DropCampaign = address(new ExistingERC20DropCampaign());
         erc1155DropCampaign = address(new NewERC1155DropCampaign());
         sb1155DropCampaign = address(new NewSB1155DropCampaign());
 
-        admin = _admin;
         airdropRegistryAddress = IAirdropRegistry(_airdropRegistryAddress);
         treasury = payable(airdropRegistryAddress.treasury());
     }
 
+    // solhint-disable-next-line no-empty-blocks
     receive() external payable {}
 
     fallback() external payable {}
 
-    /// @notice Creates a new airdrop claim contract for specific NFT collection holders that will reward with existing ERC20 tokens
+    /// @notice Creates a new airdrop claim contract for specific NFT collection holders
+    /// that will reward with existing ERC20 tokens
     /// @param rewardToken - ERC20 token's address that will be distributed as a reward
     /// @param tokenSupply - total amount of ERC20 tokens to be supplied for the rewards
-    function createExistingERC20DropCampaign(address rewardToken, uint256 tokenSupply) external payable duringBeta validFeeAmount {
+    function createExistingERC20DropCampaign(address rewardToken, uint256 tokenSupply)
+        external
+        payable
+        duringBeta
+        validFeeAmount
+    {
+        // solhint-disable-next-line avoid-low-level-calls
         (bool success, ) = treasury.call{ value: msg.value }("");
 
         if (!success) {
@@ -69,18 +76,22 @@ contract AirbroCampaignFactory is AirdropAdmin, AirdropBeta {
         airdropContract.initialize(
             rewardToken,
             tokenSupply,
-            address(this) // airBroFactory contract address -> used for getting back admin contract address in airdrop contracts)
+            address(this) // airBroFactory contract address ->
+            // -> used for getting back admin contract address in airdrop contracts)
         );
+        // solhint-disable-next-line avoid-low-level-calls
         airdropRegistryAddress.addAirdrop(address(airdropContract), msg.sender, "ERC20");
     }
 
-    /// @notice Creates a new airdrop claim contract for specific NFT collection holders that will reward participants with newly created ERC1155 NFTs
+    /// @notice Creates a new airdrop claim contract for specific NFT collection holders that will
+    /// reward participants with newly created ERC1155 NFTs
     /// @param uri - ipfs link of the image uploaded by user
     function createNewERC1155DropCampaign(
         string memory name,
         string memory symbol,
         string memory uri
     ) external payable duringBeta validFeeAmount {
+        // solhint-disable-next-line avoid-low-level-calls
         (bool success, ) = treasury.call{ value: msg.value }("");
 
         if (!success) {
@@ -97,13 +108,15 @@ contract AirbroCampaignFactory is AirdropAdmin, AirdropBeta {
         airdropRegistryAddress.addAirdrop(address(airdropContract), msg.sender, "ERC1155");
     }
 
-    /// @notice Creates a new airdrop claim contract for specific NFT collection holders that will reward participants with newly created Soulbound ERC1155 NFTs
+    /// @notice Creates a new airdrop claim contract for specific NFT collection holders that will
+    /// reward participants with newly created Soulbound ERC1155 NFTs
     /// @param uri - ipfs link of the image uploaded by user
     function createNewSB1155DropCampaign(
         string memory name,
         string memory symbol,
         string memory uri
     ) external payable duringBeta validFeeAmount {
+        // solhint-disable-next-line avoid-low-level-calls
         (bool success, ) = treasury.call{ value: msg.value }("");
 
         if (!success) {
