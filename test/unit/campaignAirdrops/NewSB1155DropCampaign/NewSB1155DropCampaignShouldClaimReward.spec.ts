@@ -54,7 +54,7 @@ export function NewSB1155DropCampaignShouldClaimReward(): void {
       const hexProof = merkleTree.getHexProof(leaves[0]);
 
       await expect(
-        this.newSB1155DropCampaign.connect(this.signers.peter).claim(hexProof, this.signers.alice.address, { value: claimFee }),
+        this.newSB1155DropCampaign.connect(this.signers.peter).claim(hexProof, this.signers.peter.address, { value: claimFee }),
       ).to.be.revertedWith(`NotEligible`);
     });
 

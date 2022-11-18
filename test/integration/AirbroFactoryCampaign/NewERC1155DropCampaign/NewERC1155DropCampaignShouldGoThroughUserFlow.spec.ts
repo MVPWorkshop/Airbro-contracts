@@ -76,7 +76,7 @@ export function NewERC1155DropCampaignShouldGoThroughUserFlow() {
 
     // address that is not in merkleRootHash trying to withdraw
     await expect(
-      NewERC1155DropCampaignContract.connect(this.signers.lisa).claim(hexProof, this.signers.alice.address, { value: claimFee }),
+      NewERC1155DropCampaignContract.connect(this.signers.lisa).claim(hexProof, this.signers.lisa.address, { value: claimFee }),
     ).to.be.revertedWith("NotEligible");
   });
 }

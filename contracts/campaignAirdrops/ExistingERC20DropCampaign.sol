@@ -89,10 +89,9 @@ contract ExistingERC20DropCampaign is CampaignAidropsShared {
     /// @param _merkleProof is the merkle proof that this user is eligible for claiming the ERC20 airdrop
     function claim(bytes32[] calldata _merkleProof, address _claimerAddress) external payable virtual {
         if (block.timestamp > airdropExpirationTimestamp) revert AirdropExpired();
-        address sender = (msg.sender == airbroCampaignFactoryAddress.trustedRelayer()) ? _claimerAddress : msg.sender;
 
-        super.claimHandler(_merkleProof, sender);
-        rewardToken.safeTransfer(msg.sender, tokensPerClaim);
+        super.claimHandler(_merkleProof, _claimerAddress);
+        rewardToken.safeTransfer(_claimerAddress, tokensPerClaim);
     }
 
     /// @notice Checks if the user is eligible for this airdrop

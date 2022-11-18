@@ -59,10 +59,8 @@ contract NewSB1155DropCampaign is ERC1155Upgradeable, CampaignAidropsShared {
     /// @param _merkleProof is the merkleRoot proof that this user is eligible for claiming reward
     /// @param _claimerAddress is the address of the one signing the transaction and trying to claim the reward, added due to use of relayers
     function claim(bytes32[] calldata _merkleProof, address _claimerAddress) public payable virtual {
-        address sender = (msg.sender == airbroCampaignFactoryAddress.trustedRelayer()) ? _claimerAddress : msg.sender;
-
-        super.claimHandler(_merkleProof, sender);
-        _mint(msg.sender, _tokenId, _tokenAmount, "0x0");
+        super.claimHandler(_merkleProof, _claimerAddress);
+        _mint(_claimerAddress, _tokenId, _tokenAmount, "0x0");
     }
 
     /// @notice Returns the amount of airdrop tokens a user can claim

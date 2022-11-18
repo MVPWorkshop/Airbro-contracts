@@ -70,7 +70,7 @@ export function NewSB1155DropCampaignShouldGoThroughUserFlow() {
 
     // address that is not in merkleRootHash trying to withdraw
     await expect(
-      NewSB1155DropCampaignContract.connect(this.signers.lisa).claim(hexProof, this.signers.alice.address, { value: claimFee }),
+      NewSB1155DropCampaignContract.connect(this.signers.lisa).claim(hexProof, this.signers.lisa.address, { value: claimFee }),
     ).to.be.revertedWith("NotEligible");
 
     // alice attempts to transfer soulbound token to another account -> it should revert
