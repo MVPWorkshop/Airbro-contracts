@@ -6,6 +6,7 @@ import "./campaignAirdrops/NewERC1155DropCampaign.sol";
 import "./campaignAirdrops/NewSB1155DropCampaign.sol";
 import "./campaignAirdrops/ExistingERC20DropCampaign.sol";
 import "./interfaces/IAirdropRegistry.sol";
+import "./interfaces/IAirBroFactory.sol"; // to be implemented
 import "./shared/AirdropAdmin.sol";
 import "./shared/AirdropBeta.sol";
 
@@ -13,7 +14,7 @@ import "./shared/AirdropBeta.sol";
 contract AirbroCampaignFactory is AirdropBeta {
     IAirdropRegistry public immutable airdropRegistryAddress;
     address public immutable treasury;
-    address public trustedRelayer;
+    // address public override(AirdropAdmin, IAirBroFactory) admin;
     // protocol fee for claiming dropCampaign rewards
     uint256 public claimFee = 2_000_000_000_000_000; // 0.002 ETH
     // protocol fee for creating dropCampaigns
@@ -152,12 +153,5 @@ contract AirbroCampaignFactory is AirdropBeta {
     function changeClaimPeriod(uint16 _newClaimPeriod) external onlyAdmin {
         claimPeriodInDays = _newClaimPeriod;
         emit ClaimPeriodChanged(_newClaimPeriod);
-    }
-
-    /// @notice Updates the trusted relayer address
-    /// @param _trustedRelayer - New trusted relayer address
-    function changeTrustedRelayer(address _trustedRelayer) external onlyAdmin {
-        trustedRelayer = _trustedRelayer;
-        emit TrustedRelayerChanged(_trustedRelayer);
     }
 }
