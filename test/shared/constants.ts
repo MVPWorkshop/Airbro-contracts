@@ -16,6 +16,7 @@ export const registryAdminAddress: string = process.env.REGISTRY_ADMIN_WALLET_AD
 export const treasuryAddress: string = process.env.TREASURY_WALLET_ADDRESS as string;
 export const betaAddress: string = process.env.BETA_WALLET_ADDRESS as string;
 export const randomAddress: string = "0x6B175474E89094C44Da98b954EedeAC495271d0F";
+export const trustedRelayerAddressMumbai: string = process.env.TRUSTED_RELAYER_ADDRESS_MUMBAI as string;
 
 export const oneWeekInSeconds: number = 604800;
 export const claimFee = ethers.utils.parseEther("0.002"); // 0.02 ETH

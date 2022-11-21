@@ -2,10 +2,10 @@
 pragma solidity ^0.8.16;
 
 import "../../shared/AirdropMerkleProof.sol";
-import "../../interfaces/IAirBroFactory.sol";
+import "../../interfaces/IAirBroCampaignFactory.sol";
 
 abstract contract CampaignAidropsShared is AirdropMerkleProof {
-    IAirBroFactory public airbroCampaignFactoryAddress;
+    IAirBroCampaignFactory public airbroCampaignFactory;
 
     bool public airdropFunded;
     bool public merkleRootSet;
@@ -16,7 +16,7 @@ abstract contract CampaignAidropsShared is AirdropMerkleProof {
     mapping(address => bool) public hasClaimed;
 
     modifier onlyAdmin() {
-        if (msg.sender != airbroCampaignFactoryAddress.admin()) revert Unauthorized();
+        if (msg.sender != airbroCampaignFactory.admin()) revert Unauthorized();
         _;
     }
 
@@ -49,16 +49,16 @@ abstract contract CampaignAidropsShared is AirdropMerkleProof {
     /// @dev This method does not deal with the transfer/ minting of tokens
     /// - the logic for this is handled in the child contract.
     /// @param _merkleProof is the merkle proof that this user is eligible for claiming the ERC20 airdrop
-    function claimHandler(bytes32[] calldata _merkleProof) internal {
-        if (hasClaimed[msg.sender]) revert AlreadyRedeemed();
-        if (checkProof(_merkleProof, merkleRoot) == false) revert NotEligible();
+    /// @param _sender is the address attempting to claim the reward, added due to use of relayers
+    function claimHandler(bytes32[] calldata _merkleProof, address _sender) internal {
+        if (hasClaimed[_sender]) revert AlreadyRedeemed();
+        if (checkProof(_merkleProof, merkleRoot, _sender) == false) revert NotEligible();
+        if (msg.value != airbroCampaignFactory.claimFee()) revert InvalidFeeAmount();
 
-        hasClaimed[msg.sender] = true;
-
-        if (msg.value != airbroCampaignFactoryAddress.claimFee()) revert InvalidFeeAmount();
+        hasClaimed[_sender] = true;
 
         // solhint-disable-next-line avoid-low-level-calls
-        (bool success, ) = airbroCampaignFactoryAddress.treasury().call{ value: msg.value }("");
+        (bool success, ) = airbroCampaignFactory.treasury().call{ value: msg.value }("");
 
         if (!success) revert FeeNotSent();
         emit Claimed(msg.sender);
@@ -70,6 +70,6 @@ abstract contract CampaignAidropsShared is AirdropMerkleProof {
     /// @return true if user is eligibleto claim a reward
     function isEligibleForReward(bytes32[] calldata _merkleProof) public view virtual returns (bool) {
         if (hasClaimed[msg.sender]) return false;
-        return checkProof(_merkleProof, merkleRoot);
+        return checkProof(_merkleProof, merkleRoot, msg.sender);
     }
 }

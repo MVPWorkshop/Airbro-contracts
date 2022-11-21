@@ -8,9 +8,10 @@ import "./campaignAirdrops/ExistingERC20DropCampaign.sol";
 import "./interfaces/IAirdropRegistry.sol";
 import "./shared/AirdropAdmin.sol";
 import "./shared/AirdropBeta.sol";
+import "./interfaces/IAirBroCampaignFactory.sol";
 
 /// @title AirbroCampaignFactory - NFT/Token airdrop tool factory contract - for owners of 1155 Nfts
-contract AirbroCampaignFactory is AirdropBeta {
+contract AirbroCampaignFactory is AirdropBeta, IAirBroCampaignFactory {
     IAirdropRegistry public immutable airdropRegistryAddress;
     address public immutable treasury;
     // protocol fee for claiming dropCampaign rewards
@@ -26,6 +27,7 @@ contract AirbroCampaignFactory is AirdropBeta {
     event ClaimFeeChanged(uint256 indexed claimFee);
     event CreatorFeeChanged(uint256 indexed creatorFee);
     event ClaimPeriodChanged(uint16 indexed claimPeriod);
+    event TrustedRelayerChanged(address indexed trustedRelayer);
 
     error InvalidFeeAmount();
     error FeeNotSent();

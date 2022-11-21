@@ -15,7 +15,9 @@ export function ExistingERC20DropCampaignShouldDeploy(): void {
 
     // this should be an integration test
     it("should set airbroCampaignFactoryAddress to the airbroFactory address", async function () {
-      expect(await this.existingERC20DropCampaign.airbroCampaignFactoryAddress()).to.be.equal(this.mocks.mockAirbroCampaignFactory.address);
+      expect(await this.existingERC20DropCampaign.airbroCampaignFactory()).to.be.equal(
+        this.mocks.mockAirbroCampaignFactory.address,
+      );
     });
   });
 }

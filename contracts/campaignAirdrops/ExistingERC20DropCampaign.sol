@@ -3,7 +3,6 @@ pragma solidity ^0.8.16;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
-
 import "./shared/CampaignAirdropsShared.sol";
 
 /// @title Airdrops existing ERC20 tokens for airdrop recipients
@@ -39,8 +38,8 @@ contract ExistingERC20DropCampaign is CampaignAidropsShared {
         initialized = true;
         rewardToken = IERC20(_rewardToken);
         tokenSupply = _tokenSupply;
-        airbroCampaignFactoryAddress = IAirBroFactory(_airbroCampaignFactoryAddress);
-        claimPeriodInDays = airbroCampaignFactoryAddress.claimPeriodInDays();
+        airbroCampaignFactory = IAirBroCampaignFactory(_airbroCampaignFactoryAddress);
+        claimPeriodInDays = airbroCampaignFactory.claimPeriodInDays();
     }
 
     /// @notice Sets the merkleRoot and the number of claimers (also setting the amount each claimer receivers).
@@ -87,10 +86,11 @@ contract ExistingERC20DropCampaign is CampaignAidropsShared {
     /// @notice Allows eligible users to claim their ERC20 airdrop
     /// @dev Implements a handler method from the parent contract for performing checks and changing state
     /// @param _merkleProof is the merkle proof that this user is eligible for claiming the ERC20 airdrop
-    function claim(bytes32[] calldata _merkleProof) external payable virtual {
+    function claim(bytes32[] calldata _merkleProof, address _claimerAddress) external payable virtual {
         if (block.timestamp > airdropExpirationTimestamp) revert AirdropExpired();
-        super.claimHandler(_merkleProof);
-        rewardToken.safeTransfer(msg.sender, tokensPerClaim);
+
+        super.claimHandler(_merkleProof, _claimerAddress);
+        rewardToken.safeTransfer(_claimerAddress, tokensPerClaim);
     }
 
     /// @notice Checks if the user is eligible for this airdrop
