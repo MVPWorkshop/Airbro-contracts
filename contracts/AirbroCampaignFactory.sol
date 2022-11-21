@@ -6,7 +6,6 @@ import "./campaignAirdrops/NewERC1155DropCampaign.sol";
 import "./campaignAirdrops/NewSB1155DropCampaign.sol";
 import "./campaignAirdrops/ExistingERC20DropCampaign.sol";
 import "./interfaces/IAirdropRegistry.sol";
-import "./interfaces/IAirBroFactory.sol"; // to be implemented
 import "./shared/AirdropAdmin.sol";
 import "./shared/AirdropBeta.sol";
 import "./interfaces/IAirBroCampaignFactory.sol";
@@ -15,7 +14,6 @@ import "./interfaces/IAirBroCampaignFactory.sol";
 contract AirbroCampaignFactory is AirdropBeta, IAirBroCampaignFactory {
     IAirdropRegistry public immutable airdropRegistryAddress;
     address public immutable treasury;
-    // address public override(AirdropAdmin, IAirBroFactory) admin;
     // protocol fee for claiming dropCampaign rewards
     uint256 public claimFee = 2_000_000_000_000_000; // 0.002 ETH
     // protocol fee for creating dropCampaigns

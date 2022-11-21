@@ -44,13 +44,16 @@ export async function deployMockAirbroCampaignFactory(deployer: Signer): Promise
   await airbroCampaignFactory.mock.claimFee.returns(claimFee);
   await airbroCampaignFactory.mock.treasury.returns(treasuryAddress);
   await airbroCampaignFactory.mock.claimPeriodInDays.returns(claimPeriodInDays);
-  await airbroCampaignFactory.mock.trustedRelayer.returns(trustedRelayerAddressMumbai);
+  // await airbroCampaignFactory.mock.trustedRelayer.returns(trustedRelayerAddressMumbai);
 
   return airbroCampaignFactory;
 }
 
 export async function deployMockExistingERC20DropCampaign(deployer: Signer): Promise<MockContract> {
-  const existingERC20DropCampaign: MockContract = await waffle.deployMockContract(deployer, ExistingERC20DropCampaign.abi);
+  const existingERC20DropCampaign: MockContract = await waffle.deployMockContract(
+    deployer,
+    ExistingERC20DropCampaign.abi,
+  );
 
   await existingERC20DropCampaign.mock.initialized.returns(false);
 

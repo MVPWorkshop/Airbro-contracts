@@ -9,9 +9,7 @@ const bytes32MerkleRootHash = "0x00000000000000000000000000000000000000000000000
 
 export function NewSB1155DropCampaignShouldGoThroughUserFlow() {
   it("should set airbroCampaignFactoryAddress to the airbroFactory address", async function () {
-    expect(await this.newSB1155DropCampaign.airbroCampaignFactoryAddress()).to.be.equal(
-      this.airbroCampaignFactory.address,
-    );
+    expect(await this.newSB1155DropCampaign.airbroCampaignFactory()).to.be.equal(this.airbroCampaignFactory.address);
   });
 
   it("should allow factory admin to set merkleRoot", async function () {

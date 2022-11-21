@@ -15,7 +15,9 @@ export function NewSB1155DropCampaignShouldDeploy(): void {
 
     // this should also be an integration test
     it("should set airbroCampaignFactoryAddress to the airbroFactory address", async function () {
-      expect(await this.newSB1155DropCampaign.airbroCampaignFactoryAddress()).to.be.equal(this.mocks.mockAirbroCampaignFactory.address);
+      expect(await this.newSB1155DropCampaign.airbroCampaignFactory()).to.be.equal(
+        this.mocks.mockAirbroCampaignFactory.address,
+      );
     });
 
     it("should set uri properly", async function () {
