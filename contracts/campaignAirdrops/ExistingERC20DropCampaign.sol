@@ -3,7 +3,6 @@ pragma solidity ^0.8.16;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
-
 import "./shared/CampaignAirdropsShared.sol";
 
 /// @title Airdrops existing ERC20 tokens for airdrop recipients
@@ -39,8 +38,8 @@ contract ExistingERC20DropCampaign is CampaignAidropsShared {
         initialized = true;
         rewardToken = IERC20(_rewardToken);
         tokenSupply = _tokenSupply;
-        airbroCampaignFactoryAddress = IAirBroFactory(_airbroCampaignFactoryAddress);
-        claimPeriodInDays = airbroCampaignFactoryAddress.claimPeriodInDays();
+        airbroCampaignFactory = IAirBroCampaignFactory(_airbroCampaignFactoryAddress);
+        claimPeriodInDays = airbroCampaignFactory.claimPeriodInDays();
     }
 
     /// @notice Sets the merkleRoot and the number of claimers (also setting the amount each claimer receivers).

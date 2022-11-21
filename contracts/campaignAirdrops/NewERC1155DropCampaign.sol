@@ -29,7 +29,7 @@ contract NewERC1155DropCampaign is ERC1155Upgradeable, CampaignAidropsShared {
         address _airbroCampaignFactoryAddress
     ) external initializer {
         __ERC1155_init(uri_);
-        airbroCampaignFactoryAddress = IAirBroFactory(_airbroCampaignFactoryAddress);
+        airbroCampaignFactory = IAirBroCampaignFactory(_airbroCampaignFactoryAddress);
         name = _name;
         symbol = _symbol;
     }
