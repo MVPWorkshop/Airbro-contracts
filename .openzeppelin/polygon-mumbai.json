@@ -1,0 +1,165 @@
+{
+  "manifestVersion": "3.2",
+  "proxies": [
+    {
+      "address": "0xBe373DE4aAAc5e6EE294D8D894B1b79c69a31E35",
+      "txHash": "0xbea0f82553489db4902435665e6628f722da4d4c35d2b6d3c89b75d299508748",
+      "kind": "uups"
+    }
+  ],
+  "impls": {
+    "4080bd209ba26e27fc99f5e51c8227fdccec804f80f575c10d821c24ac444315": {
+      "address": "0xD1d178FDF7596d4Ede50d381db48FcD21e31FfcB",
+      "txHash": "0x876031572a7f7274a829c8a30a89e7c32dd954331a1526007cd55cf0d605429f",
+      "layout": {
+        "solcVersion": "0.8.16",
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:62",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:67"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "ERC1967UpgradeUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/ERC1967/ERC1967UpgradeUpgradeable.sol:211"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "51",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "UUPSUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol:107"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "101",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "ContextUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol:36"
+          },
+          {
+            "label": "_owner",
+            "offset": 0,
+            "slot": "151",
+            "type": "t_address",
+            "contract": "OwnableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:22"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "152",
+            "type": "t_array(t_uint256)49_storage",
+            "contract": "OwnableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:94"
+          },
+          {
+            "label": "airbroManager",
+            "offset": 0,
+            "slot": "201",
+            "type": "t_address",
+            "contract": "AirdropCampaignData",
+            "src": "contracts/AirdropCampaignData.sol:10"
+          },
+          {
+            "label": "airdrops",
+            "offset": 0,
+            "slot": "202",
+            "type": "t_mapping(t_address,t_struct(AirdropData)7990_storage)",
+            "contract": "AirdropCampaignData",
+            "src": "contracts/AirdropCampaignData.sol:24"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_array(t_bytes32)dyn_storage": {
+            "label": "bytes32[]",
+            "numberOfBytes": "32"
+          },
+          "t_array(t_uint256)49_storage": {
+            "label": "uint256[49]",
+            "numberOfBytes": "1568"
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]",
+            "numberOfBytes": "1600"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_bytes32": {
+            "label": "bytes32",
+            "numberOfBytes": "32"
+          },
+          "t_enum(Chains)7981": {
+            "label": "enum AirdropCampaignData.Chains",
+            "members": [
+              "Zero",
+              "Eth",
+              "Pols"
+            ],
+            "numberOfBytes": "1"
+          },
+          "t_mapping(t_address,t_struct(AirdropData)7990_storage)": {
+            "label": "mapping(address => struct AirdropCampaignData.AirdropData)",
+            "numberOfBytes": "32"
+          },
+          "t_struct(AirdropData)7990_storage": {
+            "label": "struct AirdropCampaignData.AirdropData",
+            "members": [
+              {
+                "label": "chain",
+                "type": "t_enum(Chains)7981",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "airdropFinished",
+                "type": "t_bool",
+                "offset": 1,
+                "slot": "0"
+              },
+              {
+                "label": "hashArray",
+                "type": "t_array(t_bytes32)dyn_storage",
+                "offset": 0,
+                "slot": "1"
+              }
+            ],
+            "numberOfBytes": "64"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        }
+      }
+    }
+  }
+}
