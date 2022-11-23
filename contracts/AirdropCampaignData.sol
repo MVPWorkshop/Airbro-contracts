@@ -34,9 +34,6 @@ contract AirdropCampaignData is Initializable, UUPSUpgradeable, OwnableUpgradeab
     error ChainAlreadySet();
     error AirdropHasFinished();
     error AlreadyFinalized();
-    error InvalidNewManagerAddress();
-    error TransferToAddressAlreadyInitiated(address receiverAddress);
-    error NotEligibleForManagerTransfer(address caller);
 
     modifier onlyAirbroManager() {
         if (msg.sender != airbroManager) revert NotAirbroManager();
