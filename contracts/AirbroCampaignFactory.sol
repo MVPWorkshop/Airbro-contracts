@@ -6,7 +6,7 @@ import "./campaignAirdrops/NewERC1155DropCampaign.sol";
 import "./campaignAirdrops/NewSB1155DropCampaign.sol";
 import "./campaignAirdrops/ExistingERC20DropCampaign.sol";
 import "./interfaces/IAirdropRegistry.sol";
-import "./shared/AirdropAdmin.sol";
+import "./shared/AirdropAdminRequest.sol";
 import "./shared/AirdropBeta.sol";
 
 /// @title AirbroCampaignFactory - NFT/Token airdrop tool factory contract - for owners of 1155 Nfts
