@@ -8,7 +8,6 @@ import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 /// @title AirdropCampaignData - Data contract for storing of daily hashes of airbro Campaigns
 contract AirdropCampaignData is Initializable, UUPSUpgradeable, OwnableUpgradeable {
     address public airbroManager;
-    address public newAirbroManager;
 
     enum Chains {
         Zero,
@@ -24,13 +23,10 @@ contract AirdropCampaignData is Initializable, UUPSUpgradeable, OwnableUpgradeab
 
     mapping(address => AirdropData) public airdrops;
 
-    event AirbroManagerChanged(address adminAddress);
-    event FinalizedAirdrop(address indexed airdropCampaignAddress);
-    event HashAdded(address indexed airdropCampaignAddress, bytes32 indexed hash);
-    event ChainAdded(address indexed airdropCampaignAddress, Chains indexed airdropChain);
-    event ManagerTransferInitiated(address receiverAddress);
-    event ManagerTransferCanceled(address receiverAddress);
-    event ManagerChanged(address managerAddress);
+    event FinalizedAirdrop(address indexed airdropCampaign);
+    event HashAdded(address indexed airdropCampaign, bytes32 indexed hash);
+    event ChainAdded(address indexed airdropCampaign, Chains indexed airdropChain);
+    event AirbroManagerChanged(address newManager);
 
     error NotAirbroManager();
     error UnequalArrays();
@@ -59,43 +55,11 @@ contract AirdropCampaignData is Initializable, UUPSUpgradeable, OwnableUpgradeab
         __UUPSUpgradeable_init();
     }
 
-    /// @notice Returns true if admin transfer is initiated
-    /// @dev admin transfer is considered initiated if newAdmin is anything else than address(0)
-    function isTransferInitiated() external view returns (bool) {
-        return (newAirbroManager != address(0));
-    }
-
-    /// @notice Adds address which can transfer airbroManager role to itself
-    /// @dev If the var newAirbroManager is not address(0), calling method with the same airbroManager
-    /// address will revert. But if we call with a different address, it will emit ManagerTransferCanceled for
-    /// current newAirbroManager address, and ManagerTransferInitiated for the newly set newAirbroManager address.
-    /// But if newAirbroManager is address(0), it will just set newAirbroManager and emit ManagerTransferInitiated.
-    /// @param _newAirbroManager address which will be able to accept/replace current airbro manager role
-    function initiateManagerTranfer(address _newAirbroManager) external onlyAirbroManager {
-        if (_newAirbroManager == address(0)) revert InvalidNewManagerAddress();
-        if (newAirbroManager == _newAirbroManager) revert TransferToAddressAlreadyInitiated(_newAirbroManager);
-        if (this.isTransferInitiated() == true) emit ManagerTransferCanceled(newAirbroManager);
-
-        newAirbroManager = _newAirbroManager;
-        emit ManagerTransferInitiated(_newAirbroManager);
-    }
-
-    /// @notice Canceled the admin transfer
-    /// @dev sets address of 0x00 as the address that can accept/replace admin role
-    function cancelManagerTransfer() external onlyAirbroManager {
-        emit ManagerTransferCanceled(newAirbroManager);
-        newAirbroManager = address(0);
-    }
-
-    /// @notice Complete transfer of admin role to newAdmin address
-    /// @dev callable only by the newAdmin address, after which the transfer system is reset
-    function acceptManagerTransfer() external {
-        if (msg.sender != newAirbroManager) revert NotEligibleForManagerTransfer(msg.sender);
-
+    /// @notice Changes Airbro manager
+    /// @param newAirbroManager address of a new manager
+    function changeAirbroManager(address newAirbroManager) external onlyOwner {
         airbroManager = newAirbroManager;
-        newAirbroManager = address(0);
-
-        emit ManagerChanged(msg.sender);
+        emit AirbroManagerChanged(newAirbroManager);
     }
 
     /// @notice Adds daily hash for any airdropCampaign contract

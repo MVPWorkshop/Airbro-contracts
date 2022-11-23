@@ -12,12 +12,12 @@ abstract contract AirdropAdmin {
         _;
     }
 
-    event AdminTransferInitiated(address indexed receiverAddress);
-    event AdminTransferCanceled(address indexed receiverAddress);
+    event AdminTransferInitiated(address indexed receiver);
+    event AdminTransferCanceled(address indexed receiver);
     event AdminChanged(address indexed adminAddress);
 
     error InvalidNewAdminAddress();
-    error TransferToAddressAlreadyInitiated(address receiverAddress);
+    error TransferToAddressAlreadyInitiated(address receiver);
     error NotEligibleForAdminTransfer(address caller);
 
     constructor(address _admin) {
@@ -27,7 +27,7 @@ abstract contract AirdropAdmin {
 
     /// @notice Returns true if admin transfer is initiated
     /// @dev admin transfer is considered initiated if newAdmin is anything else than address(0)
-    function isTransferInitiated() external view returns (bool) {
+    function isTransferInitiated() public view returns (bool) {
         return (newAdmin != address(0));
     }
 
@@ -40,7 +40,7 @@ abstract contract AirdropAdmin {
     function initiateAdminTranfer(address _newAdmin) external onlyAdmin {
         if (_newAdmin == address(0)) revert InvalidNewAdminAddress();
         if (newAdmin == _newAdmin) revert TransferToAddressAlreadyInitiated(_newAdmin);
-        if (this.isTransferInitiated() == true) emit AdminTransferCanceled(newAdmin);
+        if (isTransferInitiated()) emit AdminTransferCanceled(newAdmin);
 
         newAdmin = _newAdmin;
         emit AdminTransferInitiated(_newAdmin);
