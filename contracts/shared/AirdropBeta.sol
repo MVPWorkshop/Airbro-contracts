@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.16;
 
-import "./AirdropAdmin.sol";
+import "./AirdropAdminRequest.sol";
 
-abstract contract AirdropBeta is AirdropAdmin {
+abstract contract AirdropBeta is AirdropAdminRequest {
     bool public beta = true;
     address public immutable betaAddress;
 
@@ -18,7 +18,7 @@ abstract contract AirdropBeta is AirdropAdmin {
         _;
     }
 
-    constructor(address _betaAddress, address _admin) AirdropAdmin(_admin) {
+    constructor(address _betaAddress, address _admin) AirdropAdminRequest(_admin) {
         betaAddress = _betaAddress;
     }
 

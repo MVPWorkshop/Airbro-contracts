@@ -1,15 +1,24 @@
 import { expect } from "chai";
-import { randomAddress } from "../../shared/constants";
+import { Wallet } from "ethers";
 
 export function AirdropCampaignDataShouldChangeAirbroManager(): void {
   describe("should change airbroManager", async function () {
-    it("should allow backend to change airbroManager", async function () {
-      await expect(this.airdropCampaignData.connect(this.signers.backendWallet).changeAdmin(randomAddress))
-        .to.emit(this.airdropCampaignData, "AirbroManagerChanged")
-        .withArgs(randomAddress);
+    it("should be able to change airbroManager", async function () {
+      const newAirbroManager: Wallet = this.signers.jerry;
+      // changing airbro manager address in the airdropRegistry Contract
+      await expect(
+        this.airdropCampaignData.connect(this.signers.backendWallet).changeAirbroManager(newAirbroManager.address),
+      )
+        .to.emit(this.airdropCampaignData, `AirbroManagerChanged`)
+        .withArgs(newAirbroManager.address);
+
+      expect(await this.airdropCampaignData.airbroManager()).to.be.equal(newAirbroManager.address);
     });
-    it("should revert airbroManager change from address that is not the bakckend wallet address", async function () {
-      await expect(this.airdropCampaignData.connect(this.signers.alice).changeAdmin(randomAddress)).to.be.revertedWith("NotAirbroManager");
+    it("should revert when non manager or non owner address try to initialize manager change", async function () {
+      const nonAirbroManager: Wallet = this.signers.jerry;
+      await expect(
+        this.airdropCampaignData.connect(nonAirbroManager).changeAirbroManager(this.signers.jerry.address),
+      ).to.be.revertedWith(`NotOwnerOrAirbroManager`);
     });
   });
 }

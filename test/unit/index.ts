@@ -12,6 +12,7 @@ import {
   integrationCampaignFixture,
   unitExistingERC20DropCampaignFixture,
   airdropCampaignDataFixture,
+  unitAirbroCampaignFactoryFixure,
 } from "../shared/fixtures";
 
 import { shouldDeploy } from "./AirbroFactory/AirbroFactoryShouldDeploy.spec";
@@ -45,6 +46,8 @@ import { AirdropCampaignDataShouldFinalizeAirdrop } from "./AirdropCampaignData/
 import { AirdropCampaignDataShouldBeUpgradable } from "./AirdropCampaignData/AirdropCampaignDataShouldBeUpgradable.spec";
 import { NewERC1155DropCampaignShouldSetContractURI } from "./campaignAirdrops/NewERC1155DropCampaign/NewERC1155DropCampaignShouldSetContractURI.spec";
 import { NewSBDropCampaignShouldSetContractURI } from "./campaignAirdrops/NewSB1155DropCampaign/NewSB1155DropCampaignShouldSetContractURI.spec";
+import { AirbroCampaignFactoryShouldChangeAdmin } from "./airbroCampaignFactory/AirbroCampaignFactoryShouldChangeAdmin.spec";
+import { AirdropRegistryShouldWhitelistAndBlacklistFactories } from "./AirdropRegistry/AirdropRegistryShouldWhitelistAndBlacklistFactories.spec";
 
 describe("Unit tests", function () {
   before(async function () {
@@ -174,6 +177,17 @@ describe("Unit tests", function () {
       });
 
       AirdropRegistryShouldChangeAdmin();
+      AirdropRegistryShouldWhitelistAndBlacklistFactories();
+    });
+
+    describe("AirbroCampaignFactory", () => {
+      beforeEach(async function () {
+        const { airbroCampaignFactory } = await this.loadFixture(unitAirbroCampaignFactoryFixure);
+
+        this.airbroCampaignFactory = airbroCampaignFactory;
+      });
+
+      AirbroCampaignFactoryShouldChangeAdmin();
     });
 
     describe("NewERC1155DropCampaign", () => {

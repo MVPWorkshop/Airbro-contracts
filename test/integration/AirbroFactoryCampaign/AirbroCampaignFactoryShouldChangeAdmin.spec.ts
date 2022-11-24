@@ -7,7 +7,9 @@ export function AirbroCampaignFactoryShouldChangeAdminInAllAirDrops(): void {
   const bytes32MerkleRootHash = "0x0000000000000000000000000000000000000000000000000000000000000000";
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  it("change admin inheritance - ExistingERC20DropCampaign - empty test", async function () {});
+  it("change admin inheritance - ExistingERC20DropCampaign - empty test", async function () {
+    console.log("this is an empty test");
+  });
 
   it("change admin inheritance - NewERC1155DropCampaign", async function () {
     // making merkleTree and merkleRootHash
@@ -35,7 +37,11 @@ export function AirbroCampaignFactoryShouldChangeAdminInAllAirDrops(): void {
     const roothash = merkleTree.getHexRoot();
 
     // changing admin address in the airbroCampaignFactory Contract
-    await expect(this.airbroCampaignFactory.connect(this.signers.backendWallet).changeAdmin(this.signers.lisa.address))
+    await expect(this.airbroCampaignFactory.connect(this.signers.backendWallet).initiateAdminTranfer(this.signers.lisa.address))
+      .to.emit(this.airbroCampaignFactory, `AdminTransferInitiated`)
+      .withArgs(this.signers.lisa.address);
+
+    await expect(this.airbroCampaignFactory.connect(this.signers.lisa).acceptAdminTransfer())
       .to.emit(this.airbroCampaignFactory, `AdminChanged`)
       .withArgs(this.signers.lisa.address);
 

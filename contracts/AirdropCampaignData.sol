@@ -23,20 +23,26 @@ contract AirdropCampaignData is Initializable, UUPSUpgradeable, OwnableUpgradeab
 
     mapping(address => AirdropData) public airdrops;
 
+    event FinalizedAirdrop(address indexed airdropCampaign);
+    event HashAdded(address indexed airdropCampaign, bytes32 indexed hash);
+    event ChainAdded(address indexed airdropCampaign, Chains indexed airdropChain);
+    event AirbroManagerChanged(address newManager);
+
     error NotAirbroManager();
+    error NotOwnerOrAirbroManager();
     error UnequalArrays();
     error ChainDataNotSet();
     error ChainAlreadySet();
     error AirdropHasFinished();
     error AlreadyFinalized();
 
-    event AirbroManagerChanged(address adminAddress);
-    event FinalizedAirdrop(address indexed airdropCampaignAddress);
-    event HashAdded(address indexed airdropCampaignAddress, bytes32 indexed hash);
-    event ChainAdded(address indexed airdropCampaignAddress, Chains indexed airdropChain);
-
     modifier onlyAirbroManager() {
         if (msg.sender != airbroManager) revert NotAirbroManager();
+        _;
+    }
+
+    modifier onlyOwnerOrAirbroManager() {
+        if (msg.sender != airbroManager && msg.sender != owner()) revert NotOwnerOrAirbroManager();
         _;
     }
 
@@ -52,12 +58,11 @@ contract AirdropCampaignData is Initializable, UUPSUpgradeable, OwnableUpgradeab
         __UUPSUpgradeable_init();
     }
 
-    /// @notice Updates the address of the admin variable
-    /// @param _newAirbroManager - New address for the admin of this contract, and the address
-    /// for all newly created airdrop contracts
-    function changeAdmin(address _newAirbroManager) external onlyAirbroManager {
-        airbroManager = _newAirbroManager;
-        emit AirbroManagerChanged(_newAirbroManager);
+    /// @notice Changes Airbro manager
+    /// @param newAirbroManager address of a new manager
+    function changeAirbroManager(address newAirbroManager) external onlyOwnerOrAirbroManager {
+        airbroManager = newAirbroManager;
+        emit AirbroManagerChanged(newAirbroManager);
     }
 
     /// @notice Adds daily hash for any airdropCampaign contract
