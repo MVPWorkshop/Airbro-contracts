@@ -13,336 +13,19 @@
     },
     {
       "address": "0xD8a32c94b686e3288126a6b0e3d7c913cA6c0DCF",
-      "txHash": "0x1e659f99c26ded1088c9f7f4c1ce092e31c4fcb062ece34fcf38fc0a68c9a99c",
+      "txHash": "0x77a479d5f15edad11369fe03e1dc0c3ac107dc650c1a40db2ca786f4f494c86f",
+      "kind": "uups"
+    },
+    {
+      "address": "0xD8a32c94b686e3288126a6b0e3d7c913cA6c0DCF",
+      "txHash": "0x83486f9ba126d67aa6de5be25d349a41f97f91015b9765e09ed1e41ffd33b4c6",
       "kind": "uups"
     }
   ],
   "impls": {
-    "c152d948ab6d3838e1109294f3b4df1f272ab2f0b5ac33383fed11c793e184e2": {
-      "address": "0x5Ec03Adec9A3A3f6AdE2250d9d2FacCC2B2058Cc",
-      "txHash": "0x50cb0a354996fa93e3b32719227f794611c67d6a74d63b4bb8ff75577845832e",
-      "layout": {
-        "solcVersion": "0.8.16",
-        "storage": [
-          {
-            "label": "_initialized",
-            "offset": 0,
-            "slot": "0",
-            "type": "t_uint8",
-            "contract": "Initializable",
-            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:62",
-            "retypedFrom": "bool"
-          },
-          {
-            "label": "_initializing",
-            "offset": 1,
-            "slot": "0",
-            "type": "t_bool",
-            "contract": "Initializable",
-            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:67"
-          },
-          {
-            "label": "__gap",
-            "offset": 0,
-            "slot": "1",
-            "type": "t_array(t_uint256)50_storage",
-            "contract": "ERC1967UpgradeUpgradeable",
-            "src": "@openzeppelin/contracts-upgradeable/proxy/ERC1967/ERC1967UpgradeUpgradeable.sol:211"
-          },
-          {
-            "label": "__gap",
-            "offset": 0,
-            "slot": "51",
-            "type": "t_array(t_uint256)50_storage",
-            "contract": "UUPSUpgradeable",
-            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol:107"
-          },
-          {
-            "label": "__gap",
-            "offset": 0,
-            "slot": "101",
-            "type": "t_array(t_uint256)50_storage",
-            "contract": "ContextUpgradeable",
-            "src": "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol:36"
-          },
-          {
-            "label": "_owner",
-            "offset": 0,
-            "slot": "151",
-            "type": "t_address",
-            "contract": "OwnableUpgradeable",
-            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:22"
-          },
-          {
-            "label": "__gap",
-            "offset": 0,
-            "slot": "152",
-            "type": "t_array(t_uint256)49_storage",
-            "contract": "OwnableUpgradeable",
-            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:94"
-          },
-          {
-            "label": "airbroManager",
-            "offset": 0,
-            "slot": "201",
-            "type": "t_address",
-            "contract": "AirdropCampaignData",
-            "src": "contracts/AirdropCampaignData.sol:10"
-          },
-          {
-            "label": "newAirbroManager",
-            "offset": 0,
-            "slot": "202",
-            "type": "t_address",
-            "contract": "AirdropCampaignData",
-            "src": "contracts/AirdropCampaignData.sol:11"
-          },
-          {
-            "label": "airdrops",
-            "offset": 0,
-            "slot": "203",
-            "type": "t_mapping(t_address,t_struct(AirdropData)7992_storage)",
-            "contract": "AirdropCampaignData",
-            "src": "contracts/AirdropCampaignData.sol:25"
-          }
-        ],
-        "types": {
-          "t_address": {
-            "label": "address",
-            "numberOfBytes": "20"
-          },
-          "t_array(t_bytes32)dyn_storage": {
-            "label": "bytes32[]",
-            "numberOfBytes": "32"
-          },
-          "t_array(t_uint256)49_storage": {
-            "label": "uint256[49]",
-            "numberOfBytes": "1568"
-          },
-          "t_array(t_uint256)50_storage": {
-            "label": "uint256[50]",
-            "numberOfBytes": "1600"
-          },
-          "t_bool": {
-            "label": "bool",
-            "numberOfBytes": "1"
-          },
-          "t_bytes32": {
-            "label": "bytes32",
-            "numberOfBytes": "32"
-          },
-          "t_enum(Chains)7983": {
-            "label": "enum AirdropCampaignData.Chains",
-            "members": [
-              "Zero",
-              "Eth",
-              "Pols"
-            ],
-            "numberOfBytes": "1"
-          },
-          "t_mapping(t_address,t_struct(AirdropData)7992_storage)": {
-            "label": "mapping(address => struct AirdropCampaignData.AirdropData)",
-            "numberOfBytes": "32"
-          },
-          "t_struct(AirdropData)7992_storage": {
-            "label": "struct AirdropCampaignData.AirdropData",
-            "members": [
-              {
-                "label": "chain",
-                "type": "t_enum(Chains)7983",
-                "offset": 0,
-                "slot": "0"
-              },
-              {
-                "label": "airdropFinished",
-                "type": "t_bool",
-                "offset": 1,
-                "slot": "0"
-              },
-              {
-                "label": "hashArray",
-                "type": "t_array(t_bytes32)dyn_storage",
-                "offset": 0,
-                "slot": "1"
-              }
-            ],
-            "numberOfBytes": "64"
-          },
-          "t_uint256": {
-            "label": "uint256",
-            "numberOfBytes": "32"
-          },
-          "t_uint8": {
-            "label": "uint8",
-            "numberOfBytes": "1"
-          }
-        }
-      }
-    },
-    "6a7552a4abf334f67d02c4978ac8f5aa1fb3c5fb7738092f2807940c0513a3ac": {
-      "address": "0xd1840c871e786A7Bd3727f973AE053984a140c6e",
-      "txHash": "0x0de610c099b1f04eb56cb49f1915ee2a50a37b719fe883b7443db5065a0b4f50",
-      "layout": {
-        "solcVersion": "0.8.16",
-        "storage": [
-          {
-            "label": "_initialized",
-            "offset": 0,
-            "slot": "0",
-            "type": "t_uint8",
-            "contract": "Initializable",
-            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:62",
-            "retypedFrom": "bool"
-          },
-          {
-            "label": "_initializing",
-            "offset": 1,
-            "slot": "0",
-            "type": "t_bool",
-            "contract": "Initializable",
-            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:67"
-          },
-          {
-            "label": "__gap",
-            "offset": 0,
-            "slot": "1",
-            "type": "t_array(t_uint256)50_storage",
-            "contract": "ERC1967UpgradeUpgradeable",
-            "src": "@openzeppelin/contracts-upgradeable/proxy/ERC1967/ERC1967UpgradeUpgradeable.sol:211"
-          },
-          {
-            "label": "__gap",
-            "offset": 0,
-            "slot": "51",
-            "type": "t_array(t_uint256)50_storage",
-            "contract": "UUPSUpgradeable",
-            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol:107"
-          },
-          {
-            "label": "__gap",
-            "offset": 0,
-            "slot": "101",
-            "type": "t_array(t_uint256)50_storage",
-            "contract": "ContextUpgradeable",
-            "src": "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol:36"
-          },
-          {
-            "label": "_owner",
-            "offset": 0,
-            "slot": "151",
-            "type": "t_address",
-            "contract": "OwnableUpgradeable",
-            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:22"
-          },
-          {
-            "label": "__gap",
-            "offset": 0,
-            "slot": "152",
-            "type": "t_array(t_uint256)49_storage",
-            "contract": "OwnableUpgradeable",
-            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:94"
-          },
-          {
-            "label": "airbroManager",
-            "offset": 0,
-            "slot": "201",
-            "type": "t_address",
-            "contract": "AirdropCampaignData",
-            "src": "contracts/AirdropCampaignData.sol:10"
-          },
-          {
-            "label": "newAirbroManager",
-            "offset": 0,
-            "slot": "202",
-            "type": "t_address",
-            "contract": "AirdropCampaignData",
-            "src": "contracts/AirdropCampaignData.sol:11"
-          },
-          {
-            "label": "airdrops",
-            "offset": 0,
-            "slot": "203",
-            "type": "t_mapping(t_address,t_struct(AirdropData)7992_storage)",
-            "contract": "AirdropCampaignData",
-            "src": "contracts/AirdropCampaignData.sol:25"
-          }
-        ],
-        "types": {
-          "t_address": {
-            "label": "address",
-            "numberOfBytes": "20"
-          },
-          "t_array(t_bytes32)dyn_storage": {
-            "label": "bytes32[]",
-            "numberOfBytes": "32"
-          },
-          "t_array(t_uint256)49_storage": {
-            "label": "uint256[49]",
-            "numberOfBytes": "1568"
-          },
-          "t_array(t_uint256)50_storage": {
-            "label": "uint256[50]",
-            "numberOfBytes": "1600"
-          },
-          "t_bool": {
-            "label": "bool",
-            "numberOfBytes": "1"
-          },
-          "t_bytes32": {
-            "label": "bytes32",
-            "numberOfBytes": "32"
-          },
-          "t_enum(Chains)7983": {
-            "label": "enum AirdropCampaignData.Chains",
-            "members": [
-              "Zero",
-              "Eth",
-              "Pols"
-            ],
-            "numberOfBytes": "1"
-          },
-          "t_mapping(t_address,t_struct(AirdropData)7992_storage)": {
-            "label": "mapping(address => struct AirdropCampaignData.AirdropData)",
-            "numberOfBytes": "32"
-          },
-          "t_struct(AirdropData)7992_storage": {
-            "label": "struct AirdropCampaignData.AirdropData",
-            "members": [
-              {
-                "label": "chain",
-                "type": "t_enum(Chains)7983",
-                "offset": 0,
-                "slot": "0"
-              },
-              {
-                "label": "airdropFinished",
-                "type": "t_bool",
-                "offset": 1,
-                "slot": "0"
-              },
-              {
-                "label": "hashArray",
-                "type": "t_array(t_bytes32)dyn_storage",
-                "offset": 0,
-                "slot": "1"
-              }
-            ],
-            "numberOfBytes": "64"
-          },
-          "t_uint256": {
-            "label": "uint256",
-            "numberOfBytes": "32"
-          },
-          "t_uint8": {
-            "label": "uint8",
-            "numberOfBytes": "1"
-          }
-        }
-      }
-    },
     "4080bd209ba26e27fc99f5e51c8227fdccec804f80f575c10d821c24ac444315": {
       "address": "0x3915Ad4a3256F2Fa3866AA0160A0ac780b884A12",
-      "txHash": "0xa2d22781254e09e7157b122cd6b0bfe802d54bd8d3690d578a7c6a439f967e51",
+      "txHash": "0xf9b4ea81b0c921a280eef49bb390c40767867971c44b282d64f476677cb1f50c",
       "layout": {
         "solcVersion": "0.8.16",
         "storage": [
@@ -415,7 +98,7 @@
             "label": "airdrops",
             "offset": 0,
             "slot": "202",
-            "type": "t_mapping(t_address,t_struct(AirdropData)7990_storage)",
+            "type": "t_mapping(t_address,t_struct(AirdropData)7997_storage)",
             "contract": "AirdropCampaignData",
             "src": "contracts/AirdropCampaignData.sol:24"
           }
@@ -445,7 +128,7 @@
             "label": "bytes32",
             "numberOfBytes": "32"
           },
-          "t_enum(Chains)7981": {
+          "t_enum(Chains)7988": {
             "label": "enum AirdropCampaignData.Chains",
             "members": [
               "Zero",
@@ -454,16 +137,16 @@
             ],
             "numberOfBytes": "1"
           },
-          "t_mapping(t_address,t_struct(AirdropData)7990_storage)": {
+          "t_mapping(t_address,t_struct(AirdropData)7997_storage)": {
             "label": "mapping(address => struct AirdropCampaignData.AirdropData)",
             "numberOfBytes": "32"
           },
-          "t_struct(AirdropData)7990_storage": {
+          "t_struct(AirdropData)7997_storage": {
             "label": "struct AirdropCampaignData.AirdropData",
             "members": [
               {
                 "label": "chain",
-                "type": "t_enum(Chains)7981",
+                "type": "t_enum(Chains)7988",
                 "offset": 0,
                 "slot": "0"
               },
@@ -495,7 +178,7 @@
     },
     "17fc209269a87e9dd909e872fc4bf724fa135d8afaa36db0734e6205a2e33a91": {
       "address": "0xbda62540F24e4df25CB67389fDbEEB973231F9fc",
-      "txHash": "0x2a0ad643af568ec3783065cb41603e032f6e9fb939c0f35c4242d6967795dd1f",
+      "txHash": "0x4b892d14152449441cedf6f11fc3a9afc0b928bc9b6621451d5dc9d368b5bc92",
       "layout": {
         "solcVersion": "0.8.16",
         "storage": [
@@ -568,7 +251,7 @@
             "label": "airdrops",
             "offset": 0,
             "slot": "202",
-            "type": "t_mapping(t_address,t_struct(AirdropData)7990_storage)",
+            "type": "t_mapping(t_address,t_struct(AirdropData)7997_storage)",
             "contract": "AirdropCampaignData",
             "src": "contracts/AirdropCampaignData.sol:24"
           }
@@ -598,7 +281,7 @@
             "label": "bytes32",
             "numberOfBytes": "32"
           },
-          "t_enum(Chains)7981": {
+          "t_enum(Chains)7988": {
             "label": "enum AirdropCampaignData.Chains",
             "members": [
               "Zero",
@@ -607,16 +290,16 @@
             ],
             "numberOfBytes": "1"
           },
-          "t_mapping(t_address,t_struct(AirdropData)7990_storage)": {
+          "t_mapping(t_address,t_struct(AirdropData)7997_storage)": {
             "label": "mapping(address => struct AirdropCampaignData.AirdropData)",
             "numberOfBytes": "32"
           },
-          "t_struct(AirdropData)7990_storage": {
+          "t_struct(AirdropData)7997_storage": {
             "label": "struct AirdropCampaignData.AirdropData",
             "members": [
               {
                 "label": "chain",
-                "type": "t_enum(Chains)7981",
+                "type": "t_enum(Chains)7988",
                 "offset": 0,
                 "slot": "0"
               },

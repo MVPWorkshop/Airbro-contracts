@@ -10,22 +10,31 @@ export function ExistingERC20DropCampaignShouldClaimReward(): void {
       const numOfClaimers: number = 1;
 
       // making merkleTree and merkleRootHash
-      const whitelisted = [this.signers.alice.address, this.signers.bob.address, this.signers.jerry.address, this.signers.lisa.address];
+      const whitelisted = [
+        this.signers.alice.address,
+        this.signers.bob.address,
+        this.signers.jerry.address,
+        this.signers.lisa.address,
+      ];
       const leaves = whitelisted.map(addr => keccak256(addr));
       const merkleTree = new MerkleTree(leaves, keccak256, { sort: true });
       const roothash = merkleTree.getHexRoot();
 
       // setting merkleRootHash
-      void expect(await this.existingERC20DropCampaign.connect(this.signers.backendWallet).setMerkleRoot(roothash, numOfClaimers))
+      void expect(
+        await this.existingERC20DropCampaign.connect(this.signers.backendWallet).setMerkleRoot(roothash, numOfClaimers),
+      )
         .to.emit(this.existingERC20DropCampaign, "MerkleRootSet")
         .withArgs(roothash);
 
       // making merkleProof for alice's address
-      // const hexProof = merkleTree.getHexProof(leaves[0]);
+      const hexProof = merkleTree.getHexProof(leaves[0]);
 
       expect(await this.existingERC20DropCampaign.hasClaimed(this.signers.alice.address)).to.be.equal(false);
 
-      //expect(await this.existingERC20DropCampaign.connect(this.signers.alice).isEligibleForReward(hexProof)).to.be.equal(true); // contract must be funded first, this is why this wont work
+      expect(
+        await this.existingERC20DropCampaign.connect(this.signers.alice).isEligibleForReward(hexProof),
+      ).to.be.equal(true); // contract must be funded first, this is why this wont work
 
       // checking if hasClaimed is labeled true after claim
       /* expect(await this.existingERC20DropCampaign.hasClaimed(this.signers.alice.address)).to.be.equal(false); */

@@ -101,7 +101,6 @@ describe("Unit tests", function () {
     AirdropCampaignDataShouldBatchAddAirdropCampaignChain();
     AirdropCampaignDataShouldFinalizeAirdrop();
     AirdropCampaignDataShouldBeUpgradable(); // upgrades the upgradable fixture which is deployed
-    AirdropCampaignDataShouldChangeAirbroManager();
   });
 
   describe("Airbro - Classic", function () {

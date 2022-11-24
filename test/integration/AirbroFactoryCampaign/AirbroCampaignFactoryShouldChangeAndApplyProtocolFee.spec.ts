@@ -31,7 +31,9 @@ export function AirbroCampaignFactoryShouldChangeAndApplyProtocolFeeInAllAirDrop
     expect(await this.airbroCampaignFactory.admin()).to.be.equal(this.signers.lisa.address);
 
     // checking if old admin can change protocol fee
-    await expect(this.airbroCampaignFactory.connect(this.signers.backendWallet).changeClaimFee(newClaimFee)).to.be.revertedWith(`NotAdmin`);
+    await expect(
+      this.airbroCampaignFactory.connect(this.signers.backendWallet).changeClaimFee(newClaimFee),
+    ).to.be.revertedWith(`NotAdmin`);
 
     // checking if new admin address is able to change protocol claim fee
     void expect(await this.airbroCampaignFactory.connect(this.signers.lisa).changeClaimFee(newClaimFee))
@@ -69,7 +71,11 @@ export function AirbroCampaignFactoryShouldChangeAndApplyProtocolFeeInAllAirDrop
     const balanceBefore = await this.signers.alice.getBalance();
 
     // alice withdrawing 1155 on basis of her address being included in the merkleRoot
-    void expect(await this.newERC1155DropCampaign.connect(this.signers.alice).claim(hexProof, { value: newClaimFee }))
+    void expect(
+      await this.newERC1155DropCampaign
+        .connect(this.signers.alice)
+        .claim(hexProof, this.signers.alice.address, { value: newClaimFee }),
+    )
       .to.emit(this.newERC1155DropCampaign, "Claimed")
       .withArgs(this.signers.alice.address);
 
@@ -100,9 +106,9 @@ export function AirbroCampaignFactoryShouldChangeAndApplyProtocolFeeInAllAirDrop
     expect(await this.airbroCampaignFactory.admin()).to.be.equal(this.signers.lisa.address);
 
     // checking if old admin can change protocol fee
-    await expect(this.airbroCampaignFactory.connect(this.signers.backendWallet).changeCreatorFee(newCreatorFee)).to.be.revertedWith(
-      `NotAdmin`,
-    );
+    await expect(
+      this.airbroCampaignFactory.connect(this.signers.backendWallet).changeCreatorFee(newCreatorFee),
+    ).to.be.revertedWith(`NotAdmin`);
 
     // checking if new admin address is able to change protocol creator fee
     void expect(await this.airbroCampaignFactory.connect(this.signers.lisa).changeCreatorFee(newCreatorFee))
@@ -113,7 +119,9 @@ export function AirbroCampaignFactoryShouldChangeAndApplyProtocolFeeInAllAirDrop
   });
 
   it("creator fee should be applied to all dropCampaign creations", async function () {
-    await expect(this.airdropRegistry.connect(this.signers.registryAdmin).addFactory(this.airbroCampaignFactory.address))
+    await expect(
+      this.airdropRegistry.connect(this.signers.registryAdmin).addFactory(this.airbroCampaignFactory.address),
+    )
       .to.emit(this.airdropRegistry, "FactoryWhitelisted")
       .withArgs(this.airbroCampaignFactory.address);
 
@@ -132,15 +140,21 @@ export function AirbroCampaignFactoryShouldChangeAndApplyProtocolFeeInAllAirDrop
     const treasuryBefore = await provider.getBalance(treasuryAddress);
 
     await expect(
-      this.airbroCampaignFactory.connect(this.signers.alice).createNewERC1155DropCampaign(name, symbol, uri, { value: newCreatorFee }),
+      this.airbroCampaignFactory
+        .connect(this.signers.alice)
+        .createNewERC1155DropCampaign(name, symbol, uri, { value: newCreatorFee }),
     ).to.emit(this.airdropRegistry, "NewAirdrop");
 
     await expect(
-      this.airbroCampaignFactory.connect(this.signers.alice).createNewSB1155DropCampaign(name, symbol, uri, { value: newCreatorFee }),
+      this.airbroCampaignFactory
+        .connect(this.signers.alice)
+        .createNewSB1155DropCampaign(name, symbol, uri, { value: newCreatorFee }),
     ).to.emit(this.airdropRegistry, "NewAirdrop");
 
     await expect(
-      this.airbroCampaignFactory.connect(this.signers.alice).createExistingERC20DropCampaign(randomAddress, 1000, { value: newCreatorFee }),
+      this.airbroCampaignFactory
+        .connect(this.signers.alice)
+        .createExistingERC20DropCampaign(randomAddress, 1000, { value: newCreatorFee }),
     ).to.emit(this.airdropRegistry, "NewAirdrop");
 
     const treasuryAfter = await provider.getBalance(treasuryAddress);

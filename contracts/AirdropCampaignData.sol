@@ -29,6 +29,7 @@ contract AirdropCampaignData is Initializable, UUPSUpgradeable, OwnableUpgradeab
     event AirbroManagerChanged(address newManager);
 
     error NotAirbroManager();
+    error NotOwnerOrAirbroManager();
     error UnequalArrays();
     error ChainDataNotSet();
     error ChainAlreadySet();
@@ -37,6 +38,11 @@ contract AirdropCampaignData is Initializable, UUPSUpgradeable, OwnableUpgradeab
 
     modifier onlyAirbroManager() {
         if (msg.sender != airbroManager) revert NotAirbroManager();
+        _;
+    }
+
+    modifier onlyOwnerOrAirbroManager() {
+        if (msg.sender != airbroManager && msg.sender != owner()) revert NotOwnerOrAirbroManager();
         _;
     }
 
@@ -54,7 +60,7 @@ contract AirdropCampaignData is Initializable, UUPSUpgradeable, OwnableUpgradeab
 
     /// @notice Changes Airbro manager
     /// @param newAirbroManager address of a new manager
-    function changeAirbroManager(address newAirbroManager) external onlyOwner {
+    function changeAirbroManager(address newAirbroManager) external onlyOwnerOrAirbroManager {
         airbroManager = newAirbroManager;
         emit AirbroManagerChanged(newAirbroManager);
     }
