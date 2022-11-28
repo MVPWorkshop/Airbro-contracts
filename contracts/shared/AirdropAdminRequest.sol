@@ -39,7 +39,7 @@ abstract contract AirdropAdminRequest is IAirdropAdminRequest {
     /// AdminTransferInitiated for the newly set newAdmin address. But if newAdmin is address(0),
     /// it will just set newAdmin and  emit AdminTransferInitiated.
     /// @param _newAdmin address which will be able to accept/replace current admin role
-    function initiateAdminTranfer(address _newAdmin) external onlyAdmin {
+    function initiateAdminTransfer(address _newAdmin) external onlyAdmin {
         if (_newAdmin == address(0)) revert InvalidNewAdminAddress();
         if (newAdmin == _newAdmin) revert TransferToAddressAlreadyInitiated(_newAdmin);
         if (isTransferInitiated()) emit AdminTransferCanceled(newAdmin);

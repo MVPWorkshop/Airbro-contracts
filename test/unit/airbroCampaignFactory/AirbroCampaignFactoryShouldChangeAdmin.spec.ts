@@ -8,7 +8,9 @@ export function AirbroCampaignFactoryShouldChangeAdmin(): void {
     it("should be able to change admin", async function () {
       const newAdmin: Wallet = this.signers.jerry;
       // changing admin address in the airdropRegistry Contract
-      await expect(this.airbroCampaignFactory.connect(this.signers.backendWallet).initiateAdminTranfer(newAdmin.address))
+      await expect(
+        this.airbroCampaignFactory.connect(this.signers.backendWallet).initiateAdminTransfer(newAdmin.address),
+      )
         .to.emit(this.airbroCampaignFactory, `AdminTransferInitiated`)
         .withArgs(newAdmin.address);
 
@@ -21,30 +23,30 @@ export function AirbroCampaignFactoryShouldChangeAdmin(): void {
       const admin: SignerWithAddress = this.signers.backendWallet;
       expect(await this.airbroCampaignFactory.connect(admin).isTransferInitiated()).to.be.equal(false);
 
-      await this.airbroCampaignFactory.connect(this.signers.backendWallet).initiateAdminTranfer(randomAddress);
+      await this.airbroCampaignFactory.connect(this.signers.backendWallet).initiateAdminTransfer(randomAddress);
       expect(await this.airbroCampaignFactory.connect(admin).isTransferInitiated()).to.be.equal(true);
     });
 
     it("should revert when non admin address tries to initialize admin transfer", async function () {
       const nonAdmin: Wallet = this.signers.jerry;
-      await expect(this.airbroCampaignFactory.connect(nonAdmin).initiateAdminTranfer(this.signers.jerry.address)).to.be.revertedWith(
-        `NotAdmin`,
-      );
+      await expect(
+        this.airbroCampaignFactory.connect(nonAdmin).initiateAdminTransfer(this.signers.jerry.address),
+      ).to.be.revertedWith(`NotAdmin`);
     });
 
     it("should revert if admin tries to set address(0) as the new admin", async function () {
       await expect(
-        this.airbroCampaignFactory.connect(this.signers.backendWallet).initiateAdminTranfer(constants.AddressZero),
+        this.airbroCampaignFactory.connect(this.signers.backendWallet).initiateAdminTransfer(constants.AddressZero),
       ).to.be.revertedWith("InvalidNewAdminAddress");
     });
 
     it("should revert if admin tries to initiate transfer to the same address twice", async function () {
       const newAdmin: Wallet = this.signers.jerry;
 
-      await this.airbroCampaignFactory.connect(this.signers.backendWallet).initiateAdminTranfer(newAdmin.address);
+      await this.airbroCampaignFactory.connect(this.signers.backendWallet).initiateAdminTransfer(newAdmin.address);
 
       await expect(
-        this.airbroCampaignFactory.connect(this.signers.backendWallet).initiateAdminTranfer(newAdmin.address),
+        this.airbroCampaignFactory.connect(this.signers.backendWallet).initiateAdminTransfer(newAdmin.address),
       ).to.be.revertedWith("TransferToAddressAlreadyInitiated");
     });
 
@@ -53,10 +55,12 @@ export function AirbroCampaignFactoryShouldChangeAdmin(): void {
       const newAdmin2: Wallet = this.signers.lisa;
 
       // initiating to newAdmin1
-      await this.airbroCampaignFactory.connect(this.signers.backendWallet).initiateAdminTranfer(newAdmin1.address);
+      await this.airbroCampaignFactory.connect(this.signers.backendWallet).initiateAdminTransfer(newAdmin1.address);
 
       // initiating to newAdmin2
-      await expect(this.airbroCampaignFactory.connect(this.signers.backendWallet).initiateAdminTranfer(newAdmin2.address))
+      await expect(
+        this.airbroCampaignFactory.connect(this.signers.backendWallet).initiateAdminTransfer(newAdmin2.address),
+      )
         .to.emit(this.airbroCampaignFactory, "AdminTransferCanceled")
         .withArgs(newAdmin1.address)
         .and.to.emit(this.airbroCampaignFactory, "AdminTransferInitiated")
@@ -64,7 +68,7 @@ export function AirbroCampaignFactoryShouldChangeAdmin(): void {
     });
 
     it("should allow admin to cancel initiated admin transfer", async function () {
-      await this.airbroCampaignFactory.connect(this.signers.backendWallet).initiateAdminTranfer(randomAddress);
+      await this.airbroCampaignFactory.connect(this.signers.backendWallet).initiateAdminTransfer(randomAddress);
       await expect(this.airbroCampaignFactory.connect(this.signers.backendWallet).cancelAdminTransfer())
         .to.emit(this.airbroCampaignFactory, "AdminTransferCanceled")
         .withArgs(randomAddress);

@@ -20,7 +20,9 @@ export function AirbroCampaignFactoryShouldChangeAndApplyProtocolFeeInAllAirDrop
 
   it("new admin should be able to change protocol claim fee", async function () {
     // changing admin address in the airbroCampaignFactory Contract
-    await expect(this.airbroCampaignFactory.connect(this.signers.backendWallet).initiateAdminTranfer(this.signers.lisa.address))
+    await expect(
+      this.airbroCampaignFactory.connect(this.signers.backendWallet).initiateAdminTransfer(this.signers.lisa.address),
+    )
       .to.emit(this.airbroCampaignFactory, `AdminTransferInitiated`)
       .withArgs(this.signers.lisa.address);
 
@@ -95,7 +97,9 @@ export function AirbroCampaignFactoryShouldChangeAndApplyProtocolFeeInAllAirDrop
 
   it("new admin should be able to change protocol creator fee", async function () {
     // changing admin address in the airbroCampaignFactory Contract
-    await expect(this.airbroCampaignFactory.connect(this.signers.backendWallet).initiateAdminTranfer(this.signers.lisa.address))
+    await expect(
+      this.airbroCampaignFactory.connect(this.signers.backendWallet).initiateAdminTransfer(this.signers.lisa.address),
+    )
       .to.emit(this.airbroCampaignFactory, `AdminTransferInitiated`)
       .withArgs(this.signers.lisa.address);
 
