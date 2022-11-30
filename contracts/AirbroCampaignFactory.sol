@@ -27,7 +27,6 @@ contract AirbroCampaignFactory is AirdropBeta, IAirBroCampaignFactory {
     event ClaimFeeChanged(uint256 indexed claimFee);
     event CreatorFeeChanged(uint256 indexed creatorFee);
     event ClaimPeriodChanged(uint16 indexed claimPeriod);
-    event TrustedRelayerChanged(address indexed trustedRelayer);
 
     error InvalidFeeAmount();
     error FeeNotSent();
