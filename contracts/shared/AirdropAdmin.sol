@@ -24,7 +24,7 @@ abstract contract AirdropAdmin is IAirdropAdmin {
     /// @param _newAdmin - New address for the admin of this contract, and the address for all
     /// newly created airdrop contracts
     function changeAdmin(address _newAdmin) external override onlyAdmin {
-        admin = _newAdmin;
+        admin = msg.sender;
         emit AdminChanged(_newAdmin);
     }
 }

@@ -60,7 +60,7 @@ abstract contract AirdropAdminRequest is IAirdropAdminRequest {
     function acceptAdminTransfer() external {
         if (msg.sender != newAdmin) revert NotEligibleForAdminTransfer(msg.sender);
 
-        admin = newAdmin;
+        admin = msg.sender;
         newAdmin = address(0);
 
         emit AdminChanged(msg.sender);
