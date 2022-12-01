@@ -46,9 +46,6 @@ contract AirdropCampaignData is Initializable, UUPSUpgradeable, OwnableUpgradeab
         _;
     }
 
-    // TODO should this be onlyAirbroManager (backend wallet address),
-    // or should the deployer be able to upgrade
-    // (which means the cotract should have ownable)?
     // solhint-disable-next-line no-empty-blocks
     function _authorizeUpgrade(address) internal override onlyOwner {}
 
