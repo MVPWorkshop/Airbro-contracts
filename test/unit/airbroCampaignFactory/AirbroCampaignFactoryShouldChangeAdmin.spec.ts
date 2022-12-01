@@ -17,6 +17,8 @@ export function AirbroCampaignFactoryShouldChangeAdmin(): void {
       await expect(this.airbroCampaignFactory.connect(newAdmin).acceptAdminTransfer())
         .to.emit(this.airbroCampaignFactory, `AdminChanged`)
         .withArgs(this.signers.jerry.address);
+
+      expect(await this.airbroCampaignFactory.admin()).to.be.equal(this.signers.jerry.address);
     });
 
     it("should return true if transfer is initiated", async function () {
