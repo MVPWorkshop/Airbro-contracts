@@ -7,7 +7,6 @@ import "../../interfaces/IAirBroCampaignFactory.sol";
 abstract contract CampaignAidropsShared is AirdropMerkleProof {
     IAirBroCampaignFactory public airbroCampaignFactory;
 
-    bool public airdropFunded;
     bool public merkleRootSet;
 
     /// @notice The root hash of the Merle Tree previously generated offchain when the airdrop concludes.
@@ -22,7 +21,6 @@ abstract contract CampaignAidropsShared is AirdropMerkleProof {
 
     event MerkleRootSet(bytes32 merkleRoot);
     event Claimed(address indexed claimer);
-    event AirdropFunded(address contractAddress);
 
     error Unauthorized();
     error AlreadyRedeemed();

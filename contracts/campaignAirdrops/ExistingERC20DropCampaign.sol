@@ -20,7 +20,9 @@ contract ExistingERC20DropCampaign is CampaignAidropsShared {
 
     address internal airdropFunder;
     bool public initialized;
+    bool public airdropFunded;
 
+    event AirdropFunded(address contractAddress);
     event WithdrawUnlocked();
     event FundsWithdrawn();
 
