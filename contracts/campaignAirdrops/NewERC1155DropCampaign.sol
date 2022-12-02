@@ -10,7 +10,6 @@ import "./shared/CampaignAirdropsShared.sol";
 contract NewERC1155DropCampaign is ERC1155Upgradeable, CampaignAidropsShared {
     uint256 private constant _tokenId = 0;
     uint256 private constant _tokenAmount = 1;
-    uint256 public constant tokensPerClaim = 1; // 1 reward per wallet
     string public constant airdropType = "ERC1155";
 
     string public name;
@@ -60,6 +59,6 @@ contract NewERC1155DropCampaign is ERC1155Upgradeable, CampaignAidropsShared {
     /// @dev Implements a method from the parent contract to check for reward eligibility
     /// @param _merkleProof The proof a user can claim a reward
     function getAirdropAmount(bytes32[] calldata _merkleProof) external view returns (uint256) {
-        return super.isEligibleForReward(_merkleProof) ? tokensPerClaim : 0;
+        return super.isEligibleForReward(_merkleProof) ? _tokenAmount : 0;
     }
 }

@@ -9,7 +9,6 @@ import "./shared/CampaignAirdropsShared.sol";
 contract NewSB1155DropCampaign is ERC1155Upgradeable, CampaignAidropsShared {
     uint256 private constant _tokenId = 0;
     uint256 private constant _tokenAmount = 1;
-    uint256 public constant tokensPerClaim = 1; // 1 reward per wallet
     string public constant airdropType = "SB1155";
 
     string public name;
@@ -63,7 +62,7 @@ contract NewSB1155DropCampaign is ERC1155Upgradeable, CampaignAidropsShared {
     /// @notice Returns the amount of airdrop tokens a user can claim
     /// @param _merkleProof The proof a user can claim a reward
     function getAirdropAmount(bytes32[] calldata _merkleProof) external view returns (uint256) {
-        return isEligibleForReward(_merkleProof) ? tokensPerClaim : 0;
+        return isEligibleForReward(_merkleProof) ? _tokenAmount : 0;
     }
 
     /// @dev Overriding _beforeTokenTransfer in order to make soulbound tokens untransferable
