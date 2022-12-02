@@ -8,7 +8,7 @@ import "./shared/CampaignAirdropsShared.sol";
 /// @title Airdrops new SoulBound ERC1155 token for airdrop recipients
 contract NewSB1155DropCampaign is ERC1155Upgradeable, CampaignAidropsShared {
     uint256 private constant _tokenId = 0;
-    uint256 private constant _tokenAmount = 1;
+    uint256 private constant _tokenAmount = 1; // 1 token per claim
     string public constant airdropType = "SB1155";
 
     string public name;
