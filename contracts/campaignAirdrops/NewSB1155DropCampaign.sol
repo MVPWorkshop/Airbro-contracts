@@ -17,8 +17,6 @@ contract NewSB1155DropCampaign is ERC1155Upgradeable, CampaignAidropsShared {
     string public contractURI;
     bool public contractURIset;
 
-    address internal airdropFundingHolder;
-
     error SoulboundTokenUntransferable();
     error NotTokenOwner();
 

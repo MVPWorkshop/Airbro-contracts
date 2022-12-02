@@ -18,8 +18,6 @@ contract NewERC1155DropCampaign is ERC1155Upgradeable, CampaignAidropsShared {
     string public contractURI;
     bool public contractURIset;
 
-    address internal airdropFundingHolder;
-
     event ContractURISet(string indexed contractURI);
 
     function initialize(
