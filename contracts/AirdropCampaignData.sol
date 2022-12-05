@@ -16,8 +16,8 @@ contract AirdropCampaignData is Initializable, UUPSUpgradeable, OwnableUpgradeab
     }
 
     struct AirdropData {
-        Chains chain;
         bool airdropFinished;
+        Chains chain;
         bytes32[] hashArray;
     }
 
@@ -34,7 +34,6 @@ contract AirdropCampaignData is Initializable, UUPSUpgradeable, OwnableUpgradeab
     error ChainDataNotSet();
     error ChainAlreadySet();
     error AirdropHasFinished();
-    error AlreadyFinalized();
 
     modifier onlyAirbroManager() {
         if (msg.sender != airbroManager) revert NotAirbroManager();
@@ -144,10 +143,9 @@ contract AirdropCampaignData is Initializable, UUPSUpgradeable, OwnableUpgradeab
     function finalizeAirdrop(address _airdropCampaignAddress)
         external
         onlyAirbroManager
+        airdropNotFinished(_airdropCampaignAddress)
         chainDataSet(_airdropCampaignAddress)
     {
-        if (airdrops[_airdropCampaignAddress].airdropFinished) revert AlreadyFinalized();
-
         airdrops[_airdropCampaignAddress].airdropFinished = true;
         emit FinalizedAirdrop(_airdropCampaignAddress);
     }
