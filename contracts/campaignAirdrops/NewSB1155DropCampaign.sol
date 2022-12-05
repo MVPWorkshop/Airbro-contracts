@@ -17,7 +17,6 @@ contract NewSB1155DropCampaign is ERC1155Upgradeable, CampaignAidropsShared {
     bool public contractURIset;
 
     error SoulboundTokenUntransferable();
-    error NotTokenOwner();
 
     event Attest(address indexed to);
     event Revoke(address indexed from);
