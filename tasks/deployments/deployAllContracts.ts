@@ -64,7 +64,8 @@ task("deploy").setAction(async function (taskArguments: TaskArguments, { ethers,
   console.log(lineBreak);
   console.log("\n 3. AirdropCampaignData");
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const airdropCampaignData: AirdropCampaignData = await deploy_upgradable_AirdropCampaignData.apply({ ethers, upgrades }, [
-    BACKEND_WALLET_ADDRESS,
-  ]);
+  const airdropCampaignData: AirdropCampaignData = await deploy_upgradable_AirdropCampaignData.apply(
+    { ethers, upgrades },
+    [BACKEND_WALLET_ADDRESS],
+  );
 });
