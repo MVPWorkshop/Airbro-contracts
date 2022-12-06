@@ -62,7 +62,7 @@ contract NewSB1155DropCampaign is ERC1155Upgradeable, CampaignAidropsShared {
     /// @notice Returns the amount of airdrop tokens a user can claim
     /// @param _merkleProof The proof a user can claim a reward
     function getAirdropAmount(bytes32[] calldata _merkleProof) external view returns (uint256) {
-        return isEligibleForReward(_merkleProof) ? _tokenAmount : 0;
+        return super.isEligibleForReward(_merkleProof) ? _tokenAmount : 0;
     }
 
     /// @dev Overriding _beforeTokenTransfer in order to make soulbound tokens untransferable
