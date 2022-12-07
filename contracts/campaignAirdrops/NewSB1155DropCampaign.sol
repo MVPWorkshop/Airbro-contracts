@@ -20,6 +20,7 @@ contract NewSB1155DropCampaign is ERC1155Upgradeable, CampaignAidropsShared {
     event Revoke(address indexed from);
     event ContractURISet(string indexed contractURI);
 
+    error ContractUriAlreadySet();
     error SoulboundTokenUntransferable();
 
     function initialize(
@@ -37,6 +38,7 @@ contract NewSB1155DropCampaign is ERC1155Upgradeable, CampaignAidropsShared {
     /// @notice Sets the contractURI - can only be done by admin
     /// @param _contractURI - link to contract metadata
     function setContractURI(string memory _contractURI) external onlyAdmin {
+        if (contractURIset) revert ContractUriAlreadySet();
         contractURI = _contractURI;
         contractURIset = true;
         emit ContractURISet(_contractURI);
