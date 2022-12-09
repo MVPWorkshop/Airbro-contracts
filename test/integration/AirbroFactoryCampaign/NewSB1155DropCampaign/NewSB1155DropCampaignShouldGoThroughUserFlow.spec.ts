@@ -42,7 +42,7 @@ export function NewSB1155DropCampaignShouldGoThroughUserFlow() {
     ).to.emit(this.airdropRegistry, "NewAirdrop");
     const newSB1155DropCampaignFactory = await ethers.getContractFactory("NewSB1155DropCampaign");
     const NewSB1155DropCampaignContract = newSB1155DropCampaignFactory.attach(
-      await this.airdropRegistry.airdrops(constants.Zero),
+      await this.airdropRegistry.getAirdrop(constants.Zero),
     );
 
     //create merkleRootHash

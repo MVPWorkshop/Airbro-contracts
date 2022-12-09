@@ -26,7 +26,7 @@ export function ExistingERC20DropCampaignShouldGoThroughUserFlow(): void {
       ).to.emit(this.airdropRegistry, "NewAirdrop");
       const existingERC20DropCampaignFactory = await ethers.getContractFactory("ExistingERC20DropCampaign");
       const ExistingERC20DropCampaignContract = existingERC20DropCampaignFactory.attach(
-        await this.airdropRegistry.airdrops(constants.Zero),
+        await this.airdropRegistry.getAirdrop(constants.Zero),
       );
 
       //   deployer mints tokens, and approves them to the airdrop contract

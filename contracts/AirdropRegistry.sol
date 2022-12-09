@@ -2,25 +2,20 @@
 pragma solidity ^0.8.16;
 
 import "./shared/AirdropAdmin.sol";
+import "./interfaces/IAirdropRegistry.sol";
 
 /// @title AirdropRegsitry - Contract that holds state of all AirbroCampaignFactory contracts and their iterations
-contract AirdropRegistry is AirdropAdmin {
+contract AirdropRegistry is IAirdropRegistry, AirdropAdmin {
     address public immutable treasury;
     // index of deployed airdrop contracts
-    address[] public airdrops;
+    address[] private _airdrops;
 
-    uint256 public totalAirdropsCount;
-    // list of whitelisted and blacklisted AirbroCampaignFactory contract addresses
-    mapping(address => bool) public factories;
-
-    event FactoryWhitelisted(address indexed factoryAddress);
-    event FactoryBlacklisted(address indexed factoryAddress);
-    event NewAirdrop(address indexed _airdropContract, address indexed _creator, string indexed _airdropType);
-
-    error NotWhitelisted();
+    uint256 private _totalAirdropsCount;
+    // Mapping of whitelisted and blacklisted AirbroCampaignFactory contracts
+    mapping(address => bool) private _factories;
 
     modifier onlyWhitelisted() {
-        if (factories[msg.sender] != true) revert NotWhitelisted();
+        if (!_factories[msg.sender]) revert NotWhitelisted();
         _;
     }
 
@@ -28,39 +23,44 @@ contract AirdropRegistry is AirdropAdmin {
         treasury = payable(_treasury);
     }
 
-    // solhint-disable-next-line no-empty-blocks
-    receive() external payable {}
-
-    fallback() external payable {}
-
-    /// @notice Whitelists AirbroCampaignFactory contract so it becomes usable
-    /// @param _factoryAddress - AirbroCampaignFactory contract address
-    function addFactory(address _factoryAddress) external onlyAdmin {
-        factories[_factoryAddress] = true;
-        emit FactoryWhitelisted(_factoryAddress);
+    /// @inheritdoc IAirdropRegistry
+    function addFactory(address factoryAddress) external onlyAdmin {
+        _factories[factoryAddress] = true;
+        emit FactoryWhitelisted(factoryAddress);
     }
 
-    /// @notice Blacklists AirbroCampaignFactory contract so it cannot be used anymore
-    /// @param _factoryAddress - AirbroCampaignFactory contract address
-    function removeFactory(address _factoryAddress) external onlyAdmin {
-        factories[_factoryAddress] = false;
-        emit FactoryBlacklisted(_factoryAddress);
+    /// @inheritdoc IAirdropRegistry
+    function removeFactory(address factoryAddress) external onlyAdmin {
+        _factories[factoryAddress] = false;
+        emit FactoryBlacklisted(factoryAddress);
     }
 
-    /// @notice Adds airdrop to registry
-    /// @param _airdropContract - Airdrop campaign contract address
-    /// @param _creator - Campaign creator address
-    /// @param _airdropType - Type of reward the airdrop campaign offers - ERC20, ERC1155, SB1155 etc..
+    /// @inheritdoc IAirdropRegistry
     function addAirdrop(
-        address _airdropContract,
-        address _creator,
-        string calldata _airdropType
+        address airdropContract,
+        address creator,
+        string calldata airdropType
     ) external onlyWhitelisted {
-        airdrops.push(address(_airdropContract));
+        _airdrops.push(address(airdropContract));
         unchecked {
-            totalAirdropsCount++;
+            _totalAirdropsCount++;
         }
 
-        emit NewAirdrop(_airdropContract, _creator, _airdropType);
+        emit NewAirdrop(airdropContract, creator, airdropType);
+    }
+
+    /// @inheritdoc IAirdropRegistry
+    function isWhitelistedFactory(address factory) external view returns (bool) {
+        return _factories[factory];
+    }
+
+    /// @inheritdoc IAirdropRegistry
+    function getAirdrop(uint256 index) external view returns (address) {
+        return _airdrops[index];
+    }
+
+    /// @inheritdoc IAirdropRegistry
+    function getTotalAirdropsCount() external view returns (uint256) {
+        return _totalAirdropsCount;
     }
 }
