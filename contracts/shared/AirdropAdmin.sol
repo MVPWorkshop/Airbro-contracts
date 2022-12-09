@@ -6,14 +6,14 @@ import "../interfaces/IAirdropAdmin.sol";
 abstract contract AirdropAdmin is IAirdropAdmin {
     address public override admin;
 
+    event AdminChanged(address indexed adminAddress);
+
     error NotAdmin();
 
     modifier onlyAdmin() {
         if (msg.sender != admin) revert NotAdmin();
         _;
     }
-
-    event AdminChanged(address indexed adminAddress);
 
     constructor(address _admin) {
         admin = _admin;

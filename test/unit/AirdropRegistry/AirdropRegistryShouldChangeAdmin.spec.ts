@@ -9,6 +9,8 @@ export function AirdropRegistryShouldChangeAdmin(): void {
       await expect(this.airdropRegistry.connect(this.signers.registryAdmin).changeAdmin(newAdmin.address))
         .to.emit(this.airdropRegistry, `AdminChanged`)
         .withArgs(newAdmin.address);
+
+      expect(await this.airdropRegistry.admin()).to.be.equal(newAdmin.address);
     });
     it("should revert when non admin address tries to initialize admin change", async function () {
       const nonAdmin: Wallet = this.signers.jerry;

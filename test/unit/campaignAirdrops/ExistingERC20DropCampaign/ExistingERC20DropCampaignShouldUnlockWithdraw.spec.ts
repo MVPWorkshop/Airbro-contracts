@@ -10,7 +10,7 @@ export function ExistingERC20DropCampaignShouldUnlockWithdraw(): void {
         .withArgs(bytes32MerkleRootHash);
 
       await expect(this.existingERC20DropCampaign.connect(this.signers.backendWallet).unlockWithdraw()).to.be.revertedWith(
-        "MerkleRootHashSet",
+        "MerkleRootAlreadySet",
       );
     });
   });

@@ -14,5 +14,15 @@ export function NewSBDropCampaignShouldSetContractURI(): void {
         "Unauthorized",
       );
     });
+
+    it("should revert if admin tries to set contractURI twice", async function () {
+      await expect(this.newSB1155DropCampaign.connect(this.signers.backendWallet).setContractURI(URI))
+        .to.emit(this.newSB1155DropCampaign, "ContractURISet")
+        .withArgs(URI);
+
+      await expect(
+        this.newSB1155DropCampaign.connect(this.signers.backendWallet).setContractURI(URI),
+      ).to.be.revertedWith("ContractUriAlreadySet");
+    });
   });
 }

@@ -44,7 +44,7 @@ export function AirdropCampaignDataShouldFinalizeAirdrop(): void {
 
       // secnd finalization - should fail
       await expect(this.airdropCampaignData.connect(this.signers.backendWallet).finalizeAirdrop(campaignAddress)).to.be.revertedWith(
-        "AlreadyFinalized",
+        "AirdropHasFinished",
       );
     });
   });

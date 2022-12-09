@@ -8,8 +8,7 @@ import "./shared/CampaignAirdropsShared.sol";
 /// @title Airdrops new SoulBound ERC1155 token for airdrop recipients
 contract NewSB1155DropCampaign is ERC1155Upgradeable, CampaignAidropsShared {
     uint256 private constant _tokenId = 0;
-    uint256 private constant _tokenAmount = 1;
-    uint256 public constant tokensPerClaim = 1; // 1 reward per wallet
+    uint256 private constant _tokenAmount = 1; // 1 token per claim
     string public constant airdropType = "SB1155";
 
     string public name;
@@ -17,14 +16,12 @@ contract NewSB1155DropCampaign is ERC1155Upgradeable, CampaignAidropsShared {
     string public contractURI;
     bool public contractURIset;
 
-    address internal airdropFundingHolder;
-
-    error SoulboundTokenUntransferable();
-    error NotTokenOwner();
-
     event Attest(address indexed to);
     event Revoke(address indexed from);
     event ContractURISet(string indexed contractURI);
+
+    error ContractUriAlreadySet();
+    error SoulboundTokenUntransferable();
 
     function initialize(
         string memory _name,
@@ -41,6 +38,7 @@ contract NewSB1155DropCampaign is ERC1155Upgradeable, CampaignAidropsShared {
     /// @notice Sets the contractURI - can only be done by admin
     /// @param _contractURI - link to contract metadata
     function setContractURI(string memory _contractURI) external onlyAdmin {
+        if (contractURIset) revert ContractUriAlreadySet();
         contractURI = _contractURI;
         contractURIset = true;
         emit ContractURISet(_contractURI);
@@ -56,7 +54,8 @@ contract NewSB1155DropCampaign is ERC1155Upgradeable, CampaignAidropsShared {
     /// @notice Allows the NFT holder to claim their ERC1155 airdrop
     /// @dev Implements a handler method from the parent contract for performing checks and changing state
     /// @param _merkleProof is the merkleRoot proof that this user is eligible for claiming reward
-    /// @param _claimerAddress is the address of the one signing the transaction and trying to claim the reward, added due to use of relayers
+    /// @param _claimerAddress is the address of the one signing the transaction and trying to claim the reward,
+    /// added due to use of relayers
     function claim(bytes32[] calldata _merkleProof, address _claimerAddress) public payable virtual {
         super.claimHandler(_merkleProof, _claimerAddress);
         _mint(_claimerAddress, _tokenId, _tokenAmount, "0x0");
@@ -65,7 +64,7 @@ contract NewSB1155DropCampaign is ERC1155Upgradeable, CampaignAidropsShared {
     /// @notice Returns the amount of airdrop tokens a user can claim
     /// @param _merkleProof The proof a user can claim a reward
     function getAirdropAmount(bytes32[] calldata _merkleProof) external view returns (uint256) {
-        return isEligibleForReward(_merkleProof) ? tokensPerClaim : 0;
+        return super.isEligibleForReward(_merkleProof) ? _tokenAmount : 0;
     }
 
     /// @dev Overriding _beforeTokenTransfer in order to make soulbound tokens untransferable

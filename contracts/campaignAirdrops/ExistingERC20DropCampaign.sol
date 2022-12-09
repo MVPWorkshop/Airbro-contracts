@@ -20,14 +20,15 @@ contract ExistingERC20DropCampaign is CampaignAidropsShared {
 
     address internal airdropFunder;
     bool public initialized;
+    bool public airdropFunded;
 
+    event AirdropFunded(address contractAddress);
     event WithdrawUnlocked();
     event FundsWithdrawn();
 
     error AlreadyFunded();
     error AirdropStillActive();
     error AirdropExpired();
-    error MerkleRootHashSet();
 
     function initialize(
         address _rewardToken,
@@ -68,7 +69,7 @@ contract ExistingERC20DropCampaign is CampaignAidropsShared {
 
     /// @notice Allows admin to enable the funder address to withdraw funds early if no addresses are eligible to claim
     function unlockWithdraw() external onlyAdmin {
-        if (merkleRootSet) revert MerkleRootHashSet();
+        if (merkleRootSet) revert MerkleRootAlreadySet();
 
         airdropExpirationTimestamp = block.timestamp;
         emit WithdrawUnlocked();
