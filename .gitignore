@@ -26,6 +26,7 @@ coverage.json
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+.openzeppelin/unknown-31337.json
 
 # types
 src/types/*

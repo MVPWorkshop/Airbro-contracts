@@ -87,7 +87,7 @@ export function AirbroCampaignFactoryShouldBehaveLikeFactory(): void {
   });
 
   it("should increment totalAirdropsCount", async function () {
-    expect(await this.airdropRegistry.totalAirdropsCount()).to.be.equal(constants.Zero);
+    expect(await this.airdropRegistry.getTotalAirdropsCount()).to.be.equal(constants.Zero);
 
     await expect(this.airdropRegistry.connect(this.signers.registryAdmin).addFactory(this.airbroCampaignFactory.address))
       .to.emit(this.airdropRegistry, "FactoryWhitelisted")
@@ -103,6 +103,6 @@ export function AirbroCampaignFactoryShouldBehaveLikeFactory(): void {
       "NewAirdrop",
     );
 
-    expect(await this.airdropRegistry.totalAirdropsCount()).to.be.equal(constants.One);
+    expect(await this.airdropRegistry.getTotalAirdropsCount()).to.be.equal(constants.One);
   });
 }

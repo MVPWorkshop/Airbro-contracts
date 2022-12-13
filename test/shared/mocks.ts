@@ -17,7 +17,6 @@ import {
   claimPeriodInDays,
   registryAdminAddress,
   betaAddress,
-  trustedRelayerAddressMumbai,
 } from "./constants";
 
 export async function deployMockAirBroFactory(deployer: Signer): Promise<MockContract> {
