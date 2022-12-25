@@ -12,7 +12,7 @@ import { deployAirdrpRegistry } from "./campaignAirdrops/deploy_AirdropRegistry"
 import { deployAirbroCampaignFactory } from "./campaignAirdrops/deploy_AirbroCampaignFactory";
 import { deploy_upgradable_AirdropCampaignData } from "./campaignAirdrops/deploy_upgradable_AirdropCampaignData";
 
-task("deploy").setAction(async function (taskArguments: TaskArguments, { ethers, upgrades }) {
+task("deploy:all").setAction(async function (_taskArguments: TaskArguments, { ethers, upgrades }) {
   /* ---- necessary checks before all contracts can be deployed ---- */
   const REGISTRY_ADMIN_WALLET_ADDRESS: string | undefined = process.env.REGISTRY_ADMIN_WALLET_ADDRESS;
   if (REGISTRY_ADMIN_WALLET_ADDRESS === undefined || REGISTRY_ADMIN_WALLET_ADDRESS === "") {
@@ -64,7 +64,8 @@ task("deploy").setAction(async function (taskArguments: TaskArguments, { ethers,
   console.log(lineBreak);
   console.log("\n 3. AirdropCampaignData");
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const airdropCampaignData: AirdropCampaignData = await deploy_upgradable_AirdropCampaignData.apply({ ethers, upgrades }, [
-    BACKEND_WALLET_ADDRESS,
-  ]);
+  const airdropCampaignData: AirdropCampaignData = await deploy_upgradable_AirdropCampaignData.apply(
+    { ethers, upgrades },
+    [BACKEND_WALLET_ADDRESS],
+  );
 });
