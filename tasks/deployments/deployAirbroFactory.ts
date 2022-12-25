@@ -20,7 +20,7 @@ task("deploy:airbroCampaignFactory")
       `Deploying airbroCampaignFactory with the following parameters: \n\n1.backendWallet ${backendWallet} \n2.airdropRegistry ${airdropRegistry} \n3.betaWallet ${betaWallet}`,
     );
 
-    // TODO a prompt would be good here to check that the params are correct, not sure how to implement
+    // TODO a prompt would on this line to check that the params are correct, not sure how to implement
 
     console.log("getting AirbroCampaignFactory factory...");
     const AirbroCampaignFactoryFactory: AirbroCampaignFactory__factory = <AirbroCampaignFactory__factory>(

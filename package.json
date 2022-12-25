@@ -75,6 +75,7 @@
     "coverage": "yarn typechain && hardhat coverage --solcoverjs ./.solcover.js --temp artifacts --testfiles \"./test/**/*.ts\"",
     "deploy:all": "hardhat deploy:all",
     "deploy:airbroCampaignFactory": "hardhat deploy:airbroCampaignFactory",
+    "deploy:AirdropRegistry": "hardhat deploy:AirdropRegistry",
     "upgrade:airdropCampaignData": "hardhat upgrade:airdropCampaignData",
     "lint": "yarn lint:sol && yarn lint:ts && yarn prettier:check",
     "lint:sol": "solhint --config ./.solhint.json --max-warnings 0 \"contracts/**/*.sol\"",
